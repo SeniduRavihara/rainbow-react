@@ -6,11 +6,7 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoIosSearch } from "react-icons/io";
 import { IoIosMenu } from "react-icons/io";
 import { IonIcon } from "@ionic/react";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import {
   languageOutline,
@@ -98,7 +94,7 @@ const Navbar = () => {
         )}
       </div>
 
-      <div className="flex lg:hidden gap-10 ">
+      <div className="flex lg:hidden gap-5">
         <IoIosSearch className="text-3xl cursor-pointer" />
 
         <Sheet>

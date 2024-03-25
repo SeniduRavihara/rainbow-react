@@ -44,7 +44,7 @@ const categories = [
 
 const CategoriesArea = () => {
   return (
-    <ul className="w-full grid  grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 border-2 px-20 sm:px-32">
+    <ul className="w-full grid gap-x-10 grid-cols-2 xsm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 border-2 px-20 sm:px-32">
       {categories.map((categoryObj, index) => (
         <li key={index}>
           <CategoryCard label={categoryObj.label} icon={categoryObj.icon} />

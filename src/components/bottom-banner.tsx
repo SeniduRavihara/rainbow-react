@@ -9,9 +9,8 @@ const BottomBanner = () => {
           className="company-name-link"
         >
           {" "}
-          IMAGINI INTERNATIONAL
+          IMAGINI INTERNATIONAL.
         </a>
-        .
       </div>
     </div>
   );
