@@ -1,4 +1,4 @@
-import AdvertizingSection from "@/components/sections/advertizing-section";
+import AdvertizingSection from "@/components/sections/advertizing-section/advertizing-section";
 import BottomBanner from "@/components/bottom-banner";
 import CarouselAdds from "@/components/CarouselAdds";
 import CategoriesArea from "@/components/sections/categories-area";

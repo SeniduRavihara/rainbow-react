@@ -1,18 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBox from "../search-box";
 import { IoLocationOutline } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { FaMicrophone } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
+import { cn } from "@/lib/utils";
+
 const SearchArea = () => {
   const [location, setLocation] = useState("");
   const [searchItem, setSearchitem] = useState("");
 
+  const {
+    transcript,
+    listening,
+    // resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
+
+  useEffect(() => {
+    if (listening) {
+      setSearchitem(transcript);
+    }
+  }, [listening, searchItem, transcript]);
+
+  if (!browserSupportsSpeechRecognition) {
+    return <span>Browser doesn't support speech recognition.</span>;
+  }
+
   return (
     <div className="lg:flex flex-col items-center gap-5 justify-center lg:mb-10 mb-20 hidden">
       <h2 className="font-bold text-3xl">
-        Search across &apos;3.3 Crore<span className="font-extrabold">+</span>&apos;{" "}
-        <span className="text-blue-600">Product & Services</span>
+        Search across &apos;3.3 Crore<span className="font-extrabold">+</span>
+        &apos; <span className="text-blue-600">Product & Services</span>
       </h2>
 
       <div className="flex items-center gap-6">
@@ -43,16 +65,28 @@ const SearchArea = () => {
               value={searchItem}
               onChange={(e) => setSearchitem(e.target.value)}
             />
-            {searchItem && (
+            {(searchItem || listening) && (
               <RxCross2
-                onClick={() => setSearchitem("")}
+                onClick={() => {
+                  setSearchitem("");
+                  SpeechRecognition.stopListening();
+                }}
                 className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
               />
             )}
-            <FaMicrophone className="text-gray-500 text-xl cursor-pointer" />
+
+            <FaMicrophone
+              className={cn(
+                "text-gray-500 text-xl cursor-pointer",
+                listening && "hidden"
+              )}
+              onClick={() => SpeechRecognition.startListening()}
+            />
+
             <IoIosSearch className="bg-red-400 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1" />
           </div>
         </SearchBox>
+
       </div>
     </div>
   );

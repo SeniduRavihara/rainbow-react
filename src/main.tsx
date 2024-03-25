@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import 'regenerator-runtime/runtime.js'; // warning: before App
 import App from "./App.tsx";
 import "./index.css";
 import "./style.css";
