@@ -1,36 +1,31 @@
 // import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { useData } from "@/hooks/useData";
 import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const CarouselAdds = () => {
+  const { sliderAdds } = useData();
+
   return (
-    <div className="w-full p-5">
-      here
+    <div className="w-full -mt-5 lg:mt-0">
       <Carousel
-        showStatus={false}
-        autoPlay
-        interval={3000}
-        infiniteLoop
-        showArrows={false}
-        stopOnHover={false}
-        showIndicators={false}
-        transitionTime={800}
+      showStatus={false}
+      autoPlay
+      interval={3000}
+      infiniteLoop
+      showArrows={false}
+      stopOnHover={false}
+      showIndicators={false}
+      transitionTime={800}
+       showThumbs={false}
       >
-        <div>
-          <img
-            alt=""
-            src="https://dmrqkbkq8el9i.cloudfront.net/Pictures/480xany/1/3/0/283130_cadburydelightsorangecaramel_602912_crop.jpg"
-            className=""
-          />
-        </div>
-        <div>
-          <img alt="" src="/img/slideshow/im2.jpg" className="" />
-        </div>
-        <div>
-          <img alt="" src="/img/slideshow/im3.jpg" className="" />
-        </div>
-        <div>
-          <img alt="" src="/img/slideshow/im4.jpg" className="" />
-        </div>
+        {sliderAdds && sliderAdds.map(
+          (sliderAddObj, index) => (
+            <div key={index}>
+              <img alt="sen" src={sliderAddObj.imageUrl} className="" />
+            </div>
+          ),
+        )}
       </Carousel>
     </div>
   );

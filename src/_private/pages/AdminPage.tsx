@@ -7,12 +7,16 @@ import Store from "@/components/admin/store";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { IoArrowBack } from "react-icons/io5";
 const AdminPage = () => {
   return (
-    <div className="p-5">
-      <div className="w-full h-32 bg-red-300">
-        <Button variant="link" asChild>
-          <Link to="/">Back</Link>
+    <div className="p-5 w-full min-h-screen flex flex-col gap-5">
+      <div>
+        <h1 className="font-extrabold text-4xl text-center">Admin Panel</h1>
+        <Button variant="outline" asChild>
+          <Link to="/">
+            <IoArrowBack />
+          </Link>
         </Button>
       </div>
       <Tabs size="md" variant="enclosed" isFitted>

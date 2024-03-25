@@ -1,8 +1,8 @@
 const TopBanner = () => {
   return (
-    <p className="w-screen h-7 text-white bg-blue-500 flex items-center pl-10 text-sm">
-      Call Us : 0112 222 22 | info@sample.com
-    </p>
+    <div className="navbar-top">
+      <div className="top-nav-content">Call Us : 0112 222 22 | info@sample.com</div>
+    </div>
   );
 };
 export default TopBanner;

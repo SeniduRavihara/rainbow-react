@@ -1,0 +1,39 @@
+import resturant from "./img/category-img/resturant.png";
+import hotel from "./img/category-img/hotel.png";
+import beautySpa from "./img/category-img/beautyspa.png";
+import homeDecore from "./img/category-img/home&indoors.png";
+import weddingRequisitos from "./img/category-img/bride-and-groom.png";
+import education from "./img/category-img/education.png";
+import rent from "./img/category-img/rent.png";
+import pgHostels from "./img/category-img/PG-Hostels.png";
+import estateAgent from "./img/category-img/Estate Agent.png";
+import dentist from "./img/category-img/dentist.png";
+import gym from "./img/category-img/gym.png";
+import consultants from "./img/category-img/Consultants.png";
+import hospitalEventOrganizers from "./img/category-img/hospital.png";
+import DrivingSchools from "./img/category-img/Driving Schools.png";
+import constructorpackersMovers from "./img/category-img/constructor.png";
+import PetShop from "./img/category-img/pet-shop.png";
+import courierService from "./img/category-img/car-rent.png";
+import constructor from "./img/category-img/constructor.png";
+
+export {
+  resturant,
+  DrivingSchools,
+  PetShop,
+  rent,
+  beautySpa,
+  constructor,
+  constructorpackersMovers,
+  consultants,
+  courierService,
+  dentist,
+  education,
+  estateAgent,
+  gym,
+  homeDecore,
+  hospitalEventOrganizers,
+  hotel,
+  pgHostels,
+  weddingRequisitos,
+};

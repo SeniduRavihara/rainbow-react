@@ -14,20 +14,20 @@ const HomePage = () => {
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center">
-        <div className="fixed top-0 left-0">
+        <div className="fixed top-0 left-0 z-50">
           <TopBanner />
           <Navbar />
         </div>
-        <div className="mt-36">
+        <div className="mt-32">
           <SearchArea />
           <CarouselAdds />
           <CategoriesArea />
           <AdvertizingSection />
 
           <SocialMediaArea />
-          <DiscriptionArea />
+          {/* <DiscriptionArea /> */}
           <Footer />
-          <BottomBanner />
+          {/* <BottomBanner /> */}
         </div>
       </main>
     </div>
