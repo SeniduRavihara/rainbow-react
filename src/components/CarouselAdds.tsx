@@ -6,6 +6,11 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 const CarouselAdds = () => {
   const { sliderAdds } = useData();
 
+   if (!sliderAdds) {
+     // If sliderAdds is null, return null or a placeholder
+     return null;
+   }
+
   return (
     <div className="w-full -mt-5 lg:mt-0">
       <Carousel
@@ -19,7 +24,7 @@ const CarouselAdds = () => {
       transitionTime={800}
        showThumbs={false}
       >
-        {sliderAdds && sliderAdds.map(
+        {sliderAdds.map(
           (sliderAddObj, index) => (
             <div key={index}>
               <img alt="sen" src={sliderAddObj.imageUrl} className="" />

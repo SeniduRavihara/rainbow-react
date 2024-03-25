@@ -16,11 +16,9 @@ import { Button } from "@/components/ui/button";
 import CardWrapper from "../components/CardWrapper";
 import { getUserRole, login } from "@/firebase/api";
 import { useNavigate } from "react-router-dom";
-import { useData } from "@/hooks/useData";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { currentUserData } = useData();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof loginSchema>>({

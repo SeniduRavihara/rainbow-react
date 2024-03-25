@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -20,14 +20,13 @@ import FormError from "./form-error";
 import FormSuccess from "./form-success";
 import { registerSchema } from "@/schemas";
 import { signup } from "@/firebase/api";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
-  const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
 
-  const router = useRouter()
+  const naigate = useNavigate()
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof registerSchema>>({
@@ -44,7 +43,7 @@ const RegisterForm = () => {
     setError("");
     setSuccess("");
     await signup(values);
-    router.push("/")
+    naigate("/");
   };
 
   return (
@@ -66,7 +65,6 @@ const RegisterForm = () => {
                   <FormControl>
                     <Input
                       placeholder="John Doe"
-                      disabled={isPending}
                       {...field}
                     />
                   </FormControl>
@@ -85,7 +83,6 @@ const RegisterForm = () => {
                     <Input
                       type="email"
                       placeholder="john.doe@example.com"
-                      disabled={isPending}
                       {...field}
                     />
                   </FormControl>
@@ -103,7 +100,6 @@ const RegisterForm = () => {
                   <FormControl>
                     <Input
                       type="password"
-                      disabled={isPending}
                       placeholder="password"
                       {...field}
                     />
@@ -117,7 +113,7 @@ const RegisterForm = () => {
           <FormError message={error} />
           <FormSuccess message={success} />
 
-          <Button type="submit" className="w-full" disabled={isPending}>
+          <Button type="submit" className="w-full">
             Signup
           </Button>
         </form>

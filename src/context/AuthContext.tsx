@@ -1,14 +1,16 @@
+import { INITIAL_AUTH_CONTEXT } from "@/constants";
 import { auth, db } from "@/firebase/config";
 import { useData } from "@/hooks/useData";
+import { AuthContextType, CurrentUserDataType } from "@/types";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
 
-export const AuthContext = createContext({});
+export const AuthContext = createContext<AuthContextType>(INITIAL_AUTH_CONTEXT);
 
 const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const { currentUserData, setCurrentUserData } = useData();
+  const { setCurrentUserData } = useData();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -37,7 +39,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
 
       const unsubscribe = onSnapshot(documentRef, (documentSnapshot) => {
         if (documentSnapshot.exists()) {
-          const userData = documentSnapshot.data();
+          const userData = documentSnapshot.data() as CurrentUserDataType;
           setCurrentUserData(userData);
         } else {
           console.log("Document does not exist.");

@@ -9,9 +9,6 @@ import { IonIcon } from "@ionic/react";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 
@@ -21,10 +18,8 @@ import {
   barChartOutline,
 } from "ionicons/icons";
 import Menu from "./Menu";
-import { useState } from "react";
 
 const Navbar = () => {
-  const [openMobileMenu, setOpenMobileMenu] = useState(false)
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 

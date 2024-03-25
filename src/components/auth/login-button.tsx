@@ -1,6 +1,4 @@
-"use client";
-
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 
 type LoginButtonProps = {
   children: React.ReactNode;
@@ -11,12 +9,11 @@ type LoginButtonProps = {
 function LoginButton({
   children,
   mode = "redirect",
-  asChild,
 }: LoginButtonProps) {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    router.push("/auth/login");
+    navigate("/auth/login");
     console.log("LOGIN BUTON CLICKED");
   };
 

@@ -15,11 +15,9 @@ import { Button } from "@/components/ui/button";
 import { registerSchema } from "@/schemas";
 import { getUserRole, signup } from "@/firebase/api";
 import { useNavigate } from "react-router-dom";
-import { useData } from "@/hooks/useData";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  const { currentUserData } = useData();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof registerSchema>>({

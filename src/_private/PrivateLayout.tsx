@@ -1,5 +1,4 @@
 import { useData } from "@/hooks/useData";
-import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateLayout = () => {

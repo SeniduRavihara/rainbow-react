@@ -2,11 +2,7 @@ import { db } from "@/firebase/config";
 import {
   collection,
   doc,
-  getDocs,
-  limit,
   onSnapshot,
-  query,
-  startAfter,
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -14,9 +10,7 @@ import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -32,11 +26,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { StoreListDocType, StoreListType } from "@/types";
  
 
 const Store = () => {
-  const [storeList, setStoreList] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [storeList, setStoreList] = useState<StoreListType | null>(null);
+  // const [loading, setLoading] = useState(false);
 
   // const fetchStoreData = async () => {
   //   setLoading(true);
@@ -56,10 +51,13 @@ const Store = () => {
   useEffect(() => {
     const collectionRef = collection(db, "store");
     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-      const storeListArr = QuerySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
+      const storeListArr = QuerySnapshot.docs.map((doc) => {
+        const storeList = doc.data() as StoreListDocType
+        return {
+          ...storeList,
+          id: doc.id,
+        };
+      });
       console.log(storeListArr);
       setStoreList(storeListArr);
     });
@@ -97,7 +95,7 @@ const Store = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {storeList.map((storeObj, index) => (
+          { storeList && storeList.map((storeObj, index) => (
             <TableRow key={index}>
               <TableCell className="font-medium">{storeObj.email}</TableCell>
               <TableCell className="font-medium">{storeObj.email}</TableCell>

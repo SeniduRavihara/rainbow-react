@@ -5,7 +5,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth, db, provider } from "./config";
-import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export const logout = async () => {
   try {

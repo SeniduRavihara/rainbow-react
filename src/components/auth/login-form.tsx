@@ -1,6 +1,4 @@
-"use client";
-
-import { useEffect, useState, useTransition } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -21,7 +19,6 @@ import FormSuccess from "./form-success";
 import { login } from "@/firebase/api";
 
 const LoginForm = () => {
-  const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
 
@@ -62,7 +59,6 @@ const LoginForm = () => {
                     <Input
                       type="email"
                       placeholder="john.doe@example.com"
-                      disabled={isPending}
                       {...field}
                     />
                   </FormControl>
@@ -78,12 +74,7 @@ const LoginForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      type="password"
-                      disabled={isPending}
-                      placeholder="password"
-                      {...field}
-                    />
+                    <Input type="password" placeholder="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -94,7 +85,7 @@ const LoginForm = () => {
           <FormError message={error} />
           <FormSuccess message={success} />
 
-          <Button type="submit" className="w-full" disabled={isPending}>
+          <Button type="submit" className="w-full">
             Login
           </Button>
         </form>

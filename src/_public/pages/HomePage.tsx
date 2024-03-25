@@ -25,9 +25,9 @@ const HomePage = () => {
           <AdvertizingSection />
 
           <SocialMediaArea />
-          {/* <DiscriptionArea /> */}
+          <DiscriptionArea />
           <Footer />
-          {/* <BottomBanner /> */}
+          <BottomBanner />
         </div>
       </main>
     </div>

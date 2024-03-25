@@ -1,10 +1,18 @@
 const BottomBanner = () => {
   return (
-    <div className="bg-black w-screen text-white">
-      <p className="text-sm text-center">
+    <div className="asdttryas">
+      <div className="cmp-copyright">
         © 2024 ABCDEFG. ALL RIGHTS RESERVED. SOLUTION BY{" "}
-        <span className="text-red-600">IMAGINI INTERNATIONAL.</span>
-      </p>
+        <a
+          href="https://www.imagini.lk"
+          target="_blank"
+          className="company-name-link"
+        >
+          {" "}
+          IMAGINI INTERNATIONAL
+        </a>
+        .
+      </div>
     </div>
   );
 };

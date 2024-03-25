@@ -1,29 +1,48 @@
+import { User } from "firebase/auth";
+import React from "react";
 
-// export type dataContextType = {
-//   newsList: newsListType;
-//   lastNews: newsObjType;
-//   selectedNews: newsObjType;
-//   setSelectedNews: React.Dispatch<React.SetStateAction<newsObjType>>;
-//   fetchData: () => void;
-//   firstLoading: boolean;
-//   loading: boolean;
-// };
+export type DataContextType = {
+  currentUserData: CurrentUserDataType;
+  setCurrentUserData: React.Dispatch<React.SetStateAction<CurrentUserDataType>>;
+  sectionAdds: Array<{
+    imageUrl: string;
+    id: string;
+  }> | null;
+  sliderAdds: Array<{
+    imageUrl: string;
+    id: string;
+  }> | null;
+};
 
 // ---------------------------------
 
-export type authContextType = {
-  currentUser: currentUserType | null;
-  setCurrentUser: React.Dispatch<React.SetStateAction<currentUserType | null>>;
-  googleSignIn: () => void;
-  logout: () => void;
+export type AuthContextType = {
+  currentUser: User | null;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
-export type currentUserType = {
-  uid: string;
-  email: string | null;
-  name: string | null;
-  photoURL: string | null;
-  likedPostsId?: Array<string> | undefined;
-  unlikedPostsId?: Array<string> | undefined;
-};
+export type CurrentUserDataType = {
+  id: string;
+  email: string;
+  name: string;
+  roles: string[];
+} | null;
 
+export type StoreListType = Array<{
+  id: string;
+  title: string;
+  active: boolean;
+  address: string;
+  email: string;
+  messages: string[];
+  tags: string[];
+}>;
+
+export type StoreListDocType = {
+  title: string;
+  active: boolean;
+  address: string;
+  email: string;
+  messages: string[];
+  tags: string[];
+};
