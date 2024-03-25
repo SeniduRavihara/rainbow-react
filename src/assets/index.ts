@@ -17,6 +17,18 @@ import PetShop from "./img/category-img/pet-shop.png";
 import courierService from "./img/category-img/car-rent.png";
 import constructor from "./img/category-img/constructor.png";
 
+import placeholderAdd1 from "./placeholders/img/placeholder-add-1.jpg";
+import placeholderAdd2 from "./placeholders/img/placeholder-add-2.jpg";
+import placeholderAdd3 from "./placeholders/img/placeholder-add-3.jpg";
+import placeholderAdd4 from "./placeholders/img/placeholder-add-4.jpg";
+
+const placeholderSliderAdds = [
+  placeholderAdd1,
+  placeholderAdd2,
+  placeholderAdd3,
+  placeholderAdd4,
+];
+
 export {
   resturant,
   DrivingSchools,
@@ -36,4 +48,5 @@ export {
   hotel,
   pgHostels,
   weddingRequisitos,
+  placeholderSliderAdds,
 };

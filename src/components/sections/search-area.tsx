@@ -11,7 +11,7 @@ const SearchArea = () => {
   return (
     <div className="lg:flex flex-col items-center gap-5 justify-center lg:mb-10 mb-20 hidden">
       <h2 className="font-bold text-3xl">
-        Search across &apos;3.3 Crore+&apos;{" "}
+        Search across &apos;3.3 Crore<span className="font-extrabold">+</span>&apos;{" "}
         <span className="text-blue-600">Product & Services</span>
       </h2>
 
