@@ -10,7 +10,6 @@ import SocialMediaArea from "@/components/sections/social-media-area";
 import TopBanner from "@/components/top-banner";
 
 const HomePage = () => {
-  
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center">
