@@ -13,27 +13,27 @@
     }
 
     &:has(label:nth-child(1) > input:checked) {
-      --col-1: 3fr;
-      --col-2: 2fr;
+      --col-1: 5fr;
+      --col-2: 3fr;
     }
     &:has(label:nth-child(2) > input:checked) {
       --col-1: 2fr;
-      --col-2: 3fr;
+      --col-2: 5fr;
       --col-3: 2fr;
     }
     &:has(label:nth-child(3) > input:checked) {
       --col-2: 2fr;
-      --col-3: 3fr;
+      --col-3: 5fr;
       --col-4: 2fr;
     }
     &:has(label:nth-child(4) > input:checked) {
       --col-3: 2fr;
-      --col-4: 3fr;
+      --col-4: 5fr;
       --col-5: 2fr;
     }
     &:has(label:nth-child(5) > input:checked) {
-      --col-4: 2fr;
-      --col-5: 3fr;
+      --col-4: 3fr;
+      --col-5: 5fr;
     }
 
     > label {

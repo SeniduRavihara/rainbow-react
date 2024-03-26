@@ -774,7 +774,7 @@ img{
 }
 
 
-.create-store{
+/* .create-store{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -803,7 +803,6 @@ img{
 
 .img-content{
     width: 400px;
-    /* padding: 10px; */
 }
 
 .form-content{
@@ -865,8 +864,6 @@ img{
 }
 
 .create-store .img-area .upload-img{
-    /* border: 2px dashed #0993ac; */
-    /* margin-bottom: 20px; */
     padding: 1rem;
     width: 300px;
     border-radius: 5px;
@@ -902,6 +899,4 @@ img{
     color: red;
 }
 
-
-
-/**/
+ */

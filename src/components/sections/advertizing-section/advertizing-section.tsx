@@ -1,5 +1,7 @@
 // import { useData } from "@/hooks/useData";
+import { useData } from "@/hooks/useData";
 import "./style.css";
+import { useEffect } from "react";
 
 const images = [
   {
@@ -11,7 +13,7 @@ const images = [
     value: "Pink Princess",
   },
   {
-    src: "https://firebasestorage.googleapis.com/v0/b/rainbow-32f4a.appspot.com/o/img3.jpg?alt=media&token=f14473c2-12bd-4712-a1a0-94863dd8bfb1", // Relative path to the image in the public folder
+    src: "https://firebasestorage.googleapis.com/v0/b/rainbow-32f4a.appspot.com/o/img3.jpg?alt=media&token=f14473c2-12bd-4712-a1a0-94863dd8bfb1", 
     value: "Monstera",
     checked: true,
   },
@@ -22,7 +24,12 @@ const images = [
 ];
 
 const AdvertizingSection = () => {
-  // const { sectionAdds } = useData();
+  const { sectionAdds } = useData();
+
+  useEffect(()=>{
+    
+  },[sectionAdds])
+
   return (
     <fieldset className="w-full my-5">
       {images.map((image) => (
@@ -33,7 +40,6 @@ const AdvertizingSection = () => {
             value={image.value}
             defaultChecked={image.checked}
           />
-          {/* {image.value} */}
         </label>
       ))}
     </fieldset>
