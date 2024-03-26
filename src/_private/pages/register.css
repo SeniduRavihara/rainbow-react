@@ -68,44 +68,28 @@ form .input-box span.details {
   font-size: 110px;
 }
 
-.input-form input {
-  padding: 1rem;
-  font-size: 18px;
-  margin: 10px;
-  border: 2px solid #a7a7a7;
-  border-radius: 5px;
-}
-
-.input-form input:focus {
-  outline: none;
-}
-
-.form-content .group {
-  display: flex;
-  align-items: self-start;
-  justify-content: left;
-}
-
-.form-content .group .input-form input:focus {
-  outline: none;
-}
-
 .create-store .img-area P {
   width: 150px;
   margin-left: 60px;
 }
 
-
-.create-store .img-area P span {
+.create-store .img-area P label {
   font-size: 20px;
   font-weight: bold;
   color: #005eff;
   cursor: pointer;
 }
 
-.create-store .img-area .upload-img img {
-  border-radius: 5px;
+
+/* .create-store .img-area .upload-img{
+    padding: 1rem;
+    width: 300px;
+    border-radius: 5px;
 }
+
+.create-store .img-area .upload-img img {
+    border-radius: 5px;
+} */
 
 .swiper-button-prev::after {
   margin-right: 25px;
