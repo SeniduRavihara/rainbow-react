@@ -97,7 +97,10 @@ const Navbar = () => {
               menuBtn={
                 <div>
                   {currentUser.photoURL ? (
-                    <img src={currentUser.photoURL} />
+                    <img
+                      src={currentUser.photoURL}
+                      className="w-10 h-10 rounded-full"
+                    />
                   ) : (
                     <HiOutlineUserCircle className="text-3xl" />
                   )}
@@ -164,7 +167,10 @@ const Navbar = () => {
                     menuBtn={
                       <div>
                         {currentUser.photoURL ? (
-                          <img src={currentUser.photoURL} />
+                          <img
+                            src={currentUser.photoURL}
+                            className="w-10 h-10 rounded-full"
+                          />
                         ) : (
                           <HiOutlineUserCircle className="text-3xl" />
                         )}

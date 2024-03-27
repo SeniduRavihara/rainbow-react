@@ -1,121 +1,177 @@
-import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import CardWrapper from "../components/CardWrapper";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { registerSchema } from "@/schemas";
+import { IonIcon } from "@ionic/react";
+import { addOutline } from "ionicons/icons";
+import "./style.css";
+import { Link, useNavigate } from "react-router-dom";
+import React, { useRef, useState } from "react";
 import { getUserRole, signup } from "@/firebase/api";
-import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
+  const submitButtonRef = useRef<HTMLInputElement>(null);
+
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [gender, setGender] = useState("Male");
+  const [profileImage, setProfileImage] = useState<File | null>(null);
+
   const navigate = useNavigate();
 
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      name: "",
-    },
-  });
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof registerSchema>) {
-    try {
-      const uid = await signup(values);
-      const roles = await getUserRole(uid);
-      if (roles.includes("admin")) {
-        navigate("/admin");
+    if (password === confirmPassword) {
+      try {
+        const uid = await signup({
+          name,
+          email,
+          password,
+          gender,
+          profileImage,
+        });
+        const roles = await getUserRole(uid);
+        if (roles.includes("admin")) {
+          navigate("/admin");
+        }
+        navigate("/");
+      } catch (error) {
+        console.log(error);
       }
-      navigate("/");
-    } catch (error) {
-      console.log(error);
     }
-  }
+  };
+
+  const handleClickRegister = async () => {
+    if (submitButtonRef.current) {
+      submitButtonRef.current.click();
+    }
+  };
 
   return (
-    <CardWrapper
-      headerLabel="Create an account"
-      backButtonLabel="Already have an account?"
-      backButtonHref="/login"
-      showSocial
-    >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="John Doe"
-                      // disabled={isPending}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <div className="register">
+      <div className="container">
+        <div className="card content p-4 border border-primary">
+          <div className="title text-primary">Account Infromation</div>
+          <div className="row">
+            <div className="col-12">
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div className="logo" style={{ display: "flex" }}>
+                  <label
+                    className="photo-add-button cursor-pointer"
+                    id="logo-button"
+                    htmlFor="profile-image"
+                  >
+                    <IonIcon icon={addOutline}></IonIcon>
+                  </label>
+                  <div id="previewImagelogo"></div>
+                </div>
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="john.doe@example.com"
-                      // disabled={isPending}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <div>
+                  <div>
+                    <Link
+                      to="/login"
+                      className="btn btn-primary btn-lg loginbtn"
+                    >
+                      Login
+                    </Link>
+                  </div>
+                  <div>
+                    <button
+                      className="btn btn-primary btn-lg loginbtn"
+                      id="register-btn"
+                      onClick={handleClickRegister}
+                    >
+                      register
+                    </button>
+                  </div>
+                </div>
+              </div>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      // disabled={isPending}
-                      placeholder="password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <form onSubmit={handleSubmit} id="register-form">
+                <div className="user-details">
+                  <div className="row mb-3">
+                    <div className="group col-6">
+                      <input
+                        type="file"
+                        name="profile_picture"
+                        required
+                        hidden
+                        onChange={(e) => {
+                          if (e.target.files) {
+                            setProfileImage(e.target.files[0]);
+                          }
+                        }}
+                        id="profile-image"
+                      />
+                      <input
+                        type="text"
+                        className="form-control shadow-sm"
+                        placeholder="Enter your name"
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    </div>
+                    <div className="group col-6">
+                      <select
+                        name="gender"
+                        required
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                      >
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="row mb-3">
+                    <div className="group col-6">
+                      <input
+                        type="password"
+                        className="form-control shadow-sm"
+                        required
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </div>
+                    <div className="group col-6">
+                      <input
+                        type="password"
+                        className="form-control shadow-sm"
+                        required
+                        placeholder="Enter  confirm password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="row mb-3">
+                    <div className="group col-12">
+                      <input
+                        type="email"
+                        className="form-control shadow-sm"
+                        required
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <input
+                    type="submit"
+                    hidden
+                    id="subbtn"
+                    ref={submitButtonRef}
+                  />
+                </div>
+              </form>
+            </div>
           </div>
-
-          <Button type="submit" className="w-full">
-            Signup
-          </Button>
-        </form>
-      </Form>
-    </CardWrapper>
+        </div>
+      </div>
+    </div>
   );
 };
+
 export default RegisterForm;

@@ -1,43 +1,20 @@
-import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-
-import { loginSchema } from "@/schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import CardWrapper from "../components/CardWrapper";
 import { getUserRole, login } from "@/firebase/api";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof loginSchema>) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
-      const uid = await login(values);
+      const uid = await login({ email, password });
       const roles = await getUserRole(uid);
+      console.log(roles);
 
       if (roles.includes("admin")) {
-        console.log("ADMIN");
-
         navigate("/admin");
       } else {
         navigate("/");
@@ -45,66 +22,74 @@ const LoginForm = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
-    <CardWrapper
-      headerLabel="Welcome back"
-      backButtonLabel="Don't have an account?"
-      backButtonHref="/signup"
-      showSocial
-    >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="john.doe@example.com"
-                      // disabled={isPending}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <div className="register login">
+      <div className="container">
+        <div className="card w-[400px] p-4 border border-primary">
+          <div className="text-4xl mb-10 font-bold text-blue-500">Login</div>
+          <div className="row">
+            <div className="col-12">
+              <form onSubmit={handleSubmit} id="login-form">
+                <div className="user-details">
+                  <div className="row mb-3">
+                    <div className="group col-12">
+                      <input
+                        type="email"
+                        className="form-control shadow-sm"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                  </div>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      // disabled={isPending}
-                      placeholder="password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                  <div className="row mb-3">
+                    <div className="group col-12">
+                      <input
+                        type="password"
+                        className="form-control shadow-sm"
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="mb-3 gap-2 flex items-center justify-center">
+                  <input
+                    type="checkbox"
+                    name="rem"
+                    className="form-check-input shadow-sm"
+                  />
+                  <label
+                    className="form-check-label text-gray-600"
+                    htmlFor="exampleCheck1"
+                  >
+                    Remember me
+                  </label>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <button className="btn btn-primary btn-lg loginbtn w-1/2">
+                      Login
+                    </button>
+                    <Link
+                      to="/signup"
+                      className="btn btn-primary btn-lg loginbtn w-1/2"
+                    >
+                      register
+                    </Link>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
-
-          {/* <FormError message={error} />
-          <FormSuccess message={success} /> */}
-
-          <Button type="submit" className="w-full">
-            Login
-          </Button>
-        </form>
-      </Form>
-    </CardWrapper>
+        </div>
+      </div>
+    </div>
   );
 };
+
 export default LoginForm;
