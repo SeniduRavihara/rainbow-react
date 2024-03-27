@@ -15,6 +15,7 @@ import PrivateLayout from "./_private/PrivateLayout";
 import DataContextProvider from "./context/DataContext";
 import { ChakraProvider } from "@chakra-ui/react";
 import CreateStorePage from "./_private/pages/CreateStorePage";
+import AdminLayout from "./_admin/AdminLayout";
 
 
 const router = createBrowserRouter(
@@ -33,8 +34,12 @@ const router = createBrowserRouter(
 
       {/* private routes */}
       <Route element={<PrivateLayout />}>
-        <Route path="/admin" element={<AdminPage />} />
         <Route path="/create-store" element={<CreateStorePage />} />
+      </Route>
+
+      {/* admin routes */}
+      <Route element={<AdminLayout />}>
+        <Route path="/admin" element={<AdminPage />} />
       </Route>
     </Route>
   )

@@ -1,0 +1,101 @@
+form .input-box span.details {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.user-details .group select,
+.user-details .group input {
+  height: 60px;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
+  border-radius: 5px;
+  padding-left: 15px;
+  border: 1px solid #ccc;
+  border-bottom-width: 2px;
+  transition: all 0.3s ease;
+}
+.user-details .group input,
+.user-details .group input:valid {
+  border-color: #0d6efd;
+}
+
+.user-details .group select {
+  border-color: #0d6efd;
+}
+.container .content {
+  display: flex;
+  gap: 20px;
+  padding: 10px 15px;
+}
+
+.photo-add-button ion-icon {
+  margin-top: 5px;
+  color: #1379e6;
+}
+
+.photo-add-button-txt {
+  font-size: 19px;
+  color: #1379e6;
+  margin-top: 1px;
+}
+
+.logo p {
+  margin-top: 2.5rem;
+  margin-left: 2rem;
+  width: 180px;
+  font-size: 20px;
+}
+
+.logo p span {
+  margin-left: 3rem;
+  font-size: 20px;
+  font-weight: bold;
+  color: #005eff;
+  cursor: pointer;
+}
+
+.photo-add-button {
+  width: 150px;
+  height: 150px;
+  border-radius: 550px;
+  border: 2px solid #156ec247;
+  background-color: #ffffff;
+  color: #5aa8fc;
+  margin: 0;
+  margin-bottom: 1rem;
+  font-size: 110px;
+}
+
+.create-store .img-area P {
+  width: 150px;
+  margin-left: 60px;
+}
+
+.create-store .img-area P label {
+  font-size: 20px;
+  font-weight: bold;
+  color: #005eff;
+  cursor: pointer;
+}
+
+
+/* .create-store .img-area .upload-img{
+    padding: 1rem;
+    width: 300px;
+    border-radius: 5px;
+}
+
+.create-store .img-area .upload-img img {
+    border-radius: 5px;
+} */
+
+.swiper-button-prev::after {
+  margin-right: 25px;
+  margin-top: -5rem;
+}
+.swiper-button-next:after {
+  margin-left: 25px;
+  margin-top: -5rem;
+}

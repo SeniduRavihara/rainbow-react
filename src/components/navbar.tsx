@@ -14,19 +14,34 @@ import {
   barChartOutline,
 } from "ionicons/icons";
 import Menu from "./Menu";
+import { useData } from "@/hooks/useData";
 
 const Navbar = () => {
   const { currentUser } = useAuth();
+  const { currentUserData } = useData();
   const navigate = useNavigate();
 
   const handleCreateStoreClick = () => {
     navigate("/create-store");
   };
+  const handleClickAdminPanel = () => {
+    navigate("/admin");
+  };
 
-  const menuItems = [
-    <button onClick={handleCreateStoreClick}>CreateStore</button>,
-    <button onClick={logout}>Logout</button>,
-  ];
+  let menuItems;
+
+  if (currentUserData && currentUserData.roles.includes("admin")) {
+    menuItems = [
+      <button onClick={handleClickAdminPanel}>AdminPanel</button>,
+      <button onClick={handleCreateStoreClick}>CreateStore</button>,
+      <button onClick={logout}>Logout</button>,
+    ];
+  } else {
+    menuItems = [
+      <button onClick={handleCreateStoreClick}>CreateStore</button>,
+      <button onClick={logout}>Logout</button>,
+    ];
+  }
 
   return (
     <div className="w-full bg-white pt-3 h-20 px-5 flex items-center justify-between fixed top-7 left-0 border-b-2 border-[#00000010]">

@@ -113,3 +113,18 @@ export const getUserRole = async (uid: string) => {
 //   const userData = await getDocs(colletionRef);
 //   return userData.data().roles;
 // };
+
+export const createStore = async (uid: string, payload: any) => {
+  console.log(payload);
+  
+  try {
+    await setDoc(doc(db, "store", uid), {
+      ...payload,
+      userId: uid,
+      active: false,
+    });
+    console.log("Document successfully written to Firestore!");
+  } catch (error) {
+    console.error("Error writing document:", error);
+  }
+};

@@ -9,7 +9,7 @@ const PrivateLayout = () => {
 
   if (!currentUserData) return <div>Loading...</div>;
 
-  return currentUserData.roles.includes("admin") ? (
+  return currentUserData.roles.includes("user") ? (
     <Outlet />
   ) : (
     <Navigate to="/" />

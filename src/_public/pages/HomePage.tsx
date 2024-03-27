@@ -8,6 +8,7 @@ import Navbar from "@/components/navbar";
 import SearchArea from "@/components/sections/search-area";
 import SocialMediaArea from "@/components/sections/social-media-area";
 import TopBanner from "@/components/top-banner";
+import ServicesArea from "@/components/sections/ServicesArea";
 
 const HomePage = () => {
   return (
@@ -22,7 +23,7 @@ const HomePage = () => {
           <CarouselAdds />
           <CategoriesArea />
           <AdvertizingSection />
-
+          <ServicesArea />
           <SocialMediaArea />
           <DiscriptionArea />
           <Footer />

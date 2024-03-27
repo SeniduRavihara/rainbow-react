@@ -25,7 +25,7 @@ const AdminPage = () => {
           <Tab>Sample Test 2</Tab>
           <Tab>Popular Brands</Tab>
           <Tab>Search Result Ad</Tab>
-          <Tab>Store</Tab>
+          <Tab>Store</Tab>a
           <Tab>Message</Tab>
         </TabList>
         <TabPanels>
