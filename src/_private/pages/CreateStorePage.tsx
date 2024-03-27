@@ -59,7 +59,7 @@ const CreateStorePage = () => {
         for (let i = 0; i < storeImages.length; i++) {
           const file = storeImages[i].file;
           const fileRef = ref(storage, `store_images/${v4()}`);
-          const snapshot = await uploadBytes(fileRef, file);
+          await uploadBytes(fileRef, file);
           const photoURL = await getDownloadURL(fileRef);
 
           // Update storeImages state with the uploaded image's URL
@@ -76,7 +76,7 @@ const CreateStorePage = () => {
         }
         console.log("All files uploaded successfully!");
       } catch (error) {
-        console.error("Error uploading files:", error.message);
+        console.error("Error uploading files:", error);
         alert(
           "An error occurred while uploading files. Please try again later."
         );
@@ -90,7 +90,7 @@ const CreateStorePage = () => {
     if (storeIcon) {
       try {
         const fileRef = ref(storage, `store_icons/${v4()}`);
-        const snapshot = await uploadBytes(fileRef, storeIcon);
+        await uploadBytes(fileRef, storeIcon);
         const photoURL = await getDownloadURL(fileRef);
 
         return photoURL;
@@ -133,7 +133,11 @@ const CreateStorePage = () => {
                   id={`iconInput`}
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setStoreIcon(e.target.files[0])}
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      setStoreIcon(e.target.files[0]);
+                    }
+                  }}
                   required
                   className="hidden"
                 />
@@ -216,5 +220,6 @@ const CreateStorePage = () => {
       </Card>
     </div>
   );
+
 };
 export default CreateStorePage;
