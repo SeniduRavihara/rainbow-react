@@ -1,130 +1,95 @@
- @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins',sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+
+.container .title {
+  font-size: 28px;
+  font-weight: 500;
+  position: relative;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
-body{
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-  }
+.content {
+  width: 550px;
+  margin: 0 auto;
+}
 
-  .container .title{
-    font-size: 28px;
-    font-weight: 500;
-    position: relative;
-    text-align: center;
-    margin-bottom: 10px;
-  }
+form .input-box span.details {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
 
-  .content{
-    width: 550px;
-    margin: 0 auto;
-  }
- 
+.user-details .group select,
+.user-details .group input {
+  height: 60px;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
+  border-radius: 5px;
+  padding-left: 15px;
+  border: 1px solid #ccc;
+  border-bottom-width: 2px;
+  transition: all 0.3s ease;
+}
+.user-details .group input,
+.user-details .group input:valid {
+  border-color: #0d6efd;
+}
 
-  form .input-box span.details{
-    display: block;
-    font-weight: 500;
-    margin-bottom: 5px;
-  }
+.user-details .group select {
+  border-color: #0d6efd;
+}
+.container .content {
+  display: flex;
+  gap: 20px;
+  padding: 10px 15px;
+}
 
-  .user-details .group select,
-  .user-details .group input{
-    height: 60px;
-    width: 100%;
-    outline: none;
-    font-size: 16px;
-    border-radius: 5px;
-    padding-left: 15px;
-    border: 1px solid #ccc;
-    border-bottom-width: 2px;
-    transition: all 0.3s ease;
-  }
-  .user-details .group input,
-  .user-details .group input:valid{
-    border-color: #0d6efd;
-  }
-
-
-  .user-details .group select {
-    border-color: #0d6efd;
-  }
-  .container .content{
-    display: flex;
-    gap: 20px;
-    padding: 10px 15px;
-  }
-
-
-
-  .photo-add-button ion-icon {
-    margin-top: 5px;
-    color: #1379E6;
+.photo-add-button ion-icon {
+  margin-top: 5px;
+  color: #1379e6;
 }
 
 .photo-add-button-txt {
-    font-size: 19px;
-    color: #1379E6;
-    margin-top: 1px;
+  font-size: 19px;
+  color: #1379e6;
+  margin-top: 1px;
 }
 
-
-
- .logo p{
-    margin-top: 2.5rem;
-    margin-left: 2rem;
-    width: 180px;
-    font-size: 20px;
+.logo p {
+  margin-top: 2.5rem;
+  margin-left: 2rem;
+  width: 180px;
+  font-size: 20px;
 }
 
- .logo p span{
-    margin-left: 3rem;
-    font-size: 20px;
-    font-weight: bold;
-    color: #005eff;
-    cursor: pointer;
+.logo p span {
+  margin-left: 3rem;
+  font-size: 20px;
+  font-weight: bold;
+  color: #005eff;
+  cursor: pointer;
 }
 
 .photo-add-button {
-    width: 150px;
-    height: 150px;
-    border-radius: 550px;
-    border: 2px solid #156ec247;
-    background-color: #ffffff;
-    color: #5AA8FC;
-    margin: 0;
-    margin-bottom: 1rem;
-    font-size: 110px;
-}
-
-#previewImagelogo {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background-image: url('profile_picture/Untitled-1.jpg');
-    /* Replace 'path/to/your/image.jpg' with the actual path to your image file */
-    background-size: cover;
-    /* Adjust the background size as needed */
-    background-position: center;
-    /* Adjust the background position as needed */
-    background-repeat: no-repeat;
-    margin: 0 0;
-    margin-bottom: 30px;
-    display: none;
-}
-
-.loginbtn{
-    width: 15rem;
-    margin-bottom: 10px;
+  width: 150px;
+  height: 150px;
+  border-radius: 550px;
+  border: 2px solid #156ec247;
+  background-color: #ffffff;
+  color: #5aa8fc;
+  margin: 0;
+  margin-bottom: 1rem;
+  font-size: 110px;
 }
 
 
-.login .content{
+.loginbtn {
+  width: 15rem;
+  margin-bottom: 10px;
+}
+
+.login .content {
   width: 400px;
 }

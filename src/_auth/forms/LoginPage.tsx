@@ -1,91 +1,25 @@
-// import { useForm } from "react-hook-form";
-// import {
-//   Form,
-//   FormControl,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormMessage,
-// } from "@/components/ui/form";
-
-// import { loginSchema } from "@/schemas";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { z } from "zod";
-// import { Input } from "@/components/ui/input";
-// import { Button } from "@/components/ui/button";
-// import CardWrapper from "../components/CardWrapper";
-// import { getUserRole, login } from "@/firebase/api";
-// import { useNavigate } from "react-router-dom";
-
-// import { useForm } from "react-hook-form";
-// import {
-//   Form,
-//   FormControl,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormMessage,
-// } from "@/components/ui/form";
-
-// import { loginSchema } from "@/schemas";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { z } from "zod";
-// import { Input } from "@/components/ui/input";
-// import { Button } from "@/components/ui/button";
-// import CardWrapper from "../components/CardWrapper";
-// import { getUserRole, login } from "@/firebase/api";
-// import { useNavigate } from "react-router-dom";
-
-// import { useForm } from "react-hook-form";
-// import {
-//   Form,
-//   FormControl,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormMessage,
-// } from "@/components/ui/form";
-
-// import { loginSchema } from "@/schemas";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { z } from "zod";
-// import { Input } from "@/components/ui/input";
-// import { Button } from "@/components/ui/button";
-// import CardWrapper from "../components/CardWrapper";
-// import { getUserRole, login } from "@/firebase/api";
-// import { useNavigate } from "react-router-dom";
-
-import { Link } from "react-router-dom";
+import { getUserRole, login } from "@/firebase/api";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
-  // const navigate = useNavigate();
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
 
-  // // 1. Define your form.
-  // const form = useForm<z.infer<typeof loginSchema>>({
-  //   resolver: zodResolver(loginSchema),
-  //   defaultValues: {
-  //     email: "",
-  //     password: "",
-  //   },
-  // });
-
-  // // 2. Define a submit handler.
-  // async function onSubmit(values: z.infer<typeof loginSchema>) {
-  //   try {
-  //     const uid = await login(values);
-  //     const roles = await getUserRole(uid);
-
-  //     if (roles.includes("admin")) {
-  //       console.log("ADMIN");
-
-  //       navigate("/admin");
-  //     } else {
-  //       navigate("/");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const uid = await login({ email, password });
+      const roles = await getUserRole(uid);
+      if (roles.includes("admin")) {
+        navigate("/admin");
+      }
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="register login">
@@ -94,7 +28,7 @@ const LoginForm = () => {
           <div className="text-4xl mb-10 font-bold text-blue-500">Login</div>
           <div className="row">
             <div className="col-12">
-              <form action="" id="login-form">
+              <form onSubmit={handleSubmit} id="login-form">
                 <div className="user-details">
                   <div className="row mb-3">
                     <div className="group col-12">
@@ -102,7 +36,8 @@ const LoginForm = () => {
                         type="email"
                         className="form-control shadow-sm"
                         placeholder="Enter your email"
-                        name="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                     </div>
                   </div>
@@ -113,7 +48,8 @@ const LoginForm = () => {
                         type="password"
                         className="form-control shadow-sm"
                         placeholder="Enter your password"
-                        name="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
                   </div>
@@ -133,10 +69,7 @@ const LoginForm = () => {
                 </div>
                 <div>
                   <div className="flex items-center justify-between gap-2">
-                    <button
-                      className="btn btn-primary btn-lg loginbtn w-1/2"
-                     
-                    >
+                    <button className="btn btn-primary btn-lg loginbtn w-1/2">
                       Login
                     </button>
                     <Link

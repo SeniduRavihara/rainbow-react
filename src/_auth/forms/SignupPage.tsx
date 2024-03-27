@@ -1,45 +1,21 @@
-// import { useForm } from "react-hook-form";
-// import {
-//   Form,
-//   FormControl,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormMessage,
-// } from "@/components/ui/form";
-// import CardWrapper from "../components/CardWrapper";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { z } from "zod";
-// import { Input } from "@/components/ui/input";
-// import { Button } from "@/components/ui/button";
-// import { registerSchema } from "@/schemas";
-// import { getUserRole, signup } from "@/firebase/api";
-// import { useNavigate } from "react-router-dom";
-
-// // import { useForm } from "react-hook-form";
-// import {
-//   Form,
-//   FormControl,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormMessage,
-// } from "@/components/ui/form";
-// import CardWrapper from "../components/CardWrapper";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { z } from "zod";
-// import { Input } from "@/components/ui/input";
-// import { Button } from "@/components/ui/button";
-// import { registerSchema } from "@/schemas";
-// import { getUserRole, signup } from "@/firebase/api";
-// import { useNavigate } from "react-router-dom";
 import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import "./style.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { getUserRole, signup } from "@/firebase/api";
 
 const RegisterForm = () => {
-  // const navigate = useNavigate();
+  const formRef = useRef<React.RefObject<HTMLFormElement>>();
+
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [gender, setGender] = useState("Male");
+
+  const navigate = useNavigate();
+
 
   // // 1. Define your form.
   // const form = useForm<z.infer<typeof registerSchema>>({
@@ -64,6 +40,20 @@ const RegisterForm = () => {
   //     console.log(error);
   //   }
   // }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    try {
+      const uid = await signup({name, email, password});
+      const roles = await getUserRole(uid);
+      if (roles.includes("admin")) {
+        navigate("/admin");
+      }
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="register">
@@ -104,7 +94,7 @@ const RegisterForm = () => {
                 </div>
               </div>
 
-              <form action="" id="register-form">
+              <form ref={formRef} onSubmit={(e)=>handleSubmit(e)} id="register-form">
                 <div className="user-details">
                   <div className="row mb-3">
                     <div className="group col-6">
@@ -120,12 +110,12 @@ const RegisterForm = () => {
                         className="form-control shadow-sm"
                         placeholder="Enter your name"
                         required
-                        name="name"
-                        id="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                       />
                     </div>
                     <div className="group col-6">
-                      <select name="gender" required id="">
+                      <select name="gender" required value={gender} onChange={(e) => setGender(e.target.value)}>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                       </select>
@@ -138,8 +128,8 @@ const RegisterForm = () => {
                         className="form-control shadow-sm"
                         required
                         placeholder="Enter your password"
-                        name="password"
-                        id="rpassword"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
                     <div className="group col-6">
@@ -148,8 +138,8 @@ const RegisterForm = () => {
                         className="form-control shadow-sm"
                         required
                         placeholder="Enter  confirm password"
-                        name="cpassword"
-                        id="cpassword"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                       />
                     </div>
                   </div>
@@ -161,8 +151,8 @@ const RegisterForm = () => {
                         className="form-control shadow-sm"
                         required
                         placeholder="Enter your email"
-                        name="email"
-                        id=""
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                     </div>
                   </div>

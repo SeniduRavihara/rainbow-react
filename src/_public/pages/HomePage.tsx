@@ -21,12 +21,12 @@ const HomePage = () => {
         <div className="mt-32">
           <SearchArea />
           <CarouselAdds />
-          {/* <CategoriesArea /> */}
-          {/* <AdvertizingSection /> */}
-          {/* <ServicesArea /> */}
-          {/* <SocialMediaArea /> */}
-          {/* <DiscriptionArea /> */}
-          {/* <Footer /> */}
+          <CategoriesArea />
+          <AdvertizingSection />
+          <ServicesArea />
+          <SocialMediaArea />
+          <DiscriptionArea />
+          <Footer />
           <BottomBanner />
         </div>
       </main>
