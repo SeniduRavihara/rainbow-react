@@ -26,6 +26,7 @@ export type CurrentUserDataType = {
   email: string;
   name: string;
   roles: string[];
+  gender: string
 } | null;
 
 export type StoreListType = Array<{

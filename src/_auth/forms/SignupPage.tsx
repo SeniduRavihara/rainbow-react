@@ -2,56 +2,47 @@ import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import "./style.css";
 import { Link, useNavigate } from "react-router-dom";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { getUserRole, signup } from "@/firebase/api";
 
 const RegisterForm = () => {
-  const formRef = useRef<React.RefObject<HTMLFormElement>>();
+  const submitButtonRef = useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("Male");
+  const [profileImage, setProfileImage] = useState<File | null>(null);
 
   const navigate = useNavigate();
 
-
-  // // 1. Define your form.
-  // const form = useForm<z.infer<typeof registerSchema>>({
-  //   resolver: zodResolver(registerSchema),
-  //   defaultValues: {
-  //     email: "",
-  //     password: "",
-  //     name: "",
-  //   },
-  // });
-
-  // // 2. Define a submit handler.
-  // async function onSubmit(values: z.infer<typeof registerSchema>) {
-  //   try {
-  //     const uid = await signup(values);
-  //     const roles = await getUserRole(uid);
-  //     if (roles.includes("admin")) {
-  //       navigate("/admin");
-  //     }
-  //     navigate("/");
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    try {
-      const uid = await signup({name, email, password});
-      const roles = await getUserRole(uid);
-      if (roles.includes("admin")) {
-        navigate("/admin");
+    e.preventDefault();
+
+    if (password === confirmPassword) {
+      try {
+        const uid = await signup({
+          name,
+          email,
+          password,
+          gender,
+          profileImage,
+        });
+        const roles = await getUserRole(uid);
+        if (roles.includes("admin")) {
+          navigate("/admin");
+        }
+        navigate("/");
+      } catch (error) {
+        console.log(error);
       }
-      navigate("/");
-    } catch (error) {
-      console.log(error);
+    }
+  };
+
+  const handleClickRegister = async () => {
+    if (submitButtonRef.current) {
+      submitButtonRef.current.click();
     }
   };
 
@@ -87,6 +78,7 @@ const RegisterForm = () => {
                     <button
                       className="btn btn-primary btn-lg loginbtn"
                       id="register-btn"
+                      onClick={handleClickRegister}
                     >
                       register
                     </button>
@@ -94,7 +86,7 @@ const RegisterForm = () => {
                 </div>
               </div>
 
-              <form ref={formRef} onSubmit={(e)=>handleSubmit(e)} id="register-form">
+              <form onSubmit={handleSubmit} id="register-form">
                 <div className="user-details">
                   <div className="row mb-3">
                     <div className="group col-6">
@@ -103,6 +95,11 @@ const RegisterForm = () => {
                         name="profile_picture"
                         required
                         hidden
+                        onChange={(e) => {
+                          if (e.target.files) {
+                            setProfileImage(e.target.files[0]);
+                          }
+                        }}
                         id="profile-image"
                       />
                       <input
@@ -115,7 +112,12 @@ const RegisterForm = () => {
                       />
                     </div>
                     <div className="group col-6">
-                      <select name="gender" required value={gender} onChange={(e) => setGender(e.target.value)}>
+                      <select
+                        name="gender"
+                        required
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                      >
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                       </select>
@@ -156,7 +158,12 @@ const RegisterForm = () => {
                       />
                     </div>
                   </div>
-                  <input type="submit" hidden id="subbtn" />
+                  <input
+                    type="submit"
+                    hidden
+                    id="subbtn"
+                    ref={submitButtonRef}
+                  />
                 </div>
               </form>
             </div>

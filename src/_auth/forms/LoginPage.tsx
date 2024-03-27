@@ -12,10 +12,13 @@ const LoginForm = () => {
     try {
       const uid = await login({ email, password });
       const roles = await getUserRole(uid);
+      console.log(roles);
+
       if (roles.includes("admin")) {
         navigate("/admin");
+      } else {
+        navigate("/");
       }
-      navigate("/");
     } catch (error) {
       console.log(error);
     }

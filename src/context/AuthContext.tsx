@@ -41,6 +41,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
         if (documentSnapshot.exists()) {
           const userData = documentSnapshot.data() as CurrentUserDataType;
           setCurrentUserData(userData);
+          console.log("Current user data fetched successfully");
         } else {
           console.log("Document does not exist.");
         }

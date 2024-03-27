@@ -3,9 +3,11 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateProfile,
 } from "firebase/auth";
-import { auth, db, provider } from "./config";
+import { auth, db, provider, storage } from "./config";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export const logout = async () => {
   try {
@@ -42,10 +44,14 @@ export const signup = async ({
   email,
   password,
   name,
+  gender,
+  profileImage,
 }: {
   email: string;
   password: string;
   name: string;
+  gender: string;
+  profileImage: File | null;
 }) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
@@ -57,18 +63,19 @@ export const signup = async ({
     const user = userCredential.user;
 
     const payload = {
-      name: "",
-      id: "",
-      email: "",
-    };
-
-    await setDoc(doc(db, "users", user.uid), {
-      ...payload,
-      id: user.uid,
       name,
+      id: user.uid,
       email,
       roles: ["user"],
-    });
+      gender,
+    };
+
+    await setDoc(doc(db, "users", user.uid), payload);
+
+    if (profileImage) {
+      const profilePicUrl = await uploadProfilePic(profileImage, user.uid);
+      updateProfile(user, { photoURL: profilePicUrl });
+    }
 
     return userCredential.user.uid;
   } catch (error) {
@@ -116,7 +123,7 @@ export const getUserRole = async (uid: string) => {
 
 export const createStore = async (uid: string, payload: any) => {
   console.log(payload);
-  
+
   try {
     await setDoc(doc(db, "store", uid), {
       ...payload,
@@ -126,5 +133,19 @@ export const createStore = async (uid: string, payload: any) => {
     console.log("Document successfully written to Firestore!");
   } catch (error) {
     console.error("Error writing document:", error);
+  }
+};
+
+const uploadProfilePic = async (file: File, uid: string) => {
+  try {
+    const fileRef = ref(storage, `/user_profile_images/${uid}`);
+    await uploadBytes(fileRef, file);
+    const photoURL = await getDownloadURL(fileRef);
+    console.log("Profile Piucture uploaded successfully!", photoURL);
+
+    return photoURL;
+  } catch (error) {
+    console.error("Error uploading profile picture:", error);
+    throw new Error("Failed to upload profile picture");
   }
 };
