@@ -60,7 +60,7 @@ const SampleTestSetion1 = () => {
     }
 
     try {
-      const imageUrl = await uploadAdd(addToUpdate.imageFile);
+      const imageUrl = await uploadAdd(addToUpdate.imageFile, "slider_adds");
       try {
         const documentRef = doc(db, "sliderAdds", idToUpdate);
         await updateDoc(documentRef, {

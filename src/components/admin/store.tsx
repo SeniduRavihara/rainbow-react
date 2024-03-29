@@ -23,10 +23,12 @@ import { Tag } from "@chakra-ui/react";
 import { Button } from "../ui/button";
 import { StoreListDocType, StoreListType, StoreObj } from "@/types";
 import Loader from "../Loader";
+import { cn } from "@/lib/utils";
 
 const Store = () => {
   const [storeList, setStoreList] = useState<StoreListType | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingActive, setLoadingActive] = useState({ id: "", state: false });
   const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
 
   useEffect(() => {
@@ -71,6 +73,7 @@ const Store = () => {
   };
 
   const toggleActive = async (id: string, active: boolean) => {
+    setLoadingActive((pre) => ({ ...pre, state: true, id }));
     const documentRef = doc(db, "store", id);
     try {
       await updateDoc(documentRef, {
@@ -90,6 +93,7 @@ const Store = () => {
           return item;
         });
 
+        setLoadingActive((pre) => ({ ...pre, state: false, id }));
         return updatedList;
       });
     } catch (error) {
@@ -128,11 +132,17 @@ const Store = () => {
                 </TableCell>
                 <TableCell className="text-right">
                   <Button
-                    className={`${
+                    className={cn(
+                      ` flex items-center justify-center gap-2`,
                       storeObj.active ? "bg-blue-500" : "bg-red-500"
-                    }`}
+                    )}
+                    disabled={
+                      loadingActive.id === storeObj.id && loadingActive.state
+                    }
                     onClick={() => toggleActive(storeObj.id, storeObj.active)}
                   >
+                    {loadingActive.id === storeObj.id &&
+                      loadingActive.state && <Loader />}
                     {storeObj.active ? "Dective" : "Active"}
                   </Button>
                 </TableCell>
