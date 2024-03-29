@@ -10,12 +10,16 @@ import LoginPage from "./_auth/forms/LoginPage";
 import AuthContextProvider from "./context/AuthContext";
 import PublicLayout from "./_public/PublicLayout";
 import HomePage from "./_public/pages/HomePage";
-import AdminPage from "./_private/pages/AdminPage";
+import AdminPage from "./_admin/pages/AdminPage";
 import PrivateLayout from "./_private/PrivateLayout";
 import DataContextProvider from "./context/DataContext";
 import { ChakraProvider } from "@chakra-ui/react";
 import CreateStorePage from "./_private/pages/CreateStorePage";
 import AdminLayout from "./_admin/AdminLayout";
+// import StoreCard from "./components/StoreCard";
+import { Toaster } from "react-hot-toast";
+import StoreProfilePage from "./_private/pages/StoreProfilePage";
+
 
 
 const router = createBrowserRouter(
@@ -30,10 +34,12 @@ const router = createBrowserRouter(
       {/* public routes */}
       <Route element={<PublicLayout />}>
         <Route index element={<HomePage />} />
+        {/* <Route path="/profile" element={<StoreCard />} /> */}
       </Route>
 
       {/* private routes */}
       <Route element={<PrivateLayout />}>
+        <Route path="/store-profile" element={<StoreProfilePage />} />
         <Route path="/create-store" element={<CreateStorePage />} />
       </Route>
 
@@ -51,6 +57,7 @@ const App = () => {
       <DataContextProvider>
         <AuthContextProvider>
           <RouterProvider router={router} />
+          <Toaster position="top-center" />
         </AuthContextProvider>
       </DataContextProvider>
     </ChakraProvider>

@@ -8,6 +8,7 @@ import {
 import { auth, db, provider, storage } from "./config";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 
 export const logout = async () => {
   try {
@@ -75,6 +76,7 @@ export const signup = async ({
     if (profileImage) {
       const profilePicUrl = await uploadProfilePic(profileImage, user.uid);
       updateProfile(user, { photoURL: profilePicUrl });
+      user.reload();
     }
 
     return userCredential.user.uid;
@@ -129,6 +131,7 @@ export const createStore = async (uid: string, payload: any) => {
       ...payload,
       userId: uid,
       active: false,
+      createdAt: new Date(),
     });
     console.log("Document successfully written to Firestore!");
   } catch (error) {
@@ -141,7 +144,7 @@ const uploadProfilePic = async (file: File, uid: string) => {
     const fileRef = ref(storage, `/user_profile_images/${uid}`);
     await uploadBytes(fileRef, file);
     const photoURL = await getDownloadURL(fileRef);
-    console.log("Profile Piucture uploaded successfully!", photoURL);
+    console.log("Profile Piucture uploaded successfully!");
 
     return photoURL;
   } catch (error) {
@@ -149,3 +152,18 @@ const uploadProfilePic = async (file: File, uid: string) => {
     throw new Error("Failed to upload profile picture");
   }
 };
+
+export const uploadAdd = async (file: File) => {
+  try {
+    const fileRef = ref(storage, `/slider_adds/${v4()}`);
+    await uploadBytes(fileRef, file);
+    const photoURL = await getDownloadURL(fileRef);
+    console.log("Add Image uploaded successfully!");
+
+    return photoURL;
+  } catch (error) {
+    console.error("Error uploading profile picture:", error);
+    throw new Error("Failed to upload profile picture");
+  }
+};
+

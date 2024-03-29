@@ -8,11 +8,19 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
+import { cn } from "@/lib/utils";
 const AdminPage = () => {
   return (
     <div className="p-5 w-full min-h-screen flex flex-col gap-5">
       <div>
-        <h1 className="font-extrabold text-4xl text-center">Admin Panel</h1>
+        <h1
+          className={cn(
+            "font-extrabold text-4xl text-center ",
+            "text-blue-600"
+          )}
+        >
+          Admin Panel
+        </h1>
         <Button variant="outline" asChild>
           <Link to="/">
             <IoArrowBack />

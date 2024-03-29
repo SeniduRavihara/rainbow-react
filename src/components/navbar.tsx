@@ -81,7 +81,10 @@ const Navbar = () => {
 
       <div className="lg:flex items-center hidden justify-between gap-5">
         <div>
-          <IoIosNotificationsOutline className="text-3xl cursor-pointer" />
+          <IoIosNotificationsOutline
+            className="text-3xl cursor-pointer"
+            onClick={() => currentUser?.reload()}
+          />
         </div>
         {!currentUser ? (
           <Link
