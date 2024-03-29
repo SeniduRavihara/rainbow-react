@@ -4,6 +4,7 @@ import "./style.css";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useRef, useState } from "react";
 import { getUserRole, signup } from "@/firebase/api";
+import Loader from "@/components/Loader";
 
 const RegisterForm = () => {
   const submitButtonRef = useRef<HTMLInputElement>(null);
@@ -14,11 +15,13 @@ const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("Male");
   const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     if (password === confirmPassword) {
       try {
@@ -38,6 +41,7 @@ const RegisterForm = () => {
         console.log(error);
       }
     }
+    setLoading(false);
   };
 
   const handleClickRegister = async () => {
@@ -60,7 +64,16 @@ const RegisterForm = () => {
                     id="logo-button"
                     htmlFor="profile-image"
                   >
-                    <IonIcon icon={addOutline}></IonIcon>
+                    {profileImage? (
+                      <img
+                        src={URL.createObjectURL(profileImage)}
+                        alt="profile"
+                        className="w-full h-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <IonIcon icon={addOutline}></IonIcon>
+                    )}
+                    {/* <IonIcon icon={addOutline}></IonIcon> */}
                   </label>
                   <div id="previewImagelogo"></div>
                 </div>
@@ -80,7 +93,13 @@ const RegisterForm = () => {
                       id="register-btn"
                       onClick={handleClickRegister}
                     >
-                      register
+                      {loading ? (
+                        <>
+                          <Loader /> Loading...
+                        </>
+                      ) : (
+                        "Register"
+                      )}
                     </button>
                   </div>
                 </div>
@@ -163,6 +182,7 @@ const RegisterForm = () => {
                     hidden
                     id="subbtn"
                     ref={submitButtonRef}
+                    disabled={loading}
                   />
                 </div>
               </form>

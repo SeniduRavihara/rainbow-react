@@ -5,21 +5,28 @@ import { addOutline } from "ionicons/icons";
 import "./register.css";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/firebase/config";
 import { v4 } from "uuid";
 import { useAuth } from "@/hooks/useAuth";
 import { createStore } from "@/firebase/api";
+import toast from "react-hot-toast";
+import Loader from "@/components/Loader";
+import { Tag } from "@chakra-ui/react";
 
 const CreateStorePage = () => {
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [whatsappNumber, setWhatsappNumber] = useState("");
-  const [tags, setTags] = useState("");
+  const [tagInput, setTagInput] = useState("");
+  const [tags, setTags] = useState<Array<string>>([]);
+  const [loading, setLoading] = useState(false);
   const { currentUser } = useAuth();
+
+  const navigate = useNavigate();
 
   const [storeImages, setStoreImages] = useState<
     Array<{
@@ -36,6 +43,7 @@ const CreateStorePage = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     if (currentUser) {
       await handleUpload();
       const storeIconUrl = await uploadStoreIcon();
@@ -51,6 +59,9 @@ const CreateStorePage = () => {
         email: currentUser.email,
       });
     }
+    setLoading(false);
+    toast.success("Store created successfully");
+    navigate("/store-profile");
   };
 
   const handleUpload = async () => {
@@ -100,8 +111,14 @@ const CreateStorePage = () => {
     }
   };
 
+  const handleAddTag = (tag: string) => {
+    if(!tag || tags.includes(tag)) return
+    setTagInput("");
+    setTags((pre) => [...pre, tag]);
+  };
+
   return (
-    <div className="create-store w-full h-screen flex items-center justify-center bg-[#aec5e8]">
+    <div className="create-store w-full min-h-screen flex items-center justify-center bg-[#aec5e8]">
       <Card className="w-[80%] h-[85%] p-10 flex flex-col gap-10">
         <CardHeader>
           <CardTitle className="-mt-10 text-center text-4xl font-bold text-[#005eff]">
@@ -146,7 +163,15 @@ const CreateStorePage = () => {
                   id="logo-button"
                   type="button"
                 >
-                  <IonIcon icon={addOutline}></IonIcon>
+                  {storeIcon ? (
+                    <img
+                      src={URL.createObjectURL(storeIcon)}
+                      alt="profile"
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <IonIcon icon={addOutline}></IonIcon>
+                  )}
                 </button>
                 <div id="previewImagelogo"></div>
                 <p className="text-center">
@@ -198,20 +223,54 @@ const CreateStorePage = () => {
                     className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
                   />
 
-                  <input
-                    type="text"
-                    value={tags}
-                    onChange={(e) => setTags(e.target.value)}
-                    required
-                    placeholder="Tag"
-                    className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-                  />
+                  <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400">
+                    <div className="flex items-center">
+                      <div className="">
+                        {tags.map((tag, index) => (
+                          <Tag key={index} className="m-1">
+                            {tag}
+                          </Tag>
+                        ))}
+                      </div>
 
-                  <input
+                      <input
+                        type="text"
+                        value={tagInput}
+                        onChange={(e) => setTagInput(e.target.value)}
+                        
+                        placeholder="Tag"
+                        className="p- text-lg m-[10px] outline-none"
+                      />
+                    </div>
+
+                    <button
+                      className="bg-green-500 rounded-md text-white px-2 py-1"
+                      onClick={() => handleAddTag(tagInput)}
+                    >
+                      update
+                    </button>
+                  </div>
+
+                  <button
                     type="submit"
-                    value="Submit"
+                    disabled={
+                      !title ||
+                      !address ||
+                      !phoneNumber ||
+                      !whatsappNumber ||
+                      !tags ||
+                      loading
+                    }
                     className=" text-xl m-[10px] rounded-xl flex items-center justify-center p-3 text-white bg-[#0c86ac]"
-                  />
+                  >
+                    {loading ? (
+                      <>
+                        <Loader /> Loading...
+                      </>
+                    ) : (
+                      "Submit"
+                    )}
+                  </button>
                 </div>
               </form>
             </div>

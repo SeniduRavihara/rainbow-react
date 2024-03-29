@@ -9,12 +9,13 @@ const LoginForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
       const uid = await login({ email, password });
       const roles = await getUserRole(uid);
       console.log(roles);
 
-      if (roles.includes("admin")) {
+      if (roles && roles.includes("admin")) {
         navigate("/admin");
       } else {
         navigate("/");

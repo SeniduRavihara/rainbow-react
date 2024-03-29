@@ -5,10 +5,8 @@ const Message = () => {
 
       <div>
         <h2>Create Message</h2>
-        
       </div>
-
     </div>
-  )
-}
-export default Message
+  );
+};
+export default Message;

@@ -21,6 +21,7 @@ export type AuthContextType = {
   setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
+
 export type CurrentUserDataType = {
   id: string;
   email: string;
@@ -29,14 +30,38 @@ export type CurrentUserDataType = {
   gender: string
 } | null;
 
+
+export type StoreObj = {
+  id: string;
+  title: string;
+  active: boolean;
+  address: string;
+  email: string;
+  // messages: string[];
+  tags: string[];
+  createdAt: Date;
+  phoneNumber: string;
+  whatssappNumber: string;
+  storeIcon: string;
+  storeImages: string[];
+  userId: string;
+};
+
+
 export type StoreListType = Array<{
   id: string;
   title: string;
   active: boolean;
   address: string;
   email: string;
-  messages: string[];
+  // messages: string[];
   tags: string[];
+  createdAt: Date;
+  phoneNumber: string;
+  whatssappNumber: string;
+  storeIcon: string;
+  storeImages: string[];
+  userId: string;
 }>;
 
 export type StoreListDocType = {
@@ -44,6 +69,12 @@ export type StoreListDocType = {
   active: boolean;
   address: string;
   email: string;
-  messages: string[];
+  // messages: string[];
   tags: string[];
+  createdAt: Date;
+  phoneNumber: string
+  whatssappNumber: string;
+  storeIcon: string;
+  storeImages: string[]
+  userId: string
 };

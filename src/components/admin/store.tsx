@@ -2,7 +2,11 @@ import { db } from "@/firebase/config";
 import {
   collection,
   doc,
-  onSnapshot,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  startAfter,
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -17,63 +21,76 @@ import {
 } from "@/components/ui/table";
 import { Tag } from "@chakra-ui/react";
 import { Button } from "../ui/button";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { StoreListDocType, StoreListType } from "@/types";
- 
+import { StoreListDocType, StoreListType, StoreObj } from "@/types";
+import Loader from "../Loader";
 
 const Store = () => {
   const [storeList, setStoreList] = useState<StoreListType | null>(null);
-  // const [loading, setLoading] = useState(false);
-
-  // const fetchStoreData = async () => {
-  //   setLoading(true);
-
-  //   const collectionRef = collection(db, "store");
-  //   const q = query(
-  //     collectionRef,
-  //     // orderBy("publishedTime", "desc"),
-  //     startAfter(lastFetchedNews.publishedTime ?? ""),
-  //     limit(8)
-  //   );
-
-  //   const queryNewsSnapshot = await getDocs(q);
-
-  // };
+  const [loading, setLoading] = useState(false);
+  const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
 
   useEffect(() => {
-    const collectionRef = collection(db, "store");
-    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-      const storeListArr = QuerySnapshot.docs.map((doc) => {
-        const storeList = doc.data() as StoreListDocType
-        return {
-          ...storeList,
-          id: doc.id,
-        };
-      });
-      console.log(storeListArr);
-      setStoreList(storeListArr);
-    });
-
-    return unsubscribe;
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const toggleActive = async (id: string,active: boolean) => {
-    const documentRef = doc(
-      db,
-      "store",
-      id
+  const fetchData = async () => {
+    setLoading(true);
+
+    const collectionRef = collection(db, "store");
+    const q = query(
+      collectionRef,
+      orderBy("createdAt", "desc"),
+      startAfter(lastDocument?.createdAt ?? ""),
+      limit(2)
     );
+
+    const queryStoresSnapshot = await getDocs(q);
+
+    const storeListArr = queryStoresSnapshot.docs.map((doc) => {
+      const storeList = doc.data() as StoreListDocType;
+      return {
+        ...storeList,
+        id: doc.id,
+      };
+    });
+
+    setLastDocument(storeListArr[storeListArr.length - 1]);
+    console.log(storeListArr);
+
+    if (storeListArr.length > 0) {
+      setStoreList((prev) => {
+        if (prev && prev[0].id === storeListArr[0].id) return prev;
+        return [...(prev || []), ...storeListArr];
+      });
+    } else {
+      console.log("All Store are Fetched!");
+    }
+
+    setLoading(false);
+  };
+
+  const toggleActive = async (id: string, active: boolean) => {
+    const documentRef = doc(db, "store", id);
     try {
       await updateDoc(documentRef, {
         active: !active,
+      });
+
+      setStoreList((prev) => {
+        if (!prev) return prev;
+
+        const updatedList = prev.map((item) => {
+          if (item.id === id) {
+            return {
+              ...item,
+              active: !active,
+            };
+          }
+          return item;
+        });
+
+        return updatedList;
       });
     } catch (error) {
       console.log(error);
@@ -95,62 +112,42 @@ const Store = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          { storeList && storeList.map((storeObj, index) => (
-            <TableRow key={index}>
-              <TableCell className="font-medium">{storeObj.email}</TableCell>
-              <TableCell className="font-medium">{storeObj.email}</TableCell>
-              <TableCell>{storeObj.title}</TableCell>
-              <TableCell>{storeObj.address}</TableCell>
-              <TableCell className="text-right">
-                {storeObj.tags.map((tag) => (
-                  <Tag className="m-2">{tag}</Tag>
-                ))}
-              </TableCell>
-              <TableCell className="text-right">
-                <Button
-                  className={`${
-                    storeObj.active ? "bg-blue-500" : "bg-red-500"
-                  }`}
-                  onClick={() => toggleActive(storeObj.id, storeObj.active)}
-                >
-                  {storeObj.active ? "Dective" : "Active"}
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
+          {storeList &&
+            storeList.map((storeObj, index) => (
+              <TableRow key={index}>
+                <TableCell className="font-medium">{storeObj.email}</TableCell>
+                <TableCell className="font-medium">{storeObj.email}</TableCell>
+                <TableCell>{storeObj.title}</TableCell>
+                <TableCell>{storeObj.address}</TableCell>
+                <TableCell className="text-right">
+                  {storeObj.tags.map((tag, index) => (
+                    <Tag key={index} className="m-2">
+                      {tag}
+                    </Tag>
+                  ))}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    className={`${
+                      storeObj.active ? "bg-blue-500" : "bg-red-500"
+                    }`}
+                    onClick={() => toggleActive(storeObj.id, storeObj.active)}
+                  >
+                    {storeObj.active ? "Dective" : "Active"}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
         </TableBody>
-        {/* <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-      </TableFooter> */}
       </Table>
 
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <Button
+        className="flex items-center justify-center"
+        onClick={fetchData}
+        disabled={loading}
+      >
+        {loading ? <Loader /> : "Load More"}
+      </Button>
     </div>
   );
 };

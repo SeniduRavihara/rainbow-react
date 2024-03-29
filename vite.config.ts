@@ -4,6 +4,9 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
+  optimizeDeps: {
+    exclude: ['react-hot-toast']
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
