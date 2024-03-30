@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import ImageCropDialog from "@/components/CropDialog";
+import ImageCropDialog from "@/components/image-croper/CropDialog";
 
 const initData = {
   imageUrl: "",

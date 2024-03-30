@@ -2,15 +2,14 @@ import React, { useEffect, useState } from "react";
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { uploadAdd } from "@/firebase/api";
 import { db } from "@/firebase/config";
-import ImageCropDialog from "../CropDialog";
-import Test2 from "@/testing/Test2";
+import ImageCropDialog from "../image-croper/CropDialog";
 
 interface ImageData {
   imageUrl: string;
   croppedImageUrl: string | null;
   crop: { x: number; y: number } | null;
   zoom: number | null;
-  aspect: { value: number; text: string } | null;
+  aspect: number;
   id: string;
 }
 
@@ -19,14 +18,16 @@ interface SectionAdd {
   id: string;
   imageFile?: File;
   localUrl?: string;
+  cropedImageBlob?: Blob;
+  croppedImageUrl: string;
 }
 
 const initData: ImageData = {
-  imageUrl: "/img/car1.png",
+  imageUrl: "",
   croppedImageUrl: null,
   crop: null,
   zoom: null,
-  aspect: null,
+  aspect: 20 / 5,
   id: "",
 };
 
@@ -74,13 +75,16 @@ const SampleTest2: React.FC = () => {
   const handleClickUpdate = async (idToUpdate: string) => {
     if (!sectionAdds) return;
     const addToUpdate = sectionAdds.find((add) => add.id === idToUpdate);
-    if (!addToUpdate?.imageFile) {
+    if (!addToUpdate?.cropedImageBlob) {
       console.error("Add not found or image file missing");
       return;
     }
 
     try {
-      const imageUrl = await uploadAdd(addToUpdate.imageFile, "section_adds");
+      const imageUrl = await uploadAdd(
+        addToUpdate.cropedImageBlob,
+        "section_adds"
+      );
       const documentRef = doc(db, "sectionAdds", idToUpdate);
       await updateDoc(documentRef, { imageUrl });
     } catch (error) {
@@ -90,14 +94,15 @@ const SampleTest2: React.FC = () => {
 
   const onCancel = () => {
     setImageData(initData);
+    setIsOpenCropDialog(false);
   };
 
   const setCroppedImageFor = (
     crop: { x: number; y: number },
     zoom: number,
-    aspect: { value: number; text: string },
+    aspect: number,
     croppedImageUrl: string,
-    cropedImageBlob: File
+    cropedImageBlob: Blob
   ) => {
     setImageData((prevState) => ({
       ...prevState,
@@ -111,7 +116,7 @@ const SampleTest2: React.FC = () => {
       prevState
         ? prevState.map((add) =>
             add.id === imageData.id
-              ? { ...add, imageFile: cropedImageBlob, croppedImageUrl }
+              ? { ...add, cropedImageBlob, croppedImageUrl }
               : add
           )
         : prevState
@@ -120,9 +125,6 @@ const SampleTest2: React.FC = () => {
     setIsOpenCropDialog(false);
   };
 
-  const resetImage = () => {
-    setCroppedImageFor(null, null, null, null, new File([], ""));
-  };
 
   return (
     <div
@@ -140,7 +142,6 @@ const SampleTest2: React.FC = () => {
             aspectInit={imageData.aspect}
             onCancel={onCancel}
             setCroppedImageFor={setCroppedImageFor}
-            resetImage={resetImage}
           />
         </div>
       )}
@@ -187,7 +188,7 @@ const SampleTest2: React.FC = () => {
         </div>
       </div>
 
-      <Test2 />
+      {/* <Test2 /> */}
     </div>
   );
 };
