@@ -22,12 +22,27 @@ import placeholderAdd2 from "./placeholders/img/placeholder-add-2.jpg";
 import placeholderAdd3 from "./placeholders/img/placeholder-add-3.jpg";
 import placeholderAdd4 from "./placeholders/img/placeholder-add-4.jpg";
 
+import placeholderSectionAdd1 from "./placeholders/img/img1.jpg"
+import placeholderSectionAdd2 from "./placeholders/img/img2.jpg"
+import placeholderSectionAdd3 from "./placeholders/img/img3.jpg"
+import placeholderSectionAdd4 from "./placeholders/img/img4.jpg"
+
+
+
 const placeholderSliderAdds = [
   placeholderAdd1,
   placeholderAdd2,
   placeholderAdd3,
   placeholderAdd4,
 ];
+
+const placeholderSectionAdds = [
+  placeholderSectionAdd1,
+  placeholderSectionAdd2,
+  placeholderSectionAdd3,
+  placeholderSectionAdd4,
+];
+
 
 export {
   resturant,
@@ -49,4 +64,5 @@ export {
   pgHostels,
   weddingRequisitos,
   placeholderSliderAdds,
+  placeholderSectionAdds,
 };

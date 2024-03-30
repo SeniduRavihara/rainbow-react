@@ -56,12 +56,14 @@ const SampleTest2: React.FC = () => {
     if (!e.target.files) return;
     const file = e.target.files[0];
     const localUrl = URL.createObjectURL(file);
+    
     setImageData((prevState) => ({
       ...prevState,
       id,
       imageUrl: localUrl,
       imageFile: file,
     }));
+
     setSectionAdds((prevState) =>
       prevState
         ? prevState.map((add) =>
