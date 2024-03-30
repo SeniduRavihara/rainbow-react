@@ -1,77 +1,127 @@
+import React, { useEffect, useState } from "react";
+import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { uploadAdd } from "@/firebase/api";
 import { db } from "@/firebase/config";
-import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import ImageCropDialog from "../CropDialog";
+import Test2 from "@/testing/Test2";
 
-const SampleTest2 = () => {
-  const [sectionAdds, setSectionAdds] = useState<Array<{
-    imageUrl: string;
-    id: string;
-    imageFile?: File;
-  }> | null>(null);
+interface ImageData {
+  imageUrl: string;
+  croppedImageUrl: string | null;
+  crop: { x: number; y: number } | null;
+  zoom: number | null;
+  aspect: { value: number; text: string } | null;
+  id: string;
+}
+
+interface SectionAdd {
+  imageUrl: string;
+  id: string;
+  imageFile?: File;
+  localUrl?: string;
+}
+
+const initData: ImageData = {
+  imageUrl: "/img/car1.png",
+  croppedImageUrl: null,
+  crop: null,
+  zoom: null,
+  aspect: null,
+  id: "",
+};
+
+const SampleTest2: React.FC = () => {
+  const [isOpenCropDialog, setIsOpenCropDialog] = useState(false);
+  const [imageData, setImageData] = useState<ImageData>(initData);
+  const [sectionAdds, setSectionAdds] = useState<SectionAdd[] | null>(null);
 
   useEffect(() => {
-    console.log(sectionAdds);
-  }, [sectionAdds]);
+    console.log(imageData);
+  }, [imageData]);
 
   useEffect(() => {
     const collectionRef = collection(db, "sectionAdds");
-    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-      const sliderAddsArr = QuerySnapshot.docs.map((doc) => {
-        const sliderAddsList = doc.data() as { imageUrl: string };
-        return {
-          ...sliderAddsList,
-          id: doc.id,
-        };
-      });
-      // console.log(sliderAddsArr);
-      setSectionAdds(sliderAddsArr);
+    const unsubscribe = onSnapshot(collectionRef, (querySnapshot) => {
+      const adds = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as SectionAdd[];
+      setSectionAdds(adds);
     });
-
     return unsubscribe;
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
-    if (e.target.files) {
-      const file = e.target.files[0];
-
-      setSectionAdds((prev) => {
-        if (!prev) return prev; // Handle null case
-        const updatedAdds = prev.map((add) => {
-          if (add.id === id) {
-            return {
-              ...add,
-              imageFile: file,
-            };
-          }
-          return add;
-        });
-        return updatedAdds;
-      });
-    }
+    if (!e.target.files) return;
+    const file = e.target.files[0];
+    const localUrl = URL.createObjectURL(file);
+    setImageData((prevState) => ({
+      ...prevState,
+      id,
+      imageUrl: localUrl,
+      imageFile: file,
+    }));
+    setSectionAdds((prevState) =>
+      prevState
+        ? prevState.map((add) =>
+            add.id === id ? { ...add, imageFile: file, localUrl } : add
+          )
+        : prevState
+    );
+    setIsOpenCropDialog(true);
   };
 
   const handleClickUpdate = async (idToUpdate: string) => {
     if (!sectionAdds) return;
-    const addToUpdate = sectionAdds.find(({ id }) => id === idToUpdate);
+    const addToUpdate = sectionAdds.find((add) => add.id === idToUpdate);
     if (!addToUpdate?.imageFile) {
-      console.error("Add not found");
+      console.error("Add not found or image file missing");
       return;
     }
 
     try {
       const imageUrl = await uploadAdd(addToUpdate.imageFile, "section_adds");
-      try {
-        const documentRef = doc(db, "sectionAdds", idToUpdate);
-        await updateDoc(documentRef, {
-          imageUrl,
-        });
-      } catch (error) {
-        console.log(error);
-      }
+      const documentRef = doc(db, "sectionAdds", idToUpdate);
+      await updateDoc(documentRef, { imageUrl });
     } catch (error) {
-      console.error("Error uploading add:", error);
+      console.error("Error uploading or updating add:", error);
     }
+  };
+
+  const onCancel = () => {
+    setImageData(initData);
+  };
+
+  const setCroppedImageFor = (
+    crop: { x: number; y: number },
+    zoom: number,
+    aspect: { value: number; text: string },
+    croppedImageUrl: string,
+    cropedImageBlob: File
+  ) => {
+    setImageData((prevState) => ({
+      ...prevState,
+      croppedImageUrl,
+      crop,
+      zoom,
+      aspect,
+    }));
+
+    setSectionAdds((prevState) =>
+      prevState
+        ? prevState.map((add) =>
+            add.id === imageData.id
+              ? { ...add, imageFile: cropedImageBlob, croppedImageUrl }
+              : add
+          )
+        : prevState
+    );
+
+    setIsOpenCropDialog(false);
+  };
+
+  const resetImage = () => {
+    setCroppedImageFor(null, null, null, null, new File([], ""));
   };
 
   return (
@@ -81,6 +131,19 @@ const SampleTest2 = () => {
       role="tabpanel"
       aria-labelledby="home-tab"
     >
+      {isOpenCropDialog && (
+        <div className="w-screen h-screen absolute z-10">
+          <ImageCropDialog
+            imageUrl={imageData.imageUrl}
+            cropInit={imageData.crop}
+            zoomInit={imageData.zoom}
+            aspectInit={imageData.aspect}
+            onCancel={onCancel}
+            setCroppedImageFor={setCroppedImageFor}
+            resetImage={resetImage}
+          />
+        </div>
+      )}
       <div className="">
         <h2 className="text-primary fw-bold">Index 1</h2>
         <div className="flex flex-col w-full gap-5">
@@ -98,7 +161,7 @@ const SampleTest2 = () => {
                   <div>
                     <img
                       className="card-img-top"
-                      src={add.imageUrl}
+                      src={add?.croppedImageUrl ?? add.imageUrl}
                       alt="Card image cap"
                     />
                   </div>
@@ -108,7 +171,7 @@ const SampleTest2 = () => {
                         htmlFor={add.id}
                         className="btn btn-primary text-white shadow-none"
                       >
-                        Brower
+                        Browse
                       </label>
                       <button
                         onClick={() => handleClickUpdate(add.id)}
@@ -123,7 +186,10 @@ const SampleTest2 = () => {
             ))}
         </div>
       </div>
+
+      <Test2 />
     </div>
   );
 };
+
 export default SampleTest2;
