@@ -153,9 +153,9 @@ const uploadProfilePic = async (file: File, uid: string) => {
   }
 };
 
-export const uploadAdd = async (file: File) => {
+export const uploadAdd = async (file: File | Blob, path: string) => {
   try {
-    const fileRef = ref(storage, `/slider_adds/${v4()}`);
+    const fileRef = ref(storage, `/${path}/${v4()}`);
     await uploadBytes(fileRef, file);
     const photoURL = await getDownloadURL(fileRef);
     console.log("Add Image uploaded successfully!");

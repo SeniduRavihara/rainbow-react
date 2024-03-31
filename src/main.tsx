@@ -5,6 +5,7 @@ import App from "./App.tsx";
 import "./index.css";
 import "./style.css";
 
+
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 

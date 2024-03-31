@@ -19,6 +19,8 @@ import AdminLayout from "./_admin/AdminLayout";
 // import StoreCard from "./components/StoreCard";
 import { Toaster } from "react-hot-toast";
 import StoreProfilePage from "./_private/pages/StoreProfilePage";
+import Message from "./components/admin/message";
+import Store from "./components/admin/store";
 
 
 
@@ -45,7 +47,10 @@ const router = createBrowserRouter(
 
       {/* admin routes */}
       <Route element={<AdminLayout />}>
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin" element={<AdminPage />}>
+          <Route path="message" element={<Message />} />
+          <Route path="store" element={<Store />} />
+        </Route>
       </Route>
     </Route>
   )

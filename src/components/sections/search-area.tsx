@@ -31,14 +31,14 @@ const SearchArea = () => {
   }
 
   return (
-    <div className="lg:flex flex-col items-center gap-5 justify-center lg:mb-10 mb-20 hidden">
-      <h2 className="font-bold text-3xl">
+    <div className="flex w-full flex-col items-center gap-5 justify-center lg:mb-10 mb-5 ">
+      <h2 className="font-bold text-3xl hidden lg:flex">
         Search across &apos;3.3 Crore<span className="font-extrabold">+</span>
         &apos; <span className="text-blue-600">Product & Services</span>
       </h2>
 
-      <div className="flex items-center gap-6">
-        <SearchBox>
+      <div className="items-center gap-6 hidden lg:flex">
+        <SearchBox styles="px-4">
           <div className="flex justify-between items-center gap-2 h-10">
             <IoLocationOutline className="text-xl text-gray-500" />
             <input
@@ -56,7 +56,8 @@ const SearchArea = () => {
             )}
           </div>
         </SearchBox>
-        <SearchBox>
+
+        <SearchBox styles="px-4">
           <div className="flex justify-between items-center gap-2 h-10">
             <input
               type="text"
@@ -86,7 +87,39 @@ const SearchArea = () => {
             <IoIosSearch className="bg-red-400 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1" />
           </div>
         </SearchBox>
+      </div>
 
+      {/* --------------------Mobile Searchbox----------------------- */}
+      <div className="items-center flex lg:hidden w-full justify-center px-5 xsm:px-8 sm:px-10 md:px-20">
+        <SearchBox styles="px-2">
+          <div className="flex w-full justify-between items-center gap-2 h-10">
+            <IoIosSearch className="bg-red-400 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1" />
+            <input
+              type="text"
+              placeholder="Restaurants near me"
+              className="outline-none w-[70%] px-2 font-md"
+              value={searchItem}
+              onChange={(e) => setSearchitem(e.target.value)}
+            />
+            {(searchItem || listening) && (
+              <RxCross2
+                onClick={() => {
+                  setSearchitem("");
+                  SpeechRecognition.stopListening();
+                }}
+                className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
+              />
+            )}
+
+            <FaMicrophone
+              className={cn(
+                "text-gray-500 text-2xl cursor-pointer",
+                listening && "hidden"
+              )}
+              onClick={() => SpeechRecognition.startListening()}
+            />
+          </div>
+        </SearchBox>
       </div>
     </div>
   );

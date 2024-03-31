@@ -1,61 +1,84 @@
-// import { useData } from "@/hooks/useData";
 import { useData } from "@/hooks/useData";
 import "./style.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { placeholderSectionAdds } from "@/assets";
 
 const images = [
   {
-    src: "https://firebasestorage.googleapis.com/v0/b/rainbow-32f4a.appspot.com/o/img1.jpg?alt=media&token=05281c6c-6454-4907-a53b-a355abe7a61e",
+    src: placeholderSectionAdds[0],
     value: "Fiddle Leaf",
-  },
-  {
-    src: "https://firebasestorage.googleapis.com/v0/b/rainbow-32f4a.appspot.com/o/img2.jpg?alt=media&token=45aa7f33-97b8-4d6e-9a9e-18ba34af0435",
-    value: "Pink Princess",
-  },
-  {
-    src: "https://firebasestorage.googleapis.com/v0/b/rainbow-32f4a.appspot.com/o/img3.jpg?alt=media&token=f14473c2-12bd-4712-a1a0-94863dd8bfb1", 
-    value: "Monstera",
     checked: true,
   },
   {
-    src: "https://firebasestorage.googleapis.com/v0/b/rainbow-32f4a.appspot.com/o/img4.jpg?alt=media&token=9ce9556c-e9bf-4750-8071-656dd805839a",
+    src: placeholderSectionAdds[1],
+    value: "Pink Princess",
+    checked: false,
+  },
+  {
+    src: placeholderSectionAdds[2],
+    value: "Monstera",
+    checked: false,
+  },
+  {
+    src: placeholderSectionAdds[3],
     value: "Pothos",
+    checked: false,
   },
 ];
 
 const AdvertizingSection = () => {
   const { sectionAdds } = useData();
+  const [adds, setAdds] = useState(images);
 
-  useEffect(()=>{
-    
-  },[sectionAdds])
+  useEffect(() => {
+    if (sectionAdds) {
+      setAdds((pre) =>
+        pre.map((addObj, index) => ({
+          ...addObj,
+          src: sectionAdds[index].imageUrl,
+        }))
+      );
+    }
+  }, [sectionAdds]);
 
   return (
-    <fieldset className="w-full my-5">
-      {images.map((image) => (
-        <label key={image.value} style={{ background: `url(${image.src})` }}>
-          <input
-            type="radio"
-            name="images"
-            value={image.value}
-            defaultChecked={image.checked}
+    <div className="">
+      <div className="hidden  lg:flex">
+        <fieldset className="w-full my-5">
+          {adds.map((image) => (
+            <label
+              key={image.value}
+              style={{
+                backgroundImage: `url(${image.src})`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+              }}
+              className="h-52"
+            >
+              <input
+                type="radio"
+                name="images"
+                value={image.value}
+                defaultChecked={image.checked}
+              />
+            </label>
+          ))}
+        </fieldset>
+      </div>
+
+      {/* ------------Mobile view-------------- */}
+
+      <div className="flex overflow-x-scroll gap-2 lg:hidden px-10 my-10">
+        {adds.map((image) => (
+          <img
+            key={image.value}
+            src={image.src}
+            className="rounded-md w-52 h-32 object-cover"
           />
-        </label>
-      ))}
-    </fieldset>
+        ))}
+      </div>
+    </div>
   );
 };
 export default AdvertizingSection;
-
-// const AdvertizingSection = () => {
-//   const { sectionAdds } = useData();
-//   return (
-//     <div className="w-screen p-10 flex overflow-x-scroll">
-//       {sectionAdds &&
-//         sectionAdds.map((addObj, index) => (
-//           <img key={index} className="w-80" src={addObj.imageUrl} alt="ADD" />
-//         ))}
-//     </div>
-//   );
-// };
-// export default AdvertizingSection;

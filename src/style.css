@@ -381,26 +381,7 @@ img {
   width: 100%;
 }
 
-.category-card-box {
-  width: 85px;
-  height: 85px;
-  text-align: center;
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-  display: flex;
-  border-radius: 15px;
-  border: 2px solid #34343439;
-  justify-content: center;
-  align-items: center;
-}
 
-.category-card-box img {
-  width: 40px;
-  /* Assuming you want to center the image vertically */
-  margin-top: auto;
-  margin-bottom: auto;
-}
 
 .main-categories {
   margin: auto; /* Adjust the top margin based on your needs */
@@ -408,24 +389,10 @@ img {
   text-align: center; /* Center the content horizontally */
 }
 
-.category-card {
-  text-align: center;
-  margin-left: 20px;
-  margin-right: 20px;
-  float: left;
-  margin-top: 50px;
-}
-
 .category-card:hover + .category-card-box {
   background-color: #00000034;
 }
 
-.card-text {
-  margin-top: 14px;
-  font-weight: 500;
-  font-size: 14px;
-  white-space: nowrap;
-}
 
 .asdadisdifohsfhsidof {
   float: inline-start;
@@ -459,7 +426,7 @@ img {
   /*     Replace 'your-image-url.jpg' with the actual URL or path to your image*/
 }
 
-.other-service-div {
+/* .other-service-div {
   width: 80%;
   height: 235px;
   background-color: #ffffff;
@@ -472,16 +439,16 @@ img {
   border-top: 0px solid #00000037;
   border-top: 2px solid #00000037;
   border-bottom: 2px solid #00000037;
-}
+} */
 
-.fstotsediv {
+/* .fstotsediv {
   border-bottom: 0px solid #00000037;
   border-top: 2px solid #00000037;
   border-top-left-radius: 7px;
   border-top-right-radius: 7px;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: px;
-}
+} */
 
 .oth-ser-div-left {
   float: left;

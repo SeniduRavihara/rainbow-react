@@ -97,7 +97,7 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
         }}
         navigation={true}
         modules={[Pagination, Navigation]}
-        className="mySwiper"
+        className="cerateStoreSwiper"
       >
         {renderSlides()}
       </Swiper>

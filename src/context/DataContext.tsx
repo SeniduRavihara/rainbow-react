@@ -9,6 +9,10 @@ export const DataContext = createContext<DataContextType>(INITIAL_DATA_CONTEXT);
 function DataContextProvider({ children }: { children: React.ReactNode }) {
   const [currentUserData, setCurrentUserData] =
     useState<CurrentUserDataType>(null);
+  const [popularBrands, setPopularBrands] = useState<Array<{
+    imageUrl: string;
+    id: string;
+  }> | null>(null);
   const [sectionAdds, setSectionAdds] = useState<Array<{
     imageUrl: string;
     id: string;
@@ -21,13 +25,11 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const collectionRef = collection(db, "sectionAdds");
     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-      const sctionAddsArr = QuerySnapshot.docs.map((doc) => {
-        const sctionAdd = doc.data() as { imageUrl: string }
-        return {
-          ...sctionAdd,
-          id: doc.id,
-        };
-      });
+      const sctionAddsArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as Array<{ imageUrl: string; id: string }>;
+
       console.log(sctionAddsArr);
       setSectionAdds(sctionAddsArr);
     });
@@ -38,15 +40,28 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const collectionRef = collection(db, "sliderAdds");
     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-      const sliderAddsArr = QuerySnapshot.docs.map((doc) => {
-        const sliderAdd = doc.data() as {imageUrl: string}
-        return {
-          ...sliderAdd,
-          id: doc.id,
-        };
-      });
+      const sliderAddsArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as Array<{ imageUrl: string; id: string }>;
+
       console.log(sliderAddsArr);
       setSliderAdds(sliderAddsArr);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const collectionRef = collection(db, "pupularBrands");
+    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+      const popularBrandsArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as Array<{ imageUrl: string; id: string }>;
+
+      console.log(popularBrandsArr);
+      setPopularBrands(popularBrandsArr);
     });
 
     return unsubscribe;
@@ -57,6 +72,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     setCurrentUserData,
     sectionAdds,
     sliderAdds,
+    popularBrands
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
