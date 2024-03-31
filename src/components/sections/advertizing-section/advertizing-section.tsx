@@ -1,4 +1,3 @@
-// import { useData } from "@/hooks/useData";
 import { useData } from "@/hooks/useData";
 import "./style.css";
 import { useEffect, useState } from "react";
@@ -8,7 +7,7 @@ const images = [
   {
     src: placeholderSectionAdds[0],
     value: "Fiddle Leaf",
-    checked: false,
+    checked: true,
   },
   {
     src: placeholderSectionAdds[1],
@@ -18,7 +17,7 @@ const images = [
   {
     src: placeholderSectionAdds[2],
     value: "Monstera",
-    checked: true,
+    checked: false,
   },
   {
     src: placeholderSectionAdds[3],
@@ -34,25 +33,52 @@ const AdvertizingSection = () => {
   useEffect(() => {
     if (sectionAdds) {
       setAdds((pre) =>
-        pre.map((addObj, index) => ({ ...addObj, src: sectionAdds[index].imageUrl }))
+        pre.map((addObj, index) => ({
+          ...addObj,
+          src: sectionAdds[index].imageUrl,
+        }))
       );
     }
   }, [sectionAdds]);
 
   return (
-    <fieldset className="w-full my-5">
-      {adds.map((image) => (
-        <label key={image.value} style={{ background: `url(${image.src})` }}>
-          <input
-            type="radio"
-            name="images"
-            value={image.value}
-            defaultChecked={image.checked}
+    <div className="">
+      <div className="hidden  lg:flex">
+        <fieldset className="w-full my-5">
+          {adds.map((image) => (
+            <label
+              key={image.value}
+              style={{
+                backgroundImage: `url(${image.src})`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+              }}
+              className="h-52"
+            >
+              <input
+                type="radio"
+                name="images"
+                value={image.value}
+                defaultChecked={image.checked}
+              />
+            </label>
+          ))}
+        </fieldset>
+      </div>
+
+      {/* ------------Mobile view-------------- */}
+
+      <div className="flex overflow-x-scroll gap-2 lg:hidden px-10 my-10">
+        {adds.map((image) => (
+          <img
+            key={image.value}
+            src={image.src}
+            className="rounded-md w-52 h-32 object-cover"
           />
-        </label>
-      ))}
-    </fieldset>
+        ))}
+      </div>
+    </div>
   );
 };
 export default AdvertizingSection;
-

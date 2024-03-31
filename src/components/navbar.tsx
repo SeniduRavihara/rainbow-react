@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineUserCircle } from "react-icons/hi2";
 import { logout } from "@/firebase/api";
 import { IoIosNotificationsOutline } from "react-icons/io";
-import { IoIosSearch } from "react-icons/io";
+// import { IoIosSearch } from "react-icons/io";
 import { IoIosMenu } from "react-icons/io";
 import { IonIcon } from "@ionic/react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -15,8 +15,11 @@ import {
 } from "ionicons/icons";
 import Menu from "./Menu";
 import { useData } from "@/hooks/useData";
+// import { useState } from "react";
+// import SearchBox from "./search-box";
 
 const Navbar = () => {
+  // const [searchItem, setSearchitem] = useState("");
   const { currentUser } = useAuth();
   const { currentUserData } = useData();
   const navigate = useNavigate();
@@ -115,9 +118,15 @@ const Navbar = () => {
         )}
       </div>
 
+      {/* ----------------Mobile---------------------- */}
       <div className="flex lg:hidden gap-5">
-        <IoIosSearch className="text-3xl cursor-pointer" />
+        {/* <IoIosSearch
+          onClick={() => setOpenSearchDialog(true)}
+          className="text-3xl cursor-pointer"
+        /> */}
 
+ 
+    
         <Sheet>
           <SheetTrigger>
             <IoIosMenu className="text-3xl cursor-pointer" />

@@ -27,7 +27,7 @@ const initData: ImageData = {
   croppedImageUrl: null,
   crop: null,
   zoom: null,
-  aspect: 20 / 5,
+  aspect: 16 / 5,
   id: "",
 };
 
@@ -56,7 +56,7 @@ const SampleTest2: React.FC = () => {
     if (!e.target.files) return;
     const file = e.target.files[0];
     const localUrl = URL.createObjectURL(file);
-    
+
     setImageData((prevState) => ({
       ...prevState,
       id,
@@ -127,7 +127,6 @@ const SampleTest2: React.FC = () => {
     setIsOpenCropDialog(false);
   };
 
-
   return (
     <div
       className="tab-pane fade show active"
@@ -189,8 +188,6 @@ const SampleTest2: React.FC = () => {
             ))}
         </div>
       </div>
-
-      {/* <Test2 /> */}
     </div>
   );
 };

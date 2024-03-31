@@ -8,7 +8,8 @@ import Navbar from "@/components/navbar";
 import SearchArea from "@/components/sections/search-area";
 import SocialMediaArea from "@/components/sections/social-media-area";
 import TopBanner from "@/components/top-banner";
-import ServicesArea from "@/components/sections/ServicesArea";
+import ServicesArea from "@/components/sections/service-area/ServicesArea";
+import PopularBrandsArea from "@/components/sections/popular-brands-section/popular-brands-area";
 
 const HomePage = () => {
   return (
@@ -18,12 +19,13 @@ const HomePage = () => {
           <TopBanner />
           <Navbar />
         </div>
-        <div className="mt-32">
+        <div className="mt-32 w-full">
           <SearchArea />
           <CarouselAdds />
           <CategoriesArea />
           <AdvertizingSection />
           <ServicesArea />
+          <PopularBrandsArea />
           <SocialMediaArea />
           <DiscriptionArea />
           <Footer />

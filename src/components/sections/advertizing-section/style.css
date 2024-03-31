@@ -36,21 +36,22 @@
       --col-5: 5fr;
     }
 
-    > label {
+    /* > label {
       background-image: var(--_img);
       background-position: center;
-      background-size: auto;
-    }
+      background-size: cover;
+      background-repeat: no-repeat;
+    } */
   }
 }
 
 @layer demo.support {
   fieldset {
     inline-size: 80vw;
-
+   
     display: grid;
     grid-auto-flow: column;
-    grid-template-rows: 50vh;
+    /* grid-template-rows: 50vh; */
     gap: var(--size-3);
     border: none;
 

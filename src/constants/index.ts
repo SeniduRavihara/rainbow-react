@@ -1,14 +1,13 @@
-
 export const INITIAL_CURRENT_USER_DATA = {
   id: "",
   email: "",
   name: "",
-  roles: [""]
+  roles: [""],
 };
 
 export const INITIAL_AUTH_CONTEXT = {
   currentUser: null,
-  setCurrentUser: ()=>{},
+  setCurrentUser: () => {},
 };
 
 export const INITIAL_DATA_CONTEXT = {
@@ -16,6 +15,5 @@ export const INITIAL_DATA_CONTEXT = {
   setCurrentUserData: () => {},
   sectionAdds: null,
   sliderAdds: null,
+  popularBrands: null,
 };
-
-

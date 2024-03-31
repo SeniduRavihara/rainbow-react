@@ -12,6 +12,10 @@ export type DataContextType = {
     imageUrl: string;
     id: string;
   }> | null;
+  popularBrands: Array<{
+    imageUrl: string;
+    id: string;
+  }> | null;
 };
 
 // ---------------------------------

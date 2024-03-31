@@ -1,0 +1,79 @@
+
+/* .wrapper1 i {
+  top: 50%;
+  height: 50px;
+  z-index: 199;
+  width: 50px;
+  position: absolute;
+  cursor: pointer;
+  font-size: 1.25rem;
+  position: absolute;
+  text-align: center;
+  line-height: 50px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.23);
+  transform: translateY(-50%);
+  transition: transform 0.1s linear;
+} */
+/* .wrapper1 i:active{
+  transform: translateY(-50%) scale(0.85);
+}
+.wrapper1 i:first-child{
+  left: -22px;
+}
+.wrapper1 i:last-child{
+  right: -22px;
+} */
+.wrapper1 .carousel{
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% / 3) - 12px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 16px;
+  border-radius: 8px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+.carousel.no-transition {
+  scroll-behavior: auto;
+}
+.carousel.dragging {
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+}
+.carousel.dragging .card {
+  cursor: grab;
+  user-select: none;
+}
+.carousel :where(.card, .img) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.carousel .card {
+  scroll-snap-align: start;
+  height: 250px;
+  list-style: none;
+  background: #fff;
+  cursor: pointer;
+  flex-direction: column;
+}
+
+
+
+@media screen and (max-width: 900px) {
+  .wrapper1 .carousel {
+    grid-auto-columns: calc((100% / 2) - 9px);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .wrapper1 .carousel {
+    grid-auto-columns: 100%;
+  }
+}
