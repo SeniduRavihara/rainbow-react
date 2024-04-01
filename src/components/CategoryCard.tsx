@@ -16,16 +16,18 @@ const CategoryCard = ({ label, icon }: { label: string; icon: string }) => {
             alt=""
           />
         </div>
-        <div className="mt-[10px] font-medium text-sm ">{label}</div>
+        <div className="mt-[10px] font-medium text-[12px] xsm:text-sm sm:text-base ">
+          {label}
+        </div>
       </div>
 
       {/* ---------------- */}
 
-      <div className="lg:hidden text-center flex flex-col items-center mt-[50px]">
-        <div className="p-1 w-[110px] h-[110px] text-center flex-col bg-white flex items-center justify-center border-2 border-[#34343439] rounded-lg">
+      <div className="lg:hidden text-center flex flex-col items-center mt-[20px]">
+        <div className="p-1 w-[100px] h-[100px] text-center flex-col bg-white flex items-center justify-center border-2 border-[#34343439] rounded-lg">
           <img
             src={icon}
-            className="w-[40px] flex items-center justify-center"
+            className="w-[30px] xsm:w-[40px] flex items-center justify-center"
             alt=""
           />
           <div className="mt-[10px] font-medium text-sm">{label}</div>
