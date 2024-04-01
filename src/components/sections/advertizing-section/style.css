@@ -3,7 +3,7 @@
 @layer demo {
   .fieldset1 {
     grid-template-columns:
-      var(--col-1, 1fr)
+      var(--col-1, 3fr)
       var(--col-2, 1fr)
       var(--col-3, 1fr)
       var(--col-4, 1fr);
@@ -46,7 +46,7 @@
 
   .fieldset2 {
     grid-template-columns:
-      var(--col-1, 1fr)
+      var(--col-1, 2fr)
       var(--col-2, 1fr);
 
     @media (prefers-reduced-motion: no-preference) {
@@ -60,22 +60,81 @@
     &:has(label:nth-child(2) > input:checked) {
       --col-1: 1fr;
       --col-2: 4fr;
+    }
+  }
 
+  .fieldset3 {
+    grid-template-columns:
+      var(--col-1, 1fr)
+      var(--col-2, 2fr);
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: grid-template-columns 2s var(--ease-spring-2);
     }
 
-    /* > label {
-      background-image: var(--_img);
-      background-position: center;
-      background-size: cover;
-      background-repeat: no-repeat;
-    } */
+    &:has(label:nth-child(1) > input:checked) {
+      --col-1: 4fr;
+      --col-2: 1fr;
+    }
+    &:has(label:nth-child(2) > input:checked) {
+      --col-1: 1fr;
+      --col-2: 4fr;
+    }
   }
 }
 
 @layer demo.support {
-  fieldset {
+  .fieldset1 {
     inline-size: 80vw;
-   
+
+    display: grid;
+    grid-auto-flow: column;
+    /* grid-template-rows: 50vh; */
+    gap: var(--size-3);
+    border: none;
+
+    > label {
+      cursor: pointer;
+      border-radius: var(--radius-2);
+
+      /* &:focus-within {
+        outline: 1px solid green;
+        outline-offset: 5px;
+      } */
+
+      > input {
+        opacity: 0;
+      }
+    }
+  }
+
+  .fieldset2 {
+    inline-size: 80vw;
+
+    display: grid;
+    grid-auto-flow: column;
+    /* grid-template-rows: 50vh; */
+    gap: var(--size-3);
+    border: none;
+
+    > label {
+      cursor: pointer;
+      border-radius: var(--radius-2);
+
+      /* &:focus-within {
+        outline: 1px solid green;
+        outline-offset: 5px;
+      } */
+
+      > input {
+        opacity: 0;
+      }
+    }
+  }
+
+  .fieldset3 {
+    inline-size: 80vw;
+
     display: grid;
     grid-auto-flow: column;
     /* grid-template-rows: 50vh; */

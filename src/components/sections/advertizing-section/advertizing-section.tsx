@@ -95,7 +95,7 @@ const AdvertizingSection = () => {
           )}
         </fieldset>
 
-        <fieldset className="w-full px- fieldset2">
+        <fieldset className="w-full px- fieldset3">
           {adds.map(
             (image, index) =>
               index >= 2 && (
