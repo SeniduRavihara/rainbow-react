@@ -116,13 +116,13 @@ const ServicesArea = () => {
                   key={obj.title}
                   className="text-center flex flex-col items-center mt-[50px]"
                 >
-                  <div className=" w-[100px] h-[100px] text-center flex-col bg-white flex items-center justify-center border-2 border-[#34343439] rounded-lg">
+                  <div className="w-[80px] h-[80px] xsm:w-[100px] xsm:h-[100px] sm:w-[120px] sm:h-[120px] text-center flex-col bg-white flex items-center justify-center border-2 border-[#34343439] rounded-lg">
                     <img
                       src={obj.icon}
                       className="w-[40px] flex items-center justify-center"
                       alt=""
                     />
-                    <div className="mt-[10px] font-medium text-sm whitespace-nowrap">
+                    <div className="mt-[10px] font-medium text-[12px] xsm:text-sm sm:text-base whitespace-nowrap">
                       {obj.title}
                     </div>
                   </div>
@@ -131,8 +131,6 @@ const ServicesArea = () => {
             </div>
           </div>
         </div>
-
-  
 
         <div className="flex flex-col">
           <div className="text-center">
@@ -150,13 +148,13 @@ const ServicesArea = () => {
                   key={obj.title}
                   className="text-center flex flex-col items-center mt-[50px]"
                 >
-                  <div className=" w-[100px] h-[100px] text-center flex-col bg-white flex items-center justify-center border-2 border-[#34343439] rounded-lg">
+                  <div className="w-[80px] h-[80px] xsm:w-[100px] xsm:h-[100px] sm:w-[120px] sm:h-[120px] text-center flex-col bg-white flex items-center justify-center border-2 border-[#34343439] rounded-lg">
                     <img
                       src={obj.icon}
                       className="w-[40px] flex items-center justify-center"
                       alt=""
                     />
-                    <div className="mt-[10px] font-medium text-sm whitespace-nowrap">
+                    <div className="mt-[10px] font-medium text-[12px] xsm:text-sm sm:text-base whitespace-nowrap">
                       {obj.title}
                     </div>
                   </div>

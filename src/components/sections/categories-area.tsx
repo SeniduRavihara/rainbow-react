@@ -36,9 +36,9 @@ const categories = [
   { icon: dentist, label: "Dentist" },
   { icon: gym, label: "Gym" },
   { icon: consultants, label: "Consultants" },
-  { icon: hospitalEventOrganizers, label: "Hospital Event Organizers" },
+  { icon: hospitalEventOrganizers, label: "Hospital" },
   { icon: DrivingSchools, label: "Driving Schools" },
-  { icon: constructorpackersMovers, label: "Constructor packers & Movers" },
+  { icon: constructorpackersMovers, label: "Constructor" },
   { icon: PetShop, label: "Pet Shop" },
   { icon: courierService, label: "Courier Service" },
   { icon: constructor, label: "Constructor" },
@@ -78,8 +78,8 @@ const CategoriesArea = () => {
   }, []); // Empty dependency array ensures that this effect runs only once after the initial render
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <ul className=" w-full grid gap-x-20 grid-cols-3 xsm:grid-cols-4 sm:grid-cols-5  md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9  px-14 sm:p-20 ">
+    <div className="flex flex-col items-center justify-center w-full">
+      <ul className=" w-full grid gap-x-20 grid-cols-3 xsm:grid-cols-4 sm:grid-cols-5  md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 px-14 sm:px-20 ">
         {isShowAll
           ? categories.map((categoryObj, index) => (
               <li key={index}>
@@ -99,10 +99,10 @@ const CategoriesArea = () => {
             ))}
       </ul>
 
-      <div className="px-5 mt-2 w-full md:hidden">
+      <div className="px-10 sm:px-20 mt-4 w-full md:hidden">
         <Button
           onClick={() => setIsShowAll(!isShowAll)}
-          className="bg-[#0066FF] flex items-center justify-center gap-4 hover:bg-[#0066ff9a] h-[50px] min-w-[150px] w-full"
+          className="bg-[#0066FF] flex items-center justify-center gap-4 hover:bg-[#0066ff9a] h-[50px]  w-full"
         >
           {!isShowAll ? (
             <>

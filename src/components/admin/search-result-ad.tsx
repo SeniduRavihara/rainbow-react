@@ -2,67 +2,92 @@ import { uploadAdd } from "@/firebase/api";
 import { db } from "@/firebase/config";
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import ImageCropDialog from "../image-croper/CropDialog";
+
+interface ImageData {
+  imageUrl: string;
+  croppedImageUrl: string | null;
+  crop: { x: number; y: number } | null;
+  zoom: number | null;
+  aspect: number;
+  id: string;
+}
+
+interface SearchResultAdd {
+  imageUrl: string;
+  id: string;
+  imageFile?: File;
+  localUrl?: string;
+  cropedImageBlob?: Blob;
+  croppedImageUrl: string;
+}
+
+const initData: ImageData = {
+  imageUrl: "",
+  croppedImageUrl: null,
+  crop: null,
+  zoom: null,
+  aspect: 16 / 5,
+  id: "",
+};
 
 const SearchResultAd = () => {
-  const [searchResultAdds, setSearchResultAdds] = useState<Array<{
-    imageUrl: string;
-    id: string;
-    imageFile?: File;
-  }> | null>(null);
-
-  useEffect(() => {
-    console.log(searchResultAdds);
-  }, [searchResultAdds]);
+  const [isOpenCropDialog, setIsOpenCropDialog] = useState(false);
+  const [imageData, setImageData] = useState<ImageData>(initData);
+  const [searchResultAdds, setSearchResultAdds] = useState<
+    SearchResultAdd[] | null
+  >(null);
 
   useEffect(() => {
     const collectionRef = collection(db, "searchResultAdds");
     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-      const sliderAddsArr = QuerySnapshot.docs.map((doc) => {
-        const sliderAddsList = doc.data() as { imageUrl: string };
-        return {
-          ...sliderAddsList,
-          id: doc.id,
-        };
-      });
-      // console.log(sliderAddsArr);
-      setSearchResultAdds(sliderAddsArr);
+      const searchResultAddsArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as SearchResultAdd[];
+      // console.log searchResultAddsArr);
+      setSearchResultAdds(searchResultAddsArr);
     });
 
     return unsubscribe;
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
-    if (e.target.files) {
-      const file = e.target.files[0];
+    if (!e.target.files) return;
 
-      setSearchResultAdds((prev) => {
-        if (!prev) return prev; // Handle null case
-        const updatedAdds = prev.map((add) => {
-          if (add.id === id) {
-            return {
-              ...add,
-              imageFile: file,
-            };
-          }
-          return add;
-        });
-        return updatedAdds;
-      });
-    }
+    const file = e.target.files[0];
+    const localUrl = URL.createObjectURL(file);
+
+    setImageData((prevState) => ({
+      ...prevState,
+      id,
+      imageUrl: localUrl,
+      imageFile: file,
+    }));
+
+    setSearchResultAdds((prevState) =>
+      prevState
+        ? prevState.map((add) =>
+            add.id === id ? { ...add, imageFile: file, localUrl } : add
+          )
+        : prevState
+    );
+
+    setIsOpenCropDialog(true);
   };
 
   const handleClickUpdate = async (idToUpdate: string) => {
     if (!searchResultAdds) return;
     const addToUpdate = searchResultAdds.find(({ id }) => id === idToUpdate);
-    if (!addToUpdate?.imageFile) {
-      console.error("Add not found");
+    if (!addToUpdate?.cropedImageBlob) {
+      console.error("Add not found or image file missing");
       return;
     }
 
     try {
       const imageUrl = await uploadAdd(
-        addToUpdate.imageFile,
-        "search-result-adds"
+        addToUpdate.cropedImageBlob,
+        "slider_adds"
       );
       try {
         const documentRef = doc(db, "searchResultAdds", idToUpdate);
@@ -77,6 +102,39 @@ const SearchResultAd = () => {
     }
   };
 
+  const onCancel = () => {
+    setImageData(initData);
+    setIsOpenCropDialog(false);
+  };
+
+  const setCroppedImageFor = (
+    crop: { x: number; y: number },
+    zoom: number,
+    aspect: number,
+    croppedImageUrl: string,
+    cropedImageBlob: Blob
+  ) => {
+    setImageData((prevState) => ({
+      ...prevState,
+      croppedImageUrl,
+      crop,
+      zoom,
+      aspect,
+    }));
+
+    setSearchResultAdds((prevState) =>
+      prevState
+        ? prevState.map((add) =>
+            add.id === imageData.id
+              ? { ...add, cropedImageBlob, croppedImageUrl }
+              : add
+          )
+        : prevState
+    );
+
+    setIsOpenCropDialog(false);
+  };
+
   return (
     <div
       className="tab-pane fade show active"
@@ -84,7 +142,20 @@ const SearchResultAd = () => {
       role="tabpanel"
       aria-labelledby="home-tab"
     >
+      {isOpenCropDialog && (
+        <div className="w-screen h-screen absolute z-10">
+          <ImageCropDialog
+            imageUrl={imageData.imageUrl}
+            cropInit={imageData.crop}
+            zoomInit={imageData.zoom}
+            aspectInit={imageData.aspect}
+            onCancel={onCancel}
+            setCroppedImageFor={setCroppedImageFor}
+          />
+        </div>
+      )}
       <div className="">
+        <h2 className="text-primary fw-bold">Index 1</h2>
         <div className="flex flex-col w-full gap-5">
           {searchResultAdds &&
             searchResultAdds.map((add) => (
@@ -100,7 +171,7 @@ const SearchResultAd = () => {
                   <div>
                     <img
                       className="card-img-top"
-                      src={add.imageUrl}
+                      src={add?.croppedImageUrl ?? add.imageUrl}
                       alt="Card image cap"
                     />
                   </div>

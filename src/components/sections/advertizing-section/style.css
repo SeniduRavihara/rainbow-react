@@ -1,7 +1,7 @@
 @import "https://unpkg.com/open-props" layer(design.system);
 
 @layer demo {
-  fieldset {
+  .fieldset1 {
     grid-template-columns:
       var(--col-1, 1fr)
       var(--col-2, 1fr)
@@ -34,6 +34,33 @@
     &:has(label:nth-child(5) > input:checked) {
       --col-4: 3fr;
       --col-5: 5fr;
+    }
+
+    /* > label {
+      background-image: var(--_img);
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+    } */
+  }
+
+  .fieldset2 {
+    grid-template-columns:
+      var(--col-1, 1fr)
+      var(--col-2, 1fr);
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: grid-template-columns 2s var(--ease-spring-2);
+    }
+
+    &:has(label:nth-child(1) > input:checked) {
+      --col-1: 4fr;
+      --col-2: 1fr;
+    }
+    &:has(label:nth-child(2) > input:checked) {
+      --col-1: 1fr;
+      --col-2: 4fr;
+
     }
 
     /* > label {

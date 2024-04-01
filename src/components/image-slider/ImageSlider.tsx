@@ -23,12 +23,12 @@ const ImageSlider = ({
 
   return (
     <div
-      className="wrapper1 w-full my-10 flex items-center gap-10 px-4 justify-between relative"
+      className="wrapper1 w-full flex items-center gap-10 justify-between relative"
       ref={wrapperRef}
     >
       <div
         onClick={() => handleArrowClick("left")}
-        className="w-10 h-10 flex items-center absolute z-10 bg-white left-6 cursor-pointer justify-center rounded-r-2xl"
+        className="w-10 h-10 flex items-center absolute z-10 bg-white left-0 cursor-pointer justify-center rounded-r-2xl"
       >
         <MdArrowBackIos className="text-xl ml-2 text-black" />
       </div>
@@ -48,7 +48,7 @@ const ImageSlider = ({
 
       <div
         onClick={() => handleArrowClick("right")}
-        className="w-10 h-10 flex items-center absolute z-10 bg-white right-6 cursor-pointer justify-center rounded-l-2xl"
+        className="w-10 h-10 flex items-center absolute z-10 bg-white right-0 cursor-pointer justify-center rounded-l-2xl"
       >
         <MdArrowForwardIos className="text-xl" />
       </div>
