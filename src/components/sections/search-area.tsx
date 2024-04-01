@@ -91,7 +91,7 @@ const SearchArea = () => {
 
       {/* --------------------Mobile Searchbox----------------------- */}
       <div className="items-center flex lg:hidden bg-slate-40 w-full justify-center px-">
-        <SearchBox styles="px-2 w-[95%] sm:w-[85%] md:w-[80%]">
+        <SearchBox styles="px-2 w-[90%] sm:w-[85%] md:w-[80%]">
           <div className="flex w-full justify-between items-center gap-2 h-10">
             <IoIosSearch className="bg-red-400 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1" />
             <input
