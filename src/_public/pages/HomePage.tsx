@@ -23,7 +23,7 @@ const HomePage = () => {
           <SearchArea />
           <CarouselAdds />
           <CategoriesArea />
-          <AdvertizingSection />
+          {/* <AdvertizingSection /> */}
           <ServicesArea />
           <PopularBrandsArea />
           <SocialMediaArea />

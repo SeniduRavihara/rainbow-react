@@ -8,6 +8,7 @@ import {
   query,
   startAfter,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
@@ -21,7 +22,7 @@ import {
 } from "@/components/ui/table";
 import { Tag } from "@chakra-ui/react";
 import { Button } from "../ui/button";
-import { StoreListDocType, StoreListType, StoreObj } from "@/types";
+import { StoreListType, StoreObj } from "@/types";
 import Loader from "../Loader";
 import { cn } from "@/lib/utils";
 
@@ -44,18 +45,15 @@ const Store = () => {
       collectionRef,
       orderBy("createdAt", "desc"),
       startAfter(lastDocument?.createdAt ?? ""),
-      limit(2)
+      limit(2),
     );
 
     const queryStoresSnapshot = await getDocs(q);
 
-    const storeListArr = queryStoresSnapshot.docs.map((doc) => {
-      const storeList = doc.data() as StoreListDocType;
-      return {
-        ...storeList,
-        id: doc.id,
-      };
-    });
+    const storeListArr = queryStoresSnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    })) as StoreListType;
 
     setLastDocument(storeListArr[storeListArr.length - 1]);
     console.log(storeListArr);
