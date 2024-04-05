@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineUserCircle } from "react-icons/hi2";
 import { logout } from "@/firebase/api";
 import { IoIosNotificationsOutline } from "react-icons/io";
-// import { IoIosSearch } from "react-icons/io";
 import { IoIosMenu } from "react-icons/io";
 import { IonIcon } from "@ionic/react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -15,13 +14,10 @@ import {
 } from "ionicons/icons";
 import Menu from "./Menu";
 import { useData } from "@/hooks/useData";
-// import { useState } from "react";
-// import SearchBox from "./search-box";
 
 const Navbar = () => {
-  // const [searchItem, setSearchitem] = useState("");
   const { currentUser } = useAuth();
-  const { currentUserData } = useData();
+  const { currentUserData, setSearchResultStores } = useData();
   const navigate = useNavigate();
 
   const handleCreateStoreClick = () => {
@@ -30,6 +26,13 @@ const Navbar = () => {
   const handleClickAdminPanel = () => {
     navigate("/admin");
   };
+  
+  const hadleLogoClick = () => {
+    setSearchResultStores(null);
+    navigate("/");
+  };
+
+  
 
   let menuItems;
 
@@ -48,7 +51,7 @@ const Navbar = () => {
 
   return (
     <div className="w-full bg-white pt-3 h-20 px-5 flex items-center justify-between fixed top-7 left-0 border-b-2 border-[#00000010]">
-      <div className="nav-logo cursor-pointer">ABCDEF.COM</div>
+      <div onClick={hadleLogoClick} className="nav-logo cursor-pointer">ABCDEF.COM</div>
 
       <ul className="lg:flex gap-10 font-medium hidden items-center justify-center">
         <li className="flex items-center justify-center gap-1 cursor-pointer icon-with-links">

@@ -1,6 +1,6 @@
 import { INITIAL_DATA_CONTEXT } from "@/constants";
 import { db } from "@/firebase/config";
-import { CurrentUserDataType, DataContextType } from "@/types";
+import { CurrentUserDataType, DataContextType, StoreListType, StoreObj } from "@/types";
 import { collection, onSnapshot } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
 
@@ -22,6 +22,13 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     id: string;
   }> | null>(null);
 
+  const [searchResultStores, setSearchResultStores] =
+    useState<StoreListType | null>(null);
+  const [location, setLocation] = useState("");
+  const [searchItem, setSearchitem] = useState("");
+    const [loadingStoreFetching, setLoadingStoreFetching] = useState(false);
+    const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
+
   useEffect(() => {
     const collectionRef = collection(db, "sectionAdds");
     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
@@ -30,7 +37,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
         id: doc.id,
       })) as Array<{ imageUrl: string; id: string }>;
 
-      console.log(sctionAddsArr);
+      // console.log(sctionAddsArr);
       setSectionAdds(sctionAddsArr);
     });
 
@@ -45,7 +52,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
         id: doc.id,
       })) as Array<{ imageUrl: string; id: string }>;
 
-      console.log(sliderAddsArr);
+      // console.log(sliderAddsArr);
       setSliderAdds(sliderAddsArr);
     });
 
@@ -60,7 +67,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
         id: doc.id,
       })) as Array<{ imageUrl: string; id: string }>;
 
-      console.log(popularBrandsArr);
+      // console.log(popularBrandsArr);
       setPopularBrands(popularBrandsArr);
     });
 
@@ -72,7 +79,17 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     setCurrentUserData,
     sectionAdds,
     sliderAdds,
-    popularBrands
+    popularBrands,
+    searchResultStores,
+    setSearchResultStores,
+    searchItem,
+    setSearchitem,
+    location,
+    setLocation,
+    loadingStoreFetching,
+    setLoadingStoreFetching,
+    lastDocument,
+    setLastDocument,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

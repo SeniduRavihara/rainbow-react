@@ -1,22 +1,39 @@
-import { useEffect, useState } from "react";
-import  {
+import { useEffect } from "react";
+import SearchBox from "@/components/search-box";
+import { IoLocationOutline } from "react-icons/io5";
+import { RxCross2 } from "react-icons/rx";
+import { FaMicrophone } from "react-icons/fa";
+import { IoIosSearch } from "react-icons/io";
+import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import SearchBoxes from "../SearchBoxes";
+import { cn } from "@/lib/utils";
+import algoliasearch from "algoliasearch/lite";
+import { useData } from "@/hooks/useData";
+import { StoreListType } from "@/types";
+import { useNavigate } from "react-router-dom";
+import { fetchData } from "@/firebase/api";
 
-// const searchClient = algoliasearch(
-//   "6K67WTIHLT",
-//   "0cb3cddf578f097566b65642564992dc"
-// );
+const searchClient = algoliasearch(
+  "6K67WTIHLT",
+  "0cb3cddf578f097566b65642564992dc"
+);
 
-// const searchIndex = searchClient.initIndex("stores");
+const searchIndex = searchClient.initIndex("stores");
 
-const SearchArea = () => {
-  // const [location, setLocation] = useState("");
-  const [searchItem, setSearchitem] = useState("");
-  // const { setSearchResultStores } = useData();
+const SearchBoxes = () => {
+  const {
+    setSearchResultStores,
+    location,
+    setLocation,
+    searchItem,
+    setSearchitem,
+    setLoadingStoreFetching,
+    lastDocument,
+    setLastDocument,
+  } = useData();
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const {
     transcript,
@@ -29,44 +46,41 @@ const SearchArea = () => {
     if (listening) {
       setSearchitem(transcript);
     }
-  }, [listening, searchItem, transcript]);
+  }, [listening, searchItem, setSearchitem, transcript]);
 
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
 
-  // const handlesearch = async (searchQuery: string) => {
-  //   try {
-  //     const result = await searchIndex.search(searchQuery);
-  //     const storeList: StoreListType = result.hits.map((hit: any) => ({
-  //       id: hit.objectID,
-  //       title: hit.title,
-  //       active: hit.active,
-  //       address: hit.address,
-  //       email: hit.email,
-  //       tags: hit.tags,
-  //       createdAt: new Date(hit.createdAt),
-  //       phoneNumber: hit.phoneNumber,
-  //       whatssappNumber: hit.whatsappNumber,
-  //       storeIcon: hit.storeIcon,
-  //       storeImages: hit.storeImages,
-  //       userId: hit.userId,
-  //     }));
-  //     setSearchResultStores(storeList);
-  //     if (storeList && storeList.length > 0) navigate("/search-results");
-  //   } catch (error) {
-  //     console.log("Error");
-  //   }
-  // };
+  const handlesearch = async (searchQuery: string) => {
+    try {
+      const result = await searchIndex.search(searchQuery);
+      console.log(result);
+
+      const storeList: StoreListType = result.hits.map((hit: any) => ({
+        id: hit.objectID,
+        title: hit.title,
+        active: hit.active,
+        address: hit.address,
+        email: hit.email,
+        tags: hit.tags,
+        createdAt: new Date(hit.createdAt),
+        phoneNumber: hit.phoneNumber,
+        whatssappNumber: hit.whatsappNumber,
+        storeIcon: hit.storeIcon,
+        storeImages: hit.storeImages,
+        userId: hit.userId,
+      }));
+      setSearchResultStores(storeList);
+      if (storeList && storeList.length > 0) navigate("/search-results");
+    } catch (error) {
+      console.log("Error");
+    }
+  };
 
   return (
-    <div className="flex w-full flex-col items-center gap-5 justify-center lg:mb-10 mb-5 ">
-      <h2 className="font-bold text-3xl hidden lg:flex">
-        Search across &apos;3.3 Crore<span className="font-extrabold">+</span>
-        &apos; <span className="text-blue-600">Product & Services</span>
-      </h2>
-
-      {/* <div className="items-center gap-6 hidden lg:flex">
+    <div className="flex w-full flex-col items-center gap-5 justify-center">
+      <div className="items-center gap-6 hidden lg:flex">
         <SearchBox styles="px-4">
           <div className="flex justify-between items-center gap-2 h-10">
             <IoLocationOutline className="text-xl text-gray-500" />
@@ -100,6 +114,14 @@ const SearchArea = () => {
                 onClick={() => {
                   setSearchitem("");
                   SpeechRecognition.stopListening();
+                  setLastDocument(null);
+                  setSearchResultStores(null);
+                  fetchData({
+                    lastDocument,
+                    setLastDocument,
+                    setLoadingStoreFetching,
+                    setSearchResultStores,
+                  });
                 }}
                 className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
               />
@@ -113,13 +135,16 @@ const SearchArea = () => {
               onClick={() => SpeechRecognition.startListening()}
             />
 
-            <IoIosSearch className="bg-red-400 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1" />
+            <IoIosSearch
+              onClick={() => handlesearch(searchItem)}
+              className="bg-red-400 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
+            />
           </div>
         </SearchBox>
-      </div> */}
+      </div>
 
       {/* --------------------Mobile Searchbox----------------------- */}
-      {/* <div className="items-center flex lg:hidden bg-slate-40 w-full justify-center px-">
+      <div className="items-center flex lg:hidden bg-slate-40 w-full justify-center px-">
         <SearchBox styles="px-2 w-[90%] sm:w-[85%] md:w-[80%]">
           <div className="flex w-full justify-between items-center gap-2 h-10">
             <IoIosSearch
@@ -141,6 +166,15 @@ const SearchArea = () => {
                 onClick={() => {
                   setSearchitem("");
                   SpeechRecognition.stopListening();
+                  setLastDocument(null)
+                  setSearchResultStores(null)
+                  fetchData({
+                    lastDocument,
+                    setLastDocument,
+                    setLoadingStoreFetching,
+                    setSearchResultStores,
+                  });
+                  
                 }}
                 className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
               />
@@ -155,9 +189,8 @@ const SearchArea = () => {
             />
           </div>
         </SearchBox>
-      </div> */}
-      <SearchBoxes />
+      </div>
     </div>
   );
 };
-export default SearchArea;
+export default SearchBoxes;

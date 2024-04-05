@@ -10,6 +10,7 @@ import SocialMediaArea from "@/components/sections/social-media-area";
 import TopBanner from "@/components/top-banner";
 import ServicesArea from "@/components/sections/service-area/ServicesArea";
 import PopularBrandsArea from "@/components/sections/popular-brands-section/popular-brands-area";
+// import TestSearch from "@/testing/TestSearch";
 
 const HomePage = () => {
   return (
@@ -20,10 +21,11 @@ const HomePage = () => {
           <Navbar />
         </div>
         <div className="mt-32 w-full">
+          {/* <TestSearch /> */}
           <SearchArea />
           <CarouselAdds />
           <CategoriesArea />
-          {/* <AdvertizingSection /> */}
+          <AdvertizingSection />
           <ServicesArea />
           <PopularBrandsArea />
           <SocialMediaArea />
