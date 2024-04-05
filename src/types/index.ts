@@ -27,6 +27,8 @@ export type DataContextType = {
   setLoadingStoreFetching: React.Dispatch<React.SetStateAction<boolean>>;
   lastDocument: StoreObj | null;
   setLastDocument: React.Dispatch<React.SetStateAction<StoreObj | null>>;
+  isAllFetched: boolean;
+  setIsAllFetched: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // ---------------------------------

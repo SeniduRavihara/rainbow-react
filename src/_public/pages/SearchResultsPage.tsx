@@ -6,6 +6,7 @@ import SocialMediaArea from "@/components/sections/social-media-area";
 import DiscriptionArea from "@/components/sections/discription-area";
 import Footer from "@/components/footer";
 import BottomBanner from "@/components/bottom-banner";
+import FilteringArea from "../components/search-result-page/FilteringArea";
 
 const SearchResultsPage = () => {
   return (
@@ -15,6 +16,7 @@ const SearchResultsPage = () => {
       </div>
       <div className="mt-20 w-full ">
         <CarouselAdds />
+        <FilteringArea />
         <div className="flex justify-between mt-10 gap-5 px-10">
           <ResultList />
           <SearchResultAddSection />

@@ -31,6 +31,7 @@ const SearchBoxes = () => {
     setLoadingStoreFetching,
     lastDocument,
     setLastDocument,
+    setIsAllFetched,
   } = useData();
 
   const navigate = useNavigate();
@@ -71,6 +72,7 @@ const SearchBoxes = () => {
         storeImages: hit.storeImages,
         userId: hit.userId,
       }));
+      setLastDocument(null);
       setSearchResultStores(storeList);
       if (storeList && storeList.length > 0) navigate("/search-results");
     } catch (error) {
@@ -108,6 +110,9 @@ const SearchBoxes = () => {
               className="outline-none w-[400px] font-md"
               value={searchItem}
               onChange={(e) => setSearchitem(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handlesearch(searchItem);
+              }}
             />
             {(searchItem || listening) && (
               <RxCross2
@@ -121,6 +126,7 @@ const SearchBoxes = () => {
                     setLastDocument,
                     setLoadingStoreFetching,
                     setSearchResultStores,
+                    setIsAllFetched,
                   });
                 }}
                 className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
@@ -166,15 +172,15 @@ const SearchBoxes = () => {
                 onClick={() => {
                   setSearchitem("");
                   SpeechRecognition.stopListening();
-                  setLastDocument(null)
-                  setSearchResultStores(null)
+                  setLastDocument(null);
+                  setSearchResultStores(null);
                   fetchData({
                     lastDocument,
                     setLastDocument,
                     setLoadingStoreFetching,
                     setSearchResultStores,
+                    setIsAllFetched,
                   });
-                  
                 }}
                 className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
               />

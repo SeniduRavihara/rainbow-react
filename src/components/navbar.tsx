@@ -6,7 +6,24 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoIosMenu } from "react-icons/io";
 import { IonIcon } from "@ionic/react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
+import {
+  LifeBuoy,
+  LogOut,
+  Settings,
+  User,
+  Shield
+} from "lucide-react"; 
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   languageOutline,
   chevronDownOutline,
@@ -51,7 +68,9 @@ const Navbar = () => {
 
   return (
     <div className="w-full bg-white pt-3 h-20 px-5 flex items-center justify-between fixed top-7 left-0 border-b-2 border-[#00000010]">
-      <div onClick={hadleLogoClick} className="nav-logo cursor-pointer">ABCDEF.COM</div>
+      <div onClick={hadleLogoClick} className="nav-logo cursor-pointer">
+        ABCDEF.COM
+      </div>
 
       <ul className="lg:flex gap-10 font-medium hidden items-center justify-center">
         <li className="flex items-center justify-center gap-1 cursor-pointer icon-with-links">
@@ -101,7 +120,7 @@ const Navbar = () => {
           </Link>
         ) : (
           <div className="mt-1">
-            <Menu
+            {/* <Menu
               items={menuItems}
               menuBtn={
                 <div>
@@ -116,7 +135,61 @@ const Navbar = () => {
                 </div>
               }
               styles="right-5 top-24"
-            />
+            /> */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  <div>
+                    {currentUser.photoURL ? (
+                      <img
+                        src={currentUser.photoURL}
+                        className="w-10 h-10 rounded-full"
+                      />
+                    ) : (
+                      <HiOutlineUserCircle className="text-3xl" />
+                    )}
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem>
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                    <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem onClick={handleClickAdminPanel}>
+                    <Shield className="mr-2 h-4 w-4" />
+                    <span>Admin</span>
+                    <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem>
+                  <LifeBuoy className="mr-2 h-4 w-4" />
+                  <span>Support</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={logout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                  <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         )}
       </div>
@@ -128,8 +201,6 @@ const Navbar = () => {
           className="text-3xl cursor-pointer"
         /> */}
 
- 
-    
         <Sheet>
           <SheetTrigger>
             <IoIosMenu className="text-3xl cursor-pointer" />

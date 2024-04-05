@@ -1,6 +1,11 @@
 import { INITIAL_DATA_CONTEXT } from "@/constants";
 import { db } from "@/firebase/config";
-import { CurrentUserDataType, DataContextType, StoreListType, StoreObj } from "@/types";
+import {
+  CurrentUserDataType,
+  DataContextType,
+  StoreListType,
+  StoreObj,
+} from "@/types";
 import { collection, onSnapshot } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
 
@@ -26,8 +31,9 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     useState<StoreListType | null>(null);
   const [location, setLocation] = useState("");
   const [searchItem, setSearchitem] = useState("");
-    const [loadingStoreFetching, setLoadingStoreFetching] = useState(false);
-    const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
+  const [loadingStoreFetching, setLoadingStoreFetching] = useState(false);
+  const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
+  const [isAllFetched, setIsAllFetched] = useState(false)
 
   useEffect(() => {
     const collectionRef = collection(db, "sectionAdds");
@@ -90,6 +96,8 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     setLoadingStoreFetching,
     lastDocument,
     setLastDocument,
+    isAllFetched,
+    setIsAllFetched,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

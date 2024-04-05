@@ -3,6 +3,7 @@ import StoreCard from "./StoreCard";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { fetchData } from "@/firebase/api";
+import { StoreListType } from "@/types";
 
 const ResultList = () => {
   const {
@@ -11,10 +12,19 @@ const ResultList = () => {
     setLoadingStoreFetching,
     setLastDocument,
     lastDocument,
+    isAllFetched,
+    setIsAllFetched,
+    loadingStoreFetching,
   } = useData();
   // const [loading, setLoading] = useState(false);
   // const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [visibleStores, setVisibleStores] = useState<StoreListType | null>();
+  const [allPageCount, setAllPageCount] = useState(0);
+
+  useEffect(() => {
+    if (isAllFetched) setAllPageCount(currentPage);
+  }, [currentPage, isAllFetched]);
 
   useEffect(() => {
     if (!searchResultStores) {
@@ -23,6 +33,7 @@ const ResultList = () => {
         setLastDocument,
         setLoadingStoreFetching,
         setSearchResultStores,
+        setIsAllFetched,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,8 +78,18 @@ const ResultList = () => {
   //   setLoading(false);
   // };
 
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * 3;
+    const endIndex = startIndex + 3;
+
+    console.log(startIndex, endIndex);
+    setVisibleStores(
+      searchResultStores ? searchResultStores.slice(startIndex, endIndex) : []
+    );
+  }, [currentPage, searchResultStores]);
+
   const handleNextClick = () => {
-    setCurrentPage((pre) => pre + 1);
+    if (allPageCount <= currentPage) setCurrentPage((pre) => pre + 1);
 
     if (searchResultStores && searchResultStores?.length / 3 === currentPage) {
       fetchData({
@@ -76,19 +97,23 @@ const ResultList = () => {
         setLastDocument,
         setLoadingStoreFetching,
         setSearchResultStores,
+        setIsAllFetched,
       });
     }
   };
 
   const handlePrevClick = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 0));
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
   };
 
+  if (loadingStoreFetching) {
+    return <div>Loading ... </div>;
+  }
   return (
-    <div className="">
+    <div className="flex flex-col justify-between items-center">
       <ul className="flex flex-col gap-3">
-        {searchResultStores &&
-          searchResultStores.slice(currentPage, currentPage+3).map((data, index) => (
+        {visibleStores &&
+          visibleStores.map((data, index) => (
             <li key={index}>
               <StoreCard
                 address={data.address}
@@ -102,7 +127,7 @@ const ResultList = () => {
           ))}
       </ul>
 
-      <div className="flex gap-10 my-10">
+      <div className="flex gap-10 mb-2 items-end justify-center">
         <Button variant="ghost" onClick={handlePrevClick}>
           Prev
         </Button>

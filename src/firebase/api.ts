@@ -15,6 +15,7 @@ import {
   query,
   setDoc,
   startAfter,
+  where,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
@@ -178,6 +179,7 @@ export const fetchData = async ({
   lastDocument,
   setLastDocument,
   setSearchResultStores,
+  setIsAllFetched,
 }: {
   setLoadingStoreFetching: React.Dispatch<React.SetStateAction<boolean>>;
   lastDocument: StoreObj | null;
@@ -185,6 +187,7 @@ export const fetchData = async ({
   setSearchResultStores: React.Dispatch<
     React.SetStateAction<StoreListType | null>
   >;
+  setIsAllFetched: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   setLoadingStoreFetching(true);
 
@@ -193,7 +196,8 @@ export const fetchData = async ({
     collectionRef,
     orderBy("createdAt", "desc"),
     startAfter(lastDocument?.createdAt ?? ""),
-    limit(3)
+    limit(3),
+    where("active", "==", true)
   );
 
   const queryStoresSnapshot = await getDocs(q);
@@ -212,6 +216,7 @@ export const fetchData = async ({
       return [...(prev || []), ...storeListArr];
     });
   } else {
+    setIsAllFetched(true);
     console.log("All Store are Fetched!");
   }
 
