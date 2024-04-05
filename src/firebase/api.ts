@@ -3,12 +3,22 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  updateProfile,
 } from "firebase/auth";
 import { auth, db, provider, storage } from "./config";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  setDoc,
+  startAfter,
+} from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
+import { StoreListType, StoreObj } from "@/types";
 
 export const logout = async () => {
   try {
@@ -45,14 +55,11 @@ export const signup = async ({
   email,
   password,
   name,
-  gender,
-  profileImage,
 }: {
   email: string;
   password: string;
   name: string;
-  gender: string;
-  profileImage: File | null;
+  gender?: string;
 }) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
@@ -68,16 +75,15 @@ export const signup = async ({
       id: user.uid,
       email,
       roles: ["user"],
-      gender,
     };
 
     await setDoc(doc(db, "users", user.uid), payload);
 
-    if (profileImage) {
-      const profilePicUrl = await uploadProfilePic(profileImage, user.uid);
-      updateProfile(user, { photoURL: profilePicUrl });
-      user.reload();
-    }
+    // if (profileImage) {
+    //   const profilePicUrl = await uploadProfilePic(profileImage, user.uid);
+    //   updateProfile(user, { photoURL: profilePicUrl });
+    //   user.reload();
+    // }
 
     return userCredential.user.uid;
   } catch (error) {
@@ -139,19 +145,19 @@ export const createStore = async (uid: string, payload: any) => {
   }
 };
 
-const uploadProfilePic = async (file: File, uid: string) => {
-  try {
-    const fileRef = ref(storage, `/user_profile_images/${uid}`);
-    await uploadBytes(fileRef, file);
-    const photoURL = await getDownloadURL(fileRef);
-    console.log("Profile Piucture uploaded successfully!");
+// const uploadProfilePic = async (file: File, uid: string) => {
+//   try {
+//     const fileRef = ref(storage, `/user_profile_images/${uid}`);
+//     await uploadBytes(fileRef, file);
+//     const photoURL = await getDownloadURL(fileRef);
+//     console.log("Profile Piucture uploaded successfully!");
 
-    return photoURL;
-  } catch (error) {
-    console.error("Error uploading profile picture:", error);
-    throw new Error("Failed to upload profile picture");
-  }
-};
+//     return photoURL;
+//   } catch (error) {
+//     console.error("Error uploading profile picture:", error);
+//     throw new Error("Failed to upload profile picture");
+//   }
+// };
 
 export const uploadAdd = async (file: File | Blob, path: string) => {
   try {
@@ -167,3 +173,47 @@ export const uploadAdd = async (file: File | Blob, path: string) => {
   }
 };
 
+export const fetchData = async ({
+  setLoadingStoreFetching,
+  lastDocument,
+  setLastDocument,
+  setSearchResultStores,
+}: {
+  setLoadingStoreFetching: React.Dispatch<React.SetStateAction<boolean>>;
+  lastDocument: StoreObj | null;
+  setLastDocument: React.Dispatch<React.SetStateAction<StoreObj | null>>;
+  setSearchResultStores: React.Dispatch<
+    React.SetStateAction<StoreListType | null>
+  >;
+}) => {
+  setLoadingStoreFetching(true);
+
+  const collectionRef = collection(db, "store");
+  const q = query(
+    collectionRef,
+    orderBy("createdAt", "desc"),
+    startAfter(lastDocument?.createdAt ?? ""),
+    limit(3)
+  );
+
+  const queryStoresSnapshot = await getDocs(q);
+
+  const storeListArr = queryStoresSnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  })) as StoreListType;
+
+  setLastDocument(storeListArr[storeListArr.length - 1]);
+  // console.log(storeListArr);
+
+  if (storeListArr.length > 0) {
+    setSearchResultStores((prev) => {
+      if (prev && prev[0].id === storeListArr[0].id) return prev;
+      return [...(prev || []), ...storeListArr];
+    });
+  } else {
+    console.log("All Store are Fetched!");
+  }
+
+  setLoadingStoreFetching(false);
+};

@@ -1,5 +1,4 @@
 import { User } from "firebase/auth";
-import React from "react";
 
 export type DataContextType = {
   currentUserData: CurrentUserDataType;
@@ -16,6 +15,18 @@ export type DataContextType = {
     imageUrl: string;
     id: string;
   }> | null;
+  searchResultStores: StoreListType | null;
+  setSearchResultStores: React.Dispatch<
+    React.SetStateAction<StoreListType | null>
+  >;
+  searchItem: string;
+  setSearchitem: React.Dispatch<React.SetStateAction<string>>;
+  location: string;
+  setLocation: React.Dispatch<React.SetStateAction<string>>;
+  loadingStoreFetching: boolean;
+  setLoadingStoreFetching: React.Dispatch<React.SetStateAction<boolean>>;
+  lastDocument: StoreObj | null;
+  setLastDocument: React.Dispatch<React.SetStateAction<StoreObj | null>>;
 };
 
 // ---------------------------------
@@ -25,15 +36,13 @@ export type AuthContextType = {
   setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
-
 export type CurrentUserDataType = {
   id: string;
   email: string;
   name: string;
   roles: string[];
-  gender: string
+  gender: string;
 } | null;
-
 
 export type StoreObj = {
   id: string;
@@ -51,34 +60,19 @@ export type StoreObj = {
   userId: string;
 };
 
+export type StoreListType = Array<StoreObj>;
 
-export type StoreListType = Array<{
-  id: string;
-  title: string;
-  active: boolean;
-  address: string;
-  email: string;
-  // messages: string[];
-  tags: string[];
-  createdAt: Date;
-  phoneNumber: string;
-  whatssappNumber: string;
-  storeIcon: string;
-  storeImages: string[];
-  userId: string;
-}>;
-
-export type StoreListDocType = {
-  title: string;
-  active: boolean;
-  address: string;
-  email: string;
-  // messages: string[];
-  tags: string[];
-  createdAt: Date;
-  phoneNumber: string
-  whatssappNumber: string;
-  storeIcon: string;
-  storeImages: string[]
-  userId: string
-};
+// export type StoreListDocType = {
+//   title: string;
+//   active: boolean;
+//   address: string;
+//   email: string;
+//   // messages: string[];
+//   tags: string[];
+//   createdAt: Date;
+//   phoneNumber: string
+//   whatssappNumber: string;
+//   storeIcon: string;
+//   storeImages: string[]
+//   userId: string
+// };

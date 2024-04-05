@@ -21,6 +21,7 @@ import { Toaster } from "react-hot-toast";
 import StoreProfilePage from "./_private/pages/StoreProfilePage";
 import Message from "./components/admin/message";
 import Store from "./components/admin/store";
+import SearchResultsPage from "./_public/pages/SearchResultsPage";
 
 
 
@@ -36,6 +37,7 @@ const router = createBrowserRouter(
       {/* public routes */}
       <Route element={<PublicLayout />}>
         <Route index element={<HomePage />} />
+        <Route path="/search-results" element={<SearchResultsPage />} />
         {/* <Route path="/profile" element={<StoreCard />} /> */}
       </Route>
 
