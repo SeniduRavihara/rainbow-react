@@ -42,7 +42,7 @@ const AdvertizingSection = () => {
   }, [sectionAdds]);
 
   return (
-    <div className="w-full my-10">
+    <div className="w-full  my-10">
       <div className="hidden lg:flex w-full ">
         <fieldset className="w-full px-20 fieldset1">
           {adds.map((image) => (
@@ -69,8 +69,8 @@ const AdvertizingSection = () => {
 
       {/* ------------Mobile view-------------- */}
 
-      <div className="flex flex-col gap-2 lg:hidden w-full px-10 my-10">
-        <fieldset className="w-full px- fieldset2">
+      <div className="flex flex-col gap-2 lg:hidden w-full px-2 my-10">
+        <fieldset className="w-full fieldset2">
           {adds.map(
             (image, index) =>
               index <= 1 && (
@@ -95,7 +95,7 @@ const AdvertizingSection = () => {
           )}
         </fieldset>
 
-        <fieldset className="w-full px- fieldset3">
+        <fieldset className="w-full fieldset3">
           {adds.map(
             (image, index) =>
               index >= 2 && (

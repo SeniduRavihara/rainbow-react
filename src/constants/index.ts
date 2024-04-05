@@ -26,4 +26,6 @@ export const INITIAL_DATA_CONTEXT = {
   setLoadingStoreFetching: () => {},
   lastDocument: null,
   setLastDocument: () => {},
+  isAllFetched: false,
+  setIsAllFetched: ()=>{},
 };

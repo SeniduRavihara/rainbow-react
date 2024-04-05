@@ -37,6 +37,7 @@ const config = {
     extend: {
       screens: {
         xsm: "500px",
+        "880": "880px"
       },
       colors: {
         border: "hsl(var(--border))",

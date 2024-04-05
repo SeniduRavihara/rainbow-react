@@ -85,7 +85,7 @@
 
 @layer demo.support {
   .fieldset1 {
-    inline-size: 80vw;
+    inline-size: 100vw;
 
     display: grid;
     grid-auto-flow: column;
@@ -109,7 +109,7 @@
   }
 
   .fieldset2 {
-    inline-size: 80vw;
+    inline-size: 100vw;
 
     display: grid;
     grid-auto-flow: column;
@@ -133,7 +133,7 @@
   }
 
   .fieldset3 {
-    inline-size: 80vw;
+    inline-size: 100vw;
 
     display: grid;
     grid-auto-flow: column;

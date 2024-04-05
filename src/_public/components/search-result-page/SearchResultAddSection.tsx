@@ -24,7 +24,7 @@ const SearchResultAddSection = () => {
   }, []);
 
   return (
-    <ul className="flex flex-col gap-4">
+    <ul className="hidden flex-col gap-4 880:flex">
       {searchResultAdds?.map((add, index) => (
         <li key={index}>
           <img src={add.imageUrl} alt="" className="w-[400px]" />
