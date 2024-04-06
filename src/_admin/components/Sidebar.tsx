@@ -70,7 +70,7 @@ function Sidebar() {
         </li>
 
         <li>
-          <Link to="analytics" className="flex items-center gap-3">
+          <Link to="" className="flex items-center gap-3">
             <div>
               <DiGoogleAnalytics />{" "}
             </div>

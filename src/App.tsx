@@ -65,7 +65,7 @@ const router = createBrowserRouter(
             <Route path="slider-adds" element={<SliderAddsManage />} />
             <Route path="section-adds" element={<SectionAddsManage />} />
           </Route>
-          <Route path="analytics" element={<AnalyticsPage />} />
+          <Route index element={<AnalyticsPage />} />
           <Route path="comments" element={<CommentsPage />} />
         </Route>
       </Route>
