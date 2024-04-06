@@ -1,5 +1,5 @@
 import { uploadAdd } from "@/firebase/api";
-import { db, storage } from "@/firebase/config";
+import { db } from "@/firebase/config";
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ImageCropDialog from "../image-croper/CropDialog";
