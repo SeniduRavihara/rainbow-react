@@ -29,6 +29,7 @@ import SearchResultAddsManage from "./components/admin/SearchResultAddsManage";
 import SliderAddsManage from "./components/admin/SliderAddsManage";
 import SectionAddsManage from "./components/admin/SectionAddsManage";
 import CommentsPage from "./_admin/pages/CommentsPage";
+import StoreDetailsPage from "./_public/pages/StoreDetailsPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,12 +44,14 @@ const router = createBrowserRouter(
       <Route element={<PublicLayout />}>
         <Route index element={<HomePage />} />
         <Route path="/search-results" element={<SearchResultsPage />} />
+        <Route path="/store-details/:storeId" element={<StoreDetailsPage />} />
       </Route>
 
       {/* private routes */}
       <Route element={<PrivateLayout />}>
         <Route path="/store-profile" element={<StoreProfilePage />} />
         <Route path="/create-store" element={<CreateStorePage />} />
+        <Route path="/manage-store" element={<CreateStorePage />} />
       </Route>
 
       {/* admin routes */}

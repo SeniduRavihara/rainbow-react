@@ -73,7 +73,7 @@ const SearchBoxes = () => {
         userId: hit.userId,
       }));
       setLastDocument(null);
-      setSearchResultStores(storeList);
+      setSearchResultStores(storeList.filter((storeObj) => storeObj.active));
       if (storeList && storeList.length > 0) navigate("/search-results");
     } catch (error) {
       console.log("Error");

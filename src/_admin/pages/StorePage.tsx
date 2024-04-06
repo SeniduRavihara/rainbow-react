@@ -104,7 +104,7 @@ const StorePage = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">#</TableHead>
+            {/* <TableHead className="w-[100px]">Date</TableHead> */}
             <TableHead>EMAIL</TableHead>
             <TableHead>TITLE</TableHead>
             <TableHead className="text-right">ADDRESS</TableHead>
@@ -116,7 +116,7 @@ const StorePage = () => {
           {storeList &&
             storeList.map((storeObj, index) => (
               <TableRow key={index}>
-                <TableCell className="font-medium">{storeObj.email}</TableCell>
+                {/* <TableCell className="font-medium">{storeObj.createdAt.toLocaleDateString()}</TableCell> */}
                 <TableCell className="font-medium">{storeObj.email}</TableCell>
                 <TableCell>{storeObj.title}</TableCell>
                 <TableCell>{storeObj.address}</TableCell>

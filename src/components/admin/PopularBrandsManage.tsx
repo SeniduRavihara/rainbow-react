@@ -1,5 +1,5 @@
 import { uploadAdd } from "@/firebase/api";
-import { db } from "@/firebase/config";
+import { db, storage } from "@/firebase/config";
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ImageCropDialog from "../image-croper/CropDialog";
@@ -87,8 +87,11 @@ const PopularBrandsManage = () => {
     try {
       const imageUrl = await uploadAdd(
         addToUpdate.cropedImageBlob,
-        "popular_brands"
+        "popular_brands",
+        idToUpdate
       );
+
+
       try {
         const documentRef = doc(db, "pupularBrands", idToUpdate);
         await updateDoc(documentRef, {

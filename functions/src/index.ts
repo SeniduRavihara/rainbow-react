@@ -8,7 +8,6 @@ const index = client.initIndex("stores");
 export const onStoreCreated = functions.firestore
   .document("store/{storeId}")
   .onCreate((snap, ctx) => {
-
     return index.saveObject({
       objectID: ctx.params.storeId,
       ...snap.data(),
@@ -21,15 +20,15 @@ export const onStoreDelete = functions.firestore
     return index.deleteObject(ctx.params.storeId);
   });
 
-// export const createUserSuccessMessage = functions.auth
-//   .user()
-//   .onCreate((user) => {
-//     console.log("New user created:", user.uid);
-//     console.log("Welcome, ", user.displayName || "User");
-//     return null;
-//   });
+exports.onStoreUpdate = functions.firestore
+  .document("store/{storeId}")
+  .onUpdate(async (change, context) => {
+    const newData = change.after.data(); // Get the updated data
+    const objectID = context.params.storeId; // Get the ID of the updated document
 
-// export const helloWorld = onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+    return await index.partialUpdateObject({
+      objectID,
+      ...newData,
+    });
+  });
+

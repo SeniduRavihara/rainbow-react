@@ -18,7 +18,6 @@ import {
   where,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
 import { StoreListType, StoreObj } from "@/types";
 
 export const logout = async () => {
@@ -124,11 +123,7 @@ export const getUserRole = async (uid: string) => {
   // Use nullish coalescing to provide a default value if userData is undefined
   return userData?.data()?.roles ?? null;
 };
-// const getSectionAdds = async () => {
-//   const colletionRef = collection(db, "sectionAdds");
-//   const userData = await getDocs(colletionRef);
-//   return userData.data().roles;
-// };
+
 
 export const createStore = async (uid: string, payload: any) => {
   console.log(payload);
@@ -160,9 +155,13 @@ export const createStore = async (uid: string, payload: any) => {
 //   }
 // };
 
-export const uploadAdd = async (file: File | Blob, path: string) => {
+export const uploadAdd = async (
+  file: File | Blob,
+  path: string,
+  id: string
+) => {
   try {
-    const fileRef = ref(storage, `/${path}/${v4()}`);
+    const fileRef = ref(storage, `/${path}/${id}`);
     await uploadBytes(fileRef, file);
     const photoURL = await getDownloadURL(fileRef);
     console.log("Add Image uploaded successfully!");
@@ -173,6 +172,7 @@ export const uploadAdd = async (file: File | Blob, path: string) => {
     throw new Error("Failed to upload profile picture");
   }
 };
+
 
 export const fetchData = async ({
   setLoadingStoreFetching,
