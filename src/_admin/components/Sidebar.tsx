@@ -41,7 +41,7 @@ function Sidebar() {
           {/* </Link> */}
           <div>
             {isOpenAddsPage && (
-              <div>
+              <div className="flex flex-col gap-2 ml-5">
                 <Link to="popular-brands">Popular Brands</Link>
                 <Link to="search-result-adds">Search Result Adds</Link>
                 <Link to="slider-adds">Slider Adds</Link>

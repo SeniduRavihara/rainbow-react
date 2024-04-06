@@ -136,12 +136,7 @@ const SearchResultAddsManage = () => {
   };
 
   return (
-    <div
-      className="tab-pane fade show active"
-      id="home"
-      role="tabpanel"
-      aria-labelledby="home-tab"
-    >
+    <div className="w-fulll h-full">
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
           <ImageCropDialog
@@ -155,7 +150,7 @@ const SearchResultAddsManage = () => {
         </div>
       )}
       <div className="">
-        <h2 className="text-primary fw-bold">Index 1</h2>
+        <h2 className="text-primary fw-bold mb-3 text-center">Search Result Adds</h2>
         <div className="flex flex-col w-full gap-5">
           {searchResultAdds &&
             searchResultAdds.map((add) => (
