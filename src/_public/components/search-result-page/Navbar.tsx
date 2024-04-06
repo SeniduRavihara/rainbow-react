@@ -96,7 +96,7 @@ const Navbar = () => {
         </Link>
       ) : (
         <div className="mt-1">
-          <Menu
+          {/* <Menu
             items={menuItems}
             menuBtn={
               <div>
@@ -111,7 +111,7 @@ const Navbar = () => {
               </div>
             }
             styles="right-5 top-24"
-          />
+          /> */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">

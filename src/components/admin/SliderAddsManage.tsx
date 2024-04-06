@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { uploadAdd } from "@/firebase/api";
 import { db } from "@/firebase/config";
+import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import ImageCropDialog from "../image-croper/CropDialog";
 
 interface ImageData {
@@ -13,7 +13,7 @@ interface ImageData {
   id: string;
 }
 
-interface SectionAdd {
+interface SliderAdd {
   imageUrl: string;
   id: string;
   imageFile?: File;
@@ -31,29 +31,32 @@ const initData: ImageData = {
   id: "",
 };
 
-const SampleTest2: React.FC = () => {
+const SliderAddsManage = () => {
   const [isOpenCropDialog, setIsOpenCropDialog] = useState(false);
   const [imageData, setImageData] = useState<ImageData>(initData);
-  const [sectionAdds, setSectionAdds] = useState<SectionAdd[] | null>(null);
+  const [sliderAdds, setSliderAdds] = useState<SliderAdd[] | null>(null);
 
   useEffect(() => {
-    console.log(imageData);
-  }, [imageData]);
+    console.log(sliderAdds);
+  }, [sliderAdds]);
 
   useEffect(() => {
-    const collectionRef = collection(db, "sectionAdds");
-    const unsubscribe = onSnapshot(collectionRef, (querySnapshot) => {
-      const adds = querySnapshot.docs.map((doc) => ({
+    const collectionRef = collection(db, "sliderAdds");
+    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+      const sliderAddsArr = QuerySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-      })) as SectionAdd[];
-      setSectionAdds(adds);
+      })) as SliderAdd[];
+      // console.log(sliderAddsArr);
+      setSliderAdds(sliderAddsArr);
     });
+
     return unsubscribe;
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
     if (!e.target.files) return;
+
     const file = e.target.files[0];
     const localUrl = URL.createObjectURL(file);
 
@@ -64,19 +67,20 @@ const SampleTest2: React.FC = () => {
       imageFile: file,
     }));
 
-    setSectionAdds((prevState) =>
+    setSliderAdds((prevState) =>
       prevState
         ? prevState.map((add) =>
             add.id === id ? { ...add, imageFile: file, localUrl } : add
           )
         : prevState
     );
+
     setIsOpenCropDialog(true);
   };
 
   const handleClickUpdate = async (idToUpdate: string) => {
-    if (!sectionAdds) return;
-    const addToUpdate = sectionAdds.find((add) => add.id === idToUpdate);
+    if (!sliderAdds) return;
+    const addToUpdate = sliderAdds.find(({ id }) => id === idToUpdate);
     if (!addToUpdate?.cropedImageBlob) {
       console.error("Add not found or image file missing");
       return;
@@ -85,12 +89,18 @@ const SampleTest2: React.FC = () => {
     try {
       const imageUrl = await uploadAdd(
         addToUpdate.cropedImageBlob,
-        "section_adds"
+        "slider_adds"
       );
-      const documentRef = doc(db, "sectionAdds", idToUpdate);
-      await updateDoc(documentRef, { imageUrl });
+      try {
+        const documentRef = doc(db, "sliderAdds", idToUpdate);
+        await updateDoc(documentRef, {
+          imageUrl,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     } catch (error) {
-      console.error("Error uploading or updating add:", error);
+      console.error("Error uploading add:", error);
     }
   };
 
@@ -114,7 +124,7 @@ const SampleTest2: React.FC = () => {
       aspect,
     }));
 
-    setSectionAdds((prevState) =>
+    setSliderAdds((prevState) =>
       prevState
         ? prevState.map((add) =>
             add.id === imageData.id
@@ -149,8 +159,8 @@ const SampleTest2: React.FC = () => {
       <div className="">
         <h2 className="text-primary fw-bold">Index 1</h2>
         <div className="flex flex-col w-full gap-5">
-          {sectionAdds &&
-            sectionAdds.map((add) => (
+          {sliderAdds &&
+            sliderAdds.map((add) => (
               <div key={add.id} className="w-full">
                 <input
                   type="file"
@@ -173,7 +183,7 @@ const SampleTest2: React.FC = () => {
                         htmlFor={add.id}
                         className="btn btn-primary text-white shadow-none"
                       >
-                        Browse
+                        Brower
                       </label>
                       <button
                         onClick={() => handleClickUpdate(add.id)}
@@ -191,5 +201,4 @@ const SampleTest2: React.FC = () => {
     </div>
   );
 };
-
-export default SampleTest2;
+export default SliderAddsManage;
