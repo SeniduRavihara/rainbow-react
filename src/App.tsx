@@ -28,6 +28,7 @@ import PopularBrandsManage from "./components/admin/PopularBrandsManage";
 import SearchResultAddsManage from "./components/admin/SearchResultAddsManage";
 import SliderAddsManage from "./components/admin/SliderAddsManage";
 import SectionAddsManage from "./components/admin/SectionAddsManage";
+import CommentsPage from "./_admin/pages/CommentsPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -55,7 +56,7 @@ const router = createBrowserRouter(
         <Route path="/admin" element={<AdminPage2 />}>
           <Route path="message" element={<MessagePage />} />
           <Route path="stores" element={<StorePage />} />
-          <Route path="set-adds" element={<SetAddsPage />}>
+          <Route path="" element={<SetAddsPage />}>
             <Route path="popular-brands" element={<PopularBrandsManage />} />
             <Route
               path="search-result-adds"
@@ -64,7 +65,8 @@ const router = createBrowserRouter(
             <Route path="slider-adds" element={<SliderAddsManage />} />
             <Route path="section-adds" element={<SectionAddsManage />} />
           </Route>
-          <Route path="analytics" element={<AnalyticsPage />} />
+          <Route index element={<AnalyticsPage />} />
+          <Route path="comments" element={<CommentsPage />} />
         </Route>
       </Route>
     </Route>

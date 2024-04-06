@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HiSpeakerphone } from "react-icons/hi";
 import { BiSolidBookContent, BiSolidUserAccount } from "react-icons/bi";
 import { FaComments } from "react-icons/fa";
@@ -17,11 +17,17 @@ import { IoMdArrowDropdown } from "react-icons/io";
 
 function Sidebar() {
   const [isOpenAddsPage, setIsOpenAddsPage] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="w-3/12 h-screen p-5 flex flex-col items-center justify-between left-0  bg-[#3B3486] text-white">
       <ul className="flex flex-col gap-5">
-        <h1 className="text-3xl font-extrabold mb-10">LOGO</h1>
+        <h1
+          onClick={() => navigate("/")}
+          className="text-3xl font-extrabold mb-10 cursor-pointer"
+        >
+          LOGO
+        </h1>
 
         <li onClick={() => setIsOpenAddsPage(!isOpenAddsPage)}>
           {/* <Link to="set-adds" className="flex items-center gap-3"> */}
@@ -35,11 +41,11 @@ function Sidebar() {
           {/* </Link> */}
           <div>
             {isOpenAddsPage && (
-              <div>
-                {/* <Link></Link>
-                <Link></Link>
-                <Link></Link>
-                <Link></Link> */}
+              <div className="flex flex-col gap-2 ml-5">
+                <Link to="popular-brands">Popular Brands</Link>
+                <Link to="search-result-adds">Search Result Adds</Link>
+                <Link to="slider-adds">Slider Adds</Link>
+                <Link to="section-adds">Section Adds</Link>
               </div>
             )}
           </div>
@@ -55,7 +61,7 @@ function Sidebar() {
         </li>
 
         <li>
-          <Link to="set-adds" className="flex items-center gap-3">
+          <Link to="comments" className="flex items-center gap-3">
             <div>
               <FaComments />{" "}
             </div>
@@ -64,7 +70,7 @@ function Sidebar() {
         </li>
 
         <li>
-          <Link to="analytics" className="flex items-center gap-3">
+          <Link to="" className="flex items-center gap-3">
             <div>
               <DiGoogleAnalytics />{" "}
             </div>

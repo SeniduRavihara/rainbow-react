@@ -138,12 +138,7 @@ const SliderAddsManage = () => {
   };
 
   return (
-    <div
-      className="tab-pane fade show active"
-      id="home"
-      role="tabpanel"
-      aria-labelledby="home-tab"
-    >
+    <div className="w-full h-full">
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
           <ImageCropDialog

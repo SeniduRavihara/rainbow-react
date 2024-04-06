@@ -27,7 +27,7 @@ const initData: ImageData = {
   croppedImageUrl: null,
   crop: null,
   zoom: null,
-  aspect: 4/3,
+  aspect: 4 / 3,
   id: "",
 };
 
@@ -52,100 +52,94 @@ const PopularBrandsManage = () => {
     return unsubscribe;
   }, []);
 
-   const handleChange = (
-     e: React.ChangeEvent<HTMLInputElement>,
-     id: string
-   ) => {
-     if (!e.target.files) return;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+    if (!e.target.files) return;
 
-     const file = e.target.files[0];
-     const localUrl = URL.createObjectURL(file);
+    const file = e.target.files[0];
+    const localUrl = URL.createObjectURL(file);
 
-     setImageData((prevState) => ({
-       ...prevState,
-       id,
-       imageUrl: localUrl,
-       imageFile: file,
-     }));
+    setImageData((prevState) => ({
+      ...prevState,
+      id,
+      imageUrl: localUrl,
+      imageFile: file,
+    }));
 
-     setPopularBrands((prevState) =>
-       prevState
-         ? prevState.map((add) =>
-             add.id === id ? { ...add, imageFile: file, localUrl } : add
-           )
-         : prevState
-     );
+    setPopularBrands((prevState) =>
+      prevState
+        ? prevState.map((add) =>
+            add.id === id ? { ...add, imageFile: file, localUrl } : add
+          )
+        : prevState
+    );
 
-     setIsOpenCropDialog(true);
-   };
+    setIsOpenCropDialog(true);
+  };
 
-   const handleClickUpdate = async (idToUpdate: string) => {
-     if (!popularBrands) return;
-     const addToUpdate = popularBrands.find(({ id }) => id === idToUpdate);
-     if (!addToUpdate?.cropedImageBlob) {
-       console.error("Add not found or image file missing");
-       return;
-     }
+  const handleClickUpdate = async (idToUpdate: string) => {
+    if (!popularBrands) return;
+    const addToUpdate = popularBrands.find(({ id }) => id === idToUpdate);
+    if (!addToUpdate?.cropedImageBlob) {
+      console.error("Add not found or image file missing");
+      return;
+    }
 
-     try {
-       const imageUrl = await uploadAdd(
-         addToUpdate.cropedImageBlob,
-         "popular_brands"
-       );
-       try {
-         const documentRef = doc(db, "pupularBrands", idToUpdate);
-         await updateDoc(documentRef, {
-           imageUrl,
-         });
-       } catch (error) {
-         console.log(error);
-       }
-     } catch (error) {
-       console.error("Error uploading add:", error);
-     }
-   };
+    try {
+      const imageUrl = await uploadAdd(
+        addToUpdate.cropedImageBlob,
+        "popular_brands"
+      );
+      try {
+        const documentRef = doc(db, "pupularBrands", idToUpdate);
+        await updateDoc(documentRef, {
+          imageUrl,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    } catch (error) {
+      console.error("Error uploading add:", error);
+    }
+  };
 
-   const onCancel = () => {
-     setImageData(initData);
-     setIsOpenCropDialog(false);
-   };
+  const onCancel = () => {
+    setImageData(initData);
+    setIsOpenCropDialog(false);
+  };
 
-   const setCroppedImageFor = (
-     crop: { x: number; y: number },
-     zoom: number,
-     aspect: number,
-     croppedImageUrl: string,
-     cropedImageBlob: Blob
-   ) => {
-     setImageData((prevState) => ({
-       ...prevState,
-       croppedImageUrl,
-       crop,
-       zoom,
-       aspect,
-     }));
+  const setCroppedImageFor = (
+    crop: { x: number; y: number },
+    zoom: number,
+    aspect: number,
+    croppedImageUrl: string,
+    cropedImageBlob: Blob
+  ) => {
+    setImageData((prevState) => ({
+      ...prevState,
+      croppedImageUrl,
+      crop,
+      zoom,
+      aspect,
+    }));
 
-     setPopularBrands((prevState) =>
-       prevState
-         ? prevState.map((add) =>
-             add.id === imageData.id
-               ? { ...add, cropedImageBlob, croppedImageUrl }
-               : add
-           )
-         : prevState
-     );
+    setPopularBrands((prevState) =>
+      prevState
+        ? prevState.map((add) =>
+            add.id === imageData.id
+              ? { ...add, cropedImageBlob, croppedImageUrl }
+              : add
+          )
+        : prevState
+    );
 
-     setIsOpenCropDialog(false);
-   };
+    setIsOpenCropDialog(false);
+  };
 
   if (!popularBrands) return <div>Loading...</div>;
 
   return (
     <div
-      className="tab-pane fade show active"
-      id="home"
-      role="tabpanel"
-      aria-labelledby="home-tab"
+      className="w-full h-full"
     >
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
@@ -160,7 +154,7 @@ const PopularBrandsManage = () => {
         </div>
       )}
       <div className="">
-        <h2 className="text-primary fw-bold">Index 1</h2>
+        <h2 className="text-primary fw-bold mb-3 text-center">Popular Brands</h2>
         <div className="flex flex-col w-full gap-5">
           {popularBrands &&
             popularBrands.map((brand) => (

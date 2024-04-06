@@ -128,12 +128,7 @@ const SectionAddsManage: React.FC = () => {
   };
 
   return (
-    <div
-      className="tab-pane fade show active"
-      id="home"
-      role="tabpanel"
-      aria-labelledby="home-tab"
-    >
+    <div className="w-full h-full flex items-center justify-center">
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
           <ImageCropDialog
@@ -146,8 +141,8 @@ const SectionAddsManage: React.FC = () => {
           />
         </div>
       )}
-      <div className="">
-        <h2 className="text-primary fw-bold">Index 1</h2>
+      <div className="w-full">
+        <h2 className="text-primary fw-bold mb-3 text-center">Section Adds</h2>
         <div className="flex flex-col w-full gap-5">
           {sectionAdds &&
             sectionAdds.map((add) => (
