@@ -89,7 +89,8 @@ const SliderAddsManage = () => {
     try {
       const imageUrl = await uploadAdd(
         addToUpdate.cropedImageBlob,
-        "slider_adds"
+        "slider_adds",
+        idToUpdate
       );
       try {
         const documentRef = doc(db, "sliderAdds", idToUpdate);

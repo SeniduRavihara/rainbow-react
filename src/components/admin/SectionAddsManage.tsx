@@ -85,7 +85,8 @@ const SectionAddsManage: React.FC = () => {
     try {
       const imageUrl = await uploadAdd(
         addToUpdate.cropedImageBlob,
-        "section_adds"
+        "section_adds",
+        idToUpdate
       );
       const documentRef = doc(db, "sectionAdds", idToUpdate);
       await updateDoc(documentRef, { imageUrl });

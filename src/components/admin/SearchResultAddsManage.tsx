@@ -27,7 +27,7 @@ const initData: ImageData = {
   croppedImageUrl: null,
   crop: null,
   zoom: null,
-  aspect: 16 / 5,
+  aspect: 16 / 9,
   id: "",
 };
 
@@ -87,7 +87,8 @@ const SearchResultAddsManage = () => {
     try {
       const imageUrl = await uploadAdd(
         addToUpdate.cropedImageBlob,
-        "slider_adds"
+        "search-result-adds",
+        idToUpdate
       );
       try {
         const documentRef = doc(db, "searchResultAdds", idToUpdate);
@@ -136,7 +137,7 @@ const SearchResultAddsManage = () => {
   };
 
   return (
-    <div className="w-fulll h-full">
+    <div className="w-full h-full">
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
           <ImageCropDialog

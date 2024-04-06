@@ -57,7 +57,9 @@ const Navbar = () => {
         ABCDEF.COM
       </div>
 
-      <SearchBoxes />
+      <div className="">
+        <SearchBoxes />
+      </div>
 
       <ul className="lg:flex gap-10 font-medium flex items-center justify-center">
         <li className="flex items-center justify-center gap-1 cursor-pointer">

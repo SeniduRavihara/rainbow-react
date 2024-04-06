@@ -87,8 +87,11 @@ const PopularBrandsManage = () => {
     try {
       const imageUrl = await uploadAdd(
         addToUpdate.cropedImageBlob,
-        "popular_brands"
+        "popular_brands",
+        idToUpdate
       );
+
+
       try {
         const documentRef = doc(db, "pupularBrands", idToUpdate);
         await updateDoc(documentRef, {

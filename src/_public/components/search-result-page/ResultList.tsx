@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { fetchData } from "@/firebase/api";
 import { StoreListType } from "@/types";
+import { useNavigate } from "react-router-dom";
 
 const ResultList = () => {
   const {
@@ -16,11 +17,11 @@ const ResultList = () => {
     setIsAllFetched,
     loadingStoreFetching,
   } = useData();
-  // const [loading, setLoading] = useState(false);
-  // const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [visibleStores, setVisibleStores] = useState<StoreListType | null>();
   const [allPageCount, setAllPageCount] = useState(0);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (isAllFetched) setAllPageCount(currentPage);
@@ -39,50 +40,13 @@ const ResultList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(()=>{
-  //   if (searchResultStores && searchResultStores?.length / 3 === currentPage) {
-  //     setSearchResultStores(searchResultStores.slice())
-  //   }
-  // },[currentPage, searchResultStores, setSearchResultStores])
 
-  // const fetchData = async () => {
-  //   setLoading(true);
-
-    // const collectionRef = collection(db, "store");
-    // const q = query(
-    //   collectionRef,
-    //   orderBy("createdAt", "desc"),
-    //   startAfter(lastDocument?.createdAt ?? ""),
-    //   limit(3)
-    // );
-
-  //   const queryStoresSnapshot = await getDocs(q);
-
-  //   const storeListArr = queryStoresSnapshot.docs.map((doc) => ({
-  //     ...doc.data(),
-  //     id: doc.id,
-  //   })) as StoreListType;
-
-  //   setLastDocument(storeListArr[storeListArr.length - 1]);
-  //   console.log(storeListArr);
-
-  //   if (storeListArr.length > 0) {
-  //     setSearchResultStores((prev) => {
-  //       if (prev && prev[0].id === storeListArr[0].id) return prev;
-  //       return [...(prev || []), ...storeListArr];
-  //     });
-  //   } else {
-  //     console.log("All Store are Fetched!");
-  //   }
-
-  //   setLoading(false);
-  // };
 
   useEffect(() => {
     const startIndex = (currentPage - 1) * 3;
     const endIndex = startIndex + 3;
 
-    console.log(startIndex, endIndex);
+    // console.log(startIndex, endIndex);
     setVisibleStores(
       searchResultStores ? searchResultStores.slice(startIndex, endIndex) : []
     );
@@ -106,6 +70,10 @@ const ResultList = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
   };
 
+  const handleStoreClick = (id: string)=>{
+    navigate(`/store-details/${id}`);
+  }
+
   if (loadingStoreFetching) {
     return <div>Loading ... </div>;
   }
@@ -114,7 +82,7 @@ const ResultList = () => {
       <ul className="flex flex-col gap-3">
         {visibleStores &&
           visibleStores.map((data, index) => (
-            <li key={index}>
+            <li key={index} onClick={()=>handleStoreClick(data.id)}>
               <StoreCard
                 address={data.address}
                 rating={2}
