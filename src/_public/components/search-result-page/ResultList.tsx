@@ -48,13 +48,13 @@ const ResultList = () => {
   // const fetchData = async () => {
   //   setLoading(true);
 
-  //   const collectionRef = collection(db, "store");
-  //   const q = query(
-  //     collectionRef,
-  //     orderBy("createdAt", "desc"),
-  //     startAfter(lastDocument?.createdAt ?? ""),
-  //     limit(3)
-  //   );
+    // const collectionRef = collection(db, "store");
+    // const q = query(
+    //   collectionRef,
+    //   orderBy("createdAt", "desc"),
+    //   startAfter(lastDocument?.createdAt ?? ""),
+    //   limit(3)
+    // );
 
   //   const queryStoresSnapshot = await getDocs(q);
 

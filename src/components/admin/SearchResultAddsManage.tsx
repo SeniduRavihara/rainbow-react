@@ -13,7 +13,7 @@ interface ImageData {
   id: string;
 }
 
-interface SliderAdd {
+interface SearchResultAdd {
   imageUrl: string;
   id: string;
   imageFile?: File;
@@ -31,24 +31,22 @@ const initData: ImageData = {
   id: "",
 };
 
-const SampleTestSetion1 = () => {
+const SearchResultAddsManage = () => {
   const [isOpenCropDialog, setIsOpenCropDialog] = useState(false);
   const [imageData, setImageData] = useState<ImageData>(initData);
-  const [sliderAdds, setSliderAdds] = useState<SliderAdd[] | null>(null);
+  const [searchResultAdds, setSearchResultAdds] = useState<
+    SearchResultAdd[] | null
+  >(null);
 
   useEffect(() => {
-    console.log(sliderAdds);
-  }, [sliderAdds]);
-
-  useEffect(() => {
-    const collectionRef = collection(db, "sliderAdds");
+    const collectionRef = collection(db, "searchResultAdds");
     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-      const sliderAddsArr = QuerySnapshot.docs.map((doc) => ({
+      const searchResultAddsArr = QuerySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-      })) as SliderAdd[];
-      // console.log(sliderAddsArr);
-      setSliderAdds(sliderAddsArr);
+      })) as SearchResultAdd[];
+      // console.log searchResultAddsArr);
+      setSearchResultAdds(searchResultAddsArr);
     });
 
     return unsubscribe;
@@ -67,7 +65,7 @@ const SampleTestSetion1 = () => {
       imageFile: file,
     }));
 
-    setSliderAdds((prevState) =>
+    setSearchResultAdds((prevState) =>
       prevState
         ? prevState.map((add) =>
             add.id === id ? { ...add, imageFile: file, localUrl } : add
@@ -79,8 +77,8 @@ const SampleTestSetion1 = () => {
   };
 
   const handleClickUpdate = async (idToUpdate: string) => {
-    if (!sliderAdds) return;
-    const addToUpdate = sliderAdds.find(({ id }) => id === idToUpdate);
+    if (!searchResultAdds) return;
+    const addToUpdate = searchResultAdds.find(({ id }) => id === idToUpdate);
     if (!addToUpdate?.cropedImageBlob) {
       console.error("Add not found or image file missing");
       return;
@@ -92,7 +90,7 @@ const SampleTestSetion1 = () => {
         "slider_adds"
       );
       try {
-        const documentRef = doc(db, "sliderAdds", idToUpdate);
+        const documentRef = doc(db, "searchResultAdds", idToUpdate);
         await updateDoc(documentRef, {
           imageUrl,
         });
@@ -124,7 +122,7 @@ const SampleTestSetion1 = () => {
       aspect,
     }));
 
-    setSliderAdds((prevState) =>
+    setSearchResultAdds((prevState) =>
       prevState
         ? prevState.map((add) =>
             add.id === imageData.id
@@ -159,8 +157,8 @@ const SampleTestSetion1 = () => {
       <div className="">
         <h2 className="text-primary fw-bold">Index 1</h2>
         <div className="flex flex-col w-full gap-5">
-          {sliderAdds &&
-            sliderAdds.map((add) => (
+          {searchResultAdds &&
+            searchResultAdds.map((add) => (
               <div key={add.id} className="w-full">
                 <input
                   type="file"
@@ -201,4 +199,4 @@ const SampleTestSetion1 = () => {
     </div>
   );
 };
-export default SampleTestSetion1;
+export default SearchResultAddsManage;

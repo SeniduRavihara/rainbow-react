@@ -31,7 +31,7 @@ const initData: ImageData = {
   id: "",
 };
 
-const PopularBrands = () => {
+const PopularBrandsManage = () => {
   const [isOpenCropDialog, setIsOpenCropDialog] = useState(false);
   const [imageData, setImageData] = useState<ImageData>(initData);
   const [popularBrands, setPopularBrands] = useState<PopularBrands[] | null>(
@@ -204,4 +204,4 @@ const PopularBrands = () => {
     </div>
   );
 };
-export default PopularBrands;
+export default PopularBrandsManage;

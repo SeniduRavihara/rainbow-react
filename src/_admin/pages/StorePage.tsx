@@ -20,12 +20,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tag } from "@chakra-ui/react";
-import { Button } from "../ui/button";
+import { Button } from "../../components/ui/button";
 import { StoreListType, StoreObj } from "@/types";
-import Loader from "../Loader";
+import Loader from "../../components/Loader";
 import { cn } from "@/lib/utils";
 
-const Store = () => {
+const StorePage = () => {
   const [storeList, setStoreList] = useState<StoreListType | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadingActive, setLoadingActive] = useState({ id: "", state: false });
@@ -44,7 +44,7 @@ const Store = () => {
       collectionRef,
       orderBy("createdAt", "desc"),
       startAfter(lastDocument?.createdAt ?? ""),
-      limit(2),
+      limit(2)
     );
 
     const queryStoresSnapshot = await getDocs(q);
@@ -158,4 +158,4 @@ const Store = () => {
     </div>
   );
 };
-export default Store;
+export default StorePage;

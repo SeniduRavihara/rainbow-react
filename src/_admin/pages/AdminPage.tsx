@@ -1,9 +1,9 @@
-import Message from "@/components/admin/message";
-import PopularBrands from "@/components/admin/popular-brands";
-import SampleTestSetion1 from "@/components/admin/sample-test-setion1";
-import SampleTest2 from "@/components/admin/sample-test2";
-import SearchResultAd from "@/components/admin/search-result-ad";
-import Store from "@/components/admin/store";
+import Message from "@/_admin/pages/MessagePage";
+import PopularBrands from "@/components/admin/PopularBrandsManage";
+import SliderAddsManage from "@/components/admin/SliderAddsManage";
+import SampleTest2 from "@/components/admin/SectionAddsManage";
+import SearchResultAd from "@/components/admin/SearchResultAddsManage";
+import Store from "@/_admin/pages/StorePage";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
@@ -38,7 +38,7 @@ const AdminPage = () => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <SampleTestSetion1 />
+            <SliderAddsManage />
           </TabPanel>
           <TabPanel>
             <SampleTest2 />

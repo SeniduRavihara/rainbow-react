@@ -1,7 +1,7 @@
+import React, { useEffect, useState } from "react";
+import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { uploadAdd } from "@/firebase/api";
 import { db } from "@/firebase/config";
-import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
 import ImageCropDialog from "../image-croper/CropDialog";
 
 interface ImageData {
@@ -13,7 +13,7 @@ interface ImageData {
   id: string;
 }
 
-interface SearchResultAdd {
+interface SectionAdd {
   imageUrl: string;
   id: string;
   imageFile?: File;
@@ -31,30 +31,29 @@ const initData: ImageData = {
   id: "",
 };
 
-const SearchResultAd = () => {
+const SectionAddsManage: React.FC = () => {
   const [isOpenCropDialog, setIsOpenCropDialog] = useState(false);
   const [imageData, setImageData] = useState<ImageData>(initData);
-  const [searchResultAdds, setSearchResultAdds] = useState<
-    SearchResultAdd[] | null
-  >(null);
+  const [sectionAdds, setSectionAdds] = useState<SectionAdd[] | null>(null);
 
   useEffect(() => {
-    const collectionRef = collection(db, "searchResultAdds");
-    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-      const searchResultAddsArr = QuerySnapshot.docs.map((doc) => ({
+    console.log(imageData);
+  }, [imageData]);
+
+  useEffect(() => {
+    const collectionRef = collection(db, "sectionAdds");
+    const unsubscribe = onSnapshot(collectionRef, (querySnapshot) => {
+      const adds = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-      })) as SearchResultAdd[];
-      // console.log searchResultAddsArr);
-      setSearchResultAdds(searchResultAddsArr);
+      })) as SectionAdd[];
+      setSectionAdds(adds);
     });
-
     return unsubscribe;
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
     if (!e.target.files) return;
-
     const file = e.target.files[0];
     const localUrl = URL.createObjectURL(file);
 
@@ -65,20 +64,19 @@ const SearchResultAd = () => {
       imageFile: file,
     }));
 
-    setSearchResultAdds((prevState) =>
+    setSectionAdds((prevState) =>
       prevState
         ? prevState.map((add) =>
             add.id === id ? { ...add, imageFile: file, localUrl } : add
           )
         : prevState
     );
-
     setIsOpenCropDialog(true);
   };
 
   const handleClickUpdate = async (idToUpdate: string) => {
-    if (!searchResultAdds) return;
-    const addToUpdate = searchResultAdds.find(({ id }) => id === idToUpdate);
+    if (!sectionAdds) return;
+    const addToUpdate = sectionAdds.find((add) => add.id === idToUpdate);
     if (!addToUpdate?.cropedImageBlob) {
       console.error("Add not found or image file missing");
       return;
@@ -87,18 +85,12 @@ const SearchResultAd = () => {
     try {
       const imageUrl = await uploadAdd(
         addToUpdate.cropedImageBlob,
-        "slider_adds"
+        "section_adds"
       );
-      try {
-        const documentRef = doc(db, "searchResultAdds", idToUpdate);
-        await updateDoc(documentRef, {
-          imageUrl,
-        });
-      } catch (error) {
-        console.log(error);
-      }
+      const documentRef = doc(db, "sectionAdds", idToUpdate);
+      await updateDoc(documentRef, { imageUrl });
     } catch (error) {
-      console.error("Error uploading add:", error);
+      console.error("Error uploading or updating add:", error);
     }
   };
 
@@ -122,7 +114,7 @@ const SearchResultAd = () => {
       aspect,
     }));
 
-    setSearchResultAdds((prevState) =>
+    setSectionAdds((prevState) =>
       prevState
         ? prevState.map((add) =>
             add.id === imageData.id
@@ -157,8 +149,8 @@ const SearchResultAd = () => {
       <div className="">
         <h2 className="text-primary fw-bold">Index 1</h2>
         <div className="flex flex-col w-full gap-5">
-          {searchResultAdds &&
-            searchResultAdds.map((add) => (
+          {sectionAdds &&
+            sectionAdds.map((add) => (
               <div key={add.id} className="w-full">
                 <input
                   type="file"
@@ -181,7 +173,7 @@ const SearchResultAd = () => {
                         htmlFor={add.id}
                         className="btn btn-primary text-white shadow-none"
                       >
-                        Brower
+                        Browse
                       </label>
                       <button
                         onClick={() => handleClickUpdate(add.id)}
@@ -199,4 +191,5 @@ const SearchResultAd = () => {
     </div>
   );
 };
-export default SearchResultAd;
+
+export default SectionAddsManage;
