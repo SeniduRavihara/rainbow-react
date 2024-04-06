@@ -11,7 +11,8 @@ import {
   LogOut,
   Settings,
   User,
-  Shield
+  Shield,
+  Store
 } from "lucide-react"; 
 import { Button } from "@/components/ui/button";
 import {
@@ -167,11 +168,14 @@ const Navbar = () => {
                     <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem onClick={handleClickAdminPanel}>
-                    <Shield className="mr-2 h-4 w-4" />
-                    <span>Admin</span>
-                    <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                  </DropdownMenuItem>
+                  {currentUserData &&
+                    currentUserData.roles.includes("admin") && (
+                      <DropdownMenuItem onClick={handleClickAdminPanel}>
+                        <Shield className="mr-2 h-4 w-4" />
+                        <span>Admin</span>
+                        <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                    )}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
 
@@ -180,6 +184,10 @@ const Navbar = () => {
                 <DropdownMenuItem>
                   <LifeBuoy className="mr-2 h-4 w-4" />
                   <span>Support</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleCreateStoreClick}>
+                  <Store className="mr-2 h-4 w-4" />
+                  <span>Create Store</span>
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
