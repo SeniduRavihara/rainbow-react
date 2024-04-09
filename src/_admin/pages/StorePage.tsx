@@ -44,7 +44,7 @@ const StorePage = () => {
       collectionRef,
       orderBy("createdAt", "desc"),
       startAfter(lastDocument?.createdAt ?? ""),
-      limit(2)
+      limit(6)
     );
 
     const queryStoresSnapshot = await getDocs(q);
@@ -100,7 +100,7 @@ const StorePage = () => {
   };
 
   return (
-    <div>
+    <div className="pb-10">
       <Table>
         <TableHeader>
           <TableRow>
@@ -148,13 +148,15 @@ const StorePage = () => {
         </TableBody>
       </Table>
 
-      <Button
-        className="flex items-center justify-center"
-        onClick={fetchData}
-        disabled={loading}
-      >
-        {loading ? <Loader /> : "Load More"}
-      </Button>
+      <div className="w-full flex items-center justify-center">
+        <Button
+          className="flex items-center justify-center"
+          onClick={fetchData}
+          disabled={loading}
+        >
+          {loading ? <Loader /> : "Load More"}
+        </Button>
+      </div>
     </div>
   );
 };

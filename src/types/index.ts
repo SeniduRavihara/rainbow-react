@@ -1,4 +1,5 @@
 import { User } from "firebase/auth";
+import { Timestamp } from "firebase/firestore";
 
 export type DataContextType = {
   currentUserData: CurrentUserDataType;
@@ -29,6 +30,11 @@ export type DataContextType = {
   setLastDocument: React.Dispatch<React.SetStateAction<StoreObj | null>>;
   isAllFetched: boolean;
   setIsAllFetched: React.Dispatch<React.SetStateAction<boolean>>;
+  messagesToAll: Array<{
+    message: string;
+    id: string;
+    createdAt: Timestamp;
+  }> | null;
 };
 
 // ---------------------------------
@@ -44,9 +50,8 @@ export type CurrentUserDataType = {
   name: string;
   roles: string[];
   gender: string;
-  haveStore: boolean
+  haveStore: boolean;
 } | null;
-
 
 type ValuePiece = Date | string | null;
 
