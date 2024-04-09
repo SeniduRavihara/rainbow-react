@@ -16,16 +16,42 @@ import { IonIcon } from "@ionic/react";
 import { Tag } from "@chakra-ui/react";
 import { locationOutline } from "ionicons/icons";
 import ReviewsAndRatings from "../components/store-details-page/ReviewsAndRatings";
-import Gallery from "../components/store-details-page/Gallery";
+// import Gallery from "../components/store-details-page/Gallery";
 import OpenTimes from "../components/store-details-page/OpenTimes";
 import DetailsPageAdds from "../components/store-details-page/DetailsPageAdds";
+import TabComponent from "../components/store-details-page/tabs/TabComponent";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "@/firebase/config";
+
+
 const StoreDetailsPage = () => {
   const { searchResultStores } = useData();
   const [selectedStore, setSelectedStore] = useState<StoreObj | null>(null);
   const params = useParams();
   const storeId = params.storeId;
+  const [detailsPageAdds, setDetailsPageAdds] = useState<Array<{
+    imageUrl: string;
+    id: string;
+  }> | null>(null);
 
   const navigate = useNavigate();
+
+
+    useEffect(() => {
+      const collectionRef = collection(db, "detailsPageAdds");
+      const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+        const searchResultAdds = QuerySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        })) as Array<{ imageUrl: string; id: string }>;
+
+        // console.log(searchResultAdds);
+        setDetailsPageAdds(searchResultAdds);
+      });
+
+      return unsubscribe;
+    }, []);
+
 
   useEffect(() => {
     if (!searchResultStores) navigate("/");
@@ -35,15 +61,15 @@ const StoreDetailsPage = () => {
   }, [navigate, searchResultStores, storeId]);
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-screen p-5">
       <div className="fixed top-0 left-0 z-50">
         <Navbar />
       </div>
 
       <div className="mt-20 w-full ">
-        <Gallery />
+        {/* <Gallery /> */}
         <div className="flex justify-between">
-          <div>
+          <div className="w-9/12">
             <div className="flex rounded-md max-w-[750px] h-44 border-2">
               <div className="w-4/12 flex items-center justify-center">
                 <Carousel
@@ -90,13 +116,15 @@ const StoreDetailsPage = () => {
                   <div>{selectedStore?.address}</div>
                 </div>
 
-                <div>
-                  <Tag>{selectedStore?.tags}</Tag>
+                <div className="flex gap-1">
+                  {selectedStore?.tags.map((tag, index) => (
+                    <Tag key={index}>{tag}</Tag>
+                  ))}
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div className="flex gap-2 items-center">
-                    <div>{selectedStore?.whatssappNumber}</div>
+                    <div>{selectedStore?.whatsappNumber}</div>
                     <div>Send Enquery</div>
                     <div>Chat</div>
                   </div>
@@ -105,11 +133,12 @@ const StoreDetailsPage = () => {
               </div>
             </div>
 
+            <TabComponent selectedStore={selectedStore} />
             <ReviewsAndRatings />
           </div>
-          <div className="flex flex-col gap-10">
-            <OpenTimes />
-            <DetailsPageAdds />
+          <div className="flex flex-col gap-10 w-3/12">
+            <OpenTimes schedulArr={selectedStore?.schedulArr || []} />
+            <DetailsPageAdds detailsPageAdds={detailsPageAdds} />
           </div>
         </div>
         <SocialMediaArea />
