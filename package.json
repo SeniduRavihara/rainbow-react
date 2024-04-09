@@ -33,6 +33,7 @@
     "framer-motion": "^11.0.20",
     "lucide-react": "^0.354.0",
     "react": "^18.2.0",
+    "react-autosuggest": "^10.1.0",
     "react-dom": "^18.2.0",
     "react-easy-crop": "^5.0.6",
     "react-hook-form": "^7.51.0",
