@@ -79,7 +79,7 @@ const ImageCropDialog = ({
       croppedAreaPixels
     )) as Blob;
     const croppedImageUrl: string = URL.createObjectURL(cropedImageBlob);
-    console.log(croppedImageUrl);
+    // console.log(croppedImageUrl);
 
     setCroppedImageFor(
       crop,

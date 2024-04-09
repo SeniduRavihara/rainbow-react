@@ -56,7 +56,7 @@ const SearchBoxes = () => {
   const handlesearch = async (searchQuery: string) => {
     try {
       const result = await searchIndex.search(searchQuery);
-      console.log(result);
+      // console.log(result);
 
       const storeList: StoreListType = result.hits.map((hit: any) => ({
         id: hit.objectID,

@@ -47,7 +47,7 @@ export const login = async ({
       email,
       password
     );
-    console.log(userCredential);
+    // console.log(userCredential);
 
     return userCredential.user.uid;
   } catch (error) {
@@ -73,7 +73,7 @@ export const signup = async ({
       email,
       password
     );
-    console.log(userCredential);
+    // console.log(userCredential);
     const user = userCredential.user;
 
     const payload = {
@@ -103,7 +103,7 @@ export const signup = async ({
 export const googleSignIn = async () => {
   try {
     const userCredential = await signInWithPopup(auth, provider);
-    console.log(userCredential);
+    // console.log(userCredential);
 
     const user = userCredential.user;
     const userDocRef = doc(db, "users", user.uid);
@@ -135,7 +135,7 @@ export const getUserRole = async (uid: string) => {
 
 // ----------------------------------------------
 export const createStore = async (uid: string, payload: any) => {
-  console.log("PAYLOAD", payload);
+  // console.log("PAYLOAD", payload);
 
   try {
     await setDoc(doc(db, "store", uid), {
@@ -153,7 +153,7 @@ export const createStore = async (uid: string, payload: any) => {
 
 // -------------------------------------------
 export const updateStore = async (uid: string, payload: any) => {
-  console.log(payload);
+  // console.log(payload);
 
   try {
     await updateDoc(doc(db, "store", uid), {

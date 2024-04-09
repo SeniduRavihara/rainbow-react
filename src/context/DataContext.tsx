@@ -151,7 +151,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
           })) as Array<{ message: string; id: string; createdAt: Timestamp }>;
 
           setMessagesToAll(messageArr);
-          console.log(messageArr);
+          // console.log(messageArr);
         });
 
         return unsubscribe;

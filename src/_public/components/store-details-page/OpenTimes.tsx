@@ -6,7 +6,7 @@ const OpenTimes = ({
 }: {
   schedulArr: Array<{ day: string; time: TimeValue }>;
 }) => {
-  console.log(schedulArr);
+  // console.log(schedulArr);
 
   if (!schedulArr) return <></>;
   return (

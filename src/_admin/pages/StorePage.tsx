@@ -55,7 +55,7 @@ const StorePage = () => {
     })) as StoreListType;
 
     setLastDocument(storeListArr[storeListArr.length - 1]);
-    console.log(storeListArr);
+    // console.log(storeListArr);
 
     if (storeListArr.length > 0) {
       setStoreList((prev) => {

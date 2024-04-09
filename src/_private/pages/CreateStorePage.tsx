@@ -102,7 +102,7 @@ const CreateStorePage = () => {
             return updatedImages;
           });
 
-          console.log("Download URL:", photoURL);
+          // console.log("Download URL:", photoURL);
         }
         console.log("All files uploaded successfully!");
       } catch (error) {
