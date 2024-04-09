@@ -11,14 +11,14 @@ import { Pagination, Navigation } from "swiper/modules";
 type ImageSwiperProps = {
   storeImages: Array<{
     index: number;
-    file: File;
+    file?: File;
     imageUrl: null | string;
   }>;
   setStoreImages: React.Dispatch<
     React.SetStateAction<
       Array<{
         index: number;
-        file: File;
+        file?: File;
         imageUrl: null | string;
       }>
     >
@@ -57,10 +57,11 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
     const slides = [];
     for (let i = 1; i <= 5; i++) {
       const file = storeImages[i - 1]?.file;
+      const imgUrl = storeImages[i-1].imageUrl
 
       const imageUrl = file
         ? URL.createObjectURL(file)
-        : "/assets/img/image-gallery.png";
+        :imgUrl ?? "/assets/img/image-gallery.png";
 
       slides.push(
         <SwiperSlide key={i}>

@@ -17,7 +17,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import CreateStorePage from "./_private/pages/CreateStorePage";
 import AdminLayout from "./_admin/AdminLayout";
 import { Toaster } from "react-hot-toast";
-import StoreProfilePage from "./_private/pages/StoreProfilePage";
+// import StoreProfilePage from "./_private/pages/StoreProfilePage";
 import MessagePage from "./_admin/pages/MessagePage";
 import StorePage from "./_admin/pages/StorePage";
 import SearchResultsPage from "./_public/pages/SearchResultsPage";
@@ -30,6 +30,8 @@ import SliderAddsManage from "./components/admin/SliderAddsManage";
 import SectionAddsManage from "./components/admin/SectionAddsManage";
 import CommentsPage from "./_admin/pages/CommentsPage";
 import StoreDetailsPage from "./_public/pages/StoreDetailsPage";
+import ManageStorePage from "./_private/pages/ManageStorePage";
+import DetailsPageAddsManage from "./components/admin/DetailsPageAddsManage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -49,9 +51,9 @@ const router = createBrowserRouter(
 
       {/* private routes */}
       <Route element={<PrivateLayout />}>
-        <Route path="/store-profile" element={<StoreProfilePage />} />
         <Route path="/create-store" element={<CreateStorePage />} />
-        <Route path="/manage-store" element={<CreateStorePage />} />
+        <Route path="/manage-store" element={<ManageStorePage />} />
+        
       </Route>
 
       {/* admin routes */}
@@ -67,6 +69,7 @@ const router = createBrowserRouter(
             />
             <Route path="slider-adds" element={<SliderAddsManage />} />
             <Route path="section-adds" element={<SectionAddsManage />} />
+            <Route path="details-page-adds" element={<DetailsPageAddsManage />} />
           </Route>
           <Route index element={<AnalyticsPage />} />
           <Route path="comments" element={<CommentsPage />} />

@@ -46,6 +46,7 @@ function Sidebar() {
                 <Link to="search-result-adds">Search Result Adds</Link>
                 <Link to="slider-adds">Slider Adds</Link>
                 <Link to="section-adds">Section Adds</Link>
+                <Link to="details-page-adds">DetailsPage Adds</Link>
               </div>
             )}
           </div>

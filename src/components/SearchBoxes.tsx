@@ -67,13 +67,25 @@ const SearchBoxes = () => {
         tags: hit.tags,
         createdAt: new Date(hit.createdAt),
         phoneNumber: hit.phoneNumber,
-        whatssappNumber: hit.whatsappNumber,
+        whatsappNumber: hit.whatsappNumber,
         storeIcon: hit.storeIcon,
         storeImages: hit.storeImages,
         userId: hit.userId,
+        info1: hit.info1,
+        info2: hit.info2,
+        published: hit.published,
+        schedulArr: hit.schedulArr,
       }));
       setLastDocument(null);
-      setSearchResultStores(storeList.filter((storeObj) => storeObj.active));
+      setSearchResultStores(
+        storeList
+          .filter((storeObj) => storeObj.active && storeObj.published)
+          .filter((storeObj) =>
+            location
+              ? storeObj.address.toLowerCase().includes(location.toLowerCase())
+              : storeObj
+          )
+      );
       if (storeList && storeList.length > 0) navigate("/search-results");
     } catch (error) {
       console.log("Error");

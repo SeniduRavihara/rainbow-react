@@ -29,3 +29,13 @@ export const INITIAL_DATA_CONTEXT = {
   isAllFetched: false,
   setIsAllFetched: ()=>{},
 };
+
+export const INITIAL_SCHEDULAR_ARR = [
+  { day: "Monday", time: ["08:00", "05:00"] },
+  { day: "Tuesday", time: ["08:00", "05:00"] },
+  { day: "Wednesday", time: ["08:00", "05:00"] },
+  { day: "Thursday", time: ["08:00", "05:00"] },
+  { day: "Friday", time: ["08:00", "05:00"] },
+  { day: "Saturday", time: ["08:00", "05:00"] },
+  { day: "Sunday", time: ["08:00", "05:00"] },
+]; 

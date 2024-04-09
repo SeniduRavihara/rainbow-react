@@ -7,7 +7,6 @@ import { useData } from "@/hooks/useData";
 import { barChartOutline } from "ionicons/icons";
 import SearchBoxes from "@/components/SearchBoxes";
 import { LifeBuoy, LogOut, Settings, User, Shield, Store } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +14,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -113,7 +111,6 @@ const Navbar = () => {
           /> */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">
                 <div>
                   {currentUser.photoURL ? (
                     <img
@@ -124,7 +121,6 @@ const Navbar = () => {
                     <HiOutlineUserCircle className="text-3xl" />
                   )}
                 </div>
-              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -133,20 +129,17 @@ const Navbar = () => {
                 <DropdownMenuItem>
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
-                  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem>
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
-                  <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                 </DropdownMenuItem>
 
                 {currentUserData && currentUserData.roles.includes("admin") && (
                   <DropdownMenuItem onClick={handleClickAdminPanel}>
                     <Shield className="mr-2 h-4 w-4" />
                     <span>Admin</span>
-                    <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                   </DropdownMenuItem>
                 )}
               </DropdownMenuGroup>
@@ -167,7 +160,6 @@ const Navbar = () => {
               <DropdownMenuItem onClick={logout}>
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>
-                <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -15,11 +15,14 @@ import {
   query,
   setDoc,
   startAfter,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { StoreListType, StoreObj } from "@/types";
 
+
+// --------------------------------------
 export const logout = async () => {
   try {
     await signOut(auth);
@@ -29,6 +32,7 @@ export const logout = async () => {
   }
 };
 
+// ---------------------------------------
 export const login = async ({
   email,
   password,
@@ -51,6 +55,7 @@ export const login = async ({
   }
 };
 
+// -------------------------------------
 export const signup = async ({
   email,
   password,
@@ -75,6 +80,7 @@ export const signup = async ({
       id: user.uid,
       email,
       roles: ["user"],
+      haveStore: false,
     };
 
     await setDoc(doc(db, "users", user.uid), payload);
@@ -92,6 +98,7 @@ export const signup = async ({
   }
 };
 
+// -------------------------------------
 export const googleSignIn = async () => {
   try {
     const userCredential = await signInWithPopup(auth, provider);
@@ -116,6 +123,7 @@ export const googleSignIn = async () => {
   }
 };
 
+// ----------------------------------------------
 export const getUserRole = async (uid: string) => {
   const documentRef = doc(db, "users", uid);
   const userData = await getDoc(documentRef);
@@ -124,9 +132,9 @@ export const getUserRole = async (uid: string) => {
   return userData?.data()?.roles ?? null;
 };
 
-
+// ----------------------------------------------
 export const createStore = async (uid: string, payload: any) => {
-  console.log(payload);
+  console.log("PAYLOAD",payload);
 
   try {
     await setDoc(doc(db, "store", uid), {
@@ -134,10 +142,41 @@ export const createStore = async (uid: string, payload: any) => {
       userId: uid,
       active: false,
       createdAt: new Date(),
+      published: false,
     });
     console.log("Document successfully written to Firestore!");
   } catch (error) {
     console.error("Error writing document:", error);
+  }
+};
+
+// -------------------------------------------
+export const updateStore = async (uid: string, payload: any) => {
+  console.log(payload);
+
+  try {
+    await updateDoc(doc(db, "store", uid), {
+      ...payload,
+    });
+    console.log("Document Update successfully");
+  } catch (error) {
+    console.error("Error writing document:", error);
+  }
+};
+
+
+// -------------------------------------------
+export const updateProfileForHaveStore = async (
+  uid: string,
+  haveStore: boolean
+) => {
+  try {
+    const documentRef = doc(db, "users", uid);
+    await updateDoc(documentRef, {
+      haveStore,
+    });
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -155,6 +194,7 @@ export const createStore = async (uid: string, payload: any) => {
 //   }
 // };
 
+// ---------------------------------------
 export const uploadAdd = async (
   file: File | Blob,
   path: string,
@@ -173,7 +213,7 @@ export const uploadAdd = async (
   }
 };
 
-
+// ----------------------------------------------
 export const fetchData = async ({
   setLoadingStoreFetching,
   lastDocument,
@@ -197,7 +237,8 @@ export const fetchData = async ({
     orderBy("createdAt", "desc"),
     startAfter(lastDocument?.createdAt ?? ""),
     limit(3),
-    where("active", "==", true)
+    where("active", "==", true),
+    where("published", "==", true)
   );
 
   const queryStoresSnapshot = await getDocs(q);
@@ -221,4 +262,29 @@ export const fetchData = async ({
   }
 
   setLoadingStoreFetching(false);
+};
+
+// export const getCurrentUsersStore = async (uid: string) => {
+//   const documentRef = doc(db, "store", uid);
+
+//   try {
+//     const storeData = await getDoc(documentRef);
+
+//     return storeData?.data() as StoreObj;
+//   } catch (error) {
+//     console.error("Error retrieving store data:", error);
+//     return null;
+//   }
+// };
+
+//--------------------------------------------------
+export const togglePublish = async (uid: string, published: boolean) => {
+  try {
+    const documentRef = doc(db, "store", uid);
+    await updateDoc(documentRef, {
+      published : !published,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

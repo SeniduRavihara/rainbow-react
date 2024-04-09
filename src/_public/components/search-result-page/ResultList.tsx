@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { fetchData } from "@/firebase/api";
 import { StoreListType } from "@/types";
-import { useNavigate } from "react-router-dom";
 
 const ResultList = () => {
   const {
@@ -20,8 +19,6 @@ const ResultList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [visibleStores, setVisibleStores] = useState<StoreListType | null>();
   const [allPageCount, setAllPageCount] = useState(0);
-
-  const navigate = useNavigate()
 
   useEffect(() => {
     if (isAllFetched) setAllPageCount(currentPage);
@@ -70,9 +67,9 @@ const ResultList = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
   };
 
-  const handleStoreClick = (id: string)=>{
-    navigate(`/store-details/${id}`);
-  }
+  // const handleStoreClick = (id: string)=>{
+  //   navigate(`/store-details/${id}`);
+  // }
 
   if (loadingStoreFetching) {
     return <div>Loading ... </div>;
@@ -82,14 +79,15 @@ const ResultList = () => {
       <ul className="flex flex-col gap-3">
         {visibleStores &&
           visibleStores.map((data, index) => (
-            <li key={index} onClick={()=>handleStoreClick(data.id)}>
+            <li key={index}>
               <StoreCard
+                id={data.id}
                 address={data.address}
                 rating={2}
                 title={data.title}
                 storeImages={data.storeImages}
-                tags={data.tags[0]}
-                whatsappnumber={data.whatssappNumber}
+                tags={data.tags}
+                whatsappnumber={data.whatsappNumber}
               />
             </li>
           ))}

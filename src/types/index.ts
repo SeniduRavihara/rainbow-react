@@ -44,7 +44,13 @@ export type CurrentUserDataType = {
   name: string;
   roles: string[];
   gender: string;
+  haveStore: boolean
 } | null;
+
+
+type ValuePiece = Date | string | null;
+
+export type TimeValue = ValuePiece | [ValuePiece, ValuePiece];
 
 export type StoreObj = {
   id: string;
@@ -56,10 +62,14 @@ export type StoreObj = {
   tags: string[];
   createdAt: Date;
   phoneNumber: string;
-  whatssappNumber: string;
+  whatsappNumber: string;
   storeIcon: string;
   storeImages: string[];
   userId: string;
+  info1: string;
+  info2: string;
+  published: boolean;
+  schedulArr: Array<{ day: string; time: TimeValue }>;
 };
 
 export type StoreListType = Array<StoreObj>;
