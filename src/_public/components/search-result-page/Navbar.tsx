@@ -36,7 +36,7 @@ const Navbar = () => {
 
   return (
     <div className="w-full bg-white h-20 flex items-center justify-between fixed top-0 left-0 border-b-2 border-[#00000010]">
-      <div onClick={hadleLogoClick} className="nav-log mx-2 font-extrabold text-blue-800 cursor-pointer text-2xl md:text-3xl">
+      <div onClick={hadleLogoClick} className="nav-log mx-2 font-extrabold text-blue-800 cursor-pointer text-sm md:text-3xl">
         ABCDEF.COM
       </div>
 
