@@ -1,9 +1,58 @@
-import { useState } from "react";
+import {
+  createMessageToAll,
+  createMessageToUser,
+  handleMessageDelete,
+} from "@/firebase/api";
+import { db } from "@/firebase/config";
+import { getTimeDifference } from "@/lib/utils";
+import { Timestamp, collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { RxCross1 } from "react-icons/rx";
 
 const Message = () => {
   const [messageFor, setMessageFor] = useState("all");
+  const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
+  const [messagesToAll, setMessagesToAll] = useState<Array<{
+    message: string;
+    createdAt: Timestamp;
+    id: string;
+  }> | null>(null);
 
+  const handleSubmit = async () => {
+    try {
+      if (messageFor === "all") {
+        await createMessageToAll(message);
+        setMessage("");
+      } else {
+        await createMessageToUser(message, email);
+        setMessage("");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const collectionRef = collection(db, "messagesToAll");
+      const q = query(collectionRef, orderBy("createdAt", "desc"));
+
+      const unsubscribe = onSnapshot(q, async (QuerySnapshot) => {
+        const messageArr = QuerySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        })) as Array<{ message: string; id: string; createdAt: Timestamp }>;
+
+        setMessagesToAll(messageArr);
+        // console.log(messageArr);
+      });
+
+      return unsubscribe;
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="w-full min-h-screen">
@@ -48,17 +97,41 @@ const Message = () => {
             required
             placeholder="Message"
             id="mesacontent"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
           ></textarea>
         </div>
 
         <div className="mb-3">
           <input
             type="submit"
+            onClick={handleSubmit}
             name=""
             className="w-full bg-blue-500 hover:bg-blue-400 duration-300 text-white px-2 py-1 rounded-md"
           />
         </div>
       </div>
+
+      <ul className="flex flex-col mt-10 font-medium items-center justify-center">
+        {messagesToAll &&
+          messagesToAll.map((messageObj, index) => (
+            <li
+              className="w-full flex items-center justify-between text-xl border-b py-4 px-4"
+              key={index}
+            >
+              <div>
+                {messageObj.message}
+                <div className="text-sm">
+                  {getTimeDifference(messageObj.createdAt.toDate())} ago
+                </div>
+              </div>
+              <RxCross1
+                className="cursor-pointer"
+                onClick={() => handleMessageDelete(messageObj.id)}
+              />
+            </li>
+          ))}
+      </ul>
     </div>
   );
 };

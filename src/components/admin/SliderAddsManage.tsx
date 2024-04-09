@@ -36,9 +36,9 @@ const SliderAddsManage = () => {
   const [imageData, setImageData] = useState<ImageData>(initData);
   const [sliderAdds, setSliderAdds] = useState<SliderAdd[] | null>(null);
 
-  useEffect(() => {
-    console.log(sliderAdds);
-  }, [sliderAdds]);
+  // useEffect(() => {
+  //   console.log(sliderAdds);
+  // }, [sliderAdds]);
 
   useEffect(() => {
     const collectionRef = collection(db, "sliderAdds");

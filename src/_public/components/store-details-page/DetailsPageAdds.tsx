@@ -17,7 +17,7 @@ const DetailsPageAdds = ({
     }
   }, [detailsPageAdds]);
 
-  console.log(randomAdd);
+  // console.log(randomAdd);
 
   return (
     <div>

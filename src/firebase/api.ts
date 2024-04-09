@@ -6,7 +6,9 @@ import {
 } from "firebase/auth";
 import { auth, db, provider, storage } from "./config";
 import {
+  addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -19,8 +21,7 @@ import {
   where,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { StoreListType, StoreObj } from "@/types";
-
+import { CurrentUserDataType, StoreListType, StoreObj } from "@/types";
 
 // --------------------------------------
 export const logout = async () => {
@@ -46,7 +47,7 @@ export const login = async ({
       email,
       password
     );
-    console.log(userCredential);
+    // console.log(userCredential);
 
     return userCredential.user.uid;
   } catch (error) {
@@ -72,7 +73,7 @@ export const signup = async ({
       email,
       password
     );
-    console.log(userCredential);
+    // console.log(userCredential);
     const user = userCredential.user;
 
     const payload = {
@@ -102,7 +103,7 @@ export const signup = async ({
 export const googleSignIn = async () => {
   try {
     const userCredential = await signInWithPopup(auth, provider);
-    console.log(userCredential);
+    // console.log(userCredential);
 
     const user = userCredential.user;
     const userDocRef = doc(db, "users", user.uid);
@@ -134,7 +135,7 @@ export const getUserRole = async (uid: string) => {
 
 // ----------------------------------------------
 export const createStore = async (uid: string, payload: any) => {
-  console.log("PAYLOAD",payload);
+  // console.log("PAYLOAD", payload);
 
   try {
     await setDoc(doc(db, "store", uid), {
@@ -152,7 +153,7 @@ export const createStore = async (uid: string, payload: any) => {
 
 // -------------------------------------------
 export const updateStore = async (uid: string, payload: any) => {
-  console.log(payload);
+  // console.log(payload);
 
   try {
     await updateDoc(doc(db, "store", uid), {
@@ -163,7 +164,6 @@ export const updateStore = async (uid: string, payload: any) => {
     console.error("Error writing document:", error);
   }
 };
-
 
 // -------------------------------------------
 export const updateProfileForHaveStore = async (
@@ -282,9 +282,67 @@ export const togglePublish = async (uid: string, published: boolean) => {
   try {
     const documentRef = doc(db, "store", uid);
     await updateDoc(documentRef, {
-      published : !published,
+      published: !published,
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+// ---------------------------------------------
+
+export const createMessageToAll = async (message: string) => {
+  const collectionRef = collection(db, "messagesToAll");
+
+  try {
+    await addDoc(collectionRef, { message, createdAt: new Date() });
+    console.log("New Message added..");
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const createMessageToUser = async (message: string, email: string) => {
+  const collectionRef = collection(db, "users");
+  const q = query(collectionRef, where("email", "==", email));
+
+  const queryStoresSnapshot = await getDocs(q);
+
+  const matchingUser = queryStoresSnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }))[0] as CurrentUserDataType;
+
+  const userIdForSetMessage = matchingUser?.id;
+
+  if (!userIdForSetMessage) return;
+
+  const userMessagesRef = collection(
+    db,
+    "users",
+    userIdForSetMessage,
+    "messages"
+  );
+
+  try {
+    await addDoc(userMessagesRef, { message, createdAt: new Date() });
+    console.log("New Message added..");
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+// ------------------------------------
+
+export const handleMessageDelete = async (id: string) => {
+  try {
+    const documentRef = doc(db, "messagesToAll", id);
+    await deleteDoc(documentRef);
+    console.log("Message deleted successfully");
+  } catch (error) {
+    console.error("Error deleting message:", error);
+    throw error;
   }
 };

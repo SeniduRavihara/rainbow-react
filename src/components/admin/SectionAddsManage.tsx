@@ -36,9 +36,9 @@ const SectionAddsManage: React.FC = () => {
   const [imageData, setImageData] = useState<ImageData>(initData);
   const [sectionAdds, setSectionAdds] = useState<SectionAdd[] | null>(null);
 
-  useEffect(() => {
-    console.log(imageData);
-  }, [imageData]);
+  // useEffect(() => {
+  //   console.log(imageData);
+  // }, [imageData]);
 
   useEffect(() => {
     const collectionRef = collection(db, "sectionAdds");

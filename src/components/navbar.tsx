@@ -6,14 +6,7 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoIosMenu } from "react-icons/io";
 import { IonIcon } from "@ionic/react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  LifeBuoy,
-  LogOut,
-  Settings,
-  User,
-  Shield,
-  Store
-} from "lucide-react"; 
+import { LifeBuoy, LogOut, Settings, User, Shield, Store } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,10 +22,11 @@ import {
   barChartOutline,
 } from "ionicons/icons";
 import { useData } from "@/hooks/useData";
+import { getTimeDifference } from "@/lib/utils";
 
 const Navbar = () => {
   const { currentUser } = useAuth();
-  const { currentUserData, setSearchResultStores } = useData();
+  const { currentUserData, setSearchResultStores, messagesToAll } = useData();
   const navigate = useNavigate();
 
   const handleCreateStoreClick = () => {
@@ -41,14 +35,11 @@ const Navbar = () => {
   const handleClickAdminPanel = () => {
     navigate("/admin");
   };
-  
+
   const hadleLogoClick = () => {
     setSearchResultStores(null);
     navigate("/");
   };
-
-  
-
 
   return (
     <div className="w-full bg-white pt-3 h-20 px-5 flex items-center justify-between fixed top-7 left-0 border-b-2 border-[#00000010]">
@@ -133,12 +124,34 @@ const Navbar = () => {
         </li>
       </ul>
 
-      <div className="flex items-center  justify-between gap-5">
-        <div className="lg:flex hidden">
-          <IoIosNotificationsOutline
-            className="text-3xl cursor-pointer"
-            onClick={() => currentUser?.reload()}
-          />
+      <div className="flex items-center  justify-between gap-3 md:gap-5">
+        <div className="flex mt-1 items-center justify-center">
+          {currentUser && currentUserData?.haveStore && (
+            <Sheet>
+              <SheetTrigger>
+                <IoIosNotificationsOutline
+                  className="text-3xl cursor-pointer"
+                  onClick={() => currentUser?.reload()}
+                />
+              </SheetTrigger>
+              <SheetContent className="w-screen p-0">
+                <ul className="flex flex-col mt-10 font-medium items-center justify-center">
+                  {messagesToAll &&
+                    messagesToAll.map((messageObj, index) => (
+                      <li
+                        className="w-full text-xl border-b py-4 px-4"
+                        key={index}
+                      >
+                        {messageObj.message}
+                        <div className="text-sm">
+                          {getTimeDifference(messageObj.createdAt.toDate())} ago
+                        </div>
+                      </li>
+                    ))}
+                </ul>
+              </SheetContent>
+            </Sheet>
+          )}
         </div>
         {!currentUser ? (
           <Link
@@ -151,16 +164,16 @@ const Navbar = () => {
           <div className="mt-1">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                  <div>
-                    {currentUser.photoURL ? (
-                      <img
-                        src={currentUser.photoURL}
-                        className="w-10 h-10 rounded-full"
-                      />
-                    ) : (
-                      <HiOutlineUserCircle className="text-3xl" />
-                    )}
-                  </div>
+                <div>
+                  {currentUser.photoURL ? (
+                    <img
+                      src={currentUser.photoURL}
+                      className="w-10 h-10 rounded-full"
+                    />
+                  ) : (
+                    <HiOutlineUserCircle className="text-3xl" />
+                  )}
+                </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>

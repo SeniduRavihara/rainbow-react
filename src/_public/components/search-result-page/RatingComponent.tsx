@@ -25,7 +25,7 @@ function RatingComponent({
     if (setValue) {
       setValue(value);
     }
-    console.log(value);
+    // console.log(value);
   };
 
   const handleMouseOver = (newHoverValue: number) => {

@@ -41,7 +41,7 @@ const ResultList = () => {
     const startIndex = (currentPage - 1) * 5;
     const endIndex = startIndex + 5;
 
-    console.log(startIndex, endIndex);
+    // console.log(startIndex, endIndex);
     setVisibleStores(
       searchResultStores ? searchResultStores.slice(startIndex, endIndex) : []
     );

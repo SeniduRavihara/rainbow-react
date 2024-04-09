@@ -27,7 +27,8 @@ export const INITIAL_DATA_CONTEXT = {
   lastDocument: null,
   setLastDocument: () => {},
   isAllFetched: false,
-  setIsAllFetched: ()=>{},
+  setIsAllFetched: () => {},
+  messagesToAll: null,
 };
 
 export const INITIAL_SCHEDULAR_ARR = [
