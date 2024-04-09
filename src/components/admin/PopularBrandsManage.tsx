@@ -142,7 +142,7 @@ const PopularBrandsManage = () => {
 
   return (
     <div
-      className="w-full h-full"
+      className="w-full h-full pb-5"
     >
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
@@ -158,7 +158,7 @@ const PopularBrandsManage = () => {
       )}
       <div className="">
         <h2 className="text-primary fw-bold mb-3 text-center">Popular Brands</h2>
-        <div className="flex flex-col w-full gap-5">
+        <div className="grid grid-cols-2 w-full gap-5">
           {popularBrands &&
             popularBrands.map((brand) => (
               <div key={brand.id} className="w-full">

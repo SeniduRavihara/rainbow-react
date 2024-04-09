@@ -37,22 +37,28 @@ const ResultList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
-
   useEffect(() => {
-    const startIndex = (currentPage - 1) * 3;
-    const endIndex = startIndex + 3;
+    const startIndex = (currentPage - 1) * 5;
+    const endIndex = startIndex + 5;
 
-    // console.log(startIndex, endIndex);
+    console.log(startIndex, endIndex);
     setVisibleStores(
       searchResultStores ? searchResultStores.slice(startIndex, endIndex) : []
     );
   }, [currentPage, searchResultStores]);
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optionally, you can use smooth scrolling
+    });
+  };
+
   const handleNextClick = () => {
+    scrollToTop();
     if (allPageCount <= currentPage) setCurrentPage((pre) => pre + 1);
 
-    if (searchResultStores && searchResultStores?.length / 3 === currentPage) {
+    if (searchResultStores && searchResultStores?.length / 5 === currentPage) {
       fetchData({
         lastDocument,
         setLastDocument,
@@ -64,6 +70,7 @@ const ResultList = () => {
   };
 
   const handlePrevClick = () => {
+    scrollToTop();
     setCurrentPage((prev) => Math.max(prev - 1, 1));
   };
 

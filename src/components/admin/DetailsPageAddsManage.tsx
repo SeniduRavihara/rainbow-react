@@ -150,11 +150,11 @@ const DetailsPageAddsManage = () => {
           />
         </div>
       )}
-      <div className="">
+      <div className="flex flex-col items-center justify-center">
         <h2 className="text-primary fw-bold mb-3 text-center">
           Details Page Adds
         </h2>
-        <div className="flex flex-col w-full gap-5">
+        <div className="grid grid-cols-2 w-full gap-5">
           {detailsPageAdds &&
             detailsPageAdds.map((add) => (
               <div key={add.id} className="w-full">

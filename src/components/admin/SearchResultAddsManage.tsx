@@ -152,7 +152,7 @@ const SearchResultAddsManage = () => {
       )}
       <div className="">
         <h2 className="text-primary fw-bold mb-3 text-center">Search Result Adds</h2>
-        <div className="flex flex-col w-full gap-5">
+        <div className="grid grid-cols-2 w-full gap-5">
           {searchResultAdds &&
             searchResultAdds.map((add) => (
               <div key={add.id} className="w-full">
