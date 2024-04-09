@@ -34,24 +34,9 @@ const Navbar = () => {
     navigate("/");
   };
 
-  // let menuItems;
-
-  // if (currentUserData && currentUserData.roles.includes("admin")) {
-  //   menuItems = [
-  //     <button onClick={handleClickAdminPanel}>AdminPanel</button>,
-  //     <button onClick={handleCreateStoreClick}>CreateStore</button>,
-  //     <button onClick={logout}>Logout</button>,
-  //   ];
-  // } else {
-  //   menuItems = [
-  //     <button onClick={handleCreateStoreClick}>CreateStore</button>,
-  //     <button onClick={logout}>Logout</button>,
-  //   ];
-  // }
-
   return (
     <div className="w-full bg-white h-20 flex items-center justify-between fixed top-0 left-0 border-b-2 border-[#00000010]">
-      <div onClick={hadleLogoClick} className="nav-logo cursor-pointer">
+      <div onClick={hadleLogoClick} className="nav-log mx-2 font-extrabold text-blue-800 cursor-pointer text-2xl md:text-3xl">
         ABCDEF.COM
       </div>
 
@@ -59,7 +44,7 @@ const Navbar = () => {
         <SearchBoxes />
       </div>
 
-      <ul className="lg:flex gap-10 font-medium flex items-center justify-center">
+      <ul className="hidden md:flex gap-10 font-medium items-center justify-center">
         <li className="flex items-center justify-center gap-1 cursor-pointer">
           <div className="icon">
             <img src="/assets/img/loaudspeacker.png" alt="" />
@@ -153,7 +138,7 @@ const Navbar = () => {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleCreateStoreClick}>
                 <Store className="mr-2 h-4 w-4" />
-                <span>Create Store</span>
+                <span>Manage Store</span>
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />

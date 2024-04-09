@@ -22,7 +22,14 @@ const DetailsPageAdds = ({
   return (
     <div>
       <h2 className="text-center">Advertise</h2>
-      {randomAdd && <img src={randomAdd.imageUrl} alt={`Ad ${randomAdd.id}`} />}
+      <div className="px-10">
+        {randomAdd && (
+          <img
+            src={randomAdd.imageUrl}
+            alt={`Ad ${randomAdd.id}`}
+          />
+        )}
+      </div>
     </div>
   );
 };

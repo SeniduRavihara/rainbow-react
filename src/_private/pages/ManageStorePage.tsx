@@ -211,7 +211,7 @@ const ManageStorePage = () => {
       {currentUserData && currentUserData.haveStore && currentUserStore ? (
         <div className="flex flex-col gap-2 ">
           <h2 className="text-xl font-semibold mb-4">Your Store</h2>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row items-center justify-between">
             <ImageSwiper
               setStoreImages={setStoreImages}
               storeImages={storeImages}
@@ -325,7 +325,11 @@ const ManageStorePage = () => {
                       onChange={setTimevalue}
                       value={timevalue}
                     />
-                    <button type="button" disabled={dayIndex >= 6} onClick={handleNextDay}>
+                    <button
+                      type="button"
+                      disabled={dayIndex >= 6}
+                      onClick={handleNextDay}
+                    >
                       <IoMdArrowDropright className="text-3xl" />
                     </button>
                   </div>
@@ -378,30 +382,32 @@ const ManageStorePage = () => {
                       "Update"
                     )}
                   </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      togglePublish(
+                        currentUserData.id,
+                        currentUserStore.published
+                      )
+                    }
+                    className=" text-xl m-[10px] rounded-xl flex items-center justify-center p-3 text-white bg-blue-400"
+                  >
+                    {currentUserStore.published ? "Unpublish" : "Publish"}
+                  </button>
                 </div>
               </form>
             </div>
           </div>
 
-          {/* <div className="flex flex-col gap-5">
-            <Textarea
-              value={info1}
-              onChange={(e) => setInfo1(e.target.value)}
-            />
-            <Textarea
-              value={info2}
-              onChange={(e) => setInfo1(e.target.value)}
-            />
-          </div> */}
-
-          <Button
+          {/* <Button
             onClick={() =>
               togglePublish(currentUserData.id, currentUserStore.published)
             }
             className="w-32"
           >
             {currentUserStore.published ? "Unpublish" : "Publish"}
-          </Button>
+          </Button> */}
         </div>
       ) : (
         <div>
