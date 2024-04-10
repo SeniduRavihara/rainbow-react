@@ -110,13 +110,17 @@ export const googleSignIn = async () => {
     const userDoc = await getDoc(userDocRef);
 
     if (!userDoc.exists()) {
-      const userData = {
-        name: user.displayName || "",
-        email: user.email || "",
-        uid: user.uid,
+      const payload = {
+        name: user.displayName,
+        id: user.uid,
+        email: user.email,
+        roles: ["user"],
+        haveStore: false,
       };
 
-      await setDoc(userDocRef, userData);
+      await setDoc(userDocRef, payload);
+
+      return userCredential.user.uid;
     }
   } catch (error) {
     console.error(error);
