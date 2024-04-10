@@ -94,7 +94,7 @@ const SearchBoxes = () => {
 
   return (
     <div className="flex w-full flex-col items-center gap-5 justify-center">
-      <div className="items-center gap-6 hidden lg:flex">
+      <div className="items-center gap-2 hidden lg:flex">
         <SearchBox styles="px-4">
           <div className="flex justify-between items-center gap-2 h-10">
             <IoLocationOutline className="text-xl text-gray-500" />
@@ -145,18 +145,20 @@ const SearchBoxes = () => {
               />
             )}
 
-            <FaMicrophone
-              className={cn(
-                "text-gray-500 text-xl cursor-pointer",
-                listening && "hidden"
-              )}
-              onClick={() => SpeechRecognition.startListening()}
-            />
+            <div className="flex items-center justify-center gap-4">
+              <FaMicrophone
+                className={cn(
+                  "text-gray-500 text-xl cursor-pointer",
+                  listening && "hidden"
+                )}
+                onClick={() => SpeechRecognition.startListening()}
+              />
 
-            <IoIosSearch
-              onClick={() => handlesearch(searchItem)}
-              className="bg-red-400 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
-            />
+              <IoIosSearch
+                onClick={() => handlesearch(searchItem)}
+                className="bg-red-400 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
+              />
+            </div>
           </div>
         </SearchBox>
       </div>
