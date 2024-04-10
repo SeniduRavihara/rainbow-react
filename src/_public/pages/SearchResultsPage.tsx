@@ -17,7 +17,7 @@ const SearchResultsPage = () => {
       <div className="mt-20 w-full ">
         <CarouselAdds />
         {/* <FilteringArea /> */}
-        <div className="flex justify-between mt-10 gap-5 px-10">
+        <div className="flex justify-between mt-10 gap-5 px-2 md:px-10">
           <ResultList />
           <SearchResultAddSection />
         </div>

@@ -42,7 +42,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full bg-white pt-3 h-20 px-5 flex items-center justify-between fixed top-7 left-0 border-b-2 border-[#00000010]">
+    <div className="w-full bg-white pt-3 h-20 px-2 md:px-5 flex items-center justify-between fixed top-7 left-0 border-b-2 border-[#00000010]">
       <div className="flex items-center justify-center">
         {/* ----------------Mobile---------------------- */}
         <div className="flex lg:hidden gap-5">
@@ -156,7 +156,8 @@ const Navbar = () => {
         {!currentUser ? (
           <Link
             to="/login"
-            className="rounded-md px-3 py-2 bg-blue-600 text-white font-semibold"
+            className="rounded-md px-2 md:px-3 py-2 bg-blue-600 text-white font-semibold
+           text-xs md:text-base"
           >
             Login/Sign up
           </Link>
