@@ -36,8 +36,17 @@ const Navbar = () => {
 
   return (
     <div className="w-full bg-white h-20 flex items-center justify-between fixed top-0 left-0 border-b-2 border-[#00000010]">
-      <div onClick={hadleLogoClick} className="nav-log ml-3 font-extrabold text-blue-800 cursor-pointer text-sm md:text-3xl">
+      <div
+        onClick={hadleLogoClick}
+        className="nav-log ml-3 md:hidden font-extrabold text-blue-800 cursor-pointer text-2xl xsm:text-3xl"
+      >
         LOGO
+      </div>
+      <div
+        onClick={hadleLogoClick}
+        className="nav-log mx-3 hidden md:block font-extrabold text-blue-800 cursor-pointer text-xl md:text-3xl"
+      >
+        ABCD.COM
       </div>
 
       <div className="">
@@ -73,9 +82,9 @@ const Navbar = () => {
         <Link
           to="/login"
           className="rounded-md px-2 md:px-3 py-2 bg-blue-600 text-white font-semibold
-           text-xs md:text-base"
+           text-base md:text-base"
         >
-          Login/Sign up
+          Login
         </Link>
       ) : (
         <div className="mt-1">
@@ -97,16 +106,16 @@ const Navbar = () => {
           /> */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <div>
-                  {currentUser.photoURL ? (
-                    <img
-                      src={currentUser.photoURL}
-                      className="w-10 h-10 rounded-full"
-                    />
-                  ) : (
-                    <HiOutlineUserCircle className="text-3xl" />
-                  )}
-                </div>
+              <div>
+                {currentUser.photoURL ? (
+                  <img
+                    src={currentUser.photoURL}
+                    className="w-10 h-10 rounded-full"
+                  />
+                ) : (
+                  <HiOutlineUserCircle className="text-3xl" />
+                )}
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>

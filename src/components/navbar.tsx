@@ -134,7 +134,7 @@ const Navbar = () => {
                   onClick={() => currentUser?.reload()}
                 />
               </SheetTrigger>
-              <SheetContent className="w-screen p-0">
+              <SheetContent className="w-screen p-0 overflow-y-scroll">
                 <ul className="flex flex-col mt-10 font-medium items-center justify-center">
                   {messagesToAll &&
                     messagesToAll.map((messageObj, index) => (

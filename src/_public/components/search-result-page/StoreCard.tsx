@@ -65,11 +65,11 @@ const StoreCard = ({
           </Carousel>
         </div>
         <div
-          className="w-8/12 p-3 flex flex-col justify-between"
+          className="w-8/12 px-3 py-2 flex flex-col justify-between"
           onClick={() => handleStoreClick(id)}
         >
           <div className="flex items-center justify-between">
-            <h1>{title}</h1>
+            <h1 className="font-semibold text-xl">{title}</h1>
             <FcLike className="text-2xl" />
           </div>
 
@@ -88,7 +88,7 @@ const StoreCard = ({
             <div>{address}</div>
           </div>
 
-          <div>
+          <div className="my-1">
             {tags.map((tag, index) => (
               <Tag key={index}>{tag}</Tag>
             ))}
@@ -96,11 +96,30 @@ const StoreCard = ({
 
           <div className="flex items-center justify-between">
             <div className="flex gap-2 items-center">
-              <div>{whatsappnumber}</div>
-              <div>Send Enquery</div>
-              <div>Chat</div>
+              <Button
+                size="sm"
+                className="flex gap-1 items-center px-2 py-1 rounded-md justify-center bg-green-600 hover:bg-green-600/90 text-white"
+              >
+                <FaPhoneAlt className="text-xs" />
+                <h4>{whatsappnumber}</h4>
+              </Button>
+              {/* <div>Send Enquery</div> */}
+              <Button
+                size="sm"
+                className="flex px-2 py-1 gap-1 text-white items-center justify-center bg-blue-400 hover:bg-blue-400/90"
+              >
+                <h4>Send Enquery</h4>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex gap-1 items-center justify-center"
+              >
+                <img src={whatsapp} className="w-5" />
+                <h4>Chat</h4>
+              </Button>
             </div>
-            <div>test text</div>
+            {/* <div>test text</div> */}
           </div>
         </div>
       </div>
