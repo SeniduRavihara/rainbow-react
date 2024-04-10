@@ -36,8 +36,8 @@ const Navbar = () => {
 
   return (
     <div className="w-full bg-white h-20 flex items-center justify-between fixed top-0 left-0 border-b-2 border-[#00000010]">
-      <div onClick={hadleLogoClick} className="nav-log mx-2 font-extrabold text-blue-800 cursor-pointer text-sm md:text-3xl">
-        ABCDEF.COM
+      <div onClick={hadleLogoClick} className="nav-log ml-3 font-extrabold text-blue-800 cursor-pointer text-sm md:text-3xl">
+        LOGO
       </div>
 
       <div className="">
@@ -72,7 +72,8 @@ const Navbar = () => {
       {!currentUser ? (
         <Link
           to="/login"
-          className="rounded-md px-3 py-2 bg-blue-600 text-white font-semibold"
+          className="rounded-md px-2 md:px-3 py-2 bg-blue-600 text-white font-semibold
+           text-xs md:text-base"
         >
           Login/Sign up
         </Link>

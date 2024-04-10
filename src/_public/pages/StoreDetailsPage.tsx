@@ -12,7 +12,7 @@ import BottomBanner from "@/components/bottom-banner";
 import { FcLike } from "react-icons/fc";
 import RatingComponent from "../components/search-result-page/RatingComponent";
 import { IonIcon } from "@ionic/react";
-import { Tag } from "@chakra-ui/react";
+
 import { locationOutline } from "ionicons/icons";
 import ReviewsAndRatings from "../components/store-details-page/ReviewsAndRatings";
 // import Gallery from "../components/store-details-page/Gallery";
@@ -26,6 +26,12 @@ import { fb, insta, linkedin, twitter, whatsapp, yt } from "@/assets";
 import { PiShareFatLight } from "react-icons/pi";
 import { Button } from "@/components/ui/button";
 import { MdOutlineEdit } from "react-icons/md";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Tag } from "@chakra-ui/react";
 
 const StoreDetailsPage = () => {
   const { searchResultStores, currentUserData } = useData();
@@ -69,7 +75,7 @@ const StoreDetailsPage = () => {
 
       <div className="mt-20 w-full">
         {/* <Gallery /> */}
-        <div className="w-full flex items-center justify-between pt-2 px-5">
+        <div className="w-full flex items-center justify-between pt-2 px-2">
           {/* ----------Desktop--------- */}
           <div className="hidden md:flex rounded-md max-w-[750px] h-44 ">
             <div className="w-4/12 flex items-center justify-center ">
@@ -221,13 +227,21 @@ const StoreDetailsPage = () => {
 
               <div className="flex items-start flex-col text-sm justify-start sm:flex-row sm:justify-between">
                 <div className="flex gap-2 items-center">
-                  <Button
-                    size="sm"
-                    className="flex gap-1 items-center px-2 py-1 rounded-md justify-center bg-green-600 hover:bg-green-600/90 text-white"
-                  >
-                    <FaPhoneAlt className="text-xs" />
-                    <h4>Show Number</h4>
-                  </Button>
+                  <Popover>
+                    <PopoverTrigger>
+                      <Button
+                        size="sm"
+                        className="flex gap-1 items-center px-2 py-1 rounded-md justify-center bg-green-600 hover:bg-green-600/90 text-white"
+                      >
+                        <FaPhoneAlt className="text-xs" />
+                        <h4>Show Number</h4>
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-52 px-3 py-2 text-center">
+                      {selectedStore?.whatsappNumber}
+                    </PopoverContent>
+                  </Popover>
+
                   {/* <div>Send Enquery</div> */}
                   <Button
                     variant="outline"
@@ -296,7 +310,7 @@ const StoreDetailsPage = () => {
             <ReviewsAndRatings />
           </div>
 
-          <div className="flex flex-col gap-10 md:mt-14 w-full md:w-3/12">
+          <div className="flex flex-col gap-10 md:mt-14 w-full md:w-3/12 px-10 md:px-1">
             <OpenTimes schedulArr={selectedStore?.schedulArr || []} />
             <DetailsPageAdds detailsPageAdds={detailsPageAdds} />
           </div>
