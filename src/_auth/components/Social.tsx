@@ -1,5 +1,5 @@
 import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
+// import { FaGithub } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { googleSignIn } from "@/firebase/api";
 import { useNavigate } from "react-router-dom";
@@ -23,9 +23,9 @@ const Social = () => {
       >
         <FcGoogle className="h-5 w-5" />
       </Button>
-      <Button size="lg" className="w-full" variant="outline" onClick={() => {}}>
+      {/* <Button size="lg" className="w-full" variant="outline" onClick={() => {}}>
         <FaGithub className="h-5 w-5" />
-      </Button>
+      </Button> */}
     </div>
   );
 };
