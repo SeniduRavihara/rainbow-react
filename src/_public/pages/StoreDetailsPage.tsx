@@ -307,7 +307,7 @@ const StoreDetailsPage = () => {
         <div className=" flex flex-col gap-4 md:flex-row md:flex md:justify-between">
           <div className="w-full flex flex-col md:w-9/12">
             <TabComponent selectedStore={selectedStore} />
-            <ReviewsAndRatings />
+            <ReviewsAndRatings selectedStore={selectedStore} />
           </div>
 
           <div className="flex flex-col gap-10 md:mt-14 w-full md:w-3/12 px-10 md:px-1">

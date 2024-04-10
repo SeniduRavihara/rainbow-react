@@ -56,6 +56,8 @@ import appStore from "./img/Download_on_the_App_Store_Badge.svg.png"
 import playStore from "./img/Google_Play_Store_badge_EN.svg.png"
 import whatsapp from "./img/icons8-whatsapp.svg"
 
+import placeholderReviewPic from "./img/icons8-male-user-94.png"
+
 const placeholderSliderAdds = [
   placeholderAdd1,
   placeholderAdd2,
@@ -117,5 +119,6 @@ export {
   yt,
   appStore,
   playStore,
-  whatsapp
+  whatsapp,
+  placeholderReviewPic,
 };

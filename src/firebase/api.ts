@@ -350,3 +350,56 @@ export const handleMessageDelete = async (id: string) => {
     throw error;
   }
 };
+
+// ---------------------------------
+
+export const postReview = async (
+  payload: {
+    imageUrl: string;
+    userName: string;
+    userId: string;
+    review: string;
+    rating: number;
+  },
+  selectedStoreId: string
+) => {
+  const collectionRef = collection(db, "store", selectedStoreId, "reviews");
+
+  try {
+    await addDoc(collectionRef, {
+      createdAt: new Date(),
+      ...payload,
+    });
+    console.log("New review added..");
+
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+
+export const updteReview = async (
+  payload: {
+    imageUrl: string;
+    userName: string;
+    userId: string;
+    review: string;
+    rating: number;
+  },
+  selectedStoreId: string,
+  reviewId: string
+) => {
+  const collectionRef = doc(db, "store", selectedStoreId, "reviews", reviewId);
+
+  try {
+    await setDoc(collectionRef, {
+      createdAt: new Date(),
+      ...payload,
+    });
+    console.log("New review added..");
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

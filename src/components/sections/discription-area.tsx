@@ -1,6 +1,6 @@
 const DiscriptionArea = () => {
   return (
-    <div className="flex flex-col gap-10 w-full p-10">
+    <div className="flex flex-col gap-10 w-full py-10 px-3">
       <div>
         <h3 className="text-3xl font-semibold">One-Stop All Local</h3>
         <br />

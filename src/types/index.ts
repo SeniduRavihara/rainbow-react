@@ -44,6 +44,8 @@ export type AuthContextType = {
   setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
+// ---------------------------------
+
 export type CurrentUserDataType = {
   id: string;
   email: string;
@@ -54,7 +56,6 @@ export type CurrentUserDataType = {
 } | null;
 
 type ValuePiece = Date | string | null;
-
 export type TimeValue = ValuePiece | [ValuePiece, ValuePiece];
 
 export type StoreObj = {
@@ -79,17 +80,14 @@ export type StoreObj = {
 
 export type StoreListType = Array<StoreObj>;
 
-// export type StoreListDocType = {
-//   title: string;
-//   active: boolean;
-//   address: string;
-//   email: string;
-//   // messages: string[];
-//   tags: string[];
-//   createdAt: Date;
-//   phoneNumber: string
-//   whatssappNumber: string;
-//   storeIcon: string;
-//   storeImages: string[]
-//   userId: string
-// };
+export type ReviewObjType = {
+  createdAt: Timestamp;
+  imageUrl: string;
+  userName: string;
+  userId: string;
+  review: string;
+  rating: number;
+  id: string
+};
+
+export type ReviewListType = Array<ReviewObjType>;
