@@ -310,7 +310,7 @@ const StoreDetailsPage = () => {
             <ReviewsAndRatings />
           </div>
 
-          <div className="flex flex-col gap-10 md:mt-14 w-full md:w-3/12">
+          <div className="flex flex-col gap-10 md:mt-14 w-full md:w-3/12 px-10 md:px-1">
             <OpenTimes schedulArr={selectedStore?.schedulArr || []} />
             <DetailsPageAdds detailsPageAdds={detailsPageAdds} />
           </div>
