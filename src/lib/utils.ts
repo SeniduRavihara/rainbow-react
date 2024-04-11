@@ -30,3 +30,12 @@ export const getTimeDifference = (timestamp: Date | undefined | null): string =>
     return "";
   }
 };
+
+
+  export function cleanAddress(address: string): string[] {
+    // Split the address by commas and remove unnecessary whitespaces
+    const cleanedAddress: string[] = address
+      .split(",")
+      .map((part) => part.trim());
+    return cleanedAddress;
+  }

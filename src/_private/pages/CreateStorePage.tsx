@@ -9,13 +9,18 @@ import { IoArrowBack } from "react-icons/io5";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@/firebase/config";
 import { useAuth } from "@/hooks/useAuth";
-import { createStore, updateProfileForHaveStore } from "@/firebase/api";
+import {
+  addLocation,
+  createStore,
+  updateProfileForHaveStore,
+} from "@/firebase/api";
 import toast from "react-hot-toast";
 import Loader from "@/components/Loader";
 import { Tag } from "@chakra-ui/react";
 import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 import { TimeValue } from "@/types";
+import { cleanAddress } from "@/lib/utils";
 
 const CreateStorePage = () => {
   const [title, setTitle] = useState("");
@@ -53,6 +58,7 @@ const CreateStorePage = () => {
   >([]);
   const [storeIcon, setStoreIcon] = useState<File | null>(null);
 
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -71,9 +77,10 @@ const CreateStorePage = () => {
         email: currentUser.email,
         info1,
         info2,
-        schedulArr
+        schedulArr,
       });
       updateProfileForHaveStore(currentUser?.uid, true);
+      await addLocation(cleanAddress(address));
     }
     setLoading(false);
     toast.success("Store created successfully");
@@ -157,190 +164,184 @@ const CreateStorePage = () => {
         Create Store
       </h1>
 
+      <Button variant="outline" asChild className="absolute top-5 left-5 z-10">
+        <Link to="/">
+          <IoArrowBack />
+        </Link>
+      </Button>
 
-        <Button variant="outline" asChild className="absolute top-5 left-5 z-10">
-          <Link to="/">
-            <IoArrowBack />
-          </Link>
-        </Button>
+      <div className="flex gap-20">
+        <div className="-mt-10">
+          <ImageSwiper
+            setStoreImages={setStoreImages}
+            storeImages={storeImages}
+          />
+        </div>
 
-        <div className="flex gap-20">
-          <div className="-mt-10">
-            <ImageSwiper
-              setStoreImages={setStoreImages}
-              storeImages={storeImages}
+        <div className="form-conten flex flex-col">
+          <div className="logo" id="logo-content" style={{ display: "flex" }}>
+            <input
+              id={`iconInput`}
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                if (e.target.files) {
+                  setStoreIcon(e.target.files[0]);
+                }
+              }}
+              required
+              className="hidden"
             />
+            <button className="photo-add-button" id="logo-button" type="button">
+              {storeIcon ? (
+                <img
+                  src={URL.createObjectURL(storeIcon)}
+                  alt="profile"
+                  className="w-full h-full rounded-full object-cover"
+                />
+              ) : (
+                <IonIcon icon={addOutline}></IonIcon>
+              )}
+            </button>
+            <div id="previewImagelogo"></div>
+            <p className="text-center">
+              Select your logo{" "}
+              <label
+                htmlFor="iconInput"
+                className="text-blue-500 cursor-pointer"
+              >
+                Brower
+              </label>
+            </p>
           </div>
 
-          <div className="form-conten flex flex-col">
-            <div className="logo" id="logo-content" style={{ display: "flex" }}>
+          <form onSubmit={handleSubmit}>
+            <div className="input-form grid grid-cols-2">
               <input
-                id={`iconInput`}
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  if (e.target.files) {
-                    setStoreIcon(e.target.files[0]);
-                  }
-                }}
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 required
-                className="hidden"
+                placeholder=" title"
+                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
               />
-              <button
-                className="photo-add-button"
-                id="logo-button"
-                type="button"
-              >
-                {storeIcon ? (
-                  <img
-                    src={URL.createObjectURL(storeIcon)}
-                    alt="profile"
-                    className="w-full h-full rounded-full object-cover"
-                  />
-                ) : (
-                  <IonIcon icon={addOutline}></IonIcon>
-                )}
-              </button>
-              <div id="previewImagelogo"></div>
-              <p className="text-center">
-                Select your logo{" "}
-                <label
-                  htmlFor="iconInput"
-                  className="text-blue-500 cursor-pointer"
+
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                required
+                placeholder="address"
+                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+              />
+
+              <input
+                type="text"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                required
+                placeholder="Phone number"
+                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+              />
+
+              <input
+                type="text"
+                value={whatsappNumber}
+                onChange={(e) => setWhatsappNumber(e.target.value)}
+                required
+                placeholder="Whatsapp number"
+                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+              />
+
+              <input
+                type="text"
+                value={info1}
+                onChange={(e) => setInfo1(e.target.value)}
+                required
+                placeholder=" info1"
+                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+              />
+
+              <input
+                type="text"
+                value={info2}
+                onChange={(e) => setInfo2(e.target.value)}
+                required
+                placeholder="info2"
+                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+              />
+
+              <div className="flex col-span-2 items-center justify-between w-full">
+                <button
+                  type="button"
+                  disabled={dayIndex <= 0}
+                  onClick={handlePrevDay}
                 >
-                  Brower
-                </label>
-              </p>
-            </div>
+                  <IoMdArrowDropleft className="text-3xl" />
+                </button>
+                <div>{schedulArr[dayIndex].day}</div>
+                <TimeRangePicker onChange={setTimevalue} value={timevalue} />
+                <button
+                  type="button"
+                  disabled={dayIndex >= 6}
+                  onClick={handleNextDay}
+                >
+                  <IoMdArrowDropright className="text-3xl" />
+                </button>
+              </div>
 
-            <form onSubmit={handleSubmit}>
-              <div className="input-form grid grid-cols-2">
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                  placeholder=" title"
-                  className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-                />
-
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  required
-                  placeholder="address"
-                  className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-                />
-
-                <input
-                  type="text"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  required
-                  placeholder="Phone number"
-                  className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-                />
-
-                <input
-                  type="text"
-                  value={whatsappNumber}
-                  onChange={(e) => setWhatsappNumber(e.target.value)}
-                  required
-                  placeholder="Whatsapp number"
-                  className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-                />
-
-                <input
-                  type="text"
-                  value={info1}
-                  onChange={(e) => setInfo1(e.target.value)}
-                  required
-                  placeholder=" info1"
-                  className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-                />
-
-                <input
-                  type="text"
-                  value={info2}
-                  onChange={(e) => setInfo2(e.target.value)}
-                  required
-                  placeholder="info2"
-                  className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-                />
-
-                <div className="flex col-span-2 items-center justify-between w-full">
-                  <button
-                    type="button"
-                    disabled={dayIndex <= 0}
-                    onClick={handlePrevDay}
-                  >
-                    <IoMdArrowDropleft className="text-3xl" />
-                  </button>
-                  <div>{schedulArr[dayIndex].day}</div>
-                  <TimeRangePicker onChange={setTimevalue} value={timevalue} />
-                  <button
-                    type="button"
-                    disabled={dayIndex >= 6}
-                    onClick={handleNextDay}
-                  >
-                    <IoMdArrowDropright className="text-3xl" />
-                  </button>
-                </div>
-
-                <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400">
-                  <div className="flex items-center">
-                    <div className="">
-                      {tags.map((tag, index) => (
-                        <Tag key={index} className="m-1">
-                          {tag}
-                        </Tag>
-                      ))}
-                    </div>
-
-                    <input
-                      type="text"
-                      value={tagInput}
-                      onChange={(e) => setTagInput(e.target.value)}
-                      placeholder="Tag"
-                      className="p- text-lg m-[10px] outline-none"
-                    />
+              <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400">
+                <div className="flex items-center">
+                  <div className="">
+                    {tags.map((tag, index) => (
+                      <Tag key={index} className="m-1">
+                        {tag}
+                      </Tag>
+                    ))}
                   </div>
 
-                  <button
-                    className="bg-green-500 rounded-md text-white px-2 py-1"
-                    onClick={() => handleAddTag(tagInput)}
-                    type="button"
-                  >
-                    update
-                  </button>
+                  <input
+                    type="text"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    placeholder="Tag"
+                    className="p- text-lg m-[10px] outline-none"
+                  />
                 </div>
 
                 <button
-                  type="submit"
-                  disabled={
-                    !title ||
-                    !address ||
-                    !phoneNumber ||
-                    !whatsappNumber ||
-                    !tags ||
-                    loading
-                  }
-                  className=" text-xl m-[10px] rounded-xl flex items-center justify-center p-3 text-white bg-[#0c86ac]"
+                  className="bg-green-500 rounded-md text-white px-2 py-1"
+                  onClick={() => handleAddTag(tagInput)}
+                  type="button"
                 >
-                  {loading ? (
-                    <>
-                      <Loader /> Loading...
-                    </>
-                  ) : (
-                    "Create"
-                  )}
+                  update
                 </button>
               </div>
-            </form>
-          </div>
-        </div>
 
+              <button
+                type="submit"
+                disabled={
+                  !title ||
+                  !address ||
+                  !phoneNumber ||
+                  !whatsappNumber ||
+                  !tags ||
+                  loading
+                }
+                className=" text-xl m-[10px] rounded-xl flex items-center justify-center p-3 text-white bg-[#0c86ac]"
+              >
+                {loading ? (
+                  <>
+                    <Loader /> Loading...
+                  </>
+                ) : (
+                  "Create"
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 

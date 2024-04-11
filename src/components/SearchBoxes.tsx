@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import SearchBox from "@/components/search-box";
-import { IoLocationOutline } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { FaMicrophone } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
@@ -13,6 +12,7 @@ import { useData } from "@/hooks/useData";
 import { StoreListType } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "@/firebase/api";
+import AutocompleteLocationInput from "@/_public/components/auto-compleate-location-input/AutoCompleateInput";
 
 const searchClient = algoliasearch(
   "6K67WTIHLT",
@@ -22,6 +22,7 @@ const searchClient = algoliasearch(
 const searchIndex = searchClient.initIndex("stores");
 
 const SearchBoxes = () => {
+  const { locationArr } = useData();
   const {
     setSearchResultStores,
     location,
@@ -95,7 +96,7 @@ const SearchBoxes = () => {
   return (
     <div className="flex w-full flex-col items-center gap-5 justify-center">
       <div className="items-center gap-2 hidden lg:flex">
-        <SearchBox styles="px-4">
+        {/* <SearchBox styles="px-4">
           <div className="flex justify-between items-center gap-2 h-10">
             <IoLocationOutline className="text-xl text-gray-500" />
             <input
@@ -112,7 +113,15 @@ const SearchBoxes = () => {
               />
             )}
           </div>
-        </SearchBox>
+        </SearchBox> */}
+
+        <AutocompleteLocationInput
+          locations={
+            locationArr?.map((locationObj) => locationObj.location) || []
+          }
+          inputValue={location}
+          setInputValue={setLocation}
+        />
 
         <SearchBox styles="px-4">
           <div className="flex justify-between items-center gap-2 h-10">

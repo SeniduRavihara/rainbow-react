@@ -30,11 +30,22 @@ export type DataContextType = {
   setLastDocument: React.Dispatch<React.SetStateAction<StoreObj | null>>;
   isAllFetched: boolean;
   setIsAllFetched: React.Dispatch<React.SetStateAction<boolean>>;
-  messagesToAll: Array<{
-    message: string;
-    id: string;
-    createdAt: Timestamp;
-  }> | null;
+  messagesToAll: messageObjType[] | null;
+  locationArr: Array<{ location: string; id: string }> | null;
+  setLocationArr: React.Dispatch<
+    React.SetStateAction<Array<{ location: string; id: string }> | null>
+  >;
+};
+
+// --------------------------------
+
+export type messageObjType = {
+  message: string;
+  id: string;
+  createdAt: Timestamp;
+  imageUrl: string;
+  fromName: string;
+  fromId: string;
 };
 
 // ---------------------------------
@@ -87,7 +98,7 @@ export type ReviewObjType = {
   userId: string;
   review: string;
   rating: number;
-  id: string
+  id: string;
 };
 
 export type ReviewListType = Array<ReviewObjType>;

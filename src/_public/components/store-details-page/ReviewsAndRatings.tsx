@@ -35,7 +35,6 @@ const ReviewsAndRatings = ({
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    console.log("Work");
 
     if (selectedStore) {
       const collectionRef = collection(
@@ -52,7 +51,7 @@ const ReviewsAndRatings = ({
           id: doc.id,
         })) as ReviewListType;
 
-        console.log(sctionAddsArr);
+        // console.log(sctionAddsArr);
         setReviews(sctionAddsArr);
       });
 
