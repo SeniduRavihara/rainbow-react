@@ -92,7 +92,9 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
             />
             <p>
               Select your store image{" "}
-              <label htmlFor={`fileInput${i}`}>Browse</label>
+              <label htmlFor={`fileInput${i}`} className="text-blue-500">
+                Browse
+              </label>
             </p>
           </div>
         </div>
