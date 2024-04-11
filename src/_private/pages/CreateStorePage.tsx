@@ -1,7 +1,6 @@
 import ImageSwiper from "../components/ImageSwiper";
 import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
-import "./register.css";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -23,7 +22,10 @@ import { TimeValue } from "@/types";
 import { cleanAddress } from "@/lib/utils";
 import PhoneInput from "react-phone-number-input";
 // import "react-phone-number-input/style.css";
-import "@/styles/phone-number-input.css"
+import "@/styles/phone-number-input.css";
+import { useData } from "@/hooks/useData";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 const CreateStorePage = () => {
   const [title, setTitle] = useState("");
@@ -49,7 +51,7 @@ const CreateStorePage = () => {
   ]);
   const [dayIndex, setDayIndex] = useState(0);
   const { currentUser } = useAuth();
-  // const { currentUserData } = useData();
+  const { locationArr } = useData();
   const navigate = useNavigate();
 
   const [storeImages, setStoreImages] = useState<
@@ -60,7 +62,6 @@ const CreateStorePage = () => {
     }>
   >([]);
   const [storeIcon, setStoreIcon] = useState<File | null>(null);
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -83,7 +84,10 @@ const CreateStorePage = () => {
         schedulArr,
       });
       updateProfileForHaveStore(currentUser?.uid, true);
-      await addLocation(cleanAddress(address));
+      await addLocation(
+        cleanAddress(address),
+        locationArr?.map((locationObj) => locationObj.location) || []
+      );
     }
     setLoading(false);
     toast.success("Store created successfully");
@@ -162,8 +166,8 @@ const CreateStorePage = () => {
   };
 
   return (
-    <div className="create-store w-full min-h-screen flex flex-col gap-10 items-center justify-center">
-      <h1 className=" text-center text-4xl font-bold text-[#005eff]">
+    <div className=" w-full min-h-screen flex flex-col gap-10 items-center justify-center">
+      <h1 className=" text-center text-4xl font-bold text-[#005eff] mt-20">
         Create Store
       </h1>
 
@@ -173,16 +177,19 @@ const CreateStorePage = () => {
         </Link>
       </Button>
 
-      <div className="flex gap-20">
-        <div className="-mt-10">
+      <div className="flex w-full md:px-5 flex-col gap-10 md:flex-row items-center justify-center">
+        <div className="md:w-8/12 w-full flex items-center justify-center">
           <ImageSwiper
             setStoreImages={setStoreImages}
             storeImages={storeImages}
           />
         </div>
 
-        <div className="form-conten flex flex-col">
-          <div className="logo" id="logo-content" style={{ display: "flex" }}>
+        <div className="flex flex-col gap-5 w-full px-3">
+          <div
+            className="gap-3 flex items-center justify-center"
+            id="logo-conten"
+          >
             <input
               id={`iconInput`}
               type="file"
@@ -195,18 +202,21 @@ const CreateStorePage = () => {
               required
               className="hidden"
             />
-            <button className="photo-add-button" id="logo-button" type="button">
+            <button
+              className="photo-add-butto w-20 h-20 border rounded-md"
+              id="logo-button"
+              type="button"
+            >
               {storeIcon ? (
                 <img
                   src={URL.createObjectURL(storeIcon)}
                   alt="profile"
-                  className="w-full h-full rounded-full object-cover"
+                  className="w-full h-full rounded-md object-cover"
                 />
               ) : (
                 <IonIcon icon={addOutline}></IonIcon>
               )}
             </button>
-            <div id="previewImagelogo"></div>
             <p className="text-center">
               Select your logo{" "}
               <label
@@ -219,32 +229,56 @@ const CreateStorePage = () => {
           </div>
 
           <form onSubmit={handleSubmit}>
-            <div className="input-form grid grid-cols-2">
-              <input
+            <div className="flex flex-col gap-2 md:grid grid-cols-1 md:grid-cols-2 w-full">
+              {/* <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 placeholder=" title"
                 className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+              /> */}
+              <Input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                placeholder=" title"
+                // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
               />
 
-              <input
+              {/* <input
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 required
                 placeholder="address"
                 className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+              /> */}
+              <Input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                required
+                placeholder="address"
+                // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
               />
 
-              <input
+              {/* <input
                 type="text"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 required
                 placeholder="Phone number"
                 className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+              /> */}
+              <Input
+                type="text"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                required
+                placeholder="Phone number"
+                // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
               />
 
               {/* <input
@@ -259,10 +293,10 @@ const CreateStorePage = () => {
                 value={whatsappNumber}
                 onChange={setWhatsappNumber}
                 placeholder="Whatsapp number"
-                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                className="px-[1rem] text-lg border rounded-md focus:outline-blue-400"
               />
 
-              <input
+              {/* <input
                 type="text"
                 value={info1}
                 onChange={(e) => setInfo1(e.target.value)}
@@ -278,9 +312,25 @@ const CreateStorePage = () => {
                 required
                 placeholder="info2"
                 className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+              /> */}
+              <Textarea
+                value={info1}
+                onChange={(e) => setInfo1(e.target.value)}
+                required
+                placeholder=" info1"
+                // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
               />
 
-              <div className="flex col-span-2 items-center justify-between w-full">
+              <Textarea
+                value={info2}
+                onChange={(e) => setInfo2(e.target.value)}
+                required
+                placeholder="info2"
+                // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+              />
+
+              {/* ------------Shedul input---------------- */}
+              <div className="hidden md:flex col-span-2 items-center justify-between w-full">
                 <button
                   type="button"
                   disabled={dayIndex <= 0}
@@ -298,8 +348,31 @@ const CreateStorePage = () => {
                   <IoMdArrowDropright className="text-3xl" />
                 </button>
               </div>
+              {/* -------------------- */}
+              <div className="flex md:hidden flex-col items-center justify-between w-full">
+                <TimeRangePicker onChange={setTimevalue} value={timevalue} />
+                <div className="flex items-center justify-between w-[50%]">
+                  <button
+                    type="button"
+                    disabled={dayIndex <= 0}
+                    onClick={handlePrevDay}
+                  >
+                    <IoMdArrowDropleft className="text-3xl" />
+                  </button>
+                  <div>{schedulArr[dayIndex].day}</div>
 
-              <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400">
+                  <button
+                    type="button"
+                    disabled={dayIndex >= 6}
+                    onClick={handleNextDay}
+                  >
+                    <IoMdArrowDropright className="text-3xl" />
+                  </button>
+                </div>
+              </div>
+              {/* ------------------------------- */}
+
+              <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border rounded-md focus:outline-blue-400">
                 <div className="flex items-center">
                   <div className="">
                     {tags.map((tag, index) => (

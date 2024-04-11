@@ -146,6 +146,7 @@ const StoreCard = ({
               <Dialog open={openModel} onOpenChange={setOpenModel}>
                 <DialogTrigger>
                   <Button
+                    asChild
                     size="sm"
                     className=" flex px-2 py-1 gap-1 text-white items-center justify-center bg-blue-400 hover:bg-blue-400/90"
                   >
@@ -159,12 +160,8 @@ const StoreCard = ({
 
                   <div className="grid gap-4 py-2">
                     <div className="">
-                      {/* <Label htmlFor="name" className="text-right">
-                        Review
-                      </Label> */}
                       <Input
                         id="name"
-                        defaultValue="Pedro Duarte"
                         className="col-span-3"
                         value={enquery}
                         onChange={(e) => setEnquery(e.target.value)}
@@ -274,6 +271,7 @@ const StoreCard = ({
               <Dialog open={openModel} onOpenChange={setOpenModel}>
                 <DialogTrigger>
                   <Button
+                    asChild
                     size="sm"
                     className=" flex px-2 py-1 gap-1 text-white items-center justify-center bg-blue-400 hover:bg-blue-400/90"
                   >
@@ -287,12 +285,8 @@ const StoreCard = ({
 
                   <div className="grid gap-4 py-2">
                     <div className="">
-                      {/* <Label htmlFor="name" className="text-right">
-                        Review
-                      </Label> */}
                       <Input
                         id="name"
-                        defaultValue="Pedro Duarte"
                         className="col-span-3"
                         value={enquery}
                         onChange={(e) => setEnquery(e.target.value)}
@@ -328,7 +322,6 @@ const StoreCard = ({
                 </Button>
               </Link>
             </div>
-            {/* <div>test text</div> */}
           </div>
         </div>
       </div>

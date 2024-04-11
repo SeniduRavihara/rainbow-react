@@ -46,17 +46,17 @@ import placeholderPopularPrand3 from "./placeholders/img/placeholder-popularbran
 import placeholderPopularPrand4 from "./placeholders/img/placeholder-popularbrand4.png";
 import placeholderPopularPrand5 from "./placeholders/img/placeholder-popularbrand5.png";
 
+import fb from "./img/social-platforms/fb.png";
+import insta from "./img/social-platforms/insta.png";
+import linkedin from "./img/social-platforms/linkedin.png";
+import twitter from "./img/social-platforms/twitter_x_new_logo_x_rounded_icon_256078.png";
+import yt from "./img/social-platforms/yt.png";
+import appStore from "./img/Download_on_the_App_Store_Badge.svg.png";
+import playStore from "./img/Google_Play_Store_badge_EN.svg.png";
+import whatsapp from "./img/icons8-whatsapp.svg";
 
-import fb from "./img/social-platforms/fb.png"
-import insta from "./img/social-platforms/insta.png"
-import linkedin from "./img/social-platforms/linkedin.png"
-import twitter from "./img/social-platforms/twitter_x_new_logo_x_rounded_icon_256078.png"
-import yt from "./img/social-platforms/yt.png"
-import appStore from "./img/Download_on_the_App_Store_Badge.svg.png"
-import playStore from "./img/Google_Play_Store_badge_EN.svg.png"
-import whatsapp from "./img/icons8-whatsapp.svg"
-
-import placeholderReviewPic from "./img/icons8-male-user-94.png"
+import placeholderReviewPic from "./img/icons8-male-user-94.png";
+import imageGalery from "./img/image-gallery.png";
 
 const placeholderSliderAdds = [
   placeholderAdd1,
@@ -121,4 +121,5 @@ export {
   playStore,
   whatsapp,
   placeholderReviewPic,
+  imageGalery,
 };

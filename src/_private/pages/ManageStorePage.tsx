@@ -22,13 +22,15 @@ import { cleanAddress } from "@/lib/utils";
 import toast from "react-hot-toast";
 import PhoneInput from "react-phone-number-input";
 // import "react-phone-number-input/style.css";
-import "@/styles/phone-number-input.css"
+import "@/styles/phone-number-input.css";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 const ManageStorePage = () => {
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-   const [whatsappNumber, setWhatsappNumber] = useState<string | undefined>();
+  const [whatsappNumber, setWhatsappNumber] = useState<string | undefined>();
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<Array<string>>([]);
   const [loading, setLoading] = useState(false);
@@ -65,8 +67,11 @@ const ManageStorePage = () => {
     null
   );
 
-  const { currentUserData } = useData();
+  const { currentUserData, locationArr } = useData();
   const { currentUser } = useAuth();
+
+  console.log(storeImages);
+  
 
   useEffect(() => {
     if (currentUserData) {
@@ -110,8 +115,8 @@ const ManageStorePage = () => {
     if (currentUser) {
       await handleUpload();
       const storeIconUrl = await uploadStoreIcon(currentUser.uid);
-      console.log("STORE", storeIconUrl);
-      
+      // console.log("STORE", storeIconUrl);
+
       // const validStoreImages = storeImages.filter((img) => img !== undefined);
       const storeImageUrls = storeImages
         .map((img) => img.imageUrl)
@@ -131,7 +136,10 @@ const ManageStorePage = () => {
         schedulArr,
       });
       // updateProfileForHaveStore(currentUser?.uid, true);
-      await addLocation(cleanAddress(address));
+      await addLocation(
+        cleanAddress(address),
+        locationArr?.map((locationObj) => locationObj.location) || []
+      );
     }
     setLoading(false);
     toast.success("Store created successfully");
@@ -208,27 +216,28 @@ const ManageStorePage = () => {
 
   // if (!currentUserStore) return <div>Loading...</div>;
   return (
-    <div className="w-screen min-h-screen text-center p-5">
-      <Button variant="outline" asChild className="absolute top-5 left-5">
+    <div className="w-full min-h-screen text-center relative">
+      <Button variant="outline" asChild className="absolute top-0 left-5">
         <Link to="/">
           <IoArrowBack />
         </Link>
       </Button>
-      <h1 className="text-3xl font-bold mb-6">Manage Store</h1>
+      <h1 className="text-3xl font-bold mb-6 mt-4">Manage Store</h1>
       {currentUserData && currentUserData.haveStore && currentUserStore ? (
-        <div className="flex flex-col gap-2 ">
-          <h2 className="text-xl font-semibold mb-4">Your Store</h2>
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <ImageSwiper
-              setStoreImages={setStoreImages}
-              storeImages={storeImages}
-            />
+        <div className="flex flex-col gap-2 md:p-5">
+          {/* <h2 className="text-xl font-semibold mb-4">Your Store</h2> */}
+          <div className="flex flex-col gap-10 md:flex-row items-center justify-between">
+            <div className="md:w-8/12 w-full flex items-center justify-center">
+              <ImageSwiper
+                setStoreImages={setStoreImages}
+                storeImages={storeImages}
+              />
+            </div>
 
-            <div className="form-conten flex flex-col">
+            <div className="w-full px-3 flex flex-col gap-5">
               <div
-                className="logo"
-                id="logo-content"
-                style={{ display: "flex" }}
+                className="gap-3 flex items-center justify-center"
+                id="logo-conten"
               >
                 <input
                   id={`iconInput`}
@@ -243,7 +252,7 @@ const ManageStorePage = () => {
                   className="hidden"
                 />
                 <button
-                  className="photo-add-button"
+                  className="photo-add-butto w-20 h-20 border rounded-md"
                   id="logo-button"
                   type="button"
                 >
@@ -251,13 +260,12 @@ const ManageStorePage = () => {
                     <img
                       src={URL.createObjectURL(storeIcon)}
                       alt="profile"
-                      className="w-full h-full rounded-full object-cover"
+                      className="w-full h-full rounded-md object-cover"
                     />
                   ) : (
                     <IonIcon icon={addOutline}></IonIcon>
                   )}
                 </button>
-                <div id="previewImagelogo"></div>
                 <p className="text-center">
                   Select your logo{" "}
                   <label
@@ -270,32 +278,56 @@ const ManageStorePage = () => {
               </div>
 
               <form onSubmit={handleSubmit}>
-                <div className="input-form grid grid-cols-2">
-                  <input
+                <div className="input-for flex flex-col gap-2 md:grid grid-cols-1 md:grid-cols-2">
+                  {/* <input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
                     placeholder=" title"
                     className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  /> */}
+                  <Input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                    placeholder=" title"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
                   />
 
-                  <input
+                  {/* <input
                     type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     required
                     placeholder="address"
                     className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  /> */}
+                  <Input
+                    type="text"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    required
+                    placeholder="address"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
                   />
 
-                  <input
+                  {/* <input
                     type="text"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     required
                     placeholder="Phone number"
                     className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  /> */}
+                  <Input
+                    type="text"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    required
+                    placeholder="Phone number"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
                   />
 
                   {/* <input
@@ -310,10 +342,10 @@ const ManageStorePage = () => {
                     value={whatsappNumber}
                     onChange={setWhatsappNumber}
                     placeholder="Whatsapp number"
-                    className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                    className="px-[1rem] text-lg border rounded-md focus:outline-blue-400"
                   />
 
-                  <textarea
+                  {/* <textarea
                     value={info1}
                     onChange={(e) => setInfo1(e.target.value)}
                     required
@@ -327,9 +359,25 @@ const ManageStorePage = () => {
                     required
                     placeholder="info2"
                     className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  /> */}
+                  <Textarea
+                    value={info1}
+                    onChange={(e) => setInfo1(e.target.value)}
+                    required
+                    placeholder=" info1"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
                   />
 
-                  <div className="flex col-span-2 items-center justify-between w-full">
+                  <Textarea
+                    value={info2}
+                    onChange={(e) => setInfo2(e.target.value)}
+                    required
+                    placeholder="info2"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  />
+
+                  {/* ------------Shedul input---------------- */}
+                  <div className="hidden md:flex col-span-2 items-center justify-between w-full">
                     <button
                       type="button"
                       disabled={dayIndex <= 0}
@@ -350,8 +398,34 @@ const ManageStorePage = () => {
                       <IoMdArrowDropright className="text-3xl" />
                     </button>
                   </div>
+                  {/* -------------------- */}
+                  <div className="flex md:hidden flex-col items-center justify-between w-full">
+                    <TimeRangePicker
+                      onChange={setTimevalue}
+                      value={timevalue}
+                    />
+                    <div className="flex items-center justify-between w-[50%]">
+                      <button
+                        type="button"
+                        disabled={dayIndex <= 0}
+                        onClick={handlePrevDay}
+                      >
+                        <IoMdArrowDropleft className="text-3xl" />
+                      </button>
+                      <div>{schedulArr[dayIndex].day}</div>
 
-                  <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400">
+                      <button
+                        type="button"
+                        disabled={dayIndex >= 6}
+                        onClick={handleNextDay}
+                      >
+                        <IoMdArrowDropright className="text-3xl" />
+                      </button>
+                    </div>
+                  </div>
+                  {/* ------------------------------- */}
+
+                  <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border rounded-md focus:outline-blue-400">
                     <div className="flex items-center">
                       <div className="">
                         {tags.map((tag, index) => (

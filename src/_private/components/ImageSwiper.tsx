@@ -1,12 +1,15 @@
 // Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
+// import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
-import "./styles.css";
-import { Pagination, Navigation } from "swiper/modules";
+// import "swiper/css";
+// import "swiper/css/pagination";
+// import "swiper/css/navigation";
+// import "./styles.css";
+// import { Pagination, Navigation } from "swiper/modules";
+import { Carousel } from "react-responsive-carousel";
+import { imageGalery } from "@/assets";
+import { cn } from "@/lib/utils";
 
 type ImageSwiperProps = {
   storeImages: Array<{
@@ -60,30 +63,39 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
 
       const imageUrl = file
         ? URL.createObjectURL(file)
-        : "/assets/img/image-gallery.png";
+        : imageGalery;
 
       slides.push(
-        <SwiperSlide key={i}>
-          <div className="img-area">
-            <div className="">
-              <div className="upload-img">
-                <img src={imageUrl} className="w-10 h-10" alt="" />
-              </div>
-              <input
-                id={`fileInput${i}`}
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleChange(e, i)}
-                required
-                className="hidden"
-              />
-              <p>
-                Select your store image{" "}
-                <label htmlFor={`fileInput${i}`}>Browse</label>
-              </p>
-            </div>
+        <div
+          key={i}
+          className="w-full h-full flex flex-col items-center justify-center"
+        >
+          <div>
+            <img
+              src={imageUrl}
+              className={cn(
+                "w-[80%] h-[80%] object-covr rounded-l-md",
+                imageUrl === imageGalery && "w-32 h-32"
+              )}
+              alt=""
+            />
           </div>
-        </SwiperSlide>
+
+          <div>
+            <input
+              id={`fileInput${i}`}
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleChange(e, i)}
+              required
+              className="hidden"
+            />
+            <p>
+              Select your store image{" "}
+              <label htmlFor={`fileInput${i}`} className="text-blue-500">Browse</label>
+            </p>
+          </div>
+        </div>
       );
     }
     return slides;
@@ -91,16 +103,20 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
 
   return (
     <>
-      <Swiper
-        pagination={{
-          dynamicBullets: true,
-        }}
-        navigation={true}
-        modules={[Pagination, Navigation]}
-        className="mySwiper"
+      <Carousel
+        showStatus={false}
+        interval={3000}
+        infiniteLoop={false}
+        stopOnHover={false}
+        showIndicators={false}
+        transitionTime={800}
+        showThumbs={false}
+        autoPlay={false}
+        showArrows
+        className="w-[90%] md:w-full h-full border bg-slate-200 rounded-md py-3 md:p-3 lg:p-5"
       >
         {renderSlides()}
-      </Swiper>
+      </Carousel>
     </>
   );
 };
