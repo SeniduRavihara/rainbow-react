@@ -5,6 +5,7 @@ import {
   DataContextType,
   StoreListType,
   StoreObj,
+  messageObjType,
 } from "@/types";
 import {
   Timestamp,
@@ -42,12 +43,10 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
   const [loadingStoreFetching, setLoadingStoreFetching] = useState(false);
   const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
   const [isAllFetched, setIsAllFetched] = useState(false);
+  const [locationArr, setLocationArr] =
+    useState<Array<{ location: string; id: string }> | null>(null);
 
-  const [messagesToAll, setMessagesToAll] = useState<Array<{
-    message: string;
-    createdAt: Timestamp;
-    id: string;
-  }> | null>(null);
+  const [messagesToAll, setMessagesToAll] = useState<messageObjType[] | null>(null);
 
   useEffect(() => {
     const collectionRef = collection(db, "sectionAdds");
@@ -148,7 +147,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
           const messageArr = QuerySnapshot.docs.map((doc) => ({
             ...doc.data(),
             id: doc.id,
-          })) as Array<{ message: string; id: string; createdAt: Timestamp }>;
+          })) as messageObjType[];
 
           setMessagesToAll(messageArr);
           // console.log(messageArr);
@@ -160,6 +159,23 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
 
     fetchData();
   }, [currentUserData]);
+
+  // ----------------------------------------------------
+
+  useEffect(() => {
+    const collectionRef = collection(db, "locations");
+    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+      const locationArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as Array<{ location: string; id: string }>;
+
+      // console.log("HELOOOOO",locationArr);
+      setLocationArr(locationArr);
+    });
+
+    return unsubscribe;
+  }, []);
 
   const value = {
     currentUserData,
@@ -180,6 +196,8 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     isAllFetched,
     setIsAllFetched,
     messagesToAll,
+    locationArr,
+    setLocationArr,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

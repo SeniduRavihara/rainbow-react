@@ -12,12 +12,14 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Tag } from "@chakra-ui/react";
-import { togglePublish, updateStore } from "@/firebase/api";
+import { addLocation, togglePublish, updateStore } from "@/firebase/api";
 import { useAuth } from "@/hooks/useAuth";
 import { IoArrowBack } from "react-icons/io5";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 import "@wojtekmaj/react-timerange-picker/dist/TimeRangePicker.css";
 import "react-clock/dist/Clock.css";
+import { cleanAddress } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 const ManageStorePage = () => {
   const [title, setTitle] = useState("");
@@ -105,7 +107,8 @@ const ManageStorePage = () => {
     if (currentUser) {
       await handleUpload();
       const storeIconUrl = await uploadStoreIcon(currentUser.uid);
-
+      console.log("STORE", storeIconUrl);
+      
       // const validStoreImages = storeImages.filter((img) => img !== undefined);
       const storeImageUrls = storeImages
         .map((img) => img.imageUrl)
@@ -125,9 +128,10 @@ const ManageStorePage = () => {
         schedulArr,
       });
       // updateProfileForHaveStore(currentUser?.uid, true);
+      await addLocation(cleanAddress(address));
     }
     setLoading(false);
-    // toast.success("Store created successfully");
+    toast.success("Store created successfully");
     // navigate("/manage-store");
   };
 

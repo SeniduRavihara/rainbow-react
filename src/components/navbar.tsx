@@ -23,6 +23,7 @@ import {
 } from "ionicons/icons";
 import { useData } from "@/hooks/useData";
 import { getTimeDifference } from "@/lib/utils";
+import { placeholderReviewPic } from "@/assets";
 
 const Navbar = () => {
   const { currentUser } = useAuth();
@@ -139,12 +140,30 @@ const Navbar = () => {
                   {messagesToAll &&
                     messagesToAll.map((messageObj, index) => (
                       <li
-                        className="w-full text-xl border-b py-4 px-4"
+                        className="w-full flex flex-col border-b py-4 px-4"
                         key={index}
                       >
-                        {messageObj.message}
-                        <div className="text-sm">
-                          {getTimeDifference(messageObj.createdAt.toDate())} ago
+                        <div className="flex items-center justify-center gap-2 py-2 w-full">
+                          <img
+                            src={messageObj.imageUrl || placeholderReviewPic}
+                            alt="profile"
+                            className="w-14 h-14 rounded-md"
+                          />
+                          <div className="w-full">
+                            <div className=" px-3 py-1 rounded-xl w-full">
+                              <div className="text-[12px] font-semibold">
+                                {messageObj.fromName}
+                              </div>
+                              <div>{messageObj.message}</div>
+                            </div>
+                            <div className="flex gap-3 text-[12px] ml-4 font-semibold text-gray-600/70">
+                              <div className="">
+                                {getTimeDifference(
+                                  messageObj.createdAt.toDate()
+                                )}
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </li>
                     ))}

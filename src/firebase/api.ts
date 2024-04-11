@@ -157,7 +157,7 @@ export const createStore = async (uid: string, payload: any) => {
 
 // -------------------------------------------
 export const updateStore = async (uid: string, payload: any) => {
-  // console.log(payload);
+  console.log(payload);
 
   try {
     await updateDoc(doc(db, "store", uid), {
@@ -371,13 +371,11 @@ export const postReview = async (
       ...payload,
     });
     console.log("New review added..");
-
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
-
 
 export const updteReview = async (
   payload: {
@@ -398,6 +396,50 @@ export const updteReview = async (
       ...payload,
     });
     console.log("New review added..");
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+// --------------------------------
+
+export const addLocation = async (locations: string[]) => {
+  const collectionRef = collection(db, "locations");
+
+  try {
+    for (const location of locations) {
+     await addDoc(collectionRef, {
+       location,
+     });
+    }
+    
+    console.log("New Location added..");
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+// ----------------------------
+
+export const postEnquery= async (
+  payload: {
+    imageUrl: string;
+    fromName: string;
+    fromId: string;
+    message: string;
+  },
+  selectedStoreId: string
+) => {
+  const collectionRef = collection(db, "users", selectedStoreId, "messages");
+
+  try {
+    await addDoc(collectionRef, {
+      createdAt: new Date(),
+      ...payload,
+    });
+    console.log("New Message added..");
   } catch (error) {
     console.log(error);
     throw error;

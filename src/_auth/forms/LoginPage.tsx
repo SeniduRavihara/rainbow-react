@@ -36,7 +36,7 @@ const LoginForm = () => {
      try {
        const uid = await login(values);
        const roles = await getUserRole(uid);
-       console.log(roles);
+      //  console.log(roles);
 
        if (roles && roles.includes("admin")) {
          navigate("/admin");

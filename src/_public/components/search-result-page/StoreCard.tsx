@@ -2,7 +2,6 @@ import { Carousel } from "react-responsive-carousel";
 import { FcLike } from "react-icons/fc";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import RatingComponent from "./RatingComponent";
-// import { useState } from "react";
 import { IonIcon } from "@ionic/react";
 import { locationOutline } from "ionicons/icons";
 import { Tag } from "@chakra-ui/react";
@@ -10,7 +9,19 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { FaPhoneAlt } from "react-icons/fa";
 import { whatsapp } from "@/assets";
-// import { PiShareFatLight } from "react-icons/pi";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { postEnquery } from "@/firebase/api";
+import { useData } from "@/hooks/useData";
+import { useAuth } from "@/hooks/useAuth";
 
 type StoreCardProps = {
   title: string;
@@ -31,10 +42,36 @@ const StoreCard = ({
   storeImages,
   id,
 }: StoreCardProps) => {
+  const [enquery, setEnquery] = useState("");
+  const [openModel, setOpenModel] = useState(false);
+
+  const { currentUserData } = useData();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
 
   const handleStoreClick = (id: string) => {
     navigate(`/store-details/${id}`);
+  };
+
+  const hndelCancelClick = () => {
+    setOpenModel(false);
+    setEnquery("");
+  };
+
+  const handleAddEnquery = async () => {
+    if (enquery) {
+      await postEnquery(
+        {
+          fromId: currentUserData?.id || "",
+          fromName: currentUserData?.name || "",
+          imageUrl: currentUser?.photoURL || "",
+          message: enquery,
+        },
+        id
+      );
+    }
+    setOpenModel(false);
+    setEnquery("");
   };
 
   return (
@@ -64,34 +101,37 @@ const StoreCard = ({
             ))}
           </Carousel>
         </div>
-        <div
-          className="w-8/12 px-3 py-2 flex flex-col justify-between"
-          onClick={() => handleStoreClick(id)}
-        >
-          <div className="flex items-center justify-between">
-            <h1 className="font-semibold text-xl">{title}</h1>
-            <FcLike className="text-2xl" />
-          </div>
 
-          <div className="flex gap-2 items-center ">
-            <p className="text-white bg-[#0d8012] rounded-md text-center py-[3px] w-[30px] text-xs">
-              {rating}
-            </p>
-            <RatingComponent value={rating} />
-            <div className="text-sm text-[#2a2a2a]">
-              <span id="ratingCount">1</span> Ratings
+        <div className="w-8/12 px-3 py-2 flex flex-col justify-between">
+          <div
+            className="w-full flex flex-col justify-between"
+            onClick={() => handleStoreClick(id)}
+          >
+            <div className="flex items-center justify-between">
+              <h1 className="font-semibold text-xl">{title}</h1>
+              <FcLike className="text-2xl" />
             </div>
-          </div>
 
-          <div className="users-located-place flex items-center">
-            <IonIcon icon={locationOutline}></IonIcon>
-            <div>{address}</div>
-          </div>
+            <div className="flex gap-2 items-center ">
+              <p className="text-white bg-[#0d8012] rounded-md text-center py-[3px] w-[30px] text-xs">
+                {rating}
+              </p>
+              <RatingComponent value={rating} />
+              <div className="text-sm text-[#2a2a2a]">
+                <span id="ratingCount">1</span> Ratings
+              </div>
+            </div>
 
-          <div className="my-1">
-            {tags.map((tag, index) => (
-              <Tag key={index}>{tag}</Tag>
-            ))}
+            <div className="users-located-place flex items-center">
+              <IonIcon icon={locationOutline}></IonIcon>
+              <div>{address}</div>
+            </div>
+
+            <div className="my-1">
+              {tags.map((tag, index) => (
+                <Tag key={index}>{tag}</Tag>
+              ))}
+            </div>
           </div>
 
           <div className="flex items-center justify-between">
@@ -103,13 +143,45 @@ const StoreCard = ({
                 <FaPhoneAlt className="text-xs" />
                 <h4>{whatsappnumber}</h4>
               </Button>
-              {/* <div>Send Enquery</div> */}
-              <Button
-                size="sm"
-                className="flex px-2 py-1 gap-1 text-white items-center justify-center bg-blue-400 hover:bg-blue-400/90"
-              >
-                <h4>Send Enquery</h4>
-              </Button>
+              <Dialog open={openModel} onOpenChange={setOpenModel}>
+                <DialogTrigger>
+                  <Button
+                    size="sm"
+                    className=" flex px-2 py-1 gap-1 text-white items-center justify-center bg-blue-400 hover:bg-blue-400/90"
+                  >
+                    <h4>Send Enquery</h4>
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Add your Enquery</DialogTitle>
+                  </DialogHeader>
+
+                  <div className="grid gap-4 py-2">
+                    <div className="">
+                      {/* <Label htmlFor="name" className="text-right">
+                        Review
+                      </Label> */}
+                      <Input
+                        id="name"
+                        defaultValue="Pedro Duarte"
+                        className="col-span-3"
+                        value={enquery}
+                        onChange={(e) => setEnquery(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <DialogFooter className="sm:justify-start">
+                    <div className="w-full flex items-center justify-center gap-2 px-10">
+                      <Button type="button" onClick={hndelCancelClick}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleAddEnquery}>Add</Button>
+                    </div>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
               <Button
                 variant="outline"
                 size="sm"
@@ -119,7 +191,6 @@ const StoreCard = ({
                 <h4>Chat</h4>
               </Button>
             </div>
-            {/* <div>test text</div> */}
           </div>
         </div>
       </div>
@@ -151,34 +222,36 @@ const StoreCard = ({
           </Carousel>
         </div>
 
-        <div
-          className="w-full p-3 flex flex-col justify-between gap-1"
-          onClick={() => handleStoreClick(id)}
-        >
-          <div className="flex items-center justify-between">
-            <h1 className="text-xl font-medium">{title}</h1>
-            <FcLike className="text-2xl" />
-          </div>
-
-          <div className="flex gap-2 items-center ">
-            <p className="text-white bg-[#0d8012] rounded-md text-center py-[3px] w-[30px] text-xs">
-              {rating}
-            </p>
-            <RatingComponent value={rating} />
-            <div className="text-sm text-[#2a2a2a]">
-              <span id="ratingCount">1</span> Ratings
+        <div className="w-full p-3 flex flex-col justify-between gap-1">
+          <div
+            className="w-full  flex flex-col justify-between gap-1"
+            onClick={() => handleStoreClick(id)}
+          >
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl font-medium">{title}</h1>
+              <FcLike className="text-2xl" />
             </div>
-          </div>
 
-          <div className="users-located-place flex items-center">
-            <IonIcon icon={locationOutline}></IonIcon>
-            <div>{address}</div>
-          </div>
+            <div className="flex gap-2 items-center ">
+              <p className="text-white bg-[#0d8012] rounded-md text-center py-[3px] w-[30px] text-xs">
+                {rating}
+              </p>
+              <RatingComponent value={rating} />
+              <div className="text-sm text-[#2a2a2a]">
+                <span id="ratingCount">1</span> Ratings
+              </div>
+            </div>
 
-          <div>
-            {tags.map((tag, index) => (
-              <Tag key={index}>{tag}</Tag>
-            ))}
+            <div className="users-located-place flex items-center">
+              <IonIcon icon={locationOutline}></IonIcon>
+              <div>{address}</div>
+            </div>
+
+            <div>
+              {tags.map((tag, index) => (
+                <Tag key={index}>{tag}</Tag>
+              ))}
+            </div>
           </div>
 
           <div className="flex items-start flex-col text-sm justify-start sm:flex-row sm:justify-between">
@@ -190,13 +263,46 @@ const StoreCard = ({
                 <FaPhoneAlt className="text-xs" />
                 <h4>{whatsappnumber}</h4>
               </Button>
-              {/* <div>Send Enquery</div> */}
-              <Button
-                size="sm"
-                className="flex px-2 py-1 gap-1 text-white items-center justify-center bg-blue-400 hover:bg-blue-400/90"
-              >
-                <h4>Send Enquery</h4>
-              </Button>
+              <Dialog open={openModel} onOpenChange={setOpenModel}>
+                <DialogTrigger>
+                  <Button
+                    size="sm"
+                    className=" flex px-2 py-1 gap-1 text-white items-center justify-center bg-blue-400 hover:bg-blue-400/90"
+                  >
+                    <h4>Send Enquery</h4>
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Add your Enquery</DialogTitle>
+                  </DialogHeader>
+
+                  <div className="grid gap-4 py-2">
+                    <div className="">
+                      {/* <Label htmlFor="name" className="text-right">
+                        Review
+                      </Label> */}
+                      <Input
+                        id="name"
+                        defaultValue="Pedro Duarte"
+                        className="col-span-3"
+                        value={enquery}
+                        onChange={(e) => setEnquery(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <DialogFooter className="sm:justify-start">
+                    <div className="w-full flex items-center justify-center gap-2 px-10">
+                      <Button type="button" onClick={hndelCancelClick}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleAddEnquery}>Add</Button>
+                    </div>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+
               <Button
                 variant="outline"
                 size="sm"
