@@ -1,7 +1,7 @@
 import { useData } from "@/hooks/useData";
 import { StoreObj } from "@/types";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Navbar from "../components/search-result-page/Navbar";
@@ -44,6 +44,11 @@ const StoreDetailsPage = () => {
   }> | null>(null);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Scroll to the top of the page when the component mounts
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const collectionRef = collection(db, "detailsPageAdds");
@@ -132,23 +137,38 @@ const StoreDetailsPage = () => {
               <div className="flex items-center justify-between">
                 <div className="flex gap-2 items-center">
                   {/* <div>{selectedStore?.whatsappNumber}</div>    TODO */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex gap-1 items-center px-2 py-1 rounded-md justify-center bg-green-600 hover:bg-green-600/90 text-white"
-                  >
-                    <FaPhoneAlt className="text-xs" />
-                    <h4>Show Number</h4>
-                  </Button>
+                  <Popover>
+                    <PopoverTrigger>
+                      <Button
+                        size="sm"
+                        className="flex gap-1 items-center px-2 py-1 rounded-md justify-center bg-green-600 hover:bg-green-600/90 text-white"
+                      >
+                        <FaPhoneAlt className="text-xs" />
+                        <h4>Show Number</h4>
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-52 px-3 py-2 text-center">
+                      {selectedStore?.whatsappNumber}
+                    </PopoverContent>
+                  </Popover>
                   {/* <div>Send Enquery</div> */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex gap-1 items-center justify-center"
+                  <Link
+                    to={`https://wa.me/${selectedStore?.whatsappNumber.replace(
+                      "+",
+                      ""
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <img src={whatsapp} className="w-5" />
-                    <h4>Chat</h4>
-                  </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex gap-1 items-center justify-center"
+                    >
+                      <img src={whatsapp} className="w-5" />
+                      <h4>Chat</h4>
+                    </Button>
+                  </Link>
                   <Button
                     variant="outline"
                     size="sm"
@@ -243,14 +263,23 @@ const StoreDetailsPage = () => {
                   </Popover>
 
                   {/* <div>Send Enquery</div> */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex gap-1 items-center justify-center"
+                  <Link
+                    to={`https://wa.me/${selectedStore?.whatsappNumber.replace(
+                      "+",
+                      ""
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <img src={whatsapp} className="w-5" />
-                    <h4>Chat</h4>
-                  </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex gap-1 items-center justify-center"
+                    >
+                      <img src={whatsapp} className="w-5" />
+                      <h4>Chat</h4>
+                    </Button>
+                  </Link>
                   <Button
                     variant="outline"
                     size="sm"

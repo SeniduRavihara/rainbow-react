@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineUserCircle } from "react-icons/hi2";
-import { logout } from "@/firebase/api";
+import { handleUserMessageDelete, logout } from "@/firebase/api";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoIosMenu } from "react-icons/io";
 import { IonIcon } from "@ionic/react";
@@ -24,6 +24,7 @@ import {
 import { useData } from "@/hooks/useData";
 import { getTimeDifference } from "@/lib/utils";
 import { placeholderReviewPic } from "@/assets";
+import { RxCross1 } from "react-icons/rx";
 
 const Navbar = () => {
   const { currentUser } = useAuth();
@@ -140,10 +141,10 @@ const Navbar = () => {
                   {messagesToAll &&
                     messagesToAll.map((messageObj, index) => (
                       <li
-                        className="w-full flex flex-col border-b py-4 px-4"
+                        className="w-full flex items-center justify-between border-b py-4 px-4"
                         key={index}
                       >
-                        <div className="flex items-center justify-center gap-2 py-2 w-full">
+                        <div className="flex items-center justify-center gap-2 py-2 w-[90%]">
                           <img
                             src={messageObj.imageUrl || placeholderReviewPic}
                             alt="profile"
@@ -165,6 +166,15 @@ const Navbar = () => {
                             </div>
                           </div>
                         </div>
+                        <RxCross1
+                          className="cursor-pointer"
+                          onClick={() =>
+                            handleUserMessageDelete(
+                              currentUser.uid,
+                              messageObj.id
+                            )
+                          }
+                        />
                       </li>
                     ))}
                 </ul>

@@ -21,12 +21,15 @@ import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 import { TimeValue } from "@/types";
 import { cleanAddress } from "@/lib/utils";
+import PhoneInput from "react-phone-number-input";
+// import "react-phone-number-input/style.css";
+import "@/styles/phone-number-input.css"
 
 const CreateStorePage = () => {
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [whatsappNumber, setWhatsappNumber] = useState("");
+  const [whatsappNumber, setWhatsappNumber] = useState<string | undefined>();
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<Array<string>>([]);
   const [loading, setLoading] = useState(false);
@@ -244,11 +247,17 @@ const CreateStorePage = () => {
                 className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
               />
 
-              <input
+              {/* <input
                 type="text"
                 value={whatsappNumber}
                 onChange={(e) => setWhatsappNumber(e.target.value)}
                 required
+                placeholder="Whatsapp number"
+                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+              /> */}
+              <PhoneInput
+                value={whatsappNumber}
+                onChange={setWhatsappNumber}
                 placeholder="Whatsapp number"
                 className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
               />

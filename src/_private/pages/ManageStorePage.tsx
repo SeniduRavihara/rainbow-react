@@ -20,12 +20,15 @@ import "@wojtekmaj/react-timerange-picker/dist/TimeRangePicker.css";
 import "react-clock/dist/Clock.css";
 import { cleanAddress } from "@/lib/utils";
 import toast from "react-hot-toast";
+import PhoneInput from "react-phone-number-input";
+// import "react-phone-number-input/style.css";
+import "@/styles/phone-number-input.css"
 
 const ManageStorePage = () => {
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [whatsappNumber, setWhatsappNumber] = useState("");
+   const [whatsappNumber, setWhatsappNumber] = useState<string | undefined>();
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<Array<string>>([]);
   const [loading, setLoading] = useState(false);
@@ -295,11 +298,17 @@ const ManageStorePage = () => {
                     className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
                   />
 
-                  <input
+                  {/* <input
                     type="text"
                     value={whatsappNumber}
                     onChange={(e) => setWhatsappNumber(e.target.value)}
                     required
+                    placeholder="Whatsapp number"
+                    className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  /> */}
+                  <PhoneInput
+                    value={whatsappNumber}
+                    onChange={setWhatsappNumber}
                     placeholder="Whatsapp number"
                     className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
                   />
@@ -321,7 +330,11 @@ const ManageStorePage = () => {
                   />
 
                   <div className="flex col-span-2 items-center justify-between w-full">
-                    <button type="button" disabled={dayIndex <= 0} onClick={handlePrevDay}>
+                    <button
+                      type="button"
+                      disabled={dayIndex <= 0}
+                      onClick={handlePrevDay}
+                    >
                       <IoMdArrowDropleft className="text-3xl" />
                     </button>
                     <div>{schedulArr[dayIndex].day}</div>

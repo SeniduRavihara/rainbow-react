@@ -5,10 +5,9 @@ import RatingComponent from "./RatingComponent";
 import { IonIcon } from "@ionic/react";
 import { locationOutline } from "ionicons/icons";
 import { Tag } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { FaPhoneAlt } from "react-icons/fa";
-import { whatsapp } from "@/assets";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +21,7 @@ import { useState } from "react";
 import { postEnquery } from "@/firebase/api";
 import { useData } from "@/hooks/useData";
 import { useAuth } from "@/hooks/useAuth";
+import { whatsapp } from "@/assets";
 
 type StoreCardProps = {
   title: string;
@@ -182,14 +182,22 @@ const StoreCard = ({
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex gap-1 items-center justify-center"
+              <Link
+                to={`https://wa.me/${whatsappnumber
+                  .replace("+", "")
+                  .replace(" ", "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <img src={whatsapp} className="w-5" />
-                <h4>Chat</h4>
-              </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex gap-1 items-center justify-center"
+                >
+                  <img src={whatsapp} className="w-5" />
+                  <h4>Chat</h4>
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -303,14 +311,22 @@ const StoreCard = ({
                 </DialogContent>
               </Dialog>
 
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex gap-1 items-center justify-center"
+              <Link
+                to={`https://wa.me/${whatsappnumber
+                  .replace("+", "")
+                  .replace(" ", "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <img src={whatsapp} className="w-5" />
-                <h4>Chat</h4>
-              </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex gap-1 items-center justify-center"
+                >
+                  <img src={whatsapp} className="w-5" />
+                  <h4>Chat</h4>
+                </Button>
+              </Link>
             </div>
             {/* <div>test text</div> */}
           </div>
