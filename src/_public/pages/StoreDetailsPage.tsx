@@ -18,7 +18,7 @@ import ReviewsAndRatings from "../components/store-details-page/ReviewsAndRating
 // import Gallery from "../components/store-details-page/Gallery";
 import OpenTimes from "../components/store-details-page/OpenTimes";
 import DetailsPageAdds from "../components/store-details-page/DetailsPageAdds";
-import TabComponent from "../components/store-details-page/tabs/TabComponent";
+// import TabComponent from "../components/store-details-page/tabs/TabComponent";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { FaPhoneAlt } from "react-icons/fa";
