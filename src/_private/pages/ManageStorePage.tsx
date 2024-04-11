@@ -70,9 +70,6 @@ const ManageStorePage = () => {
   const { currentUserData, locationArr } = useData();
   const { currentUser } = useAuth();
 
-  console.log(storeImages);
-  
-
   useEffect(() => {
     if (currentUserData) {
       const documentRef = doc(db, "store", currentUserData?.id);
