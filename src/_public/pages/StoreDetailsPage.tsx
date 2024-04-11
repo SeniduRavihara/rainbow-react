@@ -32,6 +32,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Tag } from "@chakra-ui/react";
+import InfoTab from "../components/store-details-page/tabs/InfoTab";
 
 const StoreDetailsPage = () => {
   const { searchResultStores, currentUserData } = useData();
@@ -335,7 +336,16 @@ const StoreDetailsPage = () => {
         </div>
         <div className=" flex flex-col gap-4 md:flex-row md:flex md:justify-between">
           <div className="w-full flex flex-col md:w-9/12">
-            <TabComponent selectedStore={selectedStore} />
+            {/* <TabComponent selectedStore={selectedStore} /> */}
+            <div className="my-5 px-3">
+              <div className="">Information</div>
+              {selectedStore && (
+                <InfoTab
+                  info1={selectedStore.info1}
+                  info2={selectedStore.info2}
+                />
+              )}
+            </div>
             <ReviewsAndRatings selectedStore={selectedStore} />
           </div>
 
