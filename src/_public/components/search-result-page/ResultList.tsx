@@ -100,7 +100,7 @@ const ResultList = () => {
           ))}
       </ul>
 
-      <div className="flex gap-10 mt-5 mb-2 items-end justify-center">
+      <div className="flex gap-2 mt-5 mb-2 items-end justify-center">
         <Button variant="outline" onClick={handlePrevClick}>
           Prev
         </Button>

@@ -351,6 +351,20 @@ export const handleMessageDelete = async (id: string) => {
   }
 };
 
+// ------------------------------------
+
+export const handleUserMessageDelete = async (uid: string ,id: string) => {
+  try {
+    const documentRef = doc(db, "users", uid, "messages", id);
+    await deleteDoc(documentRef);
+    console.log("Message deleted successfully");
+  } catch (error) {
+    console.error("Error deleting message:", error);
+    throw error;
+  }
+};
+
+
 // ---------------------------------
 
 export const postReview = async (
