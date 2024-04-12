@@ -87,6 +87,12 @@ export type StoreObj = {
   info2: string;
   published: boolean;
   schedulArr: Array<{ day: string; time: TimeValue }>;
+  fasebook: string;
+  instagram: string;
+  linkedin: string;
+  twitter: string;
+  youtube: string;
+  website: string;
 };
 
 export type StoreListType = Array<StoreObj>;

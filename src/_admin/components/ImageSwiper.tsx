@@ -10,6 +10,7 @@
 import { imageGalery } from "@/assets";
 import { Carousel } from "react-responsive-carousel";
 import { cn } from "@/lib/utils";
+import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 
 type ImageSwiperProps = {
   storeImages: Array<{
@@ -64,7 +65,6 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
 
       const imageUrl = file ? URL.createObjectURL(file) : imgUrl ?? imageGalery;
 
-
       slides.push(
         <div
           key={i}
@@ -103,9 +103,33 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
     return slides;
   };
 
+  const renderPrevArrow = (clickHandler: () => void, hasPrev: boolean) => (
+    <div
+      className={`${
+        hasPrev ? "absolute" : "hidden"
+      } top-0 bottom-0 left-0 flex justify-center items-center p-3 opacity-30 hover:opacity-100 cursor-pointer z-20`}
+      onClick={clickHandler}
+    >
+      <BiLeftArrow className="w-9 h-9 text-blue-700" />
+    </div>
+  );
+
+  const renderNextArrow = (clickHandler: () => void, hasNext: boolean) => (
+    <div
+      className={`${
+        hasNext ? "absolute" : "hidden"
+      } top-0 bottom-0 right-0 flex justify-center items-center p-3 opacity-30 hover:opacity-100 cursor-pointer z-20`}
+      onClick={clickHandler}
+    >
+      <BiRightArrow className="w-9 h-9 text-blue-700" />
+    </div>
+  );
+
   return (
     <>
       <Carousel
+        renderArrowPrev={renderPrevArrow}
+        renderArrowNext={renderNextArrow}
         showStatus={false}
         interval={3000}
         stopOnHover={false}
@@ -113,7 +137,8 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
         transitionTime={800}
         showThumbs={false}
         autoPlay={false}
-        className="w-[90%] md:w-full h-full border bg-slate-200 rounded-md py-3 md:p-3 lg:p-5"
+        infiniteLoop
+        className="w-[90%] md:w-full h-full  rounded-md py-3 md:p-3 lg:p-5"
       >
         {renderSlides()}
       </Carousel>

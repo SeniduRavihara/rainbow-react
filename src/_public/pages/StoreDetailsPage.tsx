@@ -12,7 +12,6 @@ import BottomBanner from "@/components/bottom-banner";
 import { FcLike } from "react-icons/fc";
 import RatingComponent from "../components/search-result-page/RatingComponent";
 import { IonIcon } from "@ionic/react";
-
 import { locationOutline } from "ionicons/icons";
 import ReviewsAndRatings from "../components/store-details-page/ReviewsAndRatings";
 // import Gallery from "../components/store-details-page/Gallery";
@@ -47,7 +46,6 @@ const StoreDetailsPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Scroll to the top of the page when the component mounts
     window.scrollTo(0, 0);
   }, []);
 
@@ -72,6 +70,8 @@ const StoreDetailsPage = () => {
       searchResultStores?.find((storeObj) => storeObj.id === storeId) ?? null
     );
   }, [navigate, searchResultStores, storeId]);
+
+
 
   return (
     <div className="w-full">
@@ -355,7 +355,13 @@ const StoreDetailsPage = () => {
           </div>
         </div>
 
-        <SocialMediaArea />
+        <SocialMediaArea
+          facebookUrl={selectedStore?.fasebook}
+          instagramUrl={selectedStore?.instagram}
+          linkedinUrl={selectedStore?.linkedin}
+          twitterUrl={selectedStore?.twitter}
+          youtubeUrl={selectedStore?.youtube}
+        />
         <DiscriptionArea />
         <Footer />
         <BottomBanner />
