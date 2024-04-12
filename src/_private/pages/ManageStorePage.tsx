@@ -584,7 +584,7 @@ const ManageStorePage = () => {
                     </div>
                   </>
 
-                  <div className="w-full col-span-2 flex items-center justify-center">
+                  <div className="w-full col-span-2 flex items-center justify-center mb-10">
                     <Button
                       type="submit"
                       disabled={
@@ -595,7 +595,7 @@ const ManageStorePage = () => {
                         !tags ||
                         loading
                       }
-                      className=" text-xl md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white "
+                      className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white "
                     >
                       {loading ? (
                         <>
