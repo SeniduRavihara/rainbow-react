@@ -26,6 +26,7 @@ import "@/styles/phone-number-input.css";
 import { useData } from "@/hooks/useData";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 const CreateStorePage = () => {
   const [title, setTitle] = useState("");
@@ -37,7 +38,7 @@ const CreateStorePage = () => {
   const [loading, setLoading] = useState(false);
   const [info1, setInfo1] = useState("");
   const [info2, setInfo2] = useState("");
-  const [timevalue, setTimevalue] = useState<TimeValue>(["10:00", "11:00"]);
+  const [timevalue, setTimevalue] = useState<TimeValue | null>(null);
   const [schedulArr, setSchedulArr] = useState<
     Array<{ day: string; time: TimeValue }>
   >([
@@ -63,6 +64,13 @@ const CreateStorePage = () => {
   >([]);
   const [storeIcon, setStoreIcon] = useState<File | null>(null);
 
+  const [fasebook, setFacebook] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [linkedin, setLinkedin] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [youtube, setYoutube] = useState("");
+  const [website, setWebsite] = useState("");
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -82,6 +90,12 @@ const CreateStorePage = () => {
         info1,
         info2,
         schedulArr,
+        fasebook,
+        instagram,
+        linkedin,
+        twitter,
+        youtube,
+        website,
       });
       updateProfileForHaveStore(currentUser?.uid, true);
       await addLocation(
@@ -151,11 +165,14 @@ const CreateStorePage = () => {
   };
 
   useEffect(() => {
-    setSchedulArr((pre) => {
-      const preArr = [...pre];
-      preArr[dayIndex].time = timevalue;
-      return preArr;
-    });
+    if (timevalue) {
+      setSchedulArr((pre) => {
+        const preArr = [...pre];
+        preArr[dayIndex].time = timevalue;
+        return preArr;
+      });
+      setTimevalue(null);
+    }
   }, [dayIndex, timevalue]);
 
   const handleNextDay = () => {
@@ -177,17 +194,16 @@ const CreateStorePage = () => {
         </Link>
       </Button>
 
-      <div className="flex w-full md:px-5 flex-col gap-10 md:flex-row items-center justify-center">
-        <div className="md:w-8/12 w-full flex items-center justify-center">
-          <ImageSwiper
-            setStoreImages={setStoreImages}
-            storeImages={storeImages}
-          />
-        </div>
-
-        <div className="flex flex-col gap-5 w-full px-3">
+      <div className="flex flex-col gap-10 items-center justify-between">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="md:w-6/12 w-full flex items-center justify-center">
+            <ImageSwiper
+              setStoreImages={setStoreImages}
+              storeImages={storeImages}
+            />
+          </div>
           <div
-            className="gap-3 flex items-center justify-center"
+            className="gap-3 flex items-center justify-center md:w-6/12 w-full"
             id="logo-conten"
           >
             <input
@@ -227,110 +243,88 @@ const CreateStorePage = () => {
               </label>
             </p>
           </div>
-
+        </div>
+        {/* ----------------------- */}
+        <div className="w-full px-3 gap-5">
           <form onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-2 md:grid grid-cols-1 md:grid-cols-2 w-full">
-              {/* <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                placeholder=" title"
-                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-              /> */}
-              <Input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                placeholder=" title"
-                // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-              />
+            <div className="flex flex-col gap-3 md:grid grid-cols-1 md:grid-cols-2 w-full">
+              <>
+                <div>
+                  <Label htmlFor="title">Title</Label>
+                  <Input
+                    type="text"
+                    id="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                    placeholder=" title"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  />
+                </div>
 
-              {/* <input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                required
-                placeholder="address"
-                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-              /> */}
-              <Input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                required
-                placeholder="address"
-                // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-              />
+                <div>
+                  <Label htmlFor="address">Address</Label>
+                  <Input
+                    type="text"
+                    id="address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    required
+                    placeholder="address"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  />
+                </div>
 
-              {/* <input
-                type="text"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                required
-                placeholder="Phone number"
-                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-              /> */}
-              <Input
-                type="text"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                required
-                placeholder="Phone number"
-                // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-              />
+                <div>
+                  <Label htmlFor="phone">Phone</Label>
+                  <Input
+                    type="text"
+                    id="phone"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    required
+                    placeholder="Phone number"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  />
+                </div>
 
-              {/* <input
-                type="text"
-                value={whatsappNumber}
-                onChange={(e) => setWhatsappNumber(e.target.value)}
-                required
-                placeholder="Whatsapp number"
-                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-              /> */}
-              <PhoneInput
-                value={whatsappNumber}
-                onChange={setWhatsappNumber}
-                placeholder="Whatsapp number"
-                className="px-[1rem] text-lg border rounded-md focus:outline-blue-400"
-              />
+                <div>
+                  <Label htmlFor="whatsapp">Whatsapp Number</Label>
+                  <PhoneInput
+                    value={whatsappNumber}
+                    onChange={setWhatsappNumber}
+                    placeholder="Whatsapp number"
+                    className="px-[1rem] py-1 text-lg border rounded-md focus:outline-blue-400"
+                  />
+                </div>
 
-              {/* <input
-                type="text"
-                value={info1}
-                onChange={(e) => setInfo1(e.target.value)}
-                required
-                placeholder=" info1"
-                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-              />
+                <div>
+                  <Label htmlFor="info1">Discription1</Label>
+                  <Textarea
+                    id="info1"
+                    value={info1}
+                    onChange={(e) => setInfo1(e.target.value)}
+                    required
+                    placeholder=" info1"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  />
+                </div>
 
-              <input
-                type="text"
-                value={info2}
-                onChange={(e) => setInfo2(e.target.value)}
-                required
-                placeholder="info2"
-                className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-              /> */}
-              <Textarea
-                value={info1}
-                onChange={(e) => setInfo1(e.target.value)}
-                required
-                placeholder=" info1"
-                // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-              />
-
-              <Textarea
-                value={info2}
-                onChange={(e) => setInfo2(e.target.value)}
-                required
-                placeholder="info2"
-                // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
-              />
+                <div>
+                  <Label htmlFor="info2">Discription2</Label>
+                  <Textarea
+                    id="info2"
+                    value={info2}
+                    onChange={(e) => setInfo2(e.target.value)}
+                    required
+                    placeholder="info2"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  />
+                </div>
+              </>
 
               {/* ------------Shedul input---------------- */}
-              <div className="hidden md:flex col-span-2 items-center justify-between w-full">
+              <div className="hidden md:flex col-span-2 items-center justify-between w-full px-20">
                 <button
                   type="button"
                   disabled={dayIndex <= 0}
@@ -339,7 +333,10 @@ const CreateStorePage = () => {
                   <IoMdArrowDropleft className="text-3xl" />
                 </button>
                 <div>{schedulArr[dayIndex].day}</div>
-                <TimeRangePicker onChange={setTimevalue} value={timevalue} />
+                <TimeRangePicker
+                  onChange={setTimevalue}
+                  value={schedulArr[dayIndex].time}
+                />
                 <button
                   type="button"
                   disabled={dayIndex >= 6}
@@ -350,7 +347,10 @@ const CreateStorePage = () => {
               </div>
               {/* -------------------- */}
               <div className="flex md:hidden flex-col items-center justify-between w-full">
-                <TimeRangePicker onChange={setTimevalue} value={timevalue} />
+                <TimeRangePicker
+                  onChange={setTimevalue}
+                  value={schedulArr[dayIndex].time}
+                />
                 <div className="flex items-center justify-between w-[50%]">
                   <button
                     type="button"
@@ -359,6 +359,7 @@ const CreateStorePage = () => {
                   >
                     <IoMdArrowDropleft className="text-3xl" />
                   </button>
+
                   <div>{schedulArr[dayIndex].day}</div>
 
                   <button
@@ -388,6 +389,12 @@ const CreateStorePage = () => {
                     onChange={(e) => setTagInput(e.target.value)}
                     placeholder="Tag"
                     className="p- text-lg m-[10px] outline-none"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault(); // Prevent form submission
+                        handleAddTag(tagInput);
+                      }
+                    }}
                   />
                 </div>
 
@@ -400,26 +407,101 @@ const CreateStorePage = () => {
                 </button>
               </div>
 
-              <button
-                type="submit"
-                disabled={
-                  !title ||
-                  !address ||
-                  !phoneNumber ||
-                  !whatsappNumber ||
-                  !tags ||
-                  loading
-                }
-                className=" text-xl m-[10px] rounded-xl flex items-center justify-center p-3 text-white bg-[#0c86ac]"
-              >
-                {loading ? (
-                  <>
-                    <Loader /> Loading...
-                  </>
-                ) : (
-                  "Create"
-                )}
-              </button>
+              {/* --------------------Social Links------------------------- */}
+              <>
+                <hr className="col-span-2" />
+                <h1 className="col-span-2 text-2xl text-blue-500">
+                  Social Links
+                </h1>
+                <div>
+                  <Label htmlFor="facebook">Facebook</Label>
+                  <Input
+                    type="text"
+                    id="facebook"
+                    value={fasebook}
+                    onChange={(e) => setFacebook(e.target.value)}
+                    placeholder="www.facebook.com/username"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="insta">Instagram</Label>
+                  <Input
+                    type="text"
+                    id="insta"
+                    value={instagram}
+                    onChange={(e) => setInstagram(e.target.value)}
+                    placeholder="www.instagram.com/username"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="linkedin">Linkedin</Label>
+                  <Input
+                    type="text"
+                    id="linkedin"
+                    value={linkedin}
+                    onChange={(e) => setLinkedin(e.target.value)}
+                    placeholder="www.linkedin.com/username"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="twitter">Twitter</Label>
+                  <Input
+                    type="text"
+                    id="twitter"
+                    value={twitter}
+                    onChange={(e) => setTwitter(e.target.value)}
+                    placeholder="www.twitter.com/username"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="youtube">Youtube</Label>
+                  <Input
+                    type="text"
+                    id="youtube"
+                    value={youtube}
+                    onChange={(e) => setYoutube(e.target.value)}
+                    placeholder="www.youtube.com/username"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="linkedin">Website</Label>
+                  <Input
+                    type="text"
+                    id="linkedin"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    placeholder="www.yourWebsite.com"
+                  />
+                </div>
+              </>
+
+              <div className="w-full col-span-2 flex items-center justify-center mb-10">
+                <Button
+                  type="submit"
+                  disabled={
+                    !title ||
+                    !address ||
+                    !phoneNumber ||
+                    !whatsappNumber ||
+                    !tags ||
+                    loading
+                  }
+                  className=" text-xl m-[10px] w-[200px] md:w-[450px] col-span-2 rounded-xl flex items-center justify-center p-3 text-white "
+                >
+                  {loading ? (
+                    <>
+                      <Loader /> Loading...
+                    </>
+                  ) : (
+                    "Create"
+                  )}
+                </Button>
+              </div>
             </div>
           </form>
         </div>

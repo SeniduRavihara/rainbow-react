@@ -34,7 +34,7 @@ type StoreCardProps = {
 };
 
 const StoreCard = ({
-  title = "Makeup By Sandali",
+  title = "Makeup By",
   tags,
   whatsappnumber = "0781717888",
   rating = 3,

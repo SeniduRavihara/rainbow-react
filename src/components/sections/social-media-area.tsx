@@ -7,28 +7,61 @@ import {
   twitter,
   yt,
 } from "@/assets";
+import { Link } from "react-router-dom";
 
-const SocialMediaArea = () => {
+const SocialMediaArea = ({
+  facebookUrl,
+  linkedinUrl,
+  youtubeUrl,
+  twitterUrl,
+  instagramUrl,
+}: {
+  facebookUrl?: string;
+  linkedinUrl?: string;
+  youtubeUrl?: string;
+  twitterUrl?: string;
+  instagramUrl?: string;
+}) => {
   return (
     <div className="third-section py-5 flex flex-col gap-5 md:flex-row items-center justify-between px-1">
       <div className="socail-links">
-        <div className="adasdfdsftxt mr-5">Follow us On</div>
+        {(facebookUrl ||
+          linkedinUrl ||
+          youtubeUrl ||
+          twitterUrl ||
+          instagramUrl) && (
+          <div className="adasdfdsftxt mr-5">Follow us On</div>
+        )}
         <div className="ad flex">
-          <a href="#" className="scl-md-links">
-            <img src={fb} alt="" />
-          </a>
-          <a href="#" className="scl-md-links">
-            <img src={yt} alt="" />
-          </a>
-          <a href="#" className="scl-md-links">
-            <img src={insta} alt="" />
-          </a>
-          <a href="#" className="scl-md-links">
-            <img src={linkedin} alt="" />
-          </a>
-          <a href="#" className="scl-md-links">
-            <img src={twitter} alt="" />
-          </a>
+          {facebookUrl && (
+            <Link to={facebookUrl} target="_blank" className="scl-md-links">
+              <img src={fb} alt="" />
+            </Link>
+          )}
+
+          {youtubeUrl && (
+            <Link to={youtubeUrl} target="_blank" className="scl-md-links">
+              <img src={yt} alt="" />
+            </Link>
+          )}
+
+          {instagramUrl && (
+            <Link to={instagramUrl} target="_blank" className="scl-md-links">
+              <img src={insta} alt="" />
+            </Link>
+          )}
+
+          {linkedinUrl && (
+            <Link to={linkedinUrl} target="_blank" className="scl-md-links">
+              <img src={linkedin} alt="" />
+            </Link>
+          )}
+
+          {twitterUrl && (
+            <Link to={twitterUrl} target="_blank" className="scl-md-links">
+              <img src={twitter} alt="" />
+            </Link>
+          )}
         </div>
       </div>
       <div className="right-side flex">

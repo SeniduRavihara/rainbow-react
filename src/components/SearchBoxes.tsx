@@ -76,6 +76,12 @@ const SearchBoxes = () => {
         info2: hit.info2,
         published: hit.published,
         schedulArr: hit.schedulArr,
+        fasebook: hit.fasebook,
+        instagram: hit.instagram,
+        linkedin: hit.linkedin,
+        twitter: hit.twitter,
+        youtube: hit.youtube,
+        website: hit.website,
       }));
       setLastDocument(null);
       setSearchResultStores(
