@@ -10,7 +10,7 @@
 import { imageGalery } from "@/assets";
 import { Carousel } from "react-responsive-carousel";
 import { cn } from "@/lib/utils";
-import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
+// import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 
 type ImageSwiperProps = {
   storeImages: Array<{
