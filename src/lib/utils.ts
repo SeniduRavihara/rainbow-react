@@ -32,10 +32,20 @@ export const getTimeDifference = (timestamp: Date | undefined | null): string =>
 };
 
 
-  export function cleanAddress(address: string): string[] {
-    // Split the address by commas and remove unnecessary whitespaces
-    const cleanedAddress: string[] = address
-      .split(",")
-      .map((part) => part.trim());
-    return cleanedAddress;
-  }
+export function cleanAddress(address: string): string[] {
+  // Split the address by commas and spaces and remove unnecessary whitespaces
+  const parts: string[] = address
+    .split(/[, ]+/)
+    .map((part) => part.trim().toLowerCase())
+    // Filter out elements starting with "no" or containing numeric values
+    .filter((part) => !/^\d+$/.test(part) && !/^no$/i.test(part))
+    // Replace forward slashes with an empty string
+    .map((part) => part.replace(/\//g, ""))
+    // Remove numeric characters from each part
+    .map((part) => part.replace(/\d/g, ""));
+
+  // Use a set to remove duplicates and then convert it back to an array
+  const uniqueParts: string[] = [...new Set(parts)];
+
+  return uniqueParts;
+}

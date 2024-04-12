@@ -16,7 +16,7 @@ import {
 import toast from "react-hot-toast";
 import Loader from "@/components/Loader";
 import { Tag } from "@chakra-ui/react";
-import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
+import { IoIosArrowBack, IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 import { TimeValue } from "@/types";
 import { cleanAddress } from "@/lib/utils";
@@ -188,11 +188,12 @@ const CreateStorePage = () => {
         Create Store
       </h1>
 
-      <Button variant="outline" asChild className="absolute top-5 left-5 z-10">
-        <Link to="/">
-          <IoArrowBack />
-        </Link>
-      </Button>
+      <Link
+        to="/"
+        className="absolute top-5 left-5 w-10 h-10 text-4xl font-extralight"
+      >
+        <IoIosArrowBack />
+      </Link>
 
       <div className="flex flex-col gap-10 items-center justify-between">
         <div className="flex flex-col md:flex-row gap-4">
@@ -258,7 +259,7 @@ const CreateStorePage = () => {
                     onChange={(e) => setTitle(e.target.value)}
                     required
                     placeholder=" title"
-                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                    className="focus-visible:ring-blue-500"
                   />
                 </div>
 
@@ -271,7 +272,7 @@ const CreateStorePage = () => {
                     onChange={(e) => setAddress(e.target.value)}
                     required
                     placeholder="address"
-                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                    className="focus-visible:ring-blue-500"
                   />
                 </div>
 
@@ -284,7 +285,7 @@ const CreateStorePage = () => {
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     required
                     placeholder="Phone number"
-                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                    className="focus-visible:ring-blue-500"
                   />
                 </div>
 
@@ -306,7 +307,7 @@ const CreateStorePage = () => {
                     onChange={(e) => setInfo1(e.target.value)}
                     required
                     placeholder=" info1"
-                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                    className="h-[200px] focus-visible:ring-blue-500 focus-visible:ring-1"
                   />
                 </div>
 
@@ -318,7 +319,7 @@ const CreateStorePage = () => {
                     onChange={(e) => setInfo2(e.target.value)}
                     required
                     placeholder="info2"
-                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                    className="h-[200px] focus-visible:ring-blue-500 focus-visible:ring-1"
                   />
                 </div>
               </>
@@ -330,19 +331,20 @@ const CreateStorePage = () => {
                   disabled={dayIndex <= 0}
                   onClick={handlePrevDay}
                 >
-                  <IoMdArrowDropleft className="text-3xl" />
+                  <IoMdArrowDropleft className="text-5xl text-blue-500" />
                 </button>
                 <div>{schedulArr[dayIndex].day}</div>
                 <TimeRangePicker
                   onChange={setTimevalue}
                   value={schedulArr[dayIndex].time}
+                  className="border rounded-md outline-none px-4 py-2"
                 />
                 <button
                   type="button"
                   disabled={dayIndex >= 6}
                   onClick={handleNextDay}
                 >
-                  <IoMdArrowDropright className="text-3xl" />
+                  <IoMdArrowDropright className="text-5xl text-blue-500" />
                 </button>
               </div>
               {/* -------------------- */}
@@ -350,6 +352,7 @@ const CreateStorePage = () => {
                 <TimeRangePicker
                   onChange={setTimevalue}
                   value={schedulArr[dayIndex].time}
+                  className="border rounded-md outline-none px-4 py-2"
                 />
                 <div className="flex items-center justify-between w-[50%]">
                   <button
@@ -357,7 +360,7 @@ const CreateStorePage = () => {
                     disabled={dayIndex <= 0}
                     onClick={handlePrevDay}
                   >
-                    <IoMdArrowDropleft className="text-3xl" />
+                    <IoMdArrowDropleft className="text-5xl text-blue-500" />
                   </button>
 
                   <div>{schedulArr[dayIndex].day}</div>
@@ -367,7 +370,7 @@ const CreateStorePage = () => {
                     disabled={dayIndex >= 6}
                     onClick={handleNextDay}
                   >
-                    <IoMdArrowDropright className="text-3xl" />
+                    <IoMdArrowDropright className="text-5xl text-blue-500" />
                   </button>
                 </div>
               </div>
@@ -421,6 +424,7 @@ const CreateStorePage = () => {
                     value={fasebook}
                     onChange={(e) => setFacebook(e.target.value)}
                     placeholder="www.facebook.com/username"
+                    className="focus-visible:ring-blue-500"
                   />
                 </div>
 
@@ -432,6 +436,7 @@ const CreateStorePage = () => {
                     value={instagram}
                     onChange={(e) => setInstagram(e.target.value)}
                     placeholder="www.instagram.com/username"
+                    className="focus-visible:ring-blue-500"
                   />
                 </div>
 
@@ -443,6 +448,7 @@ const CreateStorePage = () => {
                     value={linkedin}
                     onChange={(e) => setLinkedin(e.target.value)}
                     placeholder="www.linkedin.com/username"
+                    className="focus-visible:ring-blue-500"
                   />
                 </div>
 
@@ -454,6 +460,7 @@ const CreateStorePage = () => {
                     value={twitter}
                     onChange={(e) => setTwitter(e.target.value)}
                     placeholder="www.twitter.com/username"
+                    className="focus-visible:ring-blue-500"
                   />
                 </div>
 
@@ -465,6 +472,7 @@ const CreateStorePage = () => {
                     value={youtube}
                     onChange={(e) => setYoutube(e.target.value)}
                     placeholder="www.youtube.com/username"
+                    className="focus-visible:ring-blue-500"
                   />
                 </div>
 
@@ -476,6 +484,7 @@ const CreateStorePage = () => {
                     value={website}
                     onChange={(e) => setWebsite(e.target.value)}
                     placeholder="www.yourWebsite.com"
+                    className="focus-visible:ring-blue-500"
                   />
                 </div>
               </>
@@ -508,6 +517,5 @@ const CreateStorePage = () => {
       </div>
     </div>
   );
-
 };
 export default CreateStorePage;

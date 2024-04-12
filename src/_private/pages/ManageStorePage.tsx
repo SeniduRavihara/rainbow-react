@@ -7,16 +7,16 @@ import { StoreObj, TimeValue } from "@/types";
 import { doc, onSnapshot } from "firebase/firestore";
 import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
-import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
+import { IoIosArrowBack, IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Tag } from "@chakra-ui/react";
+import { Kbd, Tag } from "@chakra-ui/react";
 import { addLocation, togglePublish, updateStore } from "@/firebase/api";
 import { useAuth } from "@/hooks/useAuth";
-import { IoArrowBack } from "react-icons/io5";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
-import "@wojtekmaj/react-timerange-picker/dist/TimeRangePicker.css";
+// import "@wojtekmaj/react-timerange-picker/dist/TimeRangePicker.css";
+import "@/styles/TimeRangePicker.css";
 import "react-clock/dist/Clock.css";
 import { cleanAddress } from "@/lib/utils";
 import toast from "react-hot-toast";
@@ -63,7 +63,10 @@ const ManageStorePage = () => {
     { index: 4, imageUrl: "" },
     { index: 5, imageUrl: "" },
   ]);
-  const [storeIcon, setStoreIcon] = useState<File | null>(null);
+  const [storeIcon, setStoreIcon] = useState<{
+    file: File | null;
+    imageUrl: string;
+  } | null>(null);
   const [currentUserStore, setCurrentUserStore] = useState<StoreObj | null>(
     null
   );
@@ -110,6 +113,11 @@ const ManageStorePage = () => {
           return { ...imgObj, imageUrl: currentUserStore.storeImages[index] };
         })
       );
+      setStoreIcon((pre) =>
+        pre
+          ? { ...pre, imageUrl: currentUserStore.storeIcon }
+          : { file: null, imageUrl: currentUserStore.storeIcon }
+      );
     }
   }, [currentUserStore]);
 
@@ -124,7 +132,8 @@ const ManageStorePage = () => {
     setLoading(true);
     if (currentUser) {
       await handleUpload();
-      const storeIconUrl = await uploadStoreIcon(currentUser.uid);
+      const storeIconUrl =
+        (await uploadStoreIcon(currentUser.uid)) || storeIcon?.imageUrl;
       // console.log("STORE", storeIconUrl);
 
       // const validStoreImages = storeImages.filter((img) => img !== undefined);
@@ -159,14 +168,13 @@ const ManageStorePage = () => {
     }
     setLoading(false);
     toast.success("Store Updated Successfully");
-    // navigate("/manage-store");
   };
 
   const uploadStoreIcon = async (id: string) => {
-    if (storeIcon) {
+    if (storeIcon?.file) {
       try {
         const fileRef = ref(storage, `store_icons/${id}`);
-        await uploadBytes(fileRef, storeIcon);
+        await uploadBytes(fileRef, storeIcon.file);
         const photoURL = await getDownloadURL(fileRef);
 
         return photoURL;
@@ -235,11 +243,13 @@ const ManageStorePage = () => {
   // if (!currentUserStore) return <div>Loading...</div>;
   return (
     <div className="w-full min-h-screen text-center relative">
-      <Button variant="outline" asChild className="absolute top-0 left-5">
-        <Link to="/">
-          <IoArrowBack />
-        </Link>
-      </Button>
+      <Link
+        to="/"
+        className="absolute top-0 left-5 w-10 h-10 text-4xl font-extralight"
+      >
+        <IoIosArrowBack />
+      </Link>
+
       <h1 className="text-3xl font-bold mb-6 mt-4">Manage Store</h1>
       {currentUserData && currentUserData.haveStore && currentUserStore ? (
         <div className="flex flex-col gap-2 md:p-5">
@@ -262,7 +272,18 @@ const ManageStorePage = () => {
                   accept="image/*"
                   onChange={(e) => {
                     if (e.target.files) {
-                      setStoreIcon(e.target.files[0]);
+                      setStoreIcon((pre) =>
+                        pre
+                          ? {
+                              ...pre,
+                              file: e.target.files![0],
+                              imageUrl: URL.createObjectURL(e.target.files![0]),
+                            }
+                          : {
+                              file: e.target.files![0],
+                              imageUrl: URL.createObjectURL(e.target.files![0]),
+                            }
+                      );
                     }
                   }}
                   required
@@ -275,7 +296,11 @@ const ManageStorePage = () => {
                 >
                   {storeIcon ? (
                     <img
-                      src={URL.createObjectURL(storeIcon)}
+                      src={
+                        (storeIcon.file &&
+                          URL.createObjectURL(storeIcon.file)) ??
+                        storeIcon.imageUrl
+                      }
                       alt="profile"
                       className="w-full h-full rounded-md object-cover"
                     />
@@ -308,7 +333,7 @@ const ManageStorePage = () => {
                         onChange={(e) => setTitle(e.target.value)}
                         required
                         placeholder=" title"
-                        // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                        className="focus-visible:ring-blue-500"
                       />
                     </div>
 
@@ -321,7 +346,7 @@ const ManageStorePage = () => {
                         onChange={(e) => setAddress(e.target.value)}
                         required
                         placeholder="address"
-                        // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                        className="focus-visible:ring-blue-500"
                       />
                     </div>
 
@@ -334,7 +359,7 @@ const ManageStorePage = () => {
                         onChange={(e) => setPhoneNumber(e.target.value)}
                         required
                         placeholder="Phone number"
-                        // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                        className="focus-visible:ring-blue-500"
                       />
                     </div>
 
@@ -344,7 +369,7 @@ const ManageStorePage = () => {
                         value={whatsappNumber}
                         onChange={setWhatsappNumber}
                         placeholder="Whatsapp number"
-                        className="px-[1rem] py-1 text-lg border rounded-md focus:outline-blue-400"
+                        className="px-[1rem] py-1 text-lg border rounded-md focus:outline-blue-400 "
                       />
                     </div>
 
@@ -356,7 +381,7 @@ const ManageStorePage = () => {
                         onChange={(e) => setInfo1(e.target.value)}
                         required
                         placeholder=" info1"
-                        // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                        className="h-[200px] focus-visible:ring-blue-500 focus-visible:ring-1"
                       />
                     </div>
 
@@ -368,92 +393,104 @@ const ManageStorePage = () => {
                         onChange={(e) => setInfo2(e.target.value)}
                         required
                         placeholder="info2"
-                        // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                        className="h-[200px] focus-visible:ring-blue-500 focus-visible:ring-1"
                       />
                     </div>
                   </>
 
                   {/* ------------Shedul input---------------- */}
-                  <div className="hidden md:flex col-span-2 items-center justify-between w-full px-20">
-                    <button
-                      type="button"
-                      disabled={dayIndex <= 0}
-                      onClick={handlePrevDay}
-                    >
-                      <IoMdArrowDropleft className="text-3xl" />
-                    </button>
-                    <div>{schedulArr[dayIndex].day}</div>
-                    <TimeRangePicker
-                      onChange={setTimevalue}
-                      value={schedulArr[dayIndex].time}
-                    />
-                    <button
-                      type="button"
-                      disabled={dayIndex >= 6}
-                      onClick={handleNextDay}
-                    >
-                      <IoMdArrowDropright className="text-3xl" />
-                    </button>
-                  </div>
-                  {/* -------------------- */}
-                  <div className="flex md:hidden flex-col items-center justify-between w-full">
-                    <TimeRangePicker
-                      onChange={setTimevalue}
-                      value={schedulArr[dayIndex].time}
-                    />
-                    <div className="flex items-center justify-between w-[50%]">
+                  <>
+                    <div className="hidden md:flex col-span-2 items-center justify-between w-full px-20">
                       <button
                         type="button"
                         disabled={dayIndex <= 0}
                         onClick={handlePrevDay}
                       >
-                        <IoMdArrowDropleft className="text-3xl" />
+                        <IoMdArrowDropleft className="text-5xl text-blue-500" />
                       </button>
-
                       <div>{schedulArr[dayIndex].day}</div>
-
+                      <TimeRangePicker
+                        onChange={setTimevalue}
+                        value={schedulArr[dayIndex].time}
+                        className="border rounded-md outline-none px-4 py-2"
+                      />
                       <button
                         type="button"
                         disabled={dayIndex >= 6}
                         onClick={handleNextDay}
                       >
-                        <IoMdArrowDropright className="text-3xl" />
+                        <IoMdArrowDropright className="text-5xl text-blue-500" />
                       </button>
                     </div>
-                  </div>
-                  {/* ------------------------------- */}
-                  <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border rounded-md focus:outline-blue-400">
-                    <div className="flex items-center">
-                      <div className="">
-                        {tags.map((tag, index) => (
-                          <Tag key={index} className="m-1">
-                            {tag}
-                          </Tag>
-                        ))}
+                    {/* -------------------- */}
+                    <div className="flex md:hidden flex-col items-center justify-between w-full">
+                      <TimeRangePicker
+                        onChange={setTimevalue}
+                        value={schedulArr[dayIndex].time}
+                        className="border rounded-md outline-none px-4 py-2"
+                      />
+                      <div className="flex items-center justify-between w-[50%]">
+                        <button
+                          type="button"
+                          disabled={dayIndex <= 0}
+                          onClick={handlePrevDay}
+                        >
+                          <IoMdArrowDropleft className="text-5xl text-blue-500" />
+                        </button>
+
+                        <div>{schedulArr[dayIndex].day}</div>
+
+                        <button
+                          type="button"
+                          disabled={dayIndex >= 6}
+                          onClick={handleNextDay}
+                        >
+                          <IoMdArrowDropright className="text-5xl text-blue-500" />
+                        </button>
+                      </div>
+                    </div>
+                    {/* ------------------------------- */}
+                  </>
+
+                  {/* -----------------Tag input---------------------------- */}
+                  <div className="col-span-2 flex flex-col">
+                    <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border rounded-md focus:outline-blue-400">
+                      <div className="flex items-center">
+                        <div className="">
+                          {tags.map((tag, index) => (
+                            <Tag key={index} className="m-1">
+                              {tag}
+                            </Tag>
+                          ))}
+                        </div>
+
+                        <input
+                          type="text"
+                          value={tagInput}
+                          onChange={(e) => setTagInput(e.target.value)}
+                          placeholder="Tag"
+                          className="p- text-lg m-[10px] outline-none"
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault(); // Prevent form submission
+                              handleAddTag(tagInput);
+                            }
+                          }}
+                        />
                       </div>
 
-                      <input
-                        type="text"
-                        value={tagInput}
-                        onChange={(e) => setTagInput(e.target.value)}
-                        placeholder="Tag"
-                        className="p- text-lg m-[10px] outline-none"
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault(); // Prevent form submission
-                            handleAddTag(tagInput);
-                          }
-                        }}
-                      />
+                      <button
+                        className="bg-green-500 rounded-md text-white px-2 py-1 hidden md:block"
+                        onClick={() => handleAddTag(tagInput)}
+                        type="button"
+                      >
+                        update
+                      </button>
                     </div>
-
-                    <button
-                      className="bg-green-500 rounded-md text-white px-2 py-1"
-                      onClick={() => handleAddTag(tagInput)}
-                      type="button"
-                    >
-                      update
-                    </button>
+                    <Label className="text-xs text-gray-400 text-center md:hidden">
+                      Press <Kbd className="text-gray-500">Enter</Kbd> after
+                      every tag
+                    </Label>
                   </div>
 
                   {/* --------------------Social Links------------------------- */}
@@ -472,6 +509,7 @@ const ManageStorePage = () => {
                         value={fasebook}
                         onChange={(e) => setFacebook(e.target.value)}
                         placeholder="www.facebook.com/username"
+                        className="focus-visible:ring-blue-500"
                       />
                     </div>
 
@@ -485,6 +523,7 @@ const ManageStorePage = () => {
                         value={instagram}
                         onChange={(e) => setInstagram(e.target.value)}
                         placeholder="www.instagram.com/username"
+                        className="focus-visible:ring-blue-500"
                       />
                     </div>
 
@@ -498,6 +537,7 @@ const ManageStorePage = () => {
                         value={linkedin}
                         onChange={(e) => setLinkedin(e.target.value)}
                         placeholder="www.linkedin.com/username"
+                        className="focus-visible:ring-blue-500"
                       />
                     </div>
 
@@ -511,6 +551,7 @@ const ManageStorePage = () => {
                         value={twitter}
                         onChange={(e) => setTwitter(e.target.value)}
                         placeholder="www.twitter.com/username"
+                        className="focus-visible:ring-blue-500"
                       />
                     </div>
 
@@ -524,6 +565,7 @@ const ManageStorePage = () => {
                         value={youtube}
                         onChange={(e) => setYoutube(e.target.value)}
                         placeholder="www.youtube.com/username"
+                        className="focus-visible:ring-blue-500"
                       />
                     </div>
 
@@ -537,6 +579,7 @@ const ManageStorePage = () => {
                         value={website}
                         onChange={(e) => setWebsite(e.target.value)}
                         placeholder="www.yourWebsite.com"
+                        className="focus-visible:ring-blue-500"
                       />
                     </div>
                   </>
@@ -564,7 +607,7 @@ const ManageStorePage = () => {
                     </Button>
 
                     <Button
-                    variant="destructive"
+                      variant="destructive"
                       type="button"
                       onClick={() =>
                         togglePublish(
@@ -572,7 +615,7 @@ const ManageStorePage = () => {
                           currentUserStore.published
                         )
                       }
-                      className=" text-xl md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white"
+                      className="md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white"
                     >
                       {currentUserStore.published ? "Unpublish" : "Publish"}
                     </Button>
