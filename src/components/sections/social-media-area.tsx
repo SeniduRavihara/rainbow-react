@@ -7,7 +7,7 @@ import {
   twitter,
   yt,
 } from "@/assets";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 const SocialMediaArea = ({
   facebookUrl,
@@ -34,33 +34,33 @@ const SocialMediaArea = ({
         )}
         <div className="ad flex">
           {facebookUrl && (
-            <Link to={facebookUrl} target="_blank" className="scl-md-links">
+            <a href={facebookUrl} target="_blank" className="scl-md-links">
               <img src={fb} alt="" />
-            </Link>
+            </a>
           )}
 
           {youtubeUrl && (
-            <Link to={youtubeUrl} target="_blank" className="scl-md-links">
+            <a href={youtubeUrl} target="_blank" className="scl-md-links">
               <img src={yt} alt="" />
-            </Link>
+            </a>
           )}
 
           {instagramUrl && (
-            <Link to={instagramUrl} target="_blank" className="scl-md-links">
+            <a href={instagramUrl} target="_blank" className="scl-md-links">
               <img src={insta} alt="" />
-            </Link>
+            </a>
           )}
 
           {linkedinUrl && (
-            <Link to={linkedinUrl} target="_blank" className="scl-md-links">
+            <a href={linkedinUrl} target="_blank" className="scl-md-links">
               <img src={linkedin} alt="" />
-            </Link>
+            </a>
           )}
 
           {twitterUrl && (
-            <Link to={twitterUrl} target="_blank" className="scl-md-links">
+            <a href={twitterUrl} target="_blank" className="scl-md-links">
               <img src={twitter} alt="" />
-            </Link>
+            </a>
           )}
         </div>
       </div>
