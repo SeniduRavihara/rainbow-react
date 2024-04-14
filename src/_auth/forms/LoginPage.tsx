@@ -1,4 +1,4 @@
-import { getUserRole, login } from "@/firebase/api";
+import { getUserRole, login, logout } from "@/firebase/api";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { loginSchema } from "@/schemas";
+import toast from "react-hot-toast";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -33,19 +34,25 @@ const LoginForm = () => {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof loginSchema>) {
-     try {
-       const uid = await login(values);
-       const roles = await getUserRole(uid);
-      //  console.log(roles);
+    try {
+      const user = await login(values);
+      const roles = await getUserRole(user.uid);
 
-       if (roles && roles.includes("admin")) {
-         navigate("/admin");
-       } else {
-         navigate("/");
-       }
-     } catch (error) {
-       console.log(error);
-     }
+      // if (!user.emailVerified) {
+      //   await logout();
+      //   form.reset();
+      //   toast.error("Verify Your email to login")
+      //   return;
+      // }
+
+      if (roles && roles.includes("admin")) {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

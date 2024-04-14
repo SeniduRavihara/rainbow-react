@@ -1,10 +1,11 @@
 import {
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { auth, db, provider, storage } from "./config";
+import { auth, db, fbProvider, provider, storage } from "./config";
 import {
   addDoc,
   collection,
@@ -22,6 +23,7 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { CurrentUserDataType, StoreListType, StoreObj } from "@/types";
+import toast from "react-hot-toast";
 
 // --------------------------------------
 export const logout = async () => {
@@ -34,13 +36,15 @@ export const logout = async () => {
 };
 
 // ---------------------------------------
-export const login = async ({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) => {
+export const login = async (
+  {
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  },
+) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
@@ -49,7 +53,7 @@ export const login = async ({
     );
     // console.log(userCredential);
 
-    return userCredential.user.uid;
+    return userCredential.user;
   } catch (error) {
     console.log(error);
     throw error;
@@ -75,6 +79,10 @@ export const signup = async ({
     );
     // console.log(userCredential);
     const user = userCredential.user;
+    await sendEmailVerification(user);
+    toast.success(
+      "Success! A verification link has been sent to your email address."
+    );
 
     const payload = {
       name,
@@ -92,7 +100,7 @@ export const signup = async ({
     //   user.reload();
     // }
 
-    return userCredential.user.uid;
+    return userCredential.user;
   } catch (error) {
     console.error(error);
     throw error;
@@ -129,6 +137,38 @@ export const googleSignIn = async () => {
 };
 
 // ----------------------------------------------
+
+export const facebookSignIn = async () => {
+
+  try {
+    const userCredential = await signInWithPopup(auth, fbProvider);
+    // console.log(userCredential);
+
+    const user = userCredential.user;
+    const userDocRef = doc(db, "users", user.uid);
+    const userDoc = await getDoc(userDocRef);
+
+    if (!userDoc.exists()) {
+      const payload = {
+        name: user.displayName,
+        id: user.uid,
+        email: user.email,
+        roles: ["user"],
+        haveStore: false,
+      };
+
+      await setDoc(userDocRef, payload);
+
+      return userCredential.user.uid;
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// ----------------------------------------------
+
 export const getUserRole = async (uid: string) => {
   const documentRef = doc(db, "users", uid);
   const userData = await getDoc(documentRef);

@@ -44,7 +44,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full bg-white pt-3 h-20 px-2 md:px-5 flex items-center justify-between fixed top-7 left-0 border-b-2 border-[#00000010]">
+    <div className="w-full bg-white pt-3 h-20 px-4 md:px-5 flex items-center justify-between fixed top-7 left-0 border-b-2 border-[#00000010]">
       <div className="flex items-center justify-center">
         {/* ----------------Mobile---------------------- */}
         <div className="flex lg:hidden gap-5">

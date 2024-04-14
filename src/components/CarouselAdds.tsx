@@ -24,7 +24,7 @@ const CarouselAdds = () => {
         >
           {placeholderSliderAdds.map((sliderAdd, index) => (
             <div key={index}>
-              <img alt="sen" src={sliderAdd} className="" />
+              <img alt="Adds" src={sliderAdd} className="" />
             </div>
           ))}
         </Carousel>
@@ -46,7 +46,7 @@ const CarouselAdds = () => {
       >
         {sliderAdds.map((sliderAddObj, index) => (
           <div key={index}>
-            <img alt="sen" src={sliderAddObj.imageUrl} className="" />
+            <img alt="Adds" src={sliderAddObj.imageUrl ?? placeholderSliderAdds[index]} className="" />
           </div>
         ))}
       </Carousel>
