@@ -47,6 +47,9 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     useState<Array<{ location: string; id: string }> | null>(null);
 
   const [messagesToAll, setMessagesToAll] = useState<messageObjType[] | null>(null);
+  const [userMessages, setUserMessages] = useState<messageObjType[] | null>(
+    null
+  );
 
   useEffect(() => {
     const collectionRef = collection(db, "sectionAdds");

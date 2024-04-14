@@ -24,6 +24,7 @@ import {
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { CurrentUserDataType, StoreListType, StoreObj } from "@/types";
 import toast from "react-hot-toast";
+import { v4 } from "uuid";
 
 // --------------------------------------
 export const logout = async () => {
@@ -36,15 +37,13 @@ export const logout = async () => {
 };
 
 // ---------------------------------------
-export const login = async (
-  {
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  },
-) => {
+export const login = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
@@ -139,7 +138,6 @@ export const googleSignIn = async () => {
 // ----------------------------------------------
 
 export const facebookSignIn = async () => {
-
   try {
     const userCredential = await signInWithPopup(auth, fbProvider);
     // console.log(userCredential);
@@ -335,17 +333,49 @@ export const togglePublish = async (uid: string, published: boolean) => {
 
 // ---------------------------------------------
 
-export const createMessageToAll = async (message: string) => {
-  const collectionRef = collection(db, "messagesToAll");
+// export const createMessageToAll = async (message: string) => {
+//   const collectionRef = collection(db, "messagesToAll");
 
-  try {
-    await addDoc(collectionRef, { message, createdAt: new Date() });
-    console.log("New Message added..");
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+//   try {
+//     await addDoc(collectionRef, { message, createdAt: new Date() });
+//     console.log("New Message added..");
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// };
+
+export const createMessageToAll = async (message: string) => {
+  const collectionRef = collection(db, "users");
+  const querySnapshot = await getDocs(collectionRef);
+
+  const adminMessagesCollectionRef = collection(db, "amdinMessages");
+  const { id: adminMessageId } = await addDoc(adminMessagesCollectionRef, {
+    message,
+    createdAt: new Date(),
+    to: "all",
+    from: "admin",
+  });
+
+  querySnapshot.forEach(async (doc) => {
+    try {
+      const userMessagesRef = collection(doc.ref, "messages");
+      await addDoc(userMessagesRef, {
+        message,
+        createdAt: new Date(),
+        messageId: adminMessageId,
+        to: "all",
+        from: "admin",
+        seen: false
+      });
+    } catch (error) {
+      console.log("Error adding message to user:", doc.id, error);
+      throw error;
+    }
+  });
 };
+
+// -------------------------------------------------------
 
 export const createMessageToUser = async (message: string, email: string) => {
   const collectionRef = collection(db, "users");
@@ -360,7 +390,7 @@ export const createMessageToUser = async (message: string, email: string) => {
 
   const userIdForSetMessage = matchingUser?.id;
 
-  if (!userIdForSetMessage) return;
+  if (!userIdForSetMessage) return "There are no matching user";
 
   const userMessagesRef = collection(
     db,
@@ -370,7 +400,23 @@ export const createMessageToUser = async (message: string, email: string) => {
   );
 
   try {
-    await addDoc(userMessagesRef, { message, createdAt: new Date() });
+    const adminMessagesCollectionRef = collection(db, "adminMessages");
+    const { id: adminMessageId } = await addDoc(adminMessagesCollectionRef, {
+      message,
+      createdAt: new Date(),
+      to: matchingUser.name,
+      from: "admin",
+      toEmail: matchingUser.email,
+    });
+
+    await addDoc(userMessagesRef, {
+      message,
+      createdAt: new Date(),
+      messageId: adminMessageId,
+      to: matchingUser.name,
+      from: "admin",
+      seen: false,
+    });
     console.log("New Message added..");
   } catch (error) {
     console.log(error);
