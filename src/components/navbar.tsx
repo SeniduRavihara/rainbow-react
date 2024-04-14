@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineUserCircle } from "react-icons/hi2";
-import { handleUserMessageDelete, logout } from "@/firebase/api";
+import { handleUserMessageDelete, logout, updateAsSeen } from "@/firebase/api";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoIosMenu } from "react-icons/io";
 import { IonIcon } from "@ionic/react";
@@ -22,14 +22,24 @@ import {
   barChartOutline,
 } from "ionicons/icons";
 import { useData } from "@/hooks/useData";
-import { getTimeDifference } from "@/lib/utils";
+import { cn, getTimeDifference } from "@/lib/utils";
 import { placeholderReviewPic } from "@/assets";
 import { RxCross1 } from "react-icons/rx";
+import { useEffect, useState } from "react";
+import { messageObjType } from "@/types";
 
 const Navbar = () => {
   const { currentUser } = useAuth();
-  const { currentUserData, setSearchResultStores, messagesToAll } = useData();
+  const [notSeenMsg, setNowSeenMsg] = useState<messageObjType[] | null>(null);
+
+  const { currentUserData, setSearchResultStores, userMessages } = useData();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userMessages) {
+      setNowSeenMsg(userMessages?.filter((msgObj) => !msgObj.seen));
+    }
+  }, [userMessages]);
 
   const handleCreateStoreClick = () => {
     navigate("/manage-store");
@@ -42,9 +52,18 @@ const Navbar = () => {
     setSearchResultStores(null);
     navigate("/");
   };
+ 
+const handleSeenMessage = () => {
+  if (!currentUserData) return;
+  setTimeout(async () => {
+    await updateAsSeen(currentUserData.id);
+  }, 1000);
+};
+
+
 
   return (
-    <div className="w-full bg-white pt-3 h-20 px-2 md:px-5 flex items-center justify-between fixed top-7 left-0 border-b-2 border-[#00000010]">
+    <div className="w-full fixed bg-white pt-2 h-14 px-4 md:px-5 flex items-center justify-between  border-b-2 border-[#00000010]">
       <div className="flex items-center justify-center">
         {/* ----------------Mobile---------------------- */}
         <div className="flex lg:hidden gap-5">
@@ -126,22 +145,29 @@ const Navbar = () => {
         </li>
       </ul>
 
-      <div className="flex items-center  justify-between gap-3 md:gap-5">
+      <div className="flex items-center justify-between gap-3 md:gap-5">
         <div className="flex mt-1 items-center justify-center">
           {currentUser && currentUserData?.haveStore && (
-            <Sheet>
+            <Sheet onOpenChange={handleSeenMessage}>
               <SheetTrigger>
-                <IoIosNotificationsOutline
-                  className="text-3xl cursor-pointer"
-                  onClick={() => currentUser?.reload()}
-                />
+                <div className="relative">
+                  
+                  <IoIosNotificationsOutline
+                    className="text-3xl cursor-pointer"
+                    onClick={() => currentUser?.reload()}
+                  />
+                  <div className="absolute -top-2 left-4 flex items-center justify-center rounded-full w-5 h-5 bg-red-500 text-white">{notSeenMsg?.length}</div>
+                </div>
               </SheetTrigger>
               <SheetContent className="w-screen p-0 overflow-y-scroll">
                 <ul className="flex flex-col mt-10 font-medium items-center justify-center">
-                  {messagesToAll &&
-                    messagesToAll.map((messageObj, index) => (
+                  {userMessages &&
+                    userMessages.map((messageObj, index) => (
                       <li
-                        className="w-full flex items-center justify-between border-b py-4 px-4"
+                        className={cn(
+                          "w-full flex items-center justify-between border-b py-4 px-4",
+                          !messageObj.seen && "bg-green-400/50"
+                        )}
                         key={index}
                       >
                         <div className="flex items-center justify-center gap-2 py-2 w-[90%]">

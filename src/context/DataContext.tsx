@@ -8,13 +8,10 @@ import {
   messageObjType,
 } from "@/types";
 import {
-  Timestamp,
   collection,
-  doc,
   onSnapshot,
   orderBy,
   query,
-  setDoc,
 } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
 
@@ -46,7 +43,10 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
   const [locationArr, setLocationArr] =
     useState<Array<{ location: string; id: string }> | null>(null);
 
-  const [messagesToAll, setMessagesToAll] = useState<messageObjType[] | null>(null);
+  // const [messagesToAll, setMessagesToAll] = useState<messageObjType[] | null>(null);
+  const [userMessages, setUserMessages] = useState<messageObjType[] | null>(
+    null
+  );
 
   useEffect(() => {
     const collectionRef = collection(db, "sectionAdds");
@@ -94,41 +94,41 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // -----------------------------------------------------
-  useEffect(() => {
-    const fetchData = async () => {
-      if (currentUserData && currentUserData.haveStore) {
-        const collectionRef = collection(db, "messagesToAll");
-        const q = query(collectionRef, orderBy("createdAt", "desc"));
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (currentUserData && currentUserData.haveStore) {
+  //       const collectionRef = collection(db, "messagesToAll");
+  //       const q = query(collectionRef, orderBy("createdAt", "desc"));
 
-        const unsubscribe = onSnapshot(q, async (QuerySnapshot) => {
-          const messageArr = QuerySnapshot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          })) as Array<{ message: string; id: string; createdAt: Timestamp }>;
+  //       const unsubscribe = onSnapshot(q, async (QuerySnapshot) => {
+  //         const messageArr = QuerySnapshot.docs.map((doc) => ({
+  //           ...doc.data(),
+  //           id: doc.id,
+  //         })) as Array<{ message: string; id: string; createdAt: Timestamp }>;
 
-          // setMessagesToAll(messageArr);
-          // console.log(messageArr);
+  //         // setMessagesToAll(messageArr);
+  //         // console.log(messageArr);
 
-          for (let i = 0; i < messageArr.length; i++) {
-            const messageObj = messageArr[i];
-            const userMessagesRef = doc(
-              db,
-              "users",
-              currentUserData.id,
-              "messages",
-              messageObj.id
-            );
+  //         for (let i = 0; i < messageArr.length; i++) {
+  //           const messageObj = messageArr[i];
+  //           const userMessagesRef = doc(
+  //             db,
+  //             "users",
+  //             currentUserData.id,
+  //             "messages",
+  //             messageObj.id
+  //           );
 
-            await setDoc(userMessagesRef, { ...messageObj });
-          }
-        });
+  //           await setDoc(userMessagesRef, { ...messageObj });
+  //         }
+  //       });
 
-        return unsubscribe;
-      }
-    };
+  //       return unsubscribe;
+  //     }
+  //   };
 
-    fetchData();
-  }, [currentUserData]);
+  //   fetchData();
+  // }, [currentUserData]);
 
   // ---------------------------------------------------
 
@@ -149,7 +149,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
             id: doc.id,
           })) as messageObjType[];
 
-          setMessagesToAll(messageArr);
+          setUserMessages(messageArr);
           // console.log(messageArr);
         });
 
@@ -195,7 +195,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     setLastDocument,
     isAllFetched,
     setIsAllFetched,
-    messagesToAll,
+    userMessages,
     locationArr,
     setLocationArr,
   };
