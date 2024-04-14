@@ -18,7 +18,9 @@ const HomePage = () => {
       <main className="flex min-h-screen flex-col items-center w-screen pr-4">
         <div className="fixed top-0 left-0 z-50">
           <TopBanner />
-          <Navbar />
+          <div className="fixed top-7 left-0">
+            <Navbar />
+          </div>
         </div>
         <div className="mt-28">
           {/* <TestSearch /> */}

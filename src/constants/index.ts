@@ -28,9 +28,9 @@ export const INITIAL_DATA_CONTEXT = {
   setLastDocument: () => {},
   isAllFetched: false,
   setIsAllFetched: () => {},
-  messagesToAll: null,
-  locationArr : null,
-  setLocationArr: ()=>{},
+  userMessages: null,
+  locationArr: null,
+  setLocationArr: () => {},
 };
 
 export const INITIAL_SCHEDULAR_ARR = [

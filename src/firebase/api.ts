@@ -24,7 +24,6 @@ import {
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { CurrentUserDataType, StoreListType, StoreObj } from "@/types";
 import toast from "react-hot-toast";
-import { v4 } from "uuid";
 
 // --------------------------------------
 export const logout = async () => {
@@ -353,8 +352,12 @@ export const createMessageToAll = async (message: string) => {
   const { id: adminMessageId } = await addDoc(adminMessagesCollectionRef, {
     message,
     createdAt: new Date(),
-    to: "all",
-    from: "admin",
+    imageUrl: "",
+    fromName: "admin",
+    fromId: "",
+    toName: "all",
+    toId: "",
+    seen: false,
   });
 
   querySnapshot.forEach(async (doc) => {
@@ -362,11 +365,14 @@ export const createMessageToAll = async (message: string) => {
       const userMessagesRef = collection(doc.ref, "messages");
       await addDoc(userMessagesRef, {
         message,
-        createdAt: new Date(),
         messageId: adminMessageId,
-        to: "all",
-        from: "admin",
-        seen: false
+        createdAt: new Date(),
+        imageUrl: "",
+        fromName: "admin",
+        fromId: "",
+        toName: "all",
+        toId: "",
+        seen: false,
       });
     } catch (error) {
       console.log("Error adding message to user:", doc.id, error);
@@ -404,23 +410,48 @@ export const createMessageToUser = async (message: string, email: string) => {
     const { id: adminMessageId } = await addDoc(adminMessagesCollectionRef, {
       message,
       createdAt: new Date(),
-      to: matchingUser.name,
-      from: "admin",
-      toEmail: matchingUser.email,
+      imageUrl: "",
+      fromName: "admin",
+      fromId: "",
+      toName: matchingUser.id,
+      toId: "",
+      seen: false,
     });
 
     await addDoc(userMessagesRef, {
       message,
-      createdAt: new Date(),
       messageId: adminMessageId,
-      to: matchingUser.name,
-      from: "admin",
+      createdAt: new Date(),
+      imageUrl: "",
+      fromName: "admin",
+      fromId: "",
+      toName: matchingUser.id,
+      toId: userIdForSetMessage,
       seen: false,
     });
     console.log("New Message added..");
   } catch (error) {
     console.log(error);
     throw error;
+  }
+};
+
+// ------------------------------------
+
+export const updateAsSeen = async (uid: string) => {
+  try {
+    const collectionRef = collection(db, "users", uid, "messages");
+
+    const querySnapshot = await getDocs(collectionRef);
+    
+    querySnapshot.docs.forEach((doc) => {
+      const messageRef = doc.ref;
+      updateDoc(messageRef, { seen: true });
+    });
+
+    // for(const i=0; i<=querySnapshot)
+  } catch (error) {
+    console.log(error);
   }
 };
 
