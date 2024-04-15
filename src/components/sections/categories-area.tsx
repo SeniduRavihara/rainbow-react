@@ -48,6 +48,7 @@ const CategoriesArea = () => {
   const [isShowAll, setIsShowAll] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [visibleCategories, setVisibleCategories] = useState(categories);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   useEffect(() => {
     setIsShowAll(false);
@@ -77,6 +78,23 @@ const CategoriesArea = () => {
     };
   }, []); // Empty dependency array ensures that this effect runs only once after the initial render
 
+  useEffect(()=>{
+    if(isShowAll){
+      handleAllClick();
+    }else{
+      handleLessClick()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[isShowAll])
+
+  const handleAllClick = () => {
+    const currentScrollPosition = window.scrollY;
+    setScrollPosition(currentScrollPosition);
+  };
+  const handleLessClick = () => {
+    window.scrollTo(0, scrollPosition);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center w-full">
       <ul className=" w-full grid gap-x-20 grid-cols-3 xsm:grid-cols-4 sm:grid-cols-5  md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 px-14 sm:px-20 ">
@@ -101,16 +119,20 @@ const CategoriesArea = () => {
 
       <div className="px-10 sm:px-20 mt-4 w-full md:hidden">
         <Button
-          onClick={() => setIsShowAll(!isShowAll)}
+          onClick={() => {
+            setIsShowAll(!isShowAll);
+          }}
           className="bg-[#0066FF] flex items-center justify-center gap-4 hover:bg-[#0066ff9a] h-[50px]  w-full"
         >
           {!isShowAll ? (
             <>
-              <div>View All categorys</div> <FaArrowRight />
+              <div onClick={handleAllClick}>View All categorys</div>{" "}
+              <FaArrowRight />
             </>
           ) : (
             <>
-              <div>View less categorys</div> <FaArrowLeft />
+              <div onClick={handleLessClick}>View less categorys</div>{" "}
+              <FaArrowLeft />
             </>
           )}
         </Button>

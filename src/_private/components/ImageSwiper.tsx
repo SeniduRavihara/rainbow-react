@@ -1,15 +1,8 @@
-// Import Swiper React components
-// import { Swiper, SwiperSlide } from "swiper/react";
 
-// Import Swiper styles
-// import "swiper/css";
-// import "swiper/css/pagination";
-// import "swiper/css/navigation";
-// import "./styles.css";
-// import { Pagination, Navigation } from "swiper/modules";
 import { Carousel } from "react-responsive-carousel";
 import { imageGalery } from "@/assets";
 import { cn } from "@/lib/utils";
+// import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 
 type ImageSwiperProps = {
   storeImages: Array<{
@@ -61,9 +54,7 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
     for (let i = 1; i <= 5; i++) {
       const file = storeImages[i - 1]?.file;
 
-      const imageUrl = file
-        ? URL.createObjectURL(file)
-        : imageGalery;
+      const imageUrl = file ? URL.createObjectURL(file) : imageGalery;
 
       slides.push(
         <div
@@ -74,7 +65,7 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
             <img
               src={imageUrl}
               className={cn(
-                "w-[80%] h-[80%] object-covr rounded-l-md",
+                "object-covr rounded-l-md",
                 imageUrl === imageGalery && "w-32 h-32"
               )}
               alt=""
@@ -92,7 +83,9 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
             />
             <p>
               Select your store image{" "}
-              <label htmlFor={`fileInput${i}`} className="text-blue-500">Browse</label>
+              <label htmlFor={`fileInput${i}`} className="text-blue-500">
+                Browse
+              </label>
             </p>
           </div>
         </div>
@@ -101,19 +94,42 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
     return slides;
   };
 
+  // const renderPrevArrow = (clickHandler: () => void, hasPrev: boolean) => (
+  //   <div
+  //     className={`${
+  //       hasPrev ? "absolute" : "hidden"
+  //     } top-0 bottom-0 left-0 flex justify-center items-center p-3 opacity-30 hover:opacity-100 cursor-pointer z-20`}
+  //     onClick={clickHandler}
+  //   >
+  //     <BiLeftArrow className="w-9 h-9 text-blue-700" />
+  //   </div>
+  // );
+
+  // const renderNextArrow = (clickHandler: () => void, hasNext: boolean) => (
+  //   <div
+  //     className={`${
+  //       hasNext ? "absolute" : "hidden"
+  //     } top-0 bottom-0 right-0 flex justify-center items-center p-3 opacity-30 hover:opacity-100 cursor-pointer z-20`}
+  //     onClick={clickHandler}
+  //   >
+  //     <BiRightArrow className="w-9 h-9 text-blue-700" />
+  //   </div>
+  // );
   return (
     <>
       <Carousel
+        // renderArrowPrev={renderPrevArrow}
+        // renderArrowNext={renderNextArrow}
         showStatus={false}
         interval={3000}
-        infiniteLoop={false}
+        infiniteLoop
         stopOnHover={false}
         showIndicators={false}
         transitionTime={800}
         showThumbs={false}
         autoPlay={false}
         showArrows
-        className="w-[90%] md:w-full h-full border bg-slate-200 rounded-md py-3 md:p-3 lg:p-5"
+        className="w-[90%] md:w-full h-full  rounded-md py-3 md:p-3 lg:p-5 bg-gray-200"
       >
         {renderSlides()}
       </Carousel>

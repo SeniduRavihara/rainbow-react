@@ -30,7 +30,7 @@ export type DataContextType = {
   setLastDocument: React.Dispatch<React.SetStateAction<StoreObj | null>>;
   isAllFetched: boolean;
   setIsAllFetched: React.Dispatch<React.SetStateAction<boolean>>;
-  messagesToAll: messageObjType[] | null;
+  userMessages: messageObjType[] | null;
   locationArr: Array<{ location: string; id: string }> | null;
   setLocationArr: React.Dispatch<
     React.SetStateAction<Array<{ location: string; id: string }> | null>
@@ -40,12 +40,16 @@ export type DataContextType = {
 // --------------------------------
 
 export type messageObjType = {
-  message: string;
   id: string;
+  message: string;
+  messageId: string;
   createdAt: Timestamp;
   imageUrl: string;
   fromName: string;
   fromId: string;
+  toName: string;
+  toId: string;
+  seen: boolean;
 };
 
 // ---------------------------------
@@ -87,6 +91,12 @@ export type StoreObj = {
   info2: string;
   published: boolean;
   schedulArr: Array<{ day: string; time: TimeValue }>;
+  fasebook: string;
+  instagram: string;
+  linkedin: string;
+  twitter: string;
+  youtube: string;
+  website: string;
 };
 
 export type StoreListType = Array<StoreObj>;
