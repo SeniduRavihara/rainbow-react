@@ -10,9 +10,9 @@ import {
 
 const SocialMediaArea = () => {
   return (
-    <div className="third-section py-5 flex flex-col gap-5 lg:flex-row items-center justify-between px-10">
+    <div className="third-section py-5 flex flex-col gap-5 md:flex-row items-center justify-between px-1">
       <div className="socail-links">
-        <div className="adasdfdsftxt">Follow us On</div>
+        <div className="adasdfdsftxt mr-5">Follow us On</div>
         <div className="ad flex">
           <a href="#" className="scl-md-links">
             <img src={fb} alt="" />

@@ -18,6 +18,24 @@ import { IoArrowBack } from "react-icons/io5";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 import "@wojtekmaj/react-timerange-picker/dist/TimeRangePicker.css";
 import "react-clock/dist/Clock.css";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { COUNTRIES } from "./countries";
+import "./style.css";
+import { WithContext as ReactTags } from "react-tag-input";
+const suggestions = COUNTRIES.map((country) => {
+  return {
+    id: country,
+    text: country,
+  };
+});
+
+const KeyCodes = {
+  comma: 188,
+  enter: 13,
+};
+
+const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 const ManageStorePage = () => {
   const [title, setTitle] = useState("");
@@ -25,7 +43,7 @@ const ManageStorePage = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [tagInput, setTagInput] = useState("");
-  const [tags, setTags] = useState<Array<string>>([]);
+  // const [tags, setTags] = useState<Array<string>>([]);
   const [loading, setLoading] = useState(false);
   const [info1, setInfo1] = useState("");
   const [info2, setInfo2] = useState("");
@@ -60,6 +78,13 @@ const ManageStorePage = () => {
     null
   );
 
+    const [tags, setTags] = useState([
+      { id: "Thailand", text: "Thailand" },
+      { id: "India", text: "India" },
+      { id: "Vietnam", text: "Vietnam" },
+      { id: "Turkey", text: "Turkey" },
+    ]);
+
   const { currentUserData } = useData();
   const { currentUser } = useAuth();
 
@@ -76,28 +101,28 @@ const ManageStorePage = () => {
     }
   }, [currentUserData]);
 
-  useEffect(() => {
-    if (currentUserStore) {
-      setInfo1(currentUserStore.info1);
-      setInfo2(currentUserStore.info2);
-      setAddress(currentUserStore.address);
-      setPhoneNumber(currentUserStore.phoneNumber);
-      setWhatsappNumber(currentUserStore.whatsappNumber);
-      setTitle(currentUserStore.title);
-      setTags(currentUserStore.tags);
-      setStoreImages((pre) =>
-        pre.map((imgObj, index) => {
-          return { ...imgObj, imageUrl: currentUserStore.storeImages[index] };
-        })
-      );
-    }
-  }, [currentUserStore]);
+  // useEffect(() => {
+  //   if (currentUserStore) {
+  //     setInfo1(currentUserStore.info1);
+  //     setInfo2(currentUserStore.info2);
+  //     setAddress(currentUserStore.address);
+  //     setPhoneNumber(currentUserStore.phoneNumber);
+  //     setWhatsappNumber(currentUserStore.whatsappNumber);
+  //     setTitle(currentUserStore.title);
+  //     setTags(currentUserStore.tags);
+  //     setStoreImages((pre) =>
+  //       pre.map((imgObj, index) => {
+  //         return { ...imgObj, imageUrl: currentUserStore.storeImages[index] };
+  //       })
+  //     );
+  //   }
+  // }, [currentUserStore]);
 
-  const handleAddTag = (tag: string) => {
-    if (!tag || tags.includes(tag)) return;
-    setTagInput("");
-    setTags((pre) => [...pre, tag]);
-  };
+  // const handleAddTag = (tag: string) => {
+  //   if (!tag || tags.includes(tag)) return;
+  //   setTagInput("");
+  //   setTags((pre) => [...pre, tag]);
+  // };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -199,6 +224,30 @@ const ManageStorePage = () => {
     setDayIndex((pre) => pre - 1);
   };
 
+  // ----------------------------
+   const handleDelete = (i) => {
+     setTags(tags.filter((tag, index) => index !== i));
+   };
+
+   const handleAddition = (tag) => {
+     setTags([...tags, tag]);
+   };
+
+   const handleDrag = (tag, currPos, newPos) => {
+     const newTags = tags.slice();
+
+     newTags.splice(currPos, 1);
+     newTags.splice(newPos, 0, tag);
+
+     // re-render
+     setTags(newTags);
+   };
+
+   const handleTagClick = (index) => {
+     console.log("The tag at index " + index + " was clicked");
+   };
+  //  ----------------------------
+
   // if (!currentUserStore) return <div>Loading...</div>;
   return (
     <div className="w-screen min-h-screen text-center p-5">
@@ -264,60 +313,96 @@ const ManageStorePage = () => {
 
               <form onSubmit={handleSubmit}>
                 <div className="input-form grid grid-cols-2">
-                  <input
+                  {/* <input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
                     placeholder=" title"
                     className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  /> */}
+                  <Input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                    placeholder=" title"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
                   />
 
-                  <input
+                  {/* <input
                     type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     required
                     placeholder="address"
                     className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  /> */}
+                  <Input
+                    type="text"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    required
+                    placeholder="address"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
                   />
 
-                  <input
+                  {/* <input
                     type="text"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     required
                     placeholder="Phone number"
                     className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  /> */}
+                  <Input
+                    type="text"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    required
+                    placeholder="Phone number"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
                   />
 
-                  <input
+                  {/* <input
                     type="text"
                     value={whatsappNumber}
                     onChange={(e) => setWhatsappNumber(e.target.value)}
                     required
                     placeholder="Whatsapp number"
                     className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                  /> */}
+                  <Input
+                    type="text"
+                    value={whatsappNumber}
+                    onChange={(e) => setWhatsappNumber(e.target.value)}
+                    required
+                    placeholder="Whatsapp number"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
                   />
 
-                  <textarea
+                  <Textarea
                     value={info1}
                     onChange={(e) => setInfo1(e.target.value)}
                     required
                     placeholder=" info1"
-                    className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
                   />
 
-                  <textarea
+                  <Textarea
                     value={info2}
                     onChange={(e) => setInfo2(e.target.value)}
                     required
                     placeholder="info2"
-                    className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
+                    // className="p-[1rem] text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400"
                   />
 
                   <div className="flex col-span-2 items-center justify-between w-full">
-                    <button type="button" disabled={dayIndex <= 0} onClick={handlePrevDay}>
+                    <button
+                      type="button"
+                      disabled={dayIndex <= 0}
+                      onClick={handlePrevDay}
+                    >
                       <IoMdArrowDropleft className="text-3xl" />
                     </button>
                     <div>{schedulArr[dayIndex].day}</div>
@@ -334,7 +419,7 @@ const ManageStorePage = () => {
                     </button>
                   </div>
 
-                  <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400">
+                  {/* <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border-2 border-[#a7a7a7] rounded-xl focus:outline-blue-400">
                     <div className="flex items-center">
                       <div className="">
                         {tags.map((tag, index) => (
@@ -360,6 +445,19 @@ const ManageStorePage = () => {
                     >
                       update
                     </button>
+                  </div> */}
+                  <div className="col-span-2 border">
+                    <ReactTags
+                      tags={tags}
+                      suggestions={suggestions}
+                      delimiters={delimiters}
+                      handleDelete={handleDelete}
+                      handleAddition={handleAddition}
+                      handleDrag={handleDrag}
+                      handleTagClick={handleTagClick}
+                      inputFieldPosition="top"
+                      autocomplete
+                    />
                   </div>
 
                   <button

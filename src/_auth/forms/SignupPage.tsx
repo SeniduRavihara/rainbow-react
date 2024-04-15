@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { registerSchema } from "@/schemas";
-import { signup } from "@/firebase/api";
+import { logout, signup } from "@/firebase/api";
 import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
@@ -45,7 +45,15 @@ const RegisterForm = () => {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     try {
-      await signup(values);
+      const user = await signup(values);
+
+      if (!user.emailVerified) {
+        await logout();
+        form.reset();
+        navigate("/login");
+        return;
+      }
+
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -148,6 +156,25 @@ const RegisterForm = () => {
                 </FormItem>
               )}
             />
+
+            {/* <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      // disabled={isPending}
+                      placeholder="password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
           </div>
 
           <Button type="submit" className="w-full">

@@ -1,10 +1,11 @@
 import {
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { auth, db, provider, storage } from "./config";
+import { auth, db, fbProvider, provider, storage } from "./config";
 import {
   addDoc,
   collection,
@@ -22,6 +23,7 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { CurrentUserDataType, StoreListType, StoreObj } from "@/types";
+import toast from "react-hot-toast";
 
 // --------------------------------------
 export const logout = async () => {
@@ -49,7 +51,7 @@ export const login = async ({
     );
     // console.log(userCredential);
 
-    return userCredential.user.uid;
+    return userCredential.user;
   } catch (error) {
     console.log(error);
     throw error;
@@ -75,6 +77,10 @@ export const signup = async ({
     );
     // console.log(userCredential);
     const user = userCredential.user;
+    await sendEmailVerification(user);
+    toast.success(
+      "Success! A verification link has been sent to your email address."
+    );
 
     const payload = {
       name,
@@ -92,7 +98,7 @@ export const signup = async ({
     //   user.reload();
     // }
 
-    return userCredential.user.uid;
+    return userCredential.user;
   } catch (error) {
     console.error(error);
     throw error;
@@ -129,6 +135,37 @@ export const googleSignIn = async () => {
 };
 
 // ----------------------------------------------
+
+export const facebookSignIn = async () => {
+  try {
+    const userCredential = await signInWithPopup(auth, fbProvider);
+    // console.log(userCredential);
+
+    const user = userCredential.user;
+    const userDocRef = doc(db, "users", user.uid);
+    const userDoc = await getDoc(userDocRef);
+
+    if (!userDoc.exists()) {
+      const payload = {
+        name: user.displayName,
+        id: user.uid,
+        email: user.email,
+        roles: ["user"],
+        haveStore: false,
+      };
+
+      await setDoc(userDocRef, payload);
+
+      return userCredential.user.uid;
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// ----------------------------------------------
+
 export const getUserRole = async (uid: string) => {
   const documentRef = doc(db, "users", uid);
   const userData = await getDoc(documentRef);
@@ -295,17 +332,56 @@ export const togglePublish = async (uid: string, published: boolean) => {
 
 // ---------------------------------------------
 
-export const createMessageToAll = async (message: string) => {
-  const collectionRef = collection(db, "messagesToAll");
+// export const createMessageToAll = async (message: string) => {
+//   const collectionRef = collection(db, "messagesToAll");
 
-  try {
-    await addDoc(collectionRef, { message, createdAt: new Date() });
-    console.log("New Message added..");
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+//   try {
+//     await addDoc(collectionRef, { message, createdAt: new Date() });
+//     console.log("New Message added..");
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// };
+
+export const createMessageToAll = async (message: string) => {
+  const collectionRef = collection(db, "users");
+  const querySnapshot = await getDocs(collectionRef);
+
+  const adminMessagesCollectionRef = collection(db, "amdinMessages");
+  const { id: adminMessageId } = await addDoc(adminMessagesCollectionRef, {
+    message,
+    createdAt: new Date(),
+    imageUrl: "",
+    fromName: "admin",
+    fromId: "",
+    toName: "all",
+    toId: "",
+    seen: false,
+  });
+
+  querySnapshot.forEach(async (doc) => {
+    try {
+      const userMessagesRef = collection(doc.ref, "messages");
+      await addDoc(userMessagesRef, {
+        message,
+        messageId: adminMessageId,
+        createdAt: new Date(),
+        imageUrl: "",
+        fromName: "admin",
+        fromId: "",
+        toName: "all",
+        toId: "",
+        seen: false,
+      });
+    } catch (error) {
+      console.log("Error adding message to user:", doc.id, error);
+      throw error;
+    }
+  });
 };
+
+// -------------------------------------------------------
 
 export const createMessageToUser = async (message: string, email: string) => {
   const collectionRef = collection(db, "users");
@@ -320,7 +396,7 @@ export const createMessageToUser = async (message: string, email: string) => {
 
   const userIdForSetMessage = matchingUser?.id;
 
-  if (!userIdForSetMessage) return;
+  if (!userIdForSetMessage) return "There are no matching user";
 
   const userMessagesRef = collection(
     db,
@@ -330,11 +406,52 @@ export const createMessageToUser = async (message: string, email: string) => {
   );
 
   try {
-    await addDoc(userMessagesRef, { message, createdAt: new Date() });
+    const adminMessagesCollectionRef = collection(db, "adminMessages");
+    const { id: adminMessageId } = await addDoc(adminMessagesCollectionRef, {
+      message,
+      createdAt: new Date(),
+      imageUrl: "",
+      fromName: "admin",
+      fromId: "",
+      toName: matchingUser.id,
+      toId: "",
+      seen: false,
+    });
+
+    await addDoc(userMessagesRef, {
+      message,
+      messageId: adminMessageId,
+      createdAt: new Date(),
+      imageUrl: "",
+      fromName: "admin",
+      fromId: "",
+      toName: matchingUser.id,
+      toId: userIdForSetMessage,
+      seen: false,
+    });
     console.log("New Message added..");
   } catch (error) {
     console.log(error);
     throw error;
+  }
+};
+
+// ------------------------------------
+
+export const updateAsSeen = async (uid: string) => {
+  try {
+    const collectionRef = collection(db, "users", uid, "messages");
+
+    const querySnapshot = await getDocs(collectionRef);
+
+    querySnapshot.docs.forEach((doc) => {
+      const messageRef = doc.ref;
+      updateDoc(messageRef, { seen: true });
+    });
+
+    // for(const i=0; i<=querySnapshot)
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -347,6 +464,119 @@ export const handleMessageDelete = async (id: string) => {
     console.log("Message deleted successfully");
   } catch (error) {
     console.error("Error deleting message:", error);
+    throw error;
+  }
+};
+
+// ------------------------------------
+
+export const handleUserMessageDelete = async (uid: string, id: string) => {
+  try {
+    const documentRef = doc(db, "users", uid, "messages", id);
+    await deleteDoc(documentRef);
+    console.log("Message deleted successfully");
+  } catch (error) {
+    console.error("Error deleting message:", error);
+    throw error;
+  }
+};
+
+// ---------------------------------
+
+export const postReview = async (
+  payload: {
+    imageUrl: string;
+    userName: string;
+    userId: string;
+    review: string;
+    rating: number;
+  },
+  selectedStoreId: string
+) => {
+  const collectionRef = collection(db, "store", selectedStoreId, "reviews");
+
+  try {
+    await addDoc(collectionRef, {
+      createdAt: new Date(),
+      ...payload,
+    });
+    console.log("New review added..");
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const updteReview = async (
+  payload: {
+    imageUrl: string;
+    userName: string;
+    userId: string;
+    review: string;
+    rating: number;
+  },
+  selectedStoreId: string,
+  reviewId: string
+) => {
+  const collectionRef = doc(db, "store", selectedStoreId, "reviews", reviewId);
+
+  try {
+    await setDoc(collectionRef, {
+      createdAt: new Date(),
+      ...payload,
+    });
+    console.log("New review added..");
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+// --------------------------------
+
+export const addLocation = async (
+  locations: string[],
+  preLocationArr: string[]
+) => {
+  const collectionRef = collection(db, "locations");
+
+  try {
+    for (const location of locations) {
+      if (!preLocationArr.includes(location)) {
+        await addDoc(collectionRef, {
+          location,
+        });
+      }
+    }
+
+    console.log("New Location added..");
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+// ----------------------------
+
+export const postEnquery = async (
+  payload: {
+    imageUrl: string;
+    fromName: string;
+    fromId: string;
+    message: string;
+  },
+  selectedStoreId: string
+) => {
+  const collectionRef = collection(db, "users", selectedStoreId, "messages");
+
+  try {
+    await addDoc(collectionRef, {
+      createdAt: new Date(),
+      ...payload,
+    });
+    console.log("New Message added..");
+  } catch (error) {
+    console.log(error);
     throw error;
   }
 };
