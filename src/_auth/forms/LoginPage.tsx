@@ -39,12 +39,12 @@ const LoginForm = () => {
       const user = await login(values);
       const roles = await getUserRole(user.uid);
 
-      if (!user.emailVerified) {
-        await logout();
-        form.reset();
-        toast.error("Verify Your email to login")
-        return;
-      }
+      // if (!user.emailVerified) {
+      //   await logout();
+      //   form.reset();
+      //   toast.error("Verify Your email to login")
+      //   return;
+      // }
 
       if (roles && roles.includes("admin")) {
         navigate("/admin");
