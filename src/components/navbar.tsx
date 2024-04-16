@@ -6,16 +6,17 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoIosMenu } from "react-icons/io";
 import { IonIcon } from "@ionic/react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { LifeBuoy, LogOut, Settings, User, Shield, Store } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import {  LogOut, User, Shield, Store } from "lucide-react";
+import NavDropdown from "react-bootstrap/Dropdown";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuGroup,
+//   DropdownMenuItem,
+//   DropdownMenuLabel,
+//   DropdownMenuSeparator,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
 import {
   languageOutline,
   chevronDownOutline,
@@ -25,7 +26,7 @@ import { useData } from "@/hooks/useData";
 import { cn, getTimeDifference } from "@/lib/utils";
 import { logo, placeholderReviewPic } from "@/assets";
 import { RxCross1 } from "react-icons/rx";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { messageObjType } from "@/types";
 
 const Navbar = () => {
@@ -52,16 +53,36 @@ const Navbar = () => {
     setSearchResultStores(null);
     navigate("/");
   };
- 
-const handleSeenMessage = () => {
-  if (!currentUserData) return;
-  setTimeout(async () => {
-    await updateAsSeen(currentUserData.id);
-  }, 1000);
-};
 
+  const handleSeenMessage = () => {
+    if (!currentUserData) return;
+    setTimeout(async () => {
+      await updateAsSeen(currentUserData.id);
+    }, 1000);
+  };
 
-
+  const CustomToggle = forwardRef(
+    (
+      {
+        children,
+        onClick,
+      }: {
+        children: React.ReactNode;
+        onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+      },
+      ref: React.ForwardedRef<HTMLAnchorElement>
+    ) => (
+      <a
+        ref={ref}
+        onClick={(e) => {
+          e.preventDefault();
+          onClick(e);
+        }}
+      >
+        {children}
+      </a>
+    )
+  );
   return (
     <div className="w-full fixed bg-white pt-3 h-[70px] px-4 md:px-5 flex items-center justify-between  border-b-2 border-[#00000010]">
       <div className="flex items-center justify-center">
@@ -108,7 +129,12 @@ const handleSeenMessage = () => {
         </div>
         {/* --------------------------------------------- */}
 
-        <img src={logo} alt="" className="w-36 h-14" onClick={hadleLogoClick} />
+        <img
+          src={logo}
+          alt=""
+          className="w-36 h-14 cursor-pointer"
+          onClick={hadleLogoClick}
+        />
       </div>
 
       <ul className="lg:flex gap-10 font-medium hidden items-center justify-center">
@@ -217,7 +243,7 @@ const handleSeenMessage = () => {
           </Link>
         ) : (
           <div className="mt-1">
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div>
                   {currentUser.photoURL ? (
@@ -271,7 +297,56 @@ const handleSeenMessage = () => {
                   <span>Log out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
+            <NavDropdown>
+              <NavDropdown.Toggle
+                as={CustomToggle}
+                variant=""
+                id="NavDropdown-basic"
+                className="flex ring-0 outline-none items-center justify-center"
+              >
+                <div>
+                  {currentUser.photoURL ? (
+                    <img
+                      src={currentUser.photoURL}
+                      className="w-10 h-10 rounded-full"
+                    />
+                  ) : (
+                    <HiOutlineUserCircle className="text-3xl" />
+                  )}
+                </div>
+              </NavDropdown.Toggle>
+
+              <NavDropdown.Menu>
+                <NavDropdown.Item className="flex items-center gap-2">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </NavDropdown.Item>
+                {currentUserData && currentUserData.roles.includes("admin") && (
+                  <NavDropdown.Item
+                    onClick={handleClickAdminPanel}
+                    className="flex items-center gap-2"
+                  >
+                    <Shield className="mr-2 h-4 w-4" />
+                    <span>Admin</span>
+                  </NavDropdown.Item>
+                )}
+                <NavDropdown.Item
+                  onClick={handleCreateStoreClick}
+                  className="flex items-center gap-2"
+                >
+                  <Store className="mr-2 h-4 w-4" />
+                  <span>Manage Store</span>
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={logout}
+                  className="flex items-center gap-2"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </NavDropdown.Item>
+              </NavDropdown.Menu>
+            </NavDropdown>
           </div>
         )}
       </div>

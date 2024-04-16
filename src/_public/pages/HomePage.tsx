@@ -15,10 +15,13 @@ import PopularBrandsArea from "@/components/sections/popular-brands-section/popu
 const HomePage = () => {
   return (
     <div>
-      <main className="flex min-h-screen flex-col items-center w-screen pr-4">
+      <main
+        className="flex min-h-screen flex-col items-center"
+        // style={{ width: "calc(100% - 200px)" }}
+      >
         <div className="fixed top-0 left-0 z-50">
           <TopBanner />
-          <div className="fixed top-7 left-0">
+          <div className="fixed top-7 left-0 w-screen pr-4">
             <Navbar />
           </div>
         </div>
