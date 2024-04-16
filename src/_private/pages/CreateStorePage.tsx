@@ -69,6 +69,7 @@ const CreateStorePage = () => {
   const [linkedin, setLinkedin] = useState("");
   const [twitter, setTwitter] = useState("");
   const [youtube, setYoutube] = useState("");
+  const [tiktok, setTiktok] = useState("");
   const [website, setWebsite] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -96,6 +97,7 @@ const CreateStorePage = () => {
         twitter,
         youtube,
         website,
+        tiktok,
       });
       updateProfileForHaveStore(currentUser?.uid, true);
       await addLocation(
@@ -472,6 +474,18 @@ const CreateStorePage = () => {
                     value={youtube}
                     onChange={(e) => setYoutube(e.target.value)}
                     placeholder="www.youtube.com/username"
+                    className="focus-visible:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="tiktok">TikTok</Label>
+                  <Input
+                    type="text"
+                    id="tiktok"
+                    value={tiktok}
+                    onChange={(e) => setTiktok(e.target.value)}
+                    placeholder="www.tiktok.com/username"
                     className="focus-visible:ring-blue-500"
                   />
                 </div>

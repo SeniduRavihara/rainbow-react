@@ -7,7 +7,11 @@ import { StoreObj, TimeValue } from "@/types";
 import { doc, onSnapshot } from "firebase/firestore";
 import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
-import { IoIosArrowBack, IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
+import {
+  IoIosArrowBack,
+  IoMdArrowDropleft,
+  IoMdArrowDropright,
+} from "react-icons/io";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -75,6 +79,7 @@ const ManageStorePage = () => {
   const [linkedin, setLinkedin] = useState("");
   const [twitter, setTwitter] = useState("");
   const [youtube, setYoutube] = useState("");
+  const [tiktok, setTiktok] = useState("");
   const [website, setWebsite] = useState("");
 
   const { currentUserData, locationArr } = useData();
@@ -107,6 +112,7 @@ const ManageStorePage = () => {
       setLinkedin(currentUserStore.linkedin);
       setTwitter(currentUserStore.twitter);
       setYoutube(currentUserStore.youtube);
+      setTiktok(currentUserStore.tiktok);
       setWebsite(currentUserStore.website);
       setStoreImages((pre) =>
         pre.map((imgObj, index) => {
@@ -158,6 +164,7 @@ const ManageStorePage = () => {
         linkedin,
         twitter,
         youtube,
+        tiktok,
         website,
       });
       // updateProfileForHaveStore(currentUser?.uid, true);
@@ -565,6 +572,18 @@ const ManageStorePage = () => {
                         value={youtube}
                         onChange={(e) => setYoutube(e.target.value)}
                         placeholder="www.youtube.com/username"
+                        className="focus-visible:ring-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="tiktok">TikTok</Label>
+                      <Input
+                        type="text"
+                        id="tiktok"
+                        value={tiktok}
+                        onChange={(e) => setTiktok(e.target.value)}
+                        placeholder="www.tiktok.com/username"
                         className="focus-visible:ring-blue-500"
                       />
                     </div>

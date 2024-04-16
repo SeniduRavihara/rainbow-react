@@ -71,12 +71,14 @@ const AutocompleteLocationInput: React.FC<AutocompleteLocationInputProps> = ({
             onChange={handleInputChange}
             className="outline-none font-md"
           />
-          {inputValue && (
-            <RxCross2
-              onClick={() => setInputValue("")}
-              className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
-            />
-          )}
+          <div className="w-8">
+            {inputValue && (
+              <RxCross2
+                onClick={() => setInputValue("")}
+                className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
+              />
+            )}
+          </div>
         </div>
       </SearchBox>
       <div ref={suggestionRef} className="autocomplete-items">

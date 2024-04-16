@@ -15,9 +15,9 @@ body {
   left: 0;
   background: linear-gradient(
     90deg,
-    rgba(231, 0, 255, 1) 0%,
-    rgba(84, 9, 121, 1) 50%,
-    rgba(0, 146, 255, 1) 100%
+    rgb(198, 159, 2) 0%,
+    rgba(241, 126, 0, 1) 50%,
+    rgba(227, 17, 69, 1) 100%
   );
 }
 
