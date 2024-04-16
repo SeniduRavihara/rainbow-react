@@ -6,8 +6,13 @@ import SocialMediaArea from "@/components/sections/social-media-area";
 import DiscriptionArea from "@/components/sections/discription-area";
 import Footer from "@/components/footer";
 import BottomBanner from "@/components/bottom-banner";
+import { useEffect } from "react";
 
 const SearchResultsPage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="w-full min-h-screen">
       <div className="fixed top-0 left-0 z-50">

@@ -96,6 +96,7 @@ export type StoreObj = {
   linkedin: string;
   twitter: string;
   youtube: string;
+  tiktok: string;
   website: string;
 };
 

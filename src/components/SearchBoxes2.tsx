@@ -96,6 +96,7 @@ const SearchBoxes2 = () => {
         linkedin: hit.linkedin,
         twitter: hit.twitter,
         youtube: hit.youtube,
+        tiktok: hit.tiktok,
         website: hit.website,
       }));
       setLastDocument(null);
@@ -137,24 +138,26 @@ const SearchBoxes2 = () => {
                 if (e.key === "Enter") handlesearch(searchItem);
               }}
             />
-            {(searchItem || listening) && (
-              <RxCross2
-                onClick={() => {
-                  setSearchitem("");
-                  SpeechRecognition.stopListening();
-                  setLastDocument(null);
-                  setSearchResultStores(null);
-                  fetchData({
-                    lastDocument,
-                    setLastDocument,
-                    setLoadingStoreFetching,
-                    setSearchResultStores,
-                    setIsAllFetched,
-                  });
-                }}
-                className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
-              />
-            )}
+            <div className="w-10">
+              {(searchItem || listening) && (
+                <RxCross2
+                  onClick={() => {
+                    setSearchitem("");
+                    SpeechRecognition.stopListening();
+                    setLastDocument(null);
+                    setSearchResultStores(null);
+                    fetchData({
+                      lastDocument,
+                      setLastDocument,
+                      setLoadingStoreFetching,
+                      setSearchResultStores,
+                      setIsAllFetched,
+                    });
+                  }}
+                  className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
+                />
+              )}
+            </div>
 
             <div className="flex items-center justify-center gap-4">
               <FaMicrophone
@@ -167,7 +170,7 @@ const SearchBoxes2 = () => {
 
               <IoIosSearch
                 onClick={() => handlesearch(searchItem)}
-                className="bg-red-400 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
+                className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
               />
             </div>
           </div>
@@ -180,7 +183,7 @@ const SearchBoxes2 = () => {
           <div className="flex w-full justify-between items-center gap-2 h-10">
             <IoIosSearch
               onClick={() => handlesearch(searchItem)}
-              className="bg-red-400 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
+              className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
             />
             <input
               type="text"

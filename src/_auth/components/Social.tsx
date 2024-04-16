@@ -19,7 +19,7 @@ const Social = () => {
   };
 
   return (
-    <div className="w-full flex justify-center items-center gap-x-2">
+    <div className="w-full flex flex-col gap-4 justify-center items-center gap-x-2">
       <Button
         size="lg"
         className="w-full"

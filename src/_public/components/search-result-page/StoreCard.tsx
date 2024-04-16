@@ -107,8 +107,8 @@ const StoreCard = ({
             className="w-full flex flex-col justify-between"
             onClick={() => handleStoreClick(id)}
           >
-            <div className="flex items-center justify-between">
-              <h1 className="font-semibold text-xl">{title}</h1>
+            <div className="flex items-center justify-between mb-2">
+              <h1 className="font-semibold text-[23px]">{title}</h1>
               <FcLike className="text-2xl" />
             </div>
 
@@ -201,7 +201,7 @@ const StoreCard = ({
       </div>
 
       {/* ---------------------Mobile View---------------------------- */}
-      <div className="flex gap-2 flex-col md:hidden rounded-md border-2 cursor-pointer">
+      <div className="flex  flex-col md:hidden rounded-md border-2 cursor-pointer">
         <div className="w-full flex items-center justify-center">
           <Carousel
             showStatus={false}
@@ -233,7 +233,7 @@ const StoreCard = ({
             onClick={() => handleStoreClick(id)}
           >
             <div className="flex items-center justify-between">
-              <h1 className="text-xl font-medium">{title}</h1>
+              <h1 className="text-[23px] font-semibold">{title}</h1>
               <FcLike className="text-2xl" />
             </div>
 
