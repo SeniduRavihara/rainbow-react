@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import SearchBox from "@/components/search-box";
 import { RxCross2 } from "react-icons/rx";
 import { FaMicrophone } from "react-icons/fa";
@@ -23,6 +23,20 @@ const searchIndex = searchClient.initIndex("stores");
 
 const SearchBoxes2 = () => {
   const { locationArr } = useData();
+    const [scrollPosition, setScrollPosition] = useState(0);
+
+    useEffect(() => {
+      window.scrollTo(0, 100);
+      const handleScroll = () => {
+        setScrollPosition(window.scrollY);
+      };
+
+      window.addEventListener("scroll", handleScroll);
+
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }, []);
   const {
     setSearchResultStores,
     location,
@@ -209,7 +223,12 @@ const SearchBoxes2 = () => {
       </div>
 
       {/* ----------------------------------------------------------- */}
-      <div className="items-center bg-white 725:hidden absolute top-24 flex left-0 bg-slate-40 w-full justify-center px-">
+      <div
+        className={cn(
+          "items-center bg-white 725:hidden absolute top-24 flex left-0 bg-slate-40 w-full justify-center px-",
+          scrollPosition >= 30 && "hidden"
+        )}
+      >
         <SearchBox styles="px-2 w-[90%] md:w-[80%]">
           <div className="flex w-full justify-between items-center gap-2 h-10">
             <IoIosSearch

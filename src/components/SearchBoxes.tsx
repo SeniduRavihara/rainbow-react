@@ -101,7 +101,7 @@ const SearchBoxes = () => {
 
   return (
     <div className="flex w-full flex-col items-center gap-5 justify-center">
-      <div className="items-center gap-2 hidden lg:flex w-full">
+      <div className="items-center gap-2 hidden lg:flex">
         {/* <SearchBox styles="px-4">
           <div className="flex justify-between items-center gap-2 h-10">
             <IoLocationOutline className="text-xl text-gray-500" />
@@ -134,7 +134,7 @@ const SearchBoxes = () => {
             <input
               type="text"
               placeholder="Search Items"
-              className="outline-none max-w-[400px] font-md"
+              className="outline-none w-[400px] font-md"
               value={searchItem}
               onChange={(e) => setSearchitem(e.target.value)}
               onKeyDown={(e) => {

@@ -6,26 +6,11 @@ import SocialMediaArea from "@/components/sections/social-media-area";
 import DiscriptionArea from "@/components/sections/discription-area";
 import Footer from "@/components/footer";
 import BottomBanner from "@/components/bottom-banner";
+import { useEffect, useState } from "react";
 // import { useEffect, useState } from "react";
 
 const SearchResultsPage = () => {
-  // const [scrollPosition, setScrollPosition] = useState(0);
 
-  // useEffect(() => {
-  //   window.scrollTo(0, 100)
-  //   const handleScroll = () => {
-  //     setScrollPosition(window.scrollY);
-  //     console.log("Yes");
-  //   };
-
-  //   window.addEventListener("scroll", handleScroll);
-
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
-
-  // console.log(scrollPosition);
 
   return (
     <div className="w-full min-h-screen">
