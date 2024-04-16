@@ -156,7 +156,9 @@ const SearchArea = () => {
           </div>
         </SearchBox>
       </div> */}
+      <div className="w-[97%] lg:w-[80%]">
       <SearchBoxes />
+    </div>
     </div>
   );
 };

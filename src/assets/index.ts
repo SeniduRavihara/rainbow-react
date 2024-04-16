@@ -58,6 +58,8 @@ import whatsapp from "./img/icons8-whatsapp.svg";
 import placeholderReviewPic from "./img/icons8-male-user-94.png";
 import imageGalery from "./img/image-gallery.png";
 
+import logo from "./img/SRILANKA BUSINESS LOGO.png"
+
 const placeholderSliderAdds = [
   placeholderAdd1,
   placeholderAdd2,
@@ -122,4 +124,5 @@ export {
   whatsapp,
   placeholderReviewPic,
   imageGalery,
+  logo,
 };

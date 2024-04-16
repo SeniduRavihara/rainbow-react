@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import Navbar from "../components/search-result-page/Navbar";
 import SocialMediaArea from "@/components/sections/social-media-area";
 import DiscriptionArea from "@/components/sections/discription-area";
 import Footer from "@/components/footer";
@@ -31,8 +32,6 @@ import {
 } from "@/components/ui/popover";
 import { Tag } from "@chakra-ui/react";
 import InfoTab from "../components/store-details-page/tabs/InfoTab";
-import Navbar from "@/components/navbar";
-import SearchBoxes from "@/components/SearchBoxes";
 
 const StoreDetailsPage = () => {
   const { searchResultStores, currentUserData } = useData();
@@ -73,17 +72,12 @@ const StoreDetailsPage = () => {
   }, [navigate, searchResultStores, storeId]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center w-screen pr-4">
-      {/* <div className="fixed top-0 left-0 z-50  p-2 md:p-5">
-        <Navbar />
-      </div> */}
-      <div className="fixed top-0 left-0 z-50">
+    <div className="w-full">
+      <div className="fixed top-0 left-0 z-50  p-2 md:p-5">
         <Navbar />
       </div>
-      <div className="mt-16">
-        <SearchBoxes />
 
-        <div className=" w-full">
+      <div className="mt-40 725:mt-20 w-full ">
           {/* <Gallery /> */}
           <div className="w-full flex items-center justify-between pt-2 px-2">
             {/* ----------Desktop--------- */}
@@ -225,9 +219,7 @@ const StoreDetailsPage = () => {
               </div>
               <div className="w-full gap-2 p-3 flex flex-col justify-between">
                 <div className="flex items-center justify-between">
-                  <h1 className="text-xl font-medium">
-                    {selectedStore?.title}
-                  </h1>
+                <h1 className="text-xl font-medium">{selectedStore?.title}</h1>
                   <FcLike className="text-2xl" />
                 </div>
 
@@ -373,7 +365,6 @@ const StoreDetailsPage = () => {
           <BottomBanner />
         </div>
       </div>
-    </div>
   );
 };
 

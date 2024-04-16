@@ -21,7 +21,7 @@ const searchClient = algoliasearch(
 
 const searchIndex = searchClient.initIndex("stores");
 
-const SearchBoxes = () => {
+const SearchBoxes2 = () => {
   const { locationArr } = useData();
   const {
     setSearchResultStores,
@@ -43,6 +43,7 @@ const SearchBoxes = () => {
     // resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
+
 
   useEffect(() => {
     if (listening) {
@@ -101,26 +102,7 @@ const SearchBoxes = () => {
 
   return (
     <div className="flex w-full flex-col items-center gap-5 justify-center">
-      <div className="items-center gap-2 hidden lg:flex w-full">
-        {/* <SearchBox styles="px-4">
-          <div className="flex justify-between items-center gap-2 h-10">
-            <IoLocationOutline className="text-xl text-gray-500" />
-            <input
-              type="text"
-              placeholder="Location"
-              className="outline-none font-md"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
-            {location && (
-              <RxCross2
-                onClick={() => setLocation("")}
-                className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
-              />
-            )}
-          </div>
-        </SearchBox> */}
-
+      <div className="items-center gap-2 hidden 1150:flex w-full">
         <AutocompleteLocationInput
           locations={
             locationArr?.map((locationObj) => locationObj.location) || []
@@ -179,8 +161,56 @@ const SearchBoxes = () => {
       </div>
 
       {/* --------------------Mobile Searchbox----------------------- */}
-      <div className="items-center flex lg:hidden bg-slate-40 w-full justify-center px-">
-        <SearchBox styles="px-2 w-[90%] sm:w-[85%] md:w-[80%]">
+      <div className="items-center hidden 725:flex 1150:hidden bg-slate-40 w-full justify-center px-">
+        <SearchBox styles="px-2 w-full sm:w-[90%] md:w-[80%]">
+          <div className="flex w-full justify-between items-center gap-2 h-10">
+            <IoIosSearch
+              onClick={() => handlesearch(searchItem)}
+              className="bg-red-400 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
+            />
+            <input
+              type="text"
+              placeholder="Restaurants near me"
+              className="outline-none w-[70%] px-2 font-md"
+              value={searchItem}
+              onChange={(e) => setSearchitem(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handlesearch(searchItem);
+              }}
+            />
+            {(searchItem || listening) && (
+              <RxCross2
+                onClick={() => {
+                  setSearchitem("");
+                  SpeechRecognition.stopListening();
+                  setLastDocument(null);
+                  setSearchResultStores(null);
+                  fetchData({
+                    lastDocument,
+                    setLastDocument,
+                    setLoadingStoreFetching,
+                    setSearchResultStores,
+                    setIsAllFetched,
+                  });
+                }}
+                className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
+              />
+            )}
+
+            <FaMicrophone
+              className={cn(
+                "text-gray-500 text-2xl cursor-pointer",
+                listening && "hidden"
+              )}
+              onClick={() => SpeechRecognition.startListening()}
+            />
+          </div>
+        </SearchBox>
+      </div>
+
+      {/* ----------------------------------------------------------- */}
+      <div className="items-center bg-white 725:hidden absolute top-24 flex left-0 bg-slate-40 w-full justify-center px-">
+        <SearchBox styles="px-2 w-[90%] md:w-[80%]">
           <div className="flex w-full justify-between items-center gap-2 h-10">
             <IoIosSearch
               onClick={() => handlesearch(searchItem)}
@@ -228,4 +258,4 @@ const SearchBoxes = () => {
     </div>
   );
 };
-export default SearchBoxes;
+export default SearchBoxes2;

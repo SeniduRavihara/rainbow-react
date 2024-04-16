@@ -5,7 +5,6 @@ import { logout } from "@/firebase/api";
 import { IonIcon } from "@ionic/react";
 import { useData } from "@/hooks/useData";
 import { barChartOutline } from "ionicons/icons";
-import SearchBoxes from "@/components/SearchBoxes";
 import { LifeBuoy, LogOut, Settings, User, Shield, Store } from "lucide-react";
 import {
   DropdownMenu,
@@ -16,6 +15,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import SearchBoxes2 from "@/components/SearchBoxes2";
+import { logo } from "@/assets";
 
 const Navbar = () => {
   const { setSearchResultStores, currentUserData } = useData();
@@ -35,25 +36,15 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full bg-white h-20 flex items-center justify-between fixed top-0 left-0 border-b-2 border-[#00000010]">
-      <div
-        onClick={hadleLogoClick}
-        className="nav-log ml-3 md:hidden font-extrabold text-blue-800 cursor-pointer text-2xl xsm:text-3xl"
-      >
-        LOGO
-      </div>
-      <div
-        onClick={hadleLogoClick}
-        className="nav-log mx-3 hidden md:block font-extrabold text-blue-800 cursor-pointer text-xl md:text-3xl"
-      >
-        ABCD.COM
+    <div className="w-full px-3 bg-white h-20 flex items-center justify-between fixed top-0 left-0 border-b-2 border-[#00000010]">
+      <img src={logo} alt="" className="w-36 h-14" onClick={hadleLogoClick} />
+
+      <div className="w-[50%]">
+        <SearchBoxes2 />
       </div>
 
-      <div className="">
-        <SearchBoxes />
-      </div>
-
-      <ul className="hidden md:flex gap-10 font-medium items-center justify-center">
+      <div className="flex gap-3">
+        <ul className="hidden 550:flex gap-10 font-medium items-center justify-center">
         <li className="flex items-center justify-center gap-1 cursor-pointer">
           <div className="icon">
             <img src="/assets/img/loaudspeacker.png" alt="" />
@@ -72,7 +63,7 @@ const Navbar = () => {
               <div className="icon">
                 <IonIcon icon={barChartOutline}></IonIcon>
               </div>
-              <div className="txt">Free Listing</div>
+                <div className="text-nowrap">Free Listing</div>
             </div>
           </div>
         </li>
@@ -88,22 +79,6 @@ const Navbar = () => {
         </Link>
       ) : (
         <div className="mt-1">
-          {/* <Menu
-            items={menuItems}
-            menuBtn={
-              <div>
-                {currentUser.photoURL ? (
-                  <img
-                    src={currentUser.photoURL}
-                    className="w-10 h-10 rounded-full"
-                  />
-                ) : (
-                  <HiOutlineUserCircle className="text-3xl" />
-                )}
-              </div>
-            }
-            styles="right-5 top-24"
-          /> */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div>
@@ -131,7 +106,8 @@ const Navbar = () => {
                   <span>Settings</span>
                 </DropdownMenuItem>
 
-                {currentUserData && currentUserData.roles.includes("admin") && (
+                  {currentUserData &&
+                    currentUserData.roles.includes("admin") && (
                   <DropdownMenuItem onClick={handleClickAdminPanel}>
                     <Shield className="mr-2 h-4 w-4" />
                     <span>Admin</span>
@@ -160,6 +136,7 @@ const Navbar = () => {
           </DropdownMenu>
         </div>
       )}
+      </div>
     </div>
   );
 };

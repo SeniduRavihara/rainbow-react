@@ -23,7 +23,7 @@ import {
 } from "ionicons/icons";
 import { useData } from "@/hooks/useData";
 import { cn, getTimeDifference } from "@/lib/utils";
-import { placeholderReviewPic } from "@/assets";
+import { logo, placeholderReviewPic } from "@/assets";
 import { RxCross1 } from "react-icons/rx";
 import { useEffect, useState } from "react";
 import { messageObjType } from "@/types";
@@ -63,7 +63,7 @@ const handleSeenMessage = () => {
 
 
   return (
-    <div className="w-full fixed bg-white pt-2 h-14 px-4 md:px-5 flex items-center justify-between  border-b-2 border-[#00000010]">
+    <div className="w-full fixed bg-white pt-3 h-[70px] px-4 md:px-5 flex items-center justify-between  border-b-2 border-[#00000010]">
       <div className="flex items-center justify-center">
         {/* ----------------Mobile---------------------- */}
         <div className="flex lg:hidden gap-5">
@@ -108,9 +108,7 @@ const handleSeenMessage = () => {
         </div>
         {/* --------------------------------------------- */}
 
-        <div onClick={hadleLogoClick} className="nav-logo cursor-pointer">
-          ABCDEF.COM
-        </div>
+        <img src={logo} alt="" className="w-36 h-14" onClick={hadleLogoClick} />
       </div>
 
       <ul className="lg:flex gap-10 font-medium hidden items-center justify-center">
@@ -151,12 +149,13 @@ const handleSeenMessage = () => {
             <Sheet onOpenChange={handleSeenMessage}>
               <SheetTrigger>
                 <div className="relative">
-                  
                   <IoIosNotificationsOutline
                     className="text-3xl cursor-pointer"
                     onClick={() => currentUser?.reload()}
                   />
-                  <div className="absolute -top-2 left-4 flex items-center justify-center rounded-full w-5 h-5 bg-red-500 text-white">{notSeenMsg?.length}</div>
+                  <div className="absolute -top-2 left-4 flex items-center justify-center rounded-full w-5 h-5 bg-red-500 text-white">
+                    {notSeenMsg?.length}
+                  </div>
                 </div>
               </SheetTrigger>
               <SheetContent className="w-screen p-0 overflow-y-scroll">
