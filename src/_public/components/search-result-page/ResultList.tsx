@@ -90,11 +90,12 @@ const ResultList = () => {
               <StoreCard
                 id={data.id}
                 address={data.address}
-                rating={2}
                 title={data.title}
                 storeImages={data.storeImages}
                 tags={data.tags}
                 whatsappnumber={data.whatsappNumber}
+                reviewCount={data.reviewCount}
+                rating={data.rating}
               />
             </li>
           ))}

@@ -1,4 +1,4 @@
-import AdvertizingSection from "@/components/sections/advertizing-section/advertizing-section";
+// import AdvertizingSection from "@/components/sections/advertizing-section/advertizing-section";
 import BottomBanner from "@/components/bottom-banner";
 import CarouselAdds from "@/components/CarouselAdds";
 import CategoriesArea from "@/components/sections/categories-area";
@@ -10,9 +10,19 @@ import SocialMediaArea from "@/components/sections/social-media-area";
 import TopBanner from "@/components/top-banner";
 import ServicesArea from "@/components/sections/service-area/ServicesArea";
 import PopularBrandsArea from "@/components/sections/popular-brands-section/popular-brands-area";
+import CatogarySlider from "@/components/sections/new-slider-section/CatogarySlider";
+import { useEffect } from "react";
+import { useData } from "@/hooks/useData";
 // import TestSearch from "@/testing/TestSearch";
 
 const HomePage = () => {
+  const { setLastDocument, setSearchResultStores } = useData();
+
+  useEffect(() => {
+    setSearchResultStores(null);
+    setLastDocument(null);
+  }, [setLastDocument, setSearchResultStores]);
+
   return (
     <div>
       <main
@@ -30,7 +40,8 @@ const HomePage = () => {
           <SearchArea />
           <CarouselAdds />
           <CategoriesArea />
-          <AdvertizingSection />
+          {/* <AdvertizingSection /> */}
+          <CatogarySlider />
           <ServicesArea />
           <PopularBrandsArea />
           <SocialMediaArea />

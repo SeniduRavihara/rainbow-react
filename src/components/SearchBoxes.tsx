@@ -84,6 +84,9 @@ const SearchBoxes = () => {
         youtube: hit.youtube,
         tiktok: hit.tiktok,
         website: hit.website,
+        rating: hit.rating,
+        reviewCount: hit.reviewCount,
+        categoriesArr: hit.categoriesArr || [], // Add this line to include categoriesArr
       }));
       setLastDocument(null);
       setSearchResultStores(
@@ -97,7 +100,7 @@ const SearchBoxes = () => {
       );
       if (storeList && storeList.length > 0) navigate("/search-results");
     } catch (error) {
-      toast.error("Network Problem")
+      toast.error("Network Problem");
       console.log("Error");
     }
   };

@@ -79,7 +79,6 @@ export type StoreObj = {
   active: boolean;
   address: string;
   email: string;
-  // messages: string[];
   tags: string[];
   createdAt: Date;
   phoneNumber: string;
@@ -98,6 +97,9 @@ export type StoreObj = {
   youtube: string;
   tiktok: string;
   website: string;
+  rating: number;
+  reviewCount: number;
+  categoriesArr: Array<string>;
 };
 
 export type StoreListType = Array<StoreObj>;

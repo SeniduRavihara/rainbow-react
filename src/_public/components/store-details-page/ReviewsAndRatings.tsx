@@ -1,7 +1,14 @@
 import { FaStar } from "react-icons/fa";
 import RatingComponent from "../search-result-page/RatingComponent";
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { ReviewListType, StoreObj } from "@/types";
 import Review from "./Review";
@@ -35,7 +42,6 @@ const ReviewsAndRatings = ({
   const { currentUser } = useAuth();
 
   useEffect(() => {
-
     if (selectedStore) {
       const collectionRef = collection(
         db,
@@ -59,6 +65,25 @@ const ReviewsAndRatings = ({
     }
   }, [selectedStore]);
 
+  useEffect(() => {
+    if (selectedStore) {
+      const updateStoreRating = async () => {
+        const documentRef = doc(db, "store", selectedStore?.id);
+        try {
+          await updateDoc(documentRef, {
+            rating: parseFloat(calculateRating().toFixed(1)),
+            reviewCount: getReviewCount(),
+          });
+        } catch (error) {
+          console.error("Error updating store rating:", error);
+        }
+      };
+
+      updateStoreRating();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [review, ratingVal, selectedStore?.id, calculateRating]);
+
   const handleStartReview = async () => {
     if (review && selectedStore) {
       const preReview = reviews?.find(
@@ -77,6 +102,14 @@ const ReviewsAndRatings = ({
           selectedStore?.id,
           preReview.id
         );
+
+        console.log(parseFloat(calculateRating().toFixed(1)));
+
+        const documentRef = doc(db, "store", selectedStore?.id);
+        await updateDoc(documentRef, {
+          rating: parseFloat(calculateRating().toFixed(1)),
+          reviewCount: getReviewCount(),
+        });
       } else {
         await postReview(
           {
@@ -88,6 +121,12 @@ const ReviewsAndRatings = ({
           },
           selectedStore?.id
         );
+
+        const documentRef = doc(db, "store", selectedStore?.id);
+        await updateDoc(documentRef, {
+          rating: parseFloat(calculateRating().toFixed(1)),
+          reviewCount: getReviewCount(),
+        });
       }
     }
     setOpenModel(false);
@@ -103,6 +142,10 @@ const ReviewsAndRatings = ({
 
   const getRatingCount = () => {
     return reviews?.filter((reviewObj) => reviewObj.rating).length || 1;
+  };
+
+  const getReviewCount = () => {
+    return reviews?.filter((reviewObj) => reviewObj.review).length || 1;
   };
 
   function calculateRating(): number {
@@ -129,7 +172,6 @@ const ReviewsAndRatings = ({
     ));
   };
 
-  
   if (!selectedStore) return <></>;
   return (
     <div className="flex flex-col gap-4 mb-10 px-5">
@@ -140,8 +182,8 @@ const ReviewsAndRatings = ({
           {calculateRating().toFixed(1)}
         </div>
         <div className="flex flex-col">
-          <h2 className="text-xl font-semibold">{getRatingCount()} Ratings</h2>
-          <p>Jd rating index based on {getRatingCount()} rating the web</p>
+          <h2 className="text-xl font-semibold">{getReviewCount()} Review</h2>
+          <p>Jd rating index based on {getReviewCount()} review the web</p>
         </div>
       </div>
 

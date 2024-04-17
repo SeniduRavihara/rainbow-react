@@ -42,7 +42,7 @@ const AdvertizingSection = () => {
   }, [sectionAdds]);
 
   return (
-    <div className="w-full  my-10">
+    <div className="w-full my-10">
       <div className="hidden lg:flex w-full ">
         <fieldset className="w-full px-20 fieldset1">
           {adds.map((image) => (
