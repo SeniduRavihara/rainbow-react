@@ -72,7 +72,6 @@ const SearchBoxes2 = () => {
   const handlesearch = async (searchQuery: string) => {
     try {
       const result = await searchIndex.search(searchQuery);
-      // console.log(result);
 
       const storeList: StoreListType = result.hits.map((hit: any) => ({
         id: hit.objectID,
@@ -98,6 +97,9 @@ const SearchBoxes2 = () => {
         youtube: hit.youtube,
         tiktok: hit.tiktok,
         website: hit.website,
+        rating: hit.rating,
+        reviewCount: hit.reviewCount,
+        categoriesArr: hit.categoriesArr || [], // Add this line to include categoriesArr
       }));
       setLastDocument(null);
       setSearchResultStores(
@@ -236,7 +238,7 @@ const SearchBoxes2 = () => {
           <div className="flex w-full justify-between items-center gap-2 h-10">
             <IoIosSearch
               onClick={() => handlesearch(searchItem)}
-              className="bg-red-400 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
+              className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
             />
             <input
               type="text"

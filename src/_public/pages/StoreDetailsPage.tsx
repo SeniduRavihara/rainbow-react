@@ -106,19 +106,20 @@ const StoreDetailsPage = () => {
                 ))}
               </Carousel>
             </div>
-            <div className="w-8/12 p-3 flex flex-col justify-between">
-              <div className="flex items-center justify-between">
+
+            <div className="w-8/12 px-3 flex flex-col justify-between">
+              <div className="flex items-center justify-between text-2xl font-semibold">
                 <h1>{selectedStore?.title}</h1>
                 {/* <FcLike className="text-2xl" /> */}
               </div>
 
               <div className="flex gap-2 items-center ">
                 <p className="text-white bg-[#0d8012] rounded-md text-center py-[3px] w-[30px] text-xs">
-                  {3}
+                  {selectedStore?.rating}
                 </p>
-                <RatingComponent value={2} />
+                <RatingComponent value={selectedStore?.rating} />
                 <div className="text-sm text-[#2a2a2a]">
-                  <span id="ratingCount">1</span> Ratings
+                  <span id="ratingCount">{selectedStore?.reviewCount}</span> Reviews
                 </div>
               </div>
 

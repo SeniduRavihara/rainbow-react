@@ -185,6 +185,8 @@ export const createStore = async (uid: string, payload: any) => {
       active: false,
       createdAt: new Date(),
       published: false,
+      reviewCount: 0,
+      rating: 0,
     });
     console.log("Document successfully written to Firestore!");
   } catch (error) {
@@ -304,6 +306,64 @@ export const fetchData = async ({
 
   setLoadingStoreFetching(false);
 };
+
+// ---------------------------------------------
+
+export const fetchCatogaryData = async (
+  {
+    setLoadingStoreFetching,
+    lastDocument,
+    setLastDocument,
+    setSearchResultStores,
+    setIsAllFetched,
+  }: {
+    setLoadingStoreFetching: React.Dispatch<React.SetStateAction<boolean>>;
+    lastDocument: StoreObj | null;
+    setLastDocument: React.Dispatch<React.SetStateAction<StoreObj | null>>;
+    setSearchResultStores: React.Dispatch<
+      React.SetStateAction<StoreListType | null>
+    >;
+    setIsAllFetched: React.Dispatch<React.SetStateAction<boolean>>;
+  },
+  label: string
+) => {
+  setLoadingStoreFetching(true);
+
+  const collectionRef = collection(db, "store");
+  const q = query(
+    collectionRef,
+    orderBy("createdAt", "desc"),
+    startAfter(lastDocument?.createdAt ?? ""),
+    limit(5),
+    where("active", "==", true),
+    where("published", "==", true),
+    where("categoriesArr", "array-contains", label)
+  );
+
+  const queryStoresSnapshot = await getDocs(q);
+
+  const storeListArr = queryStoresSnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  })) as StoreListType;
+
+  setLastDocument(storeListArr[storeListArr.length - 1]);
+  // console.log(storeListArr);
+
+  if (storeListArr.length > 0) {
+    setSearchResultStores((prev) => {
+      if (prev && prev[0].id === storeListArr[0].id) return prev;
+      return [...(prev || []), ...storeListArr];
+    });
+  } else {
+    setIsAllFetched(true);
+    console.log("All Store are Fetched!");
+  }
+
+  setLoadingStoreFetching(false);
+};
+
+// ---------------------------------------------
 
 // export const getCurrentUsersStore = async (uid: string) => {
 //   const documentRef = doc(db, "store", uid);
@@ -443,7 +503,7 @@ export const updateAsSeen = async (uid: string) => {
     const collectionRef = collection(db, "users", uid, "messages");
 
     const querySnapshot = await getDocs(collectionRef);
-    
+
     querySnapshot.docs.forEach((doc) => {
       const messageRef = doc.ref;
       updateDoc(messageRef, { seen: true });

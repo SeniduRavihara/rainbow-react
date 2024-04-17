@@ -1,54 +1,34 @@
-import {
-  resturant,
-  DrivingSchools,
-  PetShop,
-  rent,
-  beautySpa,
-  constructor,
-  constructorpackersMovers,
-  consultants,
-  courierService,
-  dentist,
-  education,
-  estateAgent,
-  gym,
-  homeDecore,
-  hospitalEventOrganizers,
-  hotel,
-  pgHostels,
-  weddingRequisitos,
-} from "@/assets";
 import CategoryCard from "../CategoryCard";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
-
-const categories = [
-  { icon: resturant, label: "Resrurant" },
-  { icon: hotel, label: "Hotel" },
-  { icon: beautySpa, label: "Beauty Spa" },
-  { icon: homeDecore, label: "Home Decore" },
-  { icon: weddingRequisitos, label: "Wedding Requisitos" },
-  { icon: education, label: "Education" },
-  { icon: rent, label: "Rent" },
-  { icon: pgHostels, label: "PG-Hostels" },
-  { icon: estateAgent, label: "Estate Agent" },
-  { icon: dentist, label: "Dentist" },
-  { icon: gym, label: "Gym" },
-  { icon: consultants, label: "Consultants" },
-  { icon: hospitalEventOrganizers, label: "Hospital" },
-  { icon: DrivingSchools, label: "Driving Schools" },
-  { icon: constructorpackersMovers, label: "Constructor" },
-  { icon: PetShop, label: "Pet Shop" },
-  { icon: courierService, label: "Courier Service" },
-  { icon: constructor, label: "Constructor" },
-];
+import { useData } from "@/hooks/useData";
+// import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+// import { StoreListType } from "@/types";
+import { fetchCatogaryData } from "@/firebase/api";
+import { categories } from "@/constants";
 
 const CategoriesArea = () => {
   const [isShowAll, setIsShowAll] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [visibleCategories, setVisibleCategories] = useState(categories);
   const [scrollPosition, setScrollPosition] = useState(0);
+
+  const navigate = useNavigate();
+
+  const {
+    searchResultStores,
+    lastDocument,
+    setLastDocument,
+    setLoadingStoreFetching,
+    setSearchResultStores,
+    setIsAllFetched,
+  } = useData();
+
+  useEffect(() => {
+    console.log(searchResultStores);
+  }, [searchResultStores]);
 
   useEffect(() => {
     setIsShowAll(false);
@@ -76,16 +56,30 @@ const CategoriesArea = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []); // Empty dependency array ensures that this effect runs only once after the initial render
+  }, []);
 
-  useEffect(()=>{
-    if(isShowAll){
+  useEffect(() => {
+    if (isShowAll) {
       handleAllClick();
-    }else{
-      handleLessClick()
+    } else {
+      handleLessClick();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[isShowAll])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isShowAll]);
+
+  const handleCategaryIconClick = async (label: string) => {
+    await fetchCatogaryData(
+      {
+        lastDocument,
+        setLastDocument,
+        setLoadingStoreFetching,
+        setSearchResultStores,
+        setIsAllFetched,
+      },
+      label
+    );
+    navigate("search-results");
+  };
 
   const handleAllClick = () => {
     const currentScrollPosition = window.scrollY;
@@ -100,7 +94,11 @@ const CategoriesArea = () => {
       <ul className=" w-full grid gap-x-20 grid-cols-3 xsm:grid-cols-4 sm:grid-cols-5  md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 px-14 sm:px-20 ">
         {isShowAll
           ? categories.map((categoryObj, index) => (
-              <li key={index}>
+              <li
+                key={index}
+                className="cursor-pointer"
+                onClick={() => handleCategaryIconClick(categoryObj.label)}
+              >
                 <CategoryCard
                   label={categoryObj.label}
                   icon={categoryObj.icon}
@@ -108,7 +106,11 @@ const CategoriesArea = () => {
               </li>
             ))
           : visibleCategories.map((categoryObj, index) => (
-              <li key={index}>
+              <li
+                key={index}
+                className="cursor-pointer"
+                onClick={() => handleCategaryIconClick(categoryObj.label)}
+              >
                 <CategoryCard
                   label={categoryObj.label}
                   icon={categoryObj.icon}

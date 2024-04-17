@@ -1,3 +1,5 @@
+// import { StoreListType } from "@/types";
+// import algoliasearch from "algoliasearch/dist/algoliasearch-lite";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -5,7 +7,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const getTimeDifference = (timestamp: Date | undefined | null): string => {
+export const getTimeDifference = (
+  timestamp: Date | undefined | null
+): string => {
   if (!timestamp) {
     return "";
   }
@@ -30,7 +34,6 @@ export const getTimeDifference = (timestamp: Date | undefined | null): string =>
     return "";
   }
 };
-
 
 export function cleanAddress(address: string): string[] {
   // Split the address by commas and spaces and remove unnecessary whitespaces

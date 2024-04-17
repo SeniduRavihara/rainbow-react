@@ -29,18 +29,20 @@ type StoreCardProps = {
   tags: string[];
   address: string;
   storeImages: string[];
-  rating: number;
   id: string;
+  reviewCount: number;
+  rating: number;
 };
 
 const StoreCard = ({
-  title = "Makeup By",
+  title,
   tags,
-  whatsappnumber = "0781717888",
-  rating = 3,
+  whatsappnumber,
+  rating = 0,
   address,
   storeImages,
   id,
+  reviewCount = 0,
 }: StoreCardProps) => {
   const [enquery, setEnquery] = useState("");
   const [openModel, setOpenModel] = useState(false);
@@ -118,7 +120,7 @@ const StoreCard = ({
               </p>
               <RatingComponent value={rating} />
               <div className="text-sm text-[#2a2a2a]">
-                <span id="ratingCount">1</span> Ratings
+                <span id="ratingCount">{reviewCount}</span> Reviews
               </div>
             </div>
 
@@ -128,7 +130,7 @@ const StoreCard = ({
             </div>
 
             <div className="my-1">
-              {tags.map((tag, index) => (
+              {tags.slice(0, 4).map((tag, index) => (
                 <Tag key={index}>{tag}</Tag>
               ))}
             </div>
