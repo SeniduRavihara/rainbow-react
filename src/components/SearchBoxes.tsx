@@ -86,7 +86,8 @@ const SearchBoxes = () => {
         website: hit.website,
         rating: hit.rating,
         reviewCount: hit.reviewCount,
-        categoriesArr: hit.categoriesArr || [], // Add this line to include categoriesArr
+        categoriesArr: hit.categoriesArr || [],
+        visitCount: hit.visitCount,
       }));
       setLastDocument(null);
       setSearchResultStores(
@@ -98,7 +99,8 @@ const SearchBoxes = () => {
               : storeObj
           )
       );
-      if (storeList && storeList.length > 0) navigate("/search-results");
+      if (storeList && storeList.length > 0)
+        navigate(`/search-results/${searchQuery || "all"}`);
     } catch (error) {
       toast.error("Network Problem");
       console.log("Error");

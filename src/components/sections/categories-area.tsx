@@ -78,7 +78,7 @@ const CategoriesArea = () => {
       },
       label
     );
-    navigate("search-results");
+    navigate(`/search-results/category-${label}`);
   };
 
   const handleAllClick = () => {

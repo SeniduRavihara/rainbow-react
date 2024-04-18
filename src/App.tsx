@@ -45,7 +45,10 @@ const router = createBrowserRouter(
       {/* public routes */}
       <Route element={<PublicLayout />}>
         <Route index element={<HomePage />} />
-        <Route path="/search-results" element={<SearchResultsPage />} />
+        <Route
+          path="/search-results/:category"
+          element={<SearchResultsPage />}
+        />
         <Route path="/store-details/:storeId" element={<StoreDetailsPage />} />
       </Route>
 
@@ -53,7 +56,6 @@ const router = createBrowserRouter(
       <Route element={<PrivateLayout />}>
         <Route path="/create-store" element={<CreateStorePage />} />
         <Route path="/manage-store" element={<ManageStorePage />} />
-        
       </Route>
 
       {/* admin routes */}
@@ -69,7 +71,10 @@ const router = createBrowserRouter(
             />
             <Route path="slider-adds" element={<SliderAddsManage />} />
             <Route path="section-adds" element={<SectionAddsManage />} />
-            <Route path="details-page-adds" element={<DetailsPageAddsManage />} />
+            <Route
+              path="details-page-adds"
+              element={<DetailsPageAddsManage />}
+            />
           </Route>
           <Route index element={<AnalyticsPage />} />
           <Route path="comments" element={<CommentsPage />} />

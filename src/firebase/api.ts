@@ -164,7 +164,8 @@ export const facebookSignIn = async () => {
   }
 };
 
-// ----------------------------------------------
+
+// =============================================
 
 export const getUserRole = async (uid: string) => {
   const documentRef = doc(db, "users", uid);
@@ -187,6 +188,7 @@ export const createStore = async (uid: string, payload: any) => {
       published: false,
       reviewCount: 0,
       rating: 0,
+      visitCount: 0,
     });
     console.log("Document successfully written to Firestore!");
   } catch (error) {
