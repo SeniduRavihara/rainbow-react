@@ -9,7 +9,7 @@ import SocialMediaArea from "@/components/sections/social-media-area";
 import DiscriptionArea from "@/components/sections/discription-area";
 import Footer from "@/components/footer";
 import BottomBanner from "@/components/bottom-banner";
-import { FcLike } from "react-icons/fc";
+// import { FcLike } from "react-icons/fc";
 import RatingComponent from "../components/search-result-page/RatingComponent";
 import { IonIcon } from "@ionic/react";
 import { locationOutline } from "ionicons/icons";
@@ -18,9 +18,9 @@ import ReviewsAndRatings from "../components/store-details-page/ReviewsAndRating
 import OpenTimes from "../components/store-details-page/OpenTimes";
 import DetailsPageAdds from "../components/store-details-page/DetailsPageAdds";
 // import TabComponent from "../components/store-details-page/tabs/TabComponent";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/config";
-import { FaPhoneAlt } from "react-icons/fa";
+import { FaEye, FaPhoneAlt } from "react-icons/fa";
 import { fb, insta, linkedin, twitter, whatsapp, yt } from "@/assets";
 import { PiShareFatLight } from "react-icons/pi";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,7 @@ import InfoTab from "../components/store-details-page/tabs/InfoTab";
 const StoreDetailsPage = () => {
   const { searchResultStores, currentUserData } = useData();
   const [selectedStore, setSelectedStore] = useState<StoreObj | null>(null);
+
   const params = useParams();
   const storeId = params.storeId;
   const [detailsPageAdds, setDetailsPageAdds] = useState<Array<{
@@ -48,6 +49,24 @@ const StoreDetailsPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+useEffect(() => {
+  const updateVisitCount = async () => {
+    if (selectedStore && storeId) {
+      try {
+        const documentRef = doc(db, "store", storeId);
+        await updateDoc(documentRef, {
+          visitCount: selectedStore.visitCount + 1,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  updateVisitCount();
+}, [selectedStore, storeId]);
+
 
   useEffect(() => {
     const collectionRef = collection(db, "detailsPageAdds");
@@ -108,9 +127,14 @@ const StoreDetailsPage = () => {
             </div>
 
             <div className="w-8/12 px-3 flex flex-col justify-between">
-              <div className="flex items-center justify-between text-2xl font-semibold">
-                <h1>{selectedStore?.title}</h1>
-                {/* <FcLike className="text-2xl" /> */}
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-semibold">
+                  {selectedStore?.title}
+                </h1>
+                <div className="flex items-center justify-center gap-2">
+                  <FaEye className="text-2xl" />
+                  {selectedStore?.visitCount || 0}views
+                </div>
               </div>
 
               <div className="flex gap-2 items-center ">
@@ -119,7 +143,8 @@ const StoreDetailsPage = () => {
                 </p>
                 <RatingComponent value={selectedStore?.rating} />
                 <div className="text-sm text-[#2a2a2a]">
-                  <span id="ratingCount">{selectedStore?.reviewCount}</span> Reviews
+                  <span id="ratingCount">{selectedStore?.reviewCount}</span>{" "}
+                  Reviews
                 </div>
               </div>
 
@@ -220,8 +245,13 @@ const StoreDetailsPage = () => {
             </div>
             <div className="w-full gap-2 p-3 flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <h1 className="text-xl font-medium">{selectedStore?.title}</h1>
-                <FcLike className="text-2xl" />
+                <h1 className="text-2xl font-semibold">
+                  {selectedStore?.title}
+                </h1>
+                <div className="flex items-center justify-center gap-2">
+                  <FaEye className="text-2xl" />
+                  {selectedStore?.visitCount || 0}views
+                </div>
               </div>
 
               <div className="flex gap-2 items-center ">

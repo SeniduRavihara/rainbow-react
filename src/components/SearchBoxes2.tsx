@@ -23,20 +23,20 @@ const searchIndex = searchClient.initIndex("stores");
 
 const SearchBoxes2 = () => {
   const { locationArr } = useData();
-    const [scrollPosition, setScrollPosition] = useState(0);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
-    useEffect(() => {
-      window.scrollTo(0, 100);
-      const handleScroll = () => {
-        setScrollPosition(window.scrollY);
-      };
+  useEffect(() => {
+    window.scrollTo(0, 100);
+    const handleScroll = () => {
+      setScrollPosition(window.scrollY);
+    };
 
-      window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    }, []);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const {
     setSearchResultStores,
     location,
@@ -57,7 +57,6 @@ const SearchBoxes2 = () => {
     // resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
-
 
   useEffect(() => {
     if (listening) {
@@ -99,7 +98,8 @@ const SearchBoxes2 = () => {
         website: hit.website,
         rating: hit.rating,
         reviewCount: hit.reviewCount,
-        categoriesArr: hit.categoriesArr || [], // Add this line to include categoriesArr
+        categoriesArr: hit.categoriesArr || [],
+        visitCount: hit.visitCount,
       }));
       setLastDocument(null);
       setSearchResultStores(
@@ -111,7 +111,8 @@ const SearchBoxes2 = () => {
               : storeObj
           )
       );
-      if (storeList && storeList.length > 0) navigate("/search-results");
+      if (storeList && storeList.length > 0)
+        navigate(`/search-results/${searchQuery || "all"}`);
     } catch (error) {
       console.log("Error");
     }

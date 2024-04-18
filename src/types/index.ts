@@ -100,6 +100,7 @@ export type StoreObj = {
   rating: number;
   reviewCount: number;
   categoriesArr: Array<string>;
+  visitCount: number
 };
 
 export type StoreListType = Array<StoreObj>;
