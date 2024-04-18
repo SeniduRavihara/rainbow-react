@@ -15,7 +15,7 @@ import {
 } from "@/firebase/api";
 import toast from "react-hot-toast";
 import Loader from "@/components/Loader";
-import { Tag } from "@chakra-ui/react";
+import { Kbd, Tag } from "@chakra-ui/react";
 import { IoIosArrowBack, IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 import { TimeValue } from "@/types";
@@ -198,8 +198,6 @@ const CreateStorePage = () => {
     if (!label || categoriesArr.includes(label)) return;
     setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
   };
-
-  console.log(categoriesArr);
 
   const handleRemoveCatogary = (label: string) => {
     setCategoriesArr((pre) => [...pre.filter((preObj) => preObj !== label)]);
@@ -458,38 +456,44 @@ const CreateStorePage = () => {
               </div>
               {/* ------------------------------- */}
 
-              <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border rounded-md focus:outline-blue-400">
-                <div className="flex items-center">
-                  <div className="">
-                    {tags.map((tag, index) => (
-                      <Tag key={index} className="m-1">
-                        {tag}
-                      </Tag>
-                    ))}
+              <div className="col-span-2 flex flex-col">
+                <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border rounded-md focus:outline-blue-400">
+                  <div className="flex items-center">
+                    <div className="">
+                      {tags.map((tag, index) => (
+                        <Tag key={index} className="m-1">
+                          {tag}
+                        </Tag>
+                      ))}
+                    </div>
+
+                    <input
+                      type="text"
+                      value={tagInput}
+                      onChange={(e) => setTagInput(e.target.value)}
+                      placeholder="Tag"
+                      className="p- text-lg m-[10px] outline-none"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault(); // Prevent form submission
+                          handleAddTag(tagInput);
+                        }
+                      }}
+                    />
                   </div>
 
-                  <input
-                    type="text"
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    placeholder="Tag"
-                    className="p- text-lg m-[10px] outline-none"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault(); // Prevent form submission
-                        handleAddTag(tagInput);
-                      }
-                    }}
-                  />
+                  <button
+                    className="bg-green-500 rounded-md text-white px-2 py-1 hidden md:block"
+                    onClick={() => handleAddTag(tagInput)}
+                    type="button"
+                  >
+                    update
+                  </button>
                 </div>
-
-                <button
-                  className="bg-green-500 rounded-md text-white px-2 py-1"
-                  onClick={() => handleAddTag(tagInput)}
-                  type="button"
-                >
-                  update
-                </button>
+                <Label className="text-xs text-gray-400 text-center md:hidden">
+                  Press <Kbd className="text-gray-500">Enter</Kbd> after every
+                  tag
+                </Label>
               </div>
 
               {/* --------------------Social Links------------------------- */}

@@ -11,7 +11,6 @@ import algoliasearch from "algoliasearch/lite";
 import { useData } from "@/hooks/useData";
 import { StoreListType } from "@/types";
 import { useNavigate } from "react-router-dom";
-import { fetchData } from "@/firebase/api";
 import AutocompleteLocationInput from "@/_public/components/auto-compleate-location-input/AutoCompleateInput";
 import { CircularProgress } from "@chakra-ui/react";
 
@@ -45,10 +44,7 @@ const SearchBoxes2 = () => {
     setLocation,
     searchItem,
     setSearchitem,
-    setLoadingStoreFetching,
-    lastDocument,
     setLastDocument,
-    setIsAllFetched,
   } = useData();
 
   const navigate = useNavigate();
@@ -153,15 +149,15 @@ const SearchBoxes2 = () => {
                   onClick={() => {
                     setSearchitem("");
                     SpeechRecognition.stopListening();
-                    setLastDocument(null);
-                    setSearchResultStores(null);
-                    fetchData({
-                      lastDocument,
-                      setLastDocument,
-                      setLoadingStoreFetching,
-                      setSearchResultStores,
-                      setIsAllFetched,
-                    });
+                    // setLastDocument(null);
+                    // setSearchResultStores(null);
+                    // fetchData({
+                    //   lastDocument,
+                    //   setLastDocument,
+                    //   setLoadingStoreFetching,
+                    //   setSearchResultStores,
+                    //   setIsAllFetched,
+                    // });
                   }}
                   className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
                 />
@@ -221,15 +217,15 @@ const SearchBoxes2 = () => {
                 onClick={() => {
                   setSearchitem("");
                   SpeechRecognition.stopListening();
-                  setLastDocument(null);
-                  setSearchResultStores(null);
-                  fetchData({
-                    lastDocument,
-                    setLastDocument,
-                    setLoadingStoreFetching,
-                    setSearchResultStores,
-                    setIsAllFetched,
-                  });
+                  // setLastDocument(null);
+                  // setSearchResultStores(null);
+                  // fetchData({
+                  //   lastDocument,
+                  //   setLastDocument,
+                  //   setLoadingStoreFetching,
+                  //   setSearchResultStores,
+                  //   setIsAllFetched,
+                  // });
                 }}
                 className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
               />

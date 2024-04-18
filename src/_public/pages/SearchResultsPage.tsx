@@ -16,7 +16,7 @@ const SearchResultsPage = () => {
     } = useData();
 
   const params = useParams()
-  const category = params.category;
+  const category = params?.category ?? "";
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -33,13 +33,14 @@ const SearchResultsPage = () => {
         <div className="px-3 relative top-4 text-3xl font-bold font-">
           {category?.split("-")[0] === "category" && (
             <div>
-              {!searchResultStores && "No any "}Search result for '{category?.split("-")[1]}'
+              {!searchResultStores && "No any "}Search result for '
+              {category?.split("-")[1]}'
             </div>
           )}
         </div>
 
         <div className="flex justify-between mt-10 gap-5 px-2 md:px-10">
-          <ResultList />
+          <ResultList category={category?.split("-")[1]} />
           <SearchResultAddSection />
         </div>
         <SocialMediaArea />
