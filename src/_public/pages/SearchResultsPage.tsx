@@ -8,8 +8,13 @@ import Footer from "@/components/footer";
 import BottomBanner from "@/components/bottom-banner";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useData } from "@/hooks/useData";
 
 const SearchResultsPage = () => {
+    const {
+      searchResultStores,
+    } = useData();
+
   const params = useParams()
   const category = params.category;
 
@@ -22,12 +27,14 @@ const SearchResultsPage = () => {
       <div className="fixed top-0 left-0 z-50">
         <Navbar />
       </div>
-      <div className="mt-48 md:mt-20 w-full">
+      <div className="mt-48 725:mt-20 w-full">
         <CarouselAdds />
 
         <div className="px-3 relative top-4 text-3xl font-bold font-">
           {category?.split("-")[0] === "category" && (
-            <div>Search result for '{category?.split("-")[1]}'</div>
+            <div>
+              {!searchResultStores && "No any "}Search result for '{category?.split("-")[1]}'
+            </div>
           )}
         </div>
 

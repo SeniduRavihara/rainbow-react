@@ -13,6 +13,7 @@ import { StoreListType } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "@/firebase/api";
 import AutocompleteLocationInput from "@/_public/components/auto-compleate-location-input/AutoCompleateInput";
+import { CircularProgress } from "@chakra-ui/react";
 
 const searchClient = algoliasearch(
   "6K67WTIHLT",
@@ -24,6 +25,7 @@ const searchIndex = searchClient.initIndex("stores");
 const SearchBoxes2 = () => {
   const { locationArr } = useData();
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [loadingSearch, setLoadingSearch] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 100);
@@ -70,6 +72,7 @@ const SearchBoxes2 = () => {
 
   const handlesearch = async (searchQuery: string) => {
     try {
+      setLoadingSearch(true);
       const result = await searchIndex.search(searchQuery);
 
       const storeList: StoreListType = result.hits.map((hit: any) => ({
@@ -111,8 +114,11 @@ const SearchBoxes2 = () => {
               : storeObj
           )
       );
-      if (storeList && storeList.length > 0)
+      if (storeList && storeList.length > 0) {
         navigate(`/search-results/${searchQuery || "all"}`);
+      }
+
+      setLoadingSearch(false);
     } catch (error) {
       console.log("Error");
     }
@@ -171,10 +177,18 @@ const SearchBoxes2 = () => {
                 onClick={() => SpeechRecognition.startListening()}
               />
 
-              <IoIosSearch
-                onClick={() => handlesearch(searchItem)}
-                className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
-              />
+              {loadingSearch ? (
+                <CircularProgress
+                  size="30px"
+                  isIndeterminate
+                  color="green.300"
+                />
+              ) : (
+                <IoIosSearch
+                  onClick={() => handlesearch(searchItem)}
+                  className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
+                />
+              )}
             </div>
           </div>
         </SearchBox>
@@ -184,10 +198,14 @@ const SearchBoxes2 = () => {
       <div className="items-center hidden 725:flex 1150:hidden bg-slate-40 w-full justify-center px-">
         <SearchBox styles="px-2 w-full sm:w-[90%] md:w-[80%]">
           <div className="flex w-full justify-between items-center gap-2 h-10">
-            <IoIosSearch
-              onClick={() => handlesearch(searchItem)}
-              className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
-            />
+            {loadingSearch ? (
+              <CircularProgress size="30px" isIndeterminate color="green.300" />
+            ) : (
+              <IoIosSearch
+                onClick={() => handlesearch(searchItem)}
+                className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
+              />
+            )}
             <input
               type="text"
               placeholder="Restaurants near me"
@@ -237,10 +255,14 @@ const SearchBoxes2 = () => {
       >
         <SearchBox styles="px-2 w-[90%] md:w-[80%]">
           <div className="flex w-full justify-between items-center gap-2 h-10">
-            <IoIosSearch
-              onClick={() => handlesearch(searchItem)}
-              className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
-            />
+            {loadingSearch ? (
+              <CircularProgress size="30px" isIndeterminate color="green.300" />
+            ) : (
+              <IoIosSearch
+                onClick={() => handlesearch(searchItem)}
+                className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
+              />
+            )}
             <input
               type="text"
               placeholder="Restaurants near me"
@@ -256,15 +278,15 @@ const SearchBoxes2 = () => {
                 onClick={() => {
                   setSearchitem("");
                   SpeechRecognition.stopListening();
-                  setLastDocument(null);
-                  setSearchResultStores(null);
-                  fetchData({
-                    lastDocument,
-                    setLastDocument,
-                    setLoadingStoreFetching,
-                    setSearchResultStores,
-                    setIsAllFetched,
-                  });
+                  // setLastDocument(null);
+                  // setSearchResultStores(null);
+                  // fetchData({
+                  //   lastDocument,
+                  //   setLastDocument,
+                  //   setLoadingStoreFetching,
+                  //   setSearchResultStores,
+                  //   setIsAllFetched,
+                  // });
                 }}
                 className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
               />

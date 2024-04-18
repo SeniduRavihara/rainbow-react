@@ -22,8 +22,6 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
       setCurrentUser(user);
-      console.log(user);
-      
 
       const accessToken = await user.getIdToken();
 
