@@ -595,7 +595,7 @@ const CreateStorePage = () => {
                 </h1>
 
                 <div className=" col-span-2 flex flex-col gap-5 items-center justify-center">
-                  <div className="flex">
+                  <div className="flex flex-wrap">
                     {categoriesArr.map((catogary, index) => (
                       <CustomTag key={index} styles="m-1">
                         <div>{catogary}</div>

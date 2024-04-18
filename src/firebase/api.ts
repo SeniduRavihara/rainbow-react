@@ -354,6 +354,8 @@ export const fetchCatogaryData = async (
   // console.log(storeListArr);
 
   if (storeListArr.length > 0) {
+    setSearchResultStores(null);
+    setLastDocument(null);
     setSearchResultStores((prev) => {
       if (prev && prev[0].id === storeListArr[0].id) return prev;
       return [...(prev || []), ...storeListArr];
@@ -412,6 +414,8 @@ export const fetchTagData = async (
   // console.log(storeListArr);
 
   if (storeListArr.length > 0) {
+    setSearchResultStores(null);
+    setLastDocument(null);
     setSearchResultStores((prev) => {
       if (prev && prev[0].id === storeListArr[0].id) return prev;
       return [...(prev || []), ...storeListArr];
