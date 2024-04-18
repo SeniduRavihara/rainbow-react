@@ -2,10 +2,11 @@ import { useData } from "@/hooks/useData";
 import StoreCard from "./StoreCard";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { fetchData } from "@/firebase/api";
+import { fetchCatogaryData } from "@/firebase/api";
 import { StoreListType } from "@/types";
+import { SkeletonCard } from "@/components/SkeletonCard";
 
-const ResultList = () => {
+const ResultList = ({ category }: { category:string }) => {
   const {
     searchResultStores,
     setSearchResultStores,
@@ -20,22 +21,29 @@ const ResultList = () => {
   const [visibleStores, setVisibleStores] = useState<StoreListType | null>();
   const [allPageCount, setAllPageCount] = useState(0);
 
+  // const params = useParams();
+  // const category = params.category;
+
+  useEffect(() => {
+    console.log(searchResultStores);
+  }, [searchResultStores]);
+
   useEffect(() => {
     if (isAllFetched) setAllPageCount(currentPage);
   }, [currentPage, isAllFetched]);
 
-  useEffect(() => {
-    if (!searchResultStores) {
-      fetchData({
-        lastDocument,
-        setLastDocument,
-        setLoadingStoreFetching,
-        setSearchResultStores,
-        setIsAllFetched,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   if (!searchResultStores) {
+  //     fetchData({
+  //       lastDocument,
+  //       setLastDocument,
+  //       setLoadingStoreFetching,
+  //       setSearchResultStores,
+  //       setIsAllFetched,
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   useEffect(() => {
     const startIndex = (currentPage - 1) * 5;
@@ -59,13 +67,16 @@ const ResultList = () => {
     if (allPageCount <= currentPage) setCurrentPage((pre) => pre + 1);
 
     if (searchResultStores && searchResultStores?.length / 5 === currentPage) {
-      fetchData({
-        lastDocument,
-        setLastDocument,
-        setLoadingStoreFetching,
-        setSearchResultStores,
-        setIsAllFetched,
-      });
+      fetchCatogaryData(
+        {
+          lastDocument,
+          setLastDocument,
+          setLoadingStoreFetching,
+          setSearchResultStores,
+          setIsAllFetched,
+        },
+        category
+      );
     }
   };
 
@@ -79,7 +90,15 @@ const ResultList = () => {
   // }
 
   if (loadingStoreFetching) {
-    return <div>Loading ... </div>;
+    return (
+      <div className="flex flex-col gap-3">
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+      </div>
+    );
   }
   return (
     <div className="flex flex-col justify-between items-center">
