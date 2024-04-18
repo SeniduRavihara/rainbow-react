@@ -9,7 +9,6 @@ import SocialMediaArea from "@/components/sections/social-media-area";
 import DiscriptionArea from "@/components/sections/discription-area";
 import Footer from "@/components/footer";
 import BottomBanner from "@/components/bottom-banner";
-// import { FcLike } from "react-icons/fc";
 import RatingComponent from "../components/search-result-page/RatingComponent";
 import { IonIcon } from "@ionic/react";
 import { locationOutline } from "ionicons/icons";
@@ -33,6 +32,7 @@ import {
 import { Tag } from "@chakra-ui/react";
 import InfoTab from "../components/store-details-page/tabs/InfoTab";
 import { fetchStoreById } from "@/firebase/api";
+import ProductAndServices from "../components/store-details-page/ProductAndServices";
 
 const StoreDetailsPage = () => {
   const { searchResultStores, currentUserData } = useData();
@@ -386,6 +386,12 @@ const StoreDetailsPage = () => {
                     />
                   )}
                 </div>
+
+                <ProductAndServices
+                  tags={selectedStore.tags}
+                  categoriesArr={selectedStore.categoriesArr}
+                />
+
                 {storeId && <ReviewsAndRatings selectedStoreId={storeId} />}
               </div>
 

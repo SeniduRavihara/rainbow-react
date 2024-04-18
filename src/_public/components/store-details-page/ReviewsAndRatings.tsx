@@ -170,7 +170,7 @@ const ReviewsAndRatings = ({
   if (!selectedStoreId) return <>Loading...</>;
   return (
     <div className="flex flex-col gap-4 mb-10 px-5">
-      <h2 className="font-medium">ReviewsAndRatings</h2>
+      <h2 className="text-2xl font-bold">Reviews And Ratings</h2>
 
       <div className="flex gap-3">
         <div className="p-3 flex text-3xl items-center justify-center w-14 h-14 bg-green-600 text-white rounded-xl">

@@ -5,7 +5,7 @@ const CustomTag = ({
   styles,
 }: {
   children: React.ReactNode;
-  styles: string;
+  styles?: string;
 }) => {
   return <div className={cn("px-2 py-1 bg-blue-400 rounded-md text-white flex items-center justify-center", styles)}>{children}</div>;
 };
