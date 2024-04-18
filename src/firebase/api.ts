@@ -189,6 +189,7 @@ export const createStore = async (uid: string, payload: any) => {
       reviewCount: 0,
       rating: 0,
       visitCount: 0,
+      verified: false,
     });
     console.log("Document successfully written to Firestore!");
   } catch (error) {
@@ -281,7 +282,7 @@ export const fetchData = async ({
     collectionRef,
     orderBy("createdAt", "desc"),
     startAfter(lastDocument?.createdAt ?? ""),
-    limit(3),
+    limit(5),
     where("active", "==", true),
     where("published", "==", true)
   );
@@ -364,6 +365,20 @@ export const fetchCatogaryData = async (
 
   setLoadingStoreFetching(false);
 };
+
+// --------------------------------------------
+
+export const fetchStoreById = async (id: string)=>{
+  const documentRef = doc(db, "store", id)
+
+  try {
+    const storeData = await getDoc(documentRef)
+    return storeData?.data() as StoreObj;
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
 
 // ---------------------------------------------
 

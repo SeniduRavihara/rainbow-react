@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import SearchBox from "@/components/search-box";
 import { RxCross2 } from "react-icons/rx";
 import { FaMicrophone } from "react-icons/fa";
@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchData } from "@/firebase/api";
 import AutocompleteLocationInput from "@/_public/components/auto-compleate-location-input/AutoCompleateInput";
 import toast from "react-hot-toast";
+import { CircularProgress } from "@chakra-ui/react";
 
 const searchClient = algoliasearch(
   "6K67WTIHLT",
@@ -24,6 +25,7 @@ const searchIndex = searchClient.initIndex("stores");
 
 const SearchBoxes = () => {
   const { locationArr } = useData();
+  const [loadingSearch, setLoadingSearch] = useState(false);
   const {
     setSearchResultStores,
     location,
@@ -57,6 +59,7 @@ const SearchBoxes = () => {
 
   const handlesearch = async (searchQuery: string) => {
     try {
+      setLoadingSearch(true);
       const result = await searchIndex.search(searchQuery);
       // console.log(result);
 
@@ -101,6 +104,8 @@ const SearchBoxes = () => {
       );
       if (storeList && storeList.length > 0)
         navigate(`/search-results/${searchQuery || "all"}`);
+
+      setLoadingSearch(false);
     } catch (error) {
       toast.error("Network Problem");
       console.log("Error");
@@ -155,15 +160,15 @@ const SearchBoxes = () => {
                   onClick={() => {
                     setSearchitem("");
                     SpeechRecognition.stopListening();
-                    setLastDocument(null);
-                    setSearchResultStores(null);
-                    fetchData({
-                      lastDocument,
-                      setLastDocument,
-                      setLoadingStoreFetching,
-                      setSearchResultStores,
-                      setIsAllFetched,
-                    });
+                    // setLastDocument(null);
+                    // setSearchResultStores(null);
+                    // fetchData({
+                    //   lastDocument,
+                    //   setLastDocument,
+                    //   setLoadingStoreFetching,
+                    //   setSearchResultStores,
+                    //   setIsAllFetched,
+                    // });
                   }}
                   className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
                 />
@@ -179,10 +184,18 @@ const SearchBoxes = () => {
                 onClick={() => SpeechRecognition.startListening()}
               />
 
-              <IoIosSearch
-                onClick={() => handlesearch(searchItem)}
-                className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
-              />
+              {loadingSearch ? (
+                <CircularProgress
+                  size="30px"
+                  isIndeterminate
+                  color="green.300"
+                />
+              ) : (
+                <IoIosSearch
+                  onClick={() => handlesearch(searchItem)}
+                  className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
+                />
+              )}
             </div>
           </div>
         </SearchBox>
@@ -192,10 +205,14 @@ const SearchBoxes = () => {
       <div className="items-center flex lg:hidden bg-slate-40 w-full justify-center px-">
         <SearchBox styles="px-2 w-[90%] sm:w-[85%] md:w-[80%]">
           <div className="flex w-full justify-between items-center gap-2 h-10">
-            <IoIosSearch
-              onClick={() => handlesearch(searchItem)}
-              className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
-            />
+            {loadingSearch ? (
+              <CircularProgress size="30px" isIndeterminate color="green.300" />
+            ) : (
+              <IoIosSearch
+                onClick={() => handlesearch(searchItem)}
+                className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-8 h-8 p-1"
+              />
+            )}
             <input
               type="text"
               placeholder="Restaurants near me"

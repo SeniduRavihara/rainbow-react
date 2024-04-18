@@ -131,7 +131,9 @@ const StoreCard = ({
 
             <div className="my-1">
               {tags.slice(0, 4).map((tag, index) => (
-                <Tag key={index}>{tag}</Tag>
+                <Tag key={index} className="mx-[2px]">
+                  {tag}
+                </Tag>
               ))}
             </div>
           </div>
@@ -256,7 +258,9 @@ const StoreCard = ({
 
             <div>
               {tags.map((tag, index) => (
-                <Tag key={index}>{tag}</Tag>
+                <Tag key={index} className="mx-[2px]">
+                  {tag}
+                </Tag>
               ))}
             </div>
           </div>

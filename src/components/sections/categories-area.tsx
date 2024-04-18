@@ -18,7 +18,6 @@ const CategoriesArea = () => {
   const navigate = useNavigate();
 
   const {
-    searchResultStores,
     lastDocument,
     setLastDocument,
     setLoadingStoreFetching,
@@ -26,9 +25,9 @@ const CategoriesArea = () => {
     setIsAllFetched,
   } = useData();
 
-  useEffect(() => {
-    console.log(searchResultStores);
-  }, [searchResultStores]);
+  // useEffect(() => {
+  //   console.log(searchResultStores);
+  // }, [searchResultStores]);
 
   useEffect(() => {
     setIsShowAll(false);

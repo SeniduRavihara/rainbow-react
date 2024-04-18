@@ -10,7 +10,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "@/firebase/config";
-import { ReviewListType, StoreObj } from "@/types";
+import { ReviewListType } from "@/types";
 import Review from "./Review";
 import {
   Dialog,
@@ -28,9 +28,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useData } from "@/hooks/useData";
 
 const ReviewsAndRatings = ({
-  selectedStore,
+  selectedStoreId,
 }: {
-  selectedStore: StoreObj | null;
+  selectedStoreId: string;
 }) => {
   const [reviews, setReviews] = useState<ReviewListType | null>(null);
   const [review, setReview] = useState("");
@@ -42,13 +42,8 @@ const ReviewsAndRatings = ({
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    if (selectedStore) {
-      const collectionRef = collection(
-        db,
-        "store",
-        selectedStore.id,
-        "reviews"
-      );
+    if (selectedStoreId) {
+      const collectionRef = collection(db, "store", selectedStoreId, "reviews");
       const q = query(collectionRef, orderBy("createdAt", "desc"));
 
       const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
@@ -63,12 +58,12 @@ const ReviewsAndRatings = ({
 
       return unsubscribe;
     }
-  }, [selectedStore]);
+  }, [selectedStoreId]);
 
   useEffect(() => {
-    if (selectedStore) {
+    if (selectedStoreId) {
       const updateStoreRating = async () => {
-        const documentRef = doc(db, "store", selectedStore?.id);
+        const documentRef = doc(db, "store", selectedStoreId);
         try {
           await updateDoc(documentRef, {
             rating: parseFloat(calculateRating().toFixed(1)),
@@ -82,10 +77,10 @@ const ReviewsAndRatings = ({
       updateStoreRating();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [review, ratingVal, selectedStore?.id, calculateRating]);
+  }, [review, ratingVal, selectedStoreId, calculateRating]);
 
   const handleStartReview = async () => {
-    if (review && selectedStore) {
+    if (review && selectedStoreId) {
       const preReview = reviews?.find(
         (reviewObj) => reviewObj.userId === currentUserData?.id
       );
@@ -99,13 +94,13 @@ const ReviewsAndRatings = ({
             userId: currentUserData?.id || "",
             userName: currentUserData?.name || "",
           },
-          selectedStore?.id,
+          selectedStoreId,
           preReview.id
         );
 
         console.log(parseFloat(calculateRating().toFixed(1)));
 
-        const documentRef = doc(db, "store", selectedStore?.id);
+        const documentRef = doc(db, "store", selectedStoreId);
         await updateDoc(documentRef, {
           rating: parseFloat(calculateRating().toFixed(1)),
           reviewCount: getReviewCount(),
@@ -119,10 +114,10 @@ const ReviewsAndRatings = ({
             userId: currentUserData?.id || "",
             userName: currentUserData?.name || "",
           },
-          selectedStore?.id
+          selectedStoreId
         );
 
-        const documentRef = doc(db, "store", selectedStore?.id);
+        const documentRef = doc(db, "store", selectedStoreId);
         await updateDoc(documentRef, {
           rating: parseFloat(calculateRating().toFixed(1)),
           reviewCount: getReviewCount(),
@@ -172,7 +167,7 @@ const ReviewsAndRatings = ({
     ));
   };
 
-  if (!selectedStore) return <></>;
+  if (!selectedStoreId) return <>Loading...</>;
   return (
     <div className="flex flex-col gap-4 mb-10 px-5">
       <h2 className="font-medium">ReviewsAndRatings</h2>
@@ -189,7 +184,7 @@ const ReviewsAndRatings = ({
 
       <div>
         <Dialog open={openModel} onOpenChange={setOpenModel}>
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <Button onClick={handleStartReview}>Start your Review</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
