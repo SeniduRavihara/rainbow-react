@@ -366,6 +366,64 @@ export const fetchCatogaryData = async (
   setLoadingStoreFetching(false);
 };
 
+
+
+// --------------------------------------------
+
+export const fetchTagData = async (
+  {
+    setLoadingStoreFetching,
+    lastDocument,
+    setLastDocument,
+    setSearchResultStores,
+    setIsAllFetched,
+  }: {
+    setLoadingStoreFetching: React.Dispatch<React.SetStateAction<boolean>>;
+    lastDocument: StoreObj | null;
+    setLastDocument: React.Dispatch<React.SetStateAction<StoreObj | null>>;
+    setSearchResultStores: React.Dispatch<
+      React.SetStateAction<StoreListType | null>
+    >;
+    setIsAllFetched: React.Dispatch<React.SetStateAction<boolean>>;
+  },
+  tag: string
+) => {
+  setLoadingStoreFetching(true);
+
+  const collectionRef = collection(db, "store");
+  const q = query(
+    collectionRef,
+    orderBy("createdAt", "desc"),
+    startAfter(lastDocument?.createdAt ?? ""),
+    limit(5),
+    where("active", "==", true),
+    where("published", "==", true),
+    where("tags", "array-contains", tag)
+  );
+
+  const queryStoresSnapshot = await getDocs(q);
+
+  const storeListArr = queryStoresSnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  })) as StoreListType;
+
+  setLastDocument(storeListArr[storeListArr.length - 1]);
+  // console.log(storeListArr);
+
+  if (storeListArr.length > 0) {
+    setSearchResultStores((prev) => {
+      if (prev && prev[0].id === storeListArr[0].id) return prev;
+      return [...(prev || []), ...storeListArr];
+    });
+  } else {
+    setIsAllFetched(true);
+    console.log("All Store are Fetched!");
+  }
+
+  setLoadingStoreFetching(false);
+};
+
 // --------------------------------------------
 
 export const fetchStoreById = async (id: string)=>{

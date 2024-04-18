@@ -5,17 +5,8 @@ import { logout } from "@/firebase/api";
 import { IonIcon } from "@ionic/react";
 import { useData } from "@/hooks/useData";
 import { barChartOutline } from "ionicons/icons";
-import { LogOut,  User, Shield, Store } from "lucide-react";
+import { LogOut, User, Shield, Store } from "lucide-react";
 import NavDropdown from "react-bootstrap/Dropdown";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuGroup,
-//   DropdownMenuItem,
-//   DropdownMenuLabel,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
 import SearchBoxes2 from "@/components/SearchBoxes2";
 import { logo } from "@/assets";
 import { forwardRef } from "react";
@@ -109,61 +100,6 @@ const Navbar = () => {
           </Link>
         ) : (
           <div className="mt-1">
-            {/* <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <div>
-                {currentUser.photoURL ? (
-                  <img
-                    src={currentUser.photoURL}
-                    className="w-10 h-10 rounded-full"
-                  />
-                ) : (
-                  <HiOutlineUserCircle className="text-3xl" />
-                )}
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-
-                  {currentUserData &&
-                    currentUserData.roles.includes("admin") && (
-                  <DropdownMenuItem onClick={handleClickAdminPanel}>
-                    <Shield className="mr-2 h-4 w-4" />
-                    <span>Admin</span>
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem>
-                <LifeBuoy className="mr-2 h-4 w-4" />
-                <span>Support</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleCreateStoreClick}>
-                <Store className="mr-2 h-4 w-4" />
-                <span>Manage Store</span>
-              </DropdownMenuItem>
-
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu> */}
             <NavDropdown>
               <NavDropdown.Toggle
                 as={CustomToggle}
