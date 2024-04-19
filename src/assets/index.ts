@@ -59,6 +59,7 @@ import placeholderReviewPic from "./img/icons8-male-user-94.png";
 import imageGalery from "./img/image-gallery.png";
 
 import logo from "./img/SRILANKA BUSINESS LOGO.png";
+import mic from "./img/mic-icon.png"
 
 const placeholderSliderAdds = [
   placeholderAdd1,
@@ -125,4 +126,5 @@ export {
   placeholderReviewPic,
   imageGalery,
   logo,
+  mic,
 };

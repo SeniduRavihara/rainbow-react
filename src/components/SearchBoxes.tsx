@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import SearchBox from "@/components/search-box";
 import { RxCross2 } from "react-icons/rx";
-import { FaMicrophone } from "react-icons/fa";
+// import { FaMicrophone } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -15,6 +15,7 @@ import { fetchData } from "@/firebase/api";
 import AutocompleteLocationInput from "@/_public/components/auto-compleate-location-input/AutoCompleateInput";
 import toast from "react-hot-toast";
 import { CircularProgress } from "@chakra-ui/react";
+import { mic } from "@/assets";
 
 const searchClient = algoliasearch(
   "6K67WTIHLT",
@@ -177,9 +178,10 @@ const SearchBoxes = () => {
             </div>
 
             <div className="flex items-center justify-center gap-4">
-              <FaMicrophone
+              <img
+                src={mic}
                 className={cn(
-                  "text-gray-500 text-xl cursor-pointer",
+                  "text-gray-500 text-xl cursor-pointer  w-7 h-7",
                   listening && "hidden"
                 )}
                 onClick={() => SpeechRecognition.startListening()}
@@ -243,9 +245,10 @@ const SearchBoxes = () => {
               />
             )}
 
-            <FaMicrophone
+            <img
+              src={mic}
               className={cn(
-                "text-gray-500 text-2xl cursor-pointer",
+                "text-gray-500 text-2xl cursor-pointer w-7 h-7",
                 listening && "hidden"
               )}
               onClick={() => SpeechRecognition.startListening()}
