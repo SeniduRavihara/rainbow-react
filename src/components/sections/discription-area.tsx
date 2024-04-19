@@ -2,92 +2,7 @@ import { useData } from "@/hooks/useData";
 import CustomTag from "../CustomTag";
 import { fetchCatogaryData } from "@/firebase/api";
 import { useNavigate } from "react-router-dom";
-
-const popularCategories = [
-  "Body Massage Centers",
-  "Cinema Halls",
-  "Schools",
-  "Beauty Spas",
-  "Dermatologists",
-  "Hospitals",
-  "Malls",
-  "Gyms",
-  "Beauty Parlours",
-  "Estate Agents",
-  "Banquet Halls",
-  "ENT Doctors",
-  "Book Shops",
-  "Bike On Rent",
-  "Sexologist Doctors",
-  "Neurologists",
-  "Gynaecologist & Obstetrician Doctors",
-  "Train Ticket Booking Agents",
-  "Travel Agents",
-  "Paying Guest Accommodations",
-  "General Physician Doctors",
-  "Dentists",
-  "Orthopaedic Doctors",
-  "Chemists",
-  "Motor Training Schools",
-  "Gastroenterologists",
-  "Car Rental",
-  "Salons",
-  "Courier Services",
-  "Dance Classes",
-  "Pathology Labs",
-  "Taxi Services",
-  "Cake Shops",
-  "AC Repair & Services",
-  "Mobile Phone Dealers",
-  "Pet Shops",
-  "Dmart",
-  "Packers And Movers",
-  "Psychiatrists",
-  "Dharamshalas",
-  "Urologist Doctors",
-  "Bakeries",
-  "Bicycle Dealers",
-  "Coffee Shops",
-  "Paediatricians",
-  "Sonography Centres",
-  "Yoga Classes",
-  "Hostels",
-  "Cardiologists",
-  "Electrical Shops",
-  "Skin Care Clinics",
-  "Diagnostic Centres",
-  "Homeopathic Doctors",
-  "Physiotherapists",
-  "Photo Studios",
-  "Plumbers",
-  "Music Classes",
-  "Electricians",
-  "Sports Goods Dealers",
-  "Shoe Dealers",
-  "Hair Stylists",
-  "Gift Shops",
-  "Ophthalmologists",
-  "Car Repair & Services",
-  "Ayurvedic Doctors",
-  "Eye Clinics",
-  "Restaurants",
-  "Carpenters",
-  "Jewellery Showrooms",
-  "Cooks On Hire",
-  "Stationery Shops",
-  "Nephrologists",
-  "Caterers",
-  "Interior Designers",
-  "Rehabilitation Center",
-  "Drug De Addiction Center",
-  "Grocery Stores",
-  "Banks",
-  "ATM",
-  "5Star Hotels",
-  "Hotels",
-  "Resorts",
-  "Plastic Surgeons",
-];
+import { popularCategories, popularCities } from "@/constants";
 
 const DiscriptionArea = () => {
     const {
@@ -155,10 +70,39 @@ const DiscriptionArea = () => {
         </div> */}
         <div className="my-1 gap-2  flex flex-wrap">
           {popularCategories.map((catoegory, index) => (
-            <div key={index} onClick={() => handleCategaryClick(catoegory)}>
-              <CustomTag styles="mx-[2px] text-gray-500 font-medium px-2 py-1 bg-white border cursor-pointer rounded-sm">
+            <div
+              key={index}
+              onClick={() => handleCategaryClick(catoegory)}
+              className="flex items-center justify-center"
+            >
+              <CustomTag styles="text-gray-600 text-sm px-1 bg-white cursor-pointer rounded-0 border-gray-400  borderl-0">
                 {catoegory}
               </CustomTag>
+              <div className="w-[2px] h-4 bg-slate-400"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-3xl font-semibold">Popular Cities</h3>
+        <br />
+        {/* <div>
+          {popularCategories.map((category) => (
+            <CustomTag>{category}</CustomTag>
+          ))}
+        </div> */}
+        <div className="my-1 gap-2  flex flex-wrap">
+          {popularCities.map((catoegory, index) => (
+            <div
+              key={index}
+              // onClick={() => handleCategaryClick(catoegory)}
+              className="flex items-center justify-center"
+            >
+              <CustomTag styles="text-gray-600 text-sm px-1 bg-white cursor-pointer rounded-0 border-gray-400  borderl-0">
+                {catoegory}
+              </CustomTag>
+              <div className="w-[2px] h-4 bg-slate-400"></div>
             </div>
           ))}
         </div>

@@ -72,8 +72,8 @@ const CatogarySlider = () => {
   };
 
   return (
-    <div className="w-full flex gap-2 h-[200px] my-10 px-10">
-      <div className="w-[40%] h-[200px]">
+    <div className="w-full flex flex-col md:flex-row gap-2 my-10 px-10">
+      <div className="w-full md:w-[40%] h-[200px]">
         <Carousel
           showStatus={false}
           interval={3000}
@@ -95,21 +95,23 @@ const CatogarySlider = () => {
         </Carousel>
       </div>
 
-      {sectionStaticAdds?.map((addObj, index) => (
-        <div key={index} className="w-[15%] relative">
-          <div
-            onClick={() => handleStaticImageClick(addObj.link)}
-            className="absolute w-6 h-7 cursor-pointer backdrop-blur-xl text-white bottom-8 flex items-center justify-center rounded-r-lg"
-          >
-            <MdArrowForwardIos />
+      <div className="w-full md:w-[60%] flex gap-2">
+        {sectionStaticAdds?.map((addObj, index) => (
+          <div key={index} className="w-[25%] relative flex">
+            <div
+              onClick={() => handleStaticImageClick(addObj.link)}
+              className="absolute w-6 h-7 cursor-pointer backdrop-blur-xl text-white bottom-8 flex items-center justify-center rounded-r-lg"
+            >
+              <MdArrowForwardIos />
+            </div>
+            <img
+              src={addObj.imageUrl}
+              alt=""
+              className="w-full h-full object-cover rounded-xl"
+            />
           </div>
-          <img
-            src={addObj.imageUrl}
-            alt=""
-            className="w-full h-full object-cover rounded-xl"
-          />
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
