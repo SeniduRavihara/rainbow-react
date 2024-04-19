@@ -22,6 +22,7 @@ import { postEnquery } from "@/firebase/api";
 import { useData } from "@/hooks/useData";
 import { useAuth } from "@/hooks/useAuth";
 import { whatsapp } from "@/assets";
+import { MdVerified } from "react-icons/md";
 
 type StoreCardProps = {
   title: string;
@@ -32,6 +33,7 @@ type StoreCardProps = {
   id: string;
   reviewCount: number;
   rating: number;
+  verified: boolean;
 };
 
 const StoreCard = ({
@@ -43,6 +45,7 @@ const StoreCard = ({
   storeImages,
   id,
   reviewCount = 0,
+  verified = false,
 }: StoreCardProps) => {
   const [enquery, setEnquery] = useState("");
   const [openModel, setOpenModel] = useState(false);
@@ -122,6 +125,7 @@ const StoreCard = ({
               <div className="text-sm text-[#2a2a2a]">
                 <span id="ratingCount">{reviewCount}</span> Reviews
               </div>
+              {verified && <MdVerified />}
             </div>
 
             <div className="users-located-place flex items-center">

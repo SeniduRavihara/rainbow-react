@@ -99,6 +99,7 @@ const SearchBoxes2 = () => {
         reviewCount: hit.reviewCount,
         categoriesArr: hit.categoriesArr || [],
         visitCount: hit.visitCount,
+        verified: hit.verified || false,
       }));
       setLastDocument(null);
       setSearchResultStores(

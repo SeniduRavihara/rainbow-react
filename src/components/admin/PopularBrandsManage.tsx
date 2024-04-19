@@ -3,6 +3,7 @@ import { db } from "@/firebase/config";
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ImageCropDialog from "../image-croper/CropDialog";
+import { Input } from "../ui/input";
 
 interface ImageData {
   imageUrl: string;
@@ -20,6 +21,7 @@ interface PopularBrands {
   localUrl?: string;
   cropedImageBlob?: Blob;
   croppedImageUrl: string;
+  link: string;
 }
 
 const initData: ImageData = {
@@ -76,13 +78,37 @@ const PopularBrandsManage = () => {
     setIsOpenCropDialog(true);
   };
 
+  const handleChangeInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string
+  ) => {
+    setPopularBrands((prevState) =>
+      prevState
+        ? prevState.map((add) =>
+            add.id === id ? { ...add, link: e.target.value } : add
+          )
+        : prevState
+    );
+  };
+
   const handleClickUpdate = async (idToUpdate: string) => {
     if (!popularBrands) return;
     const addToUpdate = popularBrands.find(({ id }) => id === idToUpdate);
-    if (!addToUpdate?.cropedImageBlob) {
-      console.error("Add not found or image file missing");
-      return;
-    }
+
+        if (!addToUpdate?.cropedImageBlob) {
+          // console.error("Add not found or image file missing");
+          try {
+            const documentRef = doc(db, "pupularBrands", idToUpdate);
+            await updateDoc(documentRef, {
+              imageUrl: addToUpdate?.imageUrl,
+              link: addToUpdate?.link,
+            });
+          } catch (error) {
+            console.log(error);
+          }
+          return;
+        }
+
 
     try {
       const imageUrl = await uploadAdd(
@@ -90,7 +116,6 @@ const PopularBrandsManage = () => {
         "popular_brands",
         idToUpdate
       );
-
 
       try {
         const documentRef = doc(db, "pupularBrands", idToUpdate);
@@ -141,9 +166,7 @@ const PopularBrandsManage = () => {
   if (!popularBrands) return <div>Loading...</div>;
 
   return (
-    <div
-      className="w-full h-full pb-5"
-    >
+    <div className="w-full h-full pb-5">
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
           <ImageCropDialog
@@ -157,7 +180,9 @@ const PopularBrandsManage = () => {
         </div>
       )}
       <div className="">
-        <h2 className="text-primary fw-bold mb-3 text-center">Popular Brands</h2>
+        <h2 className="text-primary font-bold mb-10 text-center">
+          Popular Brands (4:3 ~ 1000px:750px )
+        </h2>
         <div className="grid grid-cols-2 w-full gap-5">
           {popularBrands &&
             popularBrands.map((brand) => (
@@ -177,6 +202,18 @@ const PopularBrandsManage = () => {
                       alt="Card image cap"
                     />
                   </div>
+
+                  <div className="mt-4 px-3 flex justify-center items-center">
+                    <Input
+                      type="text"
+                      value={
+                        popularBrands.find((addObj) => addObj.id === brand.id)
+                          ?.link
+                      }
+                      onChange={(e) => handleChangeInput(e, brand.id)}
+                    />
+                  </div>
+
                   <div className="card-body">
                     <div className="flex items-center justify-center gap-10">
                       <label

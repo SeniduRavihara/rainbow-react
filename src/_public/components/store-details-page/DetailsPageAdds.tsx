@@ -1,14 +1,30 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const DetailsPageAdds = ({
   detailsPageAdds,
 }: {
-  detailsPageAdds: Array<{ imageUrl: string; id: string }> | null;
+  detailsPageAdds: Array<{ imageUrl: string; id: string; link: string }> | null;
 }) => {
   const [randomAdd, setRandomAdd] = useState<{
     imageUrl: string;
     id: string;
+    link: string;
   } | null>(null);
+
+  const navigate = useNavigate();
+
+  const handleImageClick = (link: string) => {
+    if (detailsPageAdds) {
+      if (link.startsWith("http") || link.startsWith("https")) {
+        // If the URL is an external link, open it in a new tab
+        window.open(link, "_blank");
+      } else {
+        // If the URL is a relative path within your application, use navigate()
+        navigate(link);
+      }
+    }
+  };
 
   useEffect(() => {
     if (detailsPageAdds && detailsPageAdds.length > 0) {
@@ -27,6 +43,7 @@ const DetailsPageAdds = ({
           <img
             src={randomAdd.imageUrl}
             alt={`Ad ${randomAdd.id}`}
+            onClick={() => handleImageClick(randomAdd.link)}
           />
         )}
       </div>

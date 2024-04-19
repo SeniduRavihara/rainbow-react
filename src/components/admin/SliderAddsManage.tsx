@@ -3,6 +3,7 @@ import { db } from "@/firebase/config";
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ImageCropDialog from "../image-croper/CropDialog";
+import { Input } from "../ui/input";
 
 interface ImageData {
   imageUrl: string;
@@ -20,6 +21,7 @@ interface SliderAdd {
   localUrl?: string;
   cropedImageBlob?: Blob;
   croppedImageUrl: string;
+  link: string;
 }
 
 const initData: ImageData = {
@@ -78,11 +80,34 @@ const SliderAddsManage = () => {
     setIsOpenCropDialog(true);
   };
 
+  const handleChangeInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string
+  ) => {
+    setSliderAdds((prevState) =>
+      prevState
+        ? prevState.map((add) =>
+            add.id === id ? { ...add, link: e.target.value } : add
+          )
+        : prevState
+    );
+  };
+
   const handleClickUpdate = async (idToUpdate: string) => {
     if (!sliderAdds) return;
     const addToUpdate = sliderAdds.find(({ id }) => id === idToUpdate);
+    
     if (!addToUpdate?.cropedImageBlob) {
-      console.error("Add not found or image file missing");
+      // console.error("Add not found or image file missing");
+      try {
+        const documentRef = doc(db, "sliderAdds", idToUpdate);
+        await updateDoc(documentRef, {
+          imageUrl: addToUpdate?.imageUrl,
+          link: addToUpdate?.link,
+        });
+      } catch (error) {
+        console.log(error);
+      }
       return;
     }
 
@@ -96,6 +121,7 @@ const SliderAddsManage = () => {
         const documentRef = doc(db, "sliderAdds", idToUpdate);
         await updateDoc(documentRef, {
           imageUrl,
+          link: addToUpdate?.link,
         });
       } catch (error) {
         console.log(error);
@@ -153,7 +179,10 @@ const SliderAddsManage = () => {
         </div>
       )}
       <div className="">
-        <h2 className="text-primary fw-bold">Index 1</h2>
+        <h2 className="text-primary font-bold mb-10 text-center">
+          Slider Adds (16:5 ~ 1000px:312px )
+        </h2>
+
         <div className="flex flex-col w-full gap-5">
           {sliderAdds &&
             sliderAdds.map((add) => (
@@ -173,6 +202,17 @@ const SliderAddsManage = () => {
                       alt="Card image cap"
                     />
                   </div>
+
+                  <div className="mt-4 px-3 flex justify-center items-center">
+                    <Input
+                      type="text"
+                      value={
+                        sliderAdds.find((addObj) => addObj.id === add.id)?.link
+                      }
+                      onChange={(e) => handleChangeInput(e, add.id)}
+                    />
+                  </div>
+
                   <div className="card-body">
                     <div className="flex items-center justify-center gap-10">
                       <label
