@@ -3,6 +3,7 @@ import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { uploadAdd } from "@/firebase/api";
 import { db } from "@/firebase/config";
 import ImageCropDialog from "../image-croper/CropDialog";
+import { Input } from "../ui/input";
 
 interface ImageData {
   imageUrl: string;
@@ -20,6 +21,7 @@ interface SectionAdd {
   localUrl?: string;
   cropedImageBlob?: Blob;
   croppedImageUrl: string;
+  link: string;
 }
 
 const initData: ImageData = {
@@ -37,8 +39,8 @@ const SectionAddsManage: React.FC = () => {
   const [sectionAdds, setSectionAdds] = useState<SectionAdd[] | null>(null);
 
   // useEffect(() => {
-  //   console.log(imageData);
-  // }, [imageData]);
+  //   console.log(sectionAdds);
+  // }, [sectionAdds]);
 
   useEffect(() => {
     const collectionRef = collection(db, "sectionAdds");
@@ -74,11 +76,34 @@ const SectionAddsManage: React.FC = () => {
     setIsOpenCropDialog(true);
   };
 
+  const handleChangeInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string
+  ) => {
+    setSectionAdds((prevState) =>
+      prevState
+        ? prevState.map((add) =>
+            add.id === id ? { ...add, link: e.target.value } : add
+          )
+        : prevState
+    );
+  };
+
   const handleClickUpdate = async (idToUpdate: string) => {
     if (!sectionAdds) return;
     const addToUpdate = sectionAdds.find((add) => add.id === idToUpdate);
+
     if (!addToUpdate?.cropedImageBlob) {
-      console.error("Add not found or image file missing");
+      // console.error("Add not found or image file missing");
+      try {
+        const documentRef = doc(db, "sectionAdds", idToUpdate);
+        await updateDoc(documentRef, {
+          imageUrl: addToUpdate?.imageUrl,
+          link: addToUpdate?.link,
+        });
+      } catch (error) {
+        console.log(error);
+      }
       return;
     }
 
@@ -89,7 +114,7 @@ const SectionAddsManage: React.FC = () => {
         idToUpdate
       );
       const documentRef = doc(db, "sectionAdds", idToUpdate);
-      await updateDoc(documentRef, { imageUrl });
+      await updateDoc(documentRef, { imageUrl, link: addToUpdate?.link });
     } catch (error) {
       console.error("Error uploading or updating add:", error);
     }
@@ -143,7 +168,9 @@ const SectionAddsManage: React.FC = () => {
         </div>
       )}
       <div className="w-full">
-        <h2 className="text-primary fw-bold mb-3 text-center">Section Adds</h2>
+        <h2 className="text-primary font-bold mb-10 text-center">
+          Section Adds (16:5 ~ 1000px:312px )
+        </h2>
         <div className="flex flex-col w-full gap-5">
           {sectionAdds &&
             sectionAdds.map((add) => (
@@ -163,6 +190,17 @@ const SectionAddsManage: React.FC = () => {
                       alt="Card image cap"
                     />
                   </div>
+
+                  <div className="mt-4 px-3 flex justify-center items-center">
+                    <Input
+                      type="text"
+                      value={
+                        sectionAdds.find((addObj) => addObj.id === add.id)?.link
+                      }
+                      onChange={(e) => handleChangeInput(e, add.id)}
+                    />
+                  </div>
+
                   <div className="card-body">
                     <div className="flex items-center justify-center gap-10">
                       <label

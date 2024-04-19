@@ -58,7 +58,7 @@ import whatsapp from "./img/icons8-whatsapp.svg";
 import placeholderReviewPic from "./img/icons8-male-user-94.png";
 import imageGalery from "./img/image-gallery.png";
 
-import logo from "./img/SRILANKA BUSINESS LOGO.png"
+import logo from "./img/SRILANKA BUSINESS LOGO.png";
 
 const placeholderSliderAdds = [
   placeholderAdd1,
@@ -75,11 +75,11 @@ const placeholderSectionAdds = [
 ];
 
 const placeholderPopularBrands = [
-  { imageUrl: placeholderPopularPrand1, id: "1" },
-  { imageUrl: placeholderPopularPrand2, id: "2" },
-  { imageUrl: placeholderPopularPrand3, id: "3" },
-  { imageUrl: placeholderPopularPrand4, id: "4" },
-  { imageUrl: placeholderPopularPrand5, id: "5" },
+  { imageUrl: placeholderPopularPrand1, id: "1", link: "" },
+  { imageUrl: placeholderPopularPrand2, id: "2", link: "" },
+  { imageUrl: placeholderPopularPrand3, id: "3", link: "" },
+  { imageUrl: placeholderPopularPrand4, id: "4", link: "" },
+  { imageUrl: placeholderPopularPrand5, id: "5", link: "" },
 ];
 
 export {

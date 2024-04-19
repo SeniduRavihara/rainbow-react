@@ -7,14 +7,17 @@ export type DataContextType = {
   sectionAdds: Array<{
     imageUrl: string;
     id: string;
+    link: string;
   }> | null;
   sliderAdds: Array<{
     imageUrl: string;
     id: string;
+    link: string;
   }> | null;
   popularBrands: Array<{
     imageUrl: string;
     id: string;
+    link: string;
   }> | null;
   searchResultStores: StoreListType | null;
   setSearchResultStores: React.Dispatch<
@@ -100,7 +103,8 @@ export type StoreObj = {
   rating: number;
   reviewCount: number;
   categoriesArr: Array<string>;
-  visitCount: number
+  visitCount: number;
+  verified: boolean;
 };
 
 export type StoreListType = Array<StoreObj>;

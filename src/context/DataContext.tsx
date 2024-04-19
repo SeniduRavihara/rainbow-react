@@ -23,14 +23,17 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
   const [popularBrands, setPopularBrands] = useState<Array<{
     imageUrl: string;
     id: string;
+    link: string;
   }> | null>(null);
   const [sectionAdds, setSectionAdds] = useState<Array<{
     imageUrl: string;
     id: string;
+    link: string;
   }> | null>(null);
   const [sliderAdds, setSliderAdds] = useState<Array<{
     imageUrl: string;
     id: string;
+    link: string
   }> | null>(null);
 
   const [searchResultStores, setSearchResultStores] =
@@ -54,7 +57,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
       const sctionAddsArr = QuerySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-      })) as Array<{ imageUrl: string; id: string }>;
+      })) as Array<{ imageUrl: string; id: string, link: string }>;
 
       // console.log(sctionAddsArr);
       setSectionAdds(sctionAddsArr);
@@ -69,7 +72,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
       const sliderAddsArr = QuerySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-      })) as Array<{ imageUrl: string; id: string }>;
+      })) as Array<{ imageUrl: string; id: string; link: string }>;
 
       // console.log(sliderAddsArr);
       setSliderAdds(sliderAddsArr);
@@ -84,7 +87,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
       const popularBrandsArr = QuerySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-      })) as Array<{ imageUrl: string; id: string }>;
+      })) as Array<{ imageUrl: string; id: string; link: string }>;
 
       // console.log(popularBrandsArr);
       setPopularBrands(popularBrandsArr);

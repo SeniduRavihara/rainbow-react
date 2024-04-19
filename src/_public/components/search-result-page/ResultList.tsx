@@ -115,6 +115,7 @@ const ResultList = ({ category }: { category:string }) => {
                 whatsappnumber={data.whatsappNumber}
                 reviewCount={data.reviewCount}
                 rating={data.rating}
+                verified={data.verified}
               />
             </li>
           ))}

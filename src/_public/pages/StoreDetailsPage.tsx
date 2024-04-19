@@ -43,6 +43,7 @@ const StoreDetailsPage = () => {
   const [detailsPageAdds, setDetailsPageAdds] = useState<Array<{
     imageUrl: string;
     id: string;
+    link: string;
   }> | null>(null);
 
   const navigate = useNavigate();
@@ -74,7 +75,7 @@ const StoreDetailsPage = () => {
       const searchResultAdds = QuerySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-      })) as Array<{ imageUrl: string; id: string }>;
+      })) as Array<{ imageUrl: string; id: string; link: string }>;
 
       // console.log(searchResultAdds);
       setDetailsPageAdds(searchResultAdds);

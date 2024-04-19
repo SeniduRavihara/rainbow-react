@@ -3,6 +3,7 @@ import { db } from "@/firebase/config";
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ImageCropDialog from "../image-croper/CropDialog";
+import { Input } from "../ui/input";
 
 interface ImageData {
   imageUrl: string;
@@ -20,6 +21,7 @@ interface SearchResultAdd {
   localUrl?: string;
   cropedImageBlob?: Blob;
   croppedImageUrl: string;
+  link: string
 }
 
 const initData: ImageData = {
@@ -76,11 +78,34 @@ const SearchResultAddsManage = () => {
     setIsOpenCropDialog(true);
   };
 
+    const handleChangeInput = (
+      e: React.ChangeEvent<HTMLInputElement>,
+      id: string
+    ) => {
+      setSearchResultAdds((prevState) =>
+        prevState
+          ? prevState.map((add) =>
+              add.id === id ? { ...add, link: e.target.value } : add
+            )
+          : prevState
+      );
+    };
+
   const handleClickUpdate = async (idToUpdate: string) => {
     if (!searchResultAdds) return;
     const addToUpdate = searchResultAdds.find(({ id }) => id === idToUpdate);
+    
     if (!addToUpdate?.cropedImageBlob) {
-      console.error("Add not found or image file missing");
+      // console.error("Add not found or image file missing");
+      try {
+        const documentRef = doc(db, "searchResultAdds", idToUpdate);
+        await updateDoc(documentRef, {
+          imageUrl: addToUpdate?.imageUrl,
+          link: addToUpdate?.link,
+        });
+      } catch (error) {
+        console.log(error);
+      }
       return;
     }
 
@@ -151,7 +176,10 @@ const SearchResultAddsManage = () => {
         </div>
       )}
       <div className="">
-        <h2 className="text-primary fw-bold mb-3 text-center">Search Result Adds</h2>
+        <h2 className="text-primary font-bold mb-10 text-center">
+          Search Result Adds (16:9 ~ 1000px:562px )
+        </h2>
+
         <div className="grid grid-cols-2 w-full gap-5">
           {searchResultAdds &&
             searchResultAdds.map((add) => (
@@ -171,6 +199,18 @@ const SearchResultAddsManage = () => {
                       alt="Card image cap"
                     />
                   </div>
+
+                  <div className="mt-4 px-3 flex justify-center items-center">
+                    <Input
+                      type="text"
+                      value={
+                        searchResultAdds.find((addObj) => addObj.id === add.id)?.link
+                      }
+                      onChange={(e) => handleChangeInput(e, add.id)}
+                    />
+                  </div>
+
+
                   <div className="card-body">
                     <div className="flex items-center justify-center gap-10">
                       <label
