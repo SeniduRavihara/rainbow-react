@@ -10,7 +10,7 @@ const CarouselAdds = () => {
   const navigate = useNavigate();
 
   const handleImageClick = (index: number) => {
-    if (sliderAdds) {
+    if (sliderAdds && sliderAdds[index].link) {
       const url = sliderAdds[index].link;
       if (url.startsWith("http") || url.startsWith("https")) {
         // If the URL is an external link, open it in a new tab

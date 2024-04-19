@@ -3,6 +3,8 @@ import { Carousel } from "react-responsive-carousel";
 import { useData } from "@/hooks/useData";
 import { useEffect, useState } from "react";
 import { placeholderSectionAdds } from "@/assets";
+import { MdArrowForwardIos } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const images = [
   {
@@ -28,8 +30,10 @@ const images = [
 ];
 
 const CatogarySlider = () => {
-  const { sectionAdds } = useData();
+  const { sectionAdds, sectionStaticAdds } = useData();
   const [adds, setAdds] = useState(images);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (sectionAdds) {
@@ -42,6 +46,31 @@ const CatogarySlider = () => {
     }
   }, [sectionAdds]);
 
+  const handleSliderImageClick = (index: number) => {
+    if (sectionAdds) {
+      const url = sectionAdds[index].link;
+      if (url.startsWith("http") || url.startsWith("https")) {
+        // If the URL is an external link, open it in a new tab
+        window.open(url, "_blank");
+      } else {
+        // If the URL is a relative path within your application, use navigate()
+        navigate(url);
+      }
+    }
+  };
+
+  const handleStaticImageClick = (link: string) => {
+    if (sectionStaticAdds) {
+      if (link.startsWith("http") || link.startsWith("https")) {
+        // If the URL is an external link, open it in a new tab
+        window.open(link, "_blank");
+      } else {
+        // If the URL is a relative path within your application, use navigate()
+        navigate(link);
+      }
+    }
+  };
+
   return (
     <div className="w-full flex gap-2 h-[200px] my-10 px-10">
       <div className="w-[40%] h-[200px]">
@@ -53,22 +82,34 @@ const CatogarySlider = () => {
           // showIndicators={false}
           transitionTime={800}
           showThumbs={false}
+          onClickItem={(index) => handleSliderImageClick(index)}
         >
           {adds.map((image, index) => (
             <div key={index}>
-              <img src={image.src} className="h-[200px] object-cover rounded-xl" />
+              <img
+                src={image.src}
+                className="h-[200px] object-cover rounded-xl"
+              />
             </div>
           ))}
         </Carousel>
       </div>
 
-      <div className="w-[15%] bg-slate-400"></div>
-
-      <div className="w-[15%] bg-slate-400"></div>
-
-      <div className="w-[15%] bg-slate-400"></div>
-
-      <div className="w-[15%] bg-slate-400"></div>
+      {sectionStaticAdds?.map((addObj, index) => (
+        <div key={index} className="w-[15%] relative">
+          <div
+            onClick={() => handleStaticImageClick(addObj.link)}
+            className="absolute w-6 h-7 cursor-pointer backdrop-blur-xl text-white bottom-8 flex items-center justify-center rounded-r-lg"
+          >
+            <MdArrowForwardIos />
+          </div>
+          <img
+            src={addObj.imageUrl}
+            alt=""
+            className="w-full h-full object-cover rounded-xl"
+          />
+        </div>
+      ))}
     </div>
   );
 };

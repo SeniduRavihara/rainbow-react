@@ -33,19 +33,29 @@ const initData: ImageData = {
   id: "",
 };
 
+const initData2: ImageData = {
+  imageUrl: "",
+  croppedImageUrl: null,
+  crop: null,
+  zoom: null,
+  aspect: 15 / 20,
+  id: "",
+};
+
+
 const SectionAddsManage: React.FC = () => {
   const [isOpenCropDialog, setIsOpenCropDialog] = useState(false);
   const [isOpenCropDialog2, setIsOpenCropDialog2] = useState(false);
   const [imageData, setImageData] = useState<ImageData>(initData);
-  const [imageData2, setImageData2] = useState<ImageData>(initData);
+  const [imageData2, setImageData2] = useState<ImageData>(initData2);
   const [sectionAdds, setSectionAdds] = useState<SectionAdd[] | null>(null);
   const [sectionStaticAdds, setSectionStaticAdds] = useState<
     SectionAdd[] | null
   >(null);
 
   // useEffect(() => {
-  //   console.log(sectionAdds);
-  // }, [sectionAdds]);
+  //   console.log(sectionStaticAdds);
+  // }, [sectionStaticAdds]);
 
   useEffect(() => {
     const collectionRef = collection(db, "sectionAdds");
@@ -207,7 +217,7 @@ const SectionAddsManage: React.FC = () => {
     setIsOpenCropDialog(false);
   };
    const onCancel2 = () => {
-     setImageData2(initData);
+     setImageData2(initData2);
      setIsOpenCropDialog2(false);
    };
 
@@ -256,7 +266,7 @@ const SectionAddsManage: React.FC = () => {
       setSectionStaticAdds((prevState) =>
         prevState
           ? prevState.map((add) =>
-              add.id === imageData.id
+              add.id === imageData2.id
                 ? { ...add, cropedImageBlob, croppedImageUrl }
                 : add
             )
@@ -358,7 +368,7 @@ const SectionAddsManage: React.FC = () => {
         )}
         <div className="w-full">
           <h2 className="text-primary font-bold mb-10 text-center">
-            Section Adds (16:5 ~ 1000px:312px )
+            Section Adds (15:20 ~ 1000px:1333px )
           </h2>
           <div className="flex flex-col w-full gap-5">
             {sectionStaticAdds &&
@@ -384,8 +394,9 @@ const SectionAddsManage: React.FC = () => {
                       <Input
                         type="text"
                         value={
-                          sectionStaticAdds.find((addObj) => addObj.id === add.id)
-                            ?.link
+                          sectionStaticAdds.find(
+                            (addObj) => addObj.id === add.id
+                          )?.link
                         }
                         onChange={(e) => handleChangeInput2(e, add.id)}
                       />
