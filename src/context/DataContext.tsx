@@ -79,7 +79,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
          id: doc.id,
        })) as Array<{ imageUrl: string; id: string; link: string }>;
 
-       console.log(sctionStaticAddsArr);
+      //  console.log(sctionStaticAddsArr);
        setSectionStaticAdds(sctionStaticAddsArr);
      });
 

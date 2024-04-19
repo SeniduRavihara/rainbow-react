@@ -15,7 +15,7 @@ const DetailsPageAdds = ({
   const navigate = useNavigate();
 
   const handleImageClick = (link: string) => {
-    if (detailsPageAdds) {
+    if (detailsPageAdds && link) {
       if (link.startsWith("http") || link.startsWith("https")) {
         // If the URL is an external link, open it in a new tab
         window.open(link, "_blank");
