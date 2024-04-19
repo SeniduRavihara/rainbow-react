@@ -2,7 +2,7 @@ const TopBanner = () => {
   return (
     <div className="navbar-top">
       <div className="top-nav-content">
-        Call Us : 0112 222 22 | info@sample.com
+        0113 184 000 | info@srilankabusiness.lk
       </div>
     </div>
   );

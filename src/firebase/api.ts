@@ -164,7 +164,6 @@ export const facebookSignIn = async () => {
   }
 };
 
-
 // =============================================
 
 export const getUserRole = async (uid: string) => {
@@ -368,8 +367,6 @@ export const fetchCatogaryData = async (
   setLoadingStoreFetching(false);
 };
 
-
-
 // --------------------------------------------
 
 export const fetchTagData = async (
@@ -430,17 +427,16 @@ export const fetchTagData = async (
 
 // --------------------------------------------
 
-export const fetchStoreById = async (id: string)=>{
-  const documentRef = doc(db, "store", id)
+export const fetchStoreById = async (id: string) => {
+  const documentRef = doc(db, "store", id);
 
   try {
-    const storeData = await getDoc(documentRef)
+    const storeData = await getDoc(documentRef);
     return storeData?.data() as StoreObj;
   } catch (error) {
     console.log(error);
-    
   }
-}
+};
 
 // ---------------------------------------------
 
@@ -703,6 +699,8 @@ export const postEnquery = async (
     fromName: string;
     fromId: string;
     message: string;
+    email: string;
+    phone: string;
   },
   selectedStoreId: string
 ) => {

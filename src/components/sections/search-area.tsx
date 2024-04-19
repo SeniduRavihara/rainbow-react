@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import  {
-  useSpeechRecognition,
-} from "react-speech-recognition";
+import { useSpeechRecognition } from "react-speech-recognition";
 import SearchBoxes from "../SearchBoxes";
 
 // const searchClient = algoliasearch(
@@ -62,8 +60,9 @@ const SearchArea = () => {
   return (
     <div className="flex w-full flex-col items-center gap-4 justify-center lg:mb-5 mb-[30px] ">
       <h2 className="font-bold text-3xl hidden lg:flex">
-        Search across &apos;3.3 Crore<span className="font-extrabold">+</span>
-        &apos; <span className="text-blue-600">Product & Services</span>
+        Search across &apos; thousands &apos;
+        <span className="font-extrabold">+</span>
+        <span className="text-blue-600 ml-1"> Businesses</span>
       </h2>
 
       {/* <div className="items-center gap-6 hidden lg:flex">
@@ -157,8 +156,8 @@ const SearchArea = () => {
         </SearchBox>
       </div> */}
       <div className="w-[97%] lg:w-[80%]">
-      <SearchBoxes />
-    </div>
+        <SearchBoxes />
+      </div>
     </div>
   );
 };

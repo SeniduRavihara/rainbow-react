@@ -30,6 +30,11 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     id: string;
     link: string;
   }> | null>(null);
+  const [sectionStaticAdds, setSectionStaticAdds] = useState<Array<{
+    imageUrl: string;
+    id: string;
+    link: string;
+  }> | null>(null);
   const [sliderAdds, setSliderAdds] = useState<Array<{
     imageUrl: string;
     id: string;
@@ -65,6 +70,21 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
 
     return unsubscribe;
   }, []);
+
+   useEffect(() => {
+     const collectionRef = collection(db, "sectionStaticAdds");
+     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+       const sctionStaticAddsArr = QuerySnapshot.docs.map((doc) => ({
+         ...doc.data(),
+         id: doc.id,
+       })) as Array<{ imageUrl: string; id: string; link: string }>;
+
+       console.log(sctionStaticAddsArr);
+       setSectionStaticAdds(sctionStaticAddsArr);
+     });
+
+     return unsubscribe;
+   }, []);
 
   useEffect(() => {
     const collectionRef = collection(db, "sliderAdds");
@@ -184,6 +204,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     currentUserData,
     setCurrentUserData,
     sectionAdds,
+    sectionStaticAdds,
     sliderAdds,
     popularBrands,
     searchResultStores,
