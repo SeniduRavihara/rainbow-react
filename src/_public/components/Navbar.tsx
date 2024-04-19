@@ -56,7 +56,7 @@ const Navbar = () => {
       <img
         src={logo}
         alt=""
-        className="w-36 h-14 cursor-pointer"
+        className="w-40 h-14 cursor-pointer"
         onClick={hadleLogoClick}
       />
 

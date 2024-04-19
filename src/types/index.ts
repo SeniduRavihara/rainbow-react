@@ -9,6 +9,11 @@ export type DataContextType = {
     id: string;
     link: string;
   }> | null;
+  sectionStaticAdds: Array<{
+    imageUrl: string;
+    id: string;
+    link: string;
+  }> | null;
   sliderAdds: Array<{
     imageUrl: string;
     id: string;
@@ -53,6 +58,7 @@ export type messageObjType = {
   toName: string;
   toId: string;
   seen: boolean;
+  phone: string
 };
 
 // ---------------------------------

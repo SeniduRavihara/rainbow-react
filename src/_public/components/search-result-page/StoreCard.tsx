@@ -23,6 +23,7 @@ import { useData } from "@/hooks/useData";
 import { useAuth } from "@/hooks/useAuth";
 import { whatsapp } from "@/assets";
 import { MdVerified } from "react-icons/md";
+import { Label } from "@/components/ui/label";
 
 type StoreCardProps = {
   title: string;
@@ -50,6 +51,8 @@ const StoreCard = ({
   const [enquery, setEnquery] = useState("");
   const [openModel, setOpenModel] = useState(false);
 
+  const [phoneNum, setPhoneNum] = useState("");
+
   const { currentUserData } = useData();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -71,6 +74,8 @@ const StoreCard = ({
           fromName: currentUserData?.name || "",
           imageUrl: currentUser?.photoURL || "",
           message: enquery,
+          email: currentUser?.email || "",
+          phone: phoneNum
         },
         id
       );
@@ -163,7 +168,7 @@ const StoreCard = ({
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
-                    <DialogTitle>Add your Enquery</DialogTitle>
+                    <DialogTitle>Send your Enquery</DialogTitle>
                   </DialogHeader>
 
                   <div className="grid gap-4 py-2">
@@ -171,6 +176,7 @@ const StoreCard = ({
                       <Input
                         id="name"
                         className="col-span-3"
+                        placeholder="Your Message"
                         value={enquery}
                         onChange={(e) => setEnquery(e.target.value)}
                       />
@@ -182,7 +188,7 @@ const StoreCard = ({
                       <Button type="button" onClick={hndelCancelClick}>
                         Cancel
                       </Button>
-                      <Button onClick={handleAddEnquery}>Add</Button>
+                      <Button onClick={handleAddEnquery}>Send</Button>
                     </div>
                   </DialogFooter>
                 </DialogContent>
@@ -294,13 +300,28 @@ const StoreCard = ({
                   </DialogHeader>
 
                   <div className="grid gap-4 py-2">
-                    <div className="">
-                      <Input
-                        id="name"
-                        className="col-span-3"
-                        value={enquery}
-                        onChange={(e) => setEnquery(e.target.value)}
-                      />
+                    <div className="space-y-3">
+                      <div>
+                        <Label htmlFor="name">Message</Label>
+                        <Input
+                          id="name"
+                          className="col-span-3"
+                          placeholder="Type your message..."
+                          value={enquery}
+                          onChange={(e) => setEnquery(e.target.value)}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <Input
+                          id="phone"
+                          className="col-span-3"
+                          placeholder="Phone number"
+                          value={phoneNum}
+                          onChange={(e) => setPhoneNum(e.target.value)}
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -309,7 +330,7 @@ const StoreCard = ({
                       <Button type="button" onClick={hndelCancelClick}>
                         Cancel
                       </Button>
-                      <Button onClick={handleAddEnquery}>Add</Button>
+                      <Button onClick={handleAddEnquery}>Send</Button>
                     </div>
                   </DialogFooter>
                 </DialogContent>

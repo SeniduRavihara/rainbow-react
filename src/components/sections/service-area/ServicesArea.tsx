@@ -38,9 +38,9 @@ const ServicesArea = () => {
           <div className=" fstotsediv w-[80%] flex gap-3 items-center justify-between flex-col xl:flex-row p-5 border-2 border-[#00000037] rounded-t-md rounded-b-0">
             <div className="oth-ser-div-left">
               <h1>Bills & Recharge</h1>
-              <p>Pay your bills & recharge instantly with</p>
+              <p>Bills & Recharge Pay your bills & recharge instantly with </p>
               <a href="#" className="expr-link">
-                Explore More
+                Srilanka Business
               </a>
             </div>
             <div className="oth-ser-div-right-section flex gap-4">
@@ -69,7 +69,7 @@ const ServicesArea = () => {
           <div className=" w-[80%] flex gap-3 items-center justify-between flex-col xl:flex-row p-5 border-2 border-[#00000037] rounded-t-0 rounded-b-[7px]">
             <div className="oth-ser-div-lefta">
               <h1>Travel Bookings</h1>
-              <p>Instance bookings for your best experience</p>
+              <p>Instance bookings for your best experience </p>
               <a href="#" className="expr-link">
                 Explore More
               </a>

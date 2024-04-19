@@ -132,7 +132,7 @@ const Navbar = () => {
         <img
           src={logo}
           alt=""
-          className="w-36 h-14 cursor-pointer"
+          className="w-40 h-14 cursor-pointer"
           onClick={hadleLogoClick}
         />
       </div>
@@ -207,6 +207,9 @@ const Navbar = () => {
                                 {messageObj.fromName}
                               </div>
                               <div>{messageObj.message}</div>
+                              <div className="text-sm">
+                                {messageObj.phone}
+                              </div>
                             </div>
                             <div className="flex gap-3 text-[12px] ml-4 font-semibold text-gray-600/70">
                               <div className="">
