@@ -397,7 +397,7 @@ const StoreDetailsPage = () => {
 
                 <ProductAndServices
                   tags={selectedStore.tags}
-                  categoriesArr={selectedStore.categoriesArr}
+                  category={selectedStore.category}
                 />
 
                 {storeId && <ReviewsAndRatings selectedStoreId={storeId} />}

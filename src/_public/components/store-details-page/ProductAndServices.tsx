@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 
 const ProductAndServices = ({
   tags,
-  categoriesArr,
+  category,
 }: {
   tags: Array<string>;
-  categoriesArr: Array<string>;
+  category: string;
 }) => {
   const {
     lastDocument,
@@ -70,18 +70,24 @@ const ProductAndServices = ({
         </div>
       )}
 
-      {categoriesArr && (
+      {category && (
         <div>
           <h1 className="text-2xl font-bold mb-3">LISTED UNDER</h1>
-          
-          <div className="my-1 gap-2  flex flex-wrap">
-            {categoriesArr.map((catoegory, index) => (
+
+          <div
+            className="my-1 gap-2  flex flex-wrap"
+            onClick={() => handleCategaryClick(category)}
+          >
+            {/* {categoriesArr.map((catoegory, index) => (
               <div key={index} onClick={() => handleCategaryClick(catoegory)}>
                 <CustomTag styles="mx-[2px] text-gray-500 font-medium px-2 py-1 bg-white border cursor-pointer rounded-sm">
                   {catoegory}
                 </CustomTag>
               </div>
-            ))}
+            ))} */}
+            <CustomTag styles="mx-[2px] text-gray-500 font-medium px-2 py-1 bg-white border cursor-pointer rounded-sm">
+              {category}
+            </CustomTag>
           </div>
         </div>
       )}

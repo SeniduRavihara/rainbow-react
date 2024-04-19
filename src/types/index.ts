@@ -58,7 +58,7 @@ export type messageObjType = {
   toName: string;
   toId: string;
   seen: boolean;
-  phone: string
+  phone: string;
 };
 
 // ---------------------------------
@@ -108,7 +108,8 @@ export type StoreObj = {
   website: string;
   rating: number;
   reviewCount: number;
-  categoriesArr: Array<string>;
+  // categoriesArr: Array<string>;
+  category: string;
   visitCount: number;
   verified: boolean;
 };

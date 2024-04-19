@@ -72,8 +72,8 @@ const CatogarySlider = () => {
   };
 
   return (
-    <div className="w-full flex flex-col md:flex-row gap-2 my-10 px-10">
-      <div className="w-full md:w-[40%] h-[200px]">
+    <div className="w-full flex flex-col md:flex-row gap-2 my-10 px-10 md:h-[200px] h-[400px]">
+      <div className="w-full md:w-[40%] h-[250px]">
         <Carousel
           showStatus={false}
           interval={3000}
@@ -95,7 +95,7 @@ const CatogarySlider = () => {
         </Carousel>
       </div>
 
-      <div className="w-full md:w-[60%] flex gap-2">
+      <div className="w-full md:w-[60%] flex gap-2 h-[200px]">
         {sectionStaticAdds?.map((addObj, index) => (
           <div key={index} className="w-[25%] relative flex">
             <div
