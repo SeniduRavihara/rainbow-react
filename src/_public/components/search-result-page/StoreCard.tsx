@@ -267,7 +267,7 @@ const StoreCard = ({
             </div>
 
             <div>
-              {tags.map((tag, index) => (
+              {tags.slice(0, 4).map((tag, index) => (
                 <Tag key={index} className="mx-[2px]">
                   {tag}
                 </Tag>

@@ -339,7 +339,8 @@ export const fetchCatogaryData = async (
     limit(5),
     where("active", "==", true),
     where("published", "==", true),
-    where("categoriesArr", "array-contains", label)
+    // where("categoriesArr", "array-contains", label),
+    where("category", "==", label)
   );
 
   const queryStoresSnapshot = await getDocs(q);

@@ -30,8 +30,8 @@ import { Label } from "@/components/ui/label";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
 import { categories } from "@/constants";
-import CustomTag from "@/components/CustomTag";
-import { RxCross2 } from "react-icons/rx";
+// import CustomTag from "@/components/CustomTag";
+// import { RxCross2 } from "react-icons/rx";
 
 
 const CreateStorePage = () => {
@@ -78,7 +78,8 @@ const CreateStorePage = () => {
   const [tiktok, setTiktok] = useState("");
   const [website, setWebsite] = useState("");
 
-  const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
+  // const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
+  const [category, setCategory] = useState("")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -106,7 +107,7 @@ const CreateStorePage = () => {
         youtube,
         website,
         tiktok,
-        categoriesArr,
+        category,
       });
       updateProfileForHaveStore(currentUser?.uid, true);
       await addLocation(
@@ -195,13 +196,14 @@ const CreateStorePage = () => {
 
   // --------------------------
   const handleCatogaryClick = (label: string) => {
-    if (!label || categoriesArr.includes(label)) return;
-    setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
+    // if (!label || categoriesArr.includes(label)) return;
+    // setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
+    setCategory(label)
   };
 
-  const handleRemoveCatogary = (label: string) => {
-    setCategoriesArr((pre) => [...pre.filter((preObj) => preObj !== label)]);
-  };
+  // const handleRemoveCatogary = (label: string) => {
+  //   setCategoriesArr((pre) => [...pre.filter((preObj) => preObj !== label)]);
+  // };
 
   // CustomToggle component
   const CustomToggle = forwardRef<
@@ -594,9 +596,9 @@ const CreateStorePage = () => {
                   List Your Cotogary
                 </h1>
 
-                <div className=" col-span-2 flex flex-col gap-5 items-center justify-center">
-                  <div className="flex flex-wrap">
-                    {categoriesArr.map((catogary, index) => (
+                <div className="col-span-2 flex flex-row-reverse gap-5 items-center justify-center">
+                  {category && <div className="bg-blue-500 text-white px-3 py-2 rounded-md">
+                    {/* {categoriesArr.map((catogary, index) => (
                       <CustomTag key={index} styles="m-1">
                         <div>{catogary}</div>
                         <RxCross2
@@ -604,8 +606,9 @@ const CreateStorePage = () => {
                           onClick={() => handleRemoveCatogary(catogary)}
                         />
                       </CustomTag>
-                    ))}
-                  </div>
+                    ))} */}
+                    {category}
+                  </div>}
 
                   <Dropdown>
                     <Dropdown.Toggle

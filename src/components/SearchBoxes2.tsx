@@ -98,7 +98,7 @@ const SearchBoxes2 = () => {
         website: hit.website,
         rating: hit.rating,
         reviewCount: hit.reviewCount,
-        categoriesArr: hit.categoriesArr || [],
+        category: hit.category || "",
         visitCount: hit.visitCount,
         verified: hit.verified || false,
       }));

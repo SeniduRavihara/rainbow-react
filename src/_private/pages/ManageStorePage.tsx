@@ -12,7 +12,7 @@ import {
   IoMdArrowDropleft,
   IoMdArrowDropright,
 } from "react-icons/io";
-import { RxCross2 } from "react-icons/rx";
+// import { RxCross2 } from "react-icons/rx";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { forwardRef, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -34,7 +34,7 @@ import { Label } from "@/components/ui/label";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
 import { categories } from "@/constants";
-import CustomTag from "@/components/CustomTag";
+// import CustomTag from "@/components/CustomTag";
 
 const ManageStorePage = () => {
   const [title, setTitle] = useState("");
@@ -87,7 +87,8 @@ const ManageStorePage = () => {
   const [tiktok, setTiktok] = useState("");
   const [website, setWebsite] = useState("");
 
-  const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
+  // const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
+  const [category, setCategory] = useState("");
 
   const { currentUserData, locationArr } = useData();
   const { currentUser } = useAuth();
@@ -121,7 +122,7 @@ const ManageStorePage = () => {
       setYoutube(currentUserStore.youtube);
       setTiktok(currentUserStore.tiktok);
       setWebsite(currentUserStore.website);
-      setCategoriesArr(currentUserStore.categoriesArr || []);
+      setCategory(currentUserStore.category || "");
       setStoreImages((pre) =>
         pre.map((imgObj, index) => {
           return { ...imgObj, imageUrl: currentUserStore.storeImages[index] };
@@ -174,7 +175,7 @@ const ManageStorePage = () => {
         youtube,
         tiktok,
         website,
-        categoriesArr,
+        category,
       });
       // updateProfileForHaveStore(currentUser?.uid, true);
       await addLocation(
@@ -257,13 +258,14 @@ const ManageStorePage = () => {
   };
 
   const handleCatogaryClick = (label: string) => {
-    if (!label || categoriesArr.includes(label)) return;
-    setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
+    // if (!label || categoriesArr.includes(label)) return;
+    // setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
+    setCategory(label);
   };
 
-  const handleRemoveCatogary = (label: string) => {
-    setCategoriesArr((pre) => [...pre.filter((preObj) => preObj !== label)]);
-  };
+  // const handleRemoveCatogary = (label: string) => {
+  //   setCategoriesArr((pre) => [...pre.filter((preObj) => preObj !== label)]);
+  // };
 
   // CustomToggle component
   const CustomToggle = forwardRef<
@@ -687,9 +689,10 @@ const ManageStorePage = () => {
                       List Your Cotogary
                     </h1>
 
-                    <div className=" col-span-2 flex flex-col gap-5 items-center justify-center">
-                      <div className="flex flex-wrap">
-                        {categoriesArr.map((catogary, index) => (
+                    <div className="col-span-2 flex flex-row-reverse gap-5 items-center justify-center">
+                      {category && (
+                        <div className="bg-blue-500 text-white px-3 py-2 rounded-md">
+                          {/* {categoriesArr.map((catogary, index) => (
                           <CustomTag key={index} styles="m-1">
                             <div>{catogary}</div>
                             <RxCross2
@@ -697,8 +700,10 @@ const ManageStorePage = () => {
                               onClick={() => handleRemoveCatogary(catogary)}
                             />
                           </CustomTag>
-                        ))}
-                      </div>
+                        ))} */}
+                          {category}
+                        </div>
+                      )}
 
                       <Dropdown>
                         <Dropdown.Toggle
