@@ -718,3 +718,21 @@ export const postEnquery = async (
     throw error;
   }
 };
+
+// ------------------------------------
+
+export const getIdFromEmail = async (email: string) => {
+  const collectionRef = collection(db, "users");
+  const q = query(collectionRef, where("email", "==", email));
+
+  const queryStoresSnapshot = await getDocs(q);
+
+  const matchingUser = queryStoresSnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }))[0] as CurrentUserDataType | undefined; // Change the type here
+
+  if (!matchingUser) return null; // Return null if there are no matching users
+
+  return matchingUser;
+};

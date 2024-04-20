@@ -6,6 +6,7 @@ import { DiGoogleAnalytics } from "react-icons/di";
 import { useState } from "react";
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { MdManageAccounts } from "react-icons/md";
 
 // const sidebarItems = [
 //   { item: "Advertising", to: "set-adds", icon: <HiSpeakerphone /> },
@@ -85,6 +86,15 @@ function Sidebar() {
               <BiSolidUserAccount />{" "}
             </div>
             Message
+          </Link>
+        </li>
+
+        <li>
+          <Link to="manage" className="flex items-center gap-3">
+            <div>
+              <MdManageAccounts />{" "}
+            </div>
+            Manage
           </Link>
         </li>
 

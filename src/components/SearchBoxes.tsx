@@ -181,7 +181,7 @@ const SearchBoxes = () => {
               <img
                 src={mic}
                 className={cn(
-                  "text-gray-500 text-xl cursor-pointer  w-7 h-7",
+                  "text-gray-500 text-xl cursor-pointer  w-6 h-7",
                   listening && "hidden"
                 )}
                 onClick={() => SpeechRecognition.startListening()}
@@ -248,7 +248,7 @@ const SearchBoxes = () => {
             <img
               src={mic}
               className={cn(
-                "text-gray-500 text-2xl cursor-pointer w-7 h-7",
+                "text-gray-500 text-2xl cursor-pointer w-6 h-7",
                 listening && "hidden"
               )}
               onClick={() => SpeechRecognition.startListening()}

@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Tag } from "@chakra-ui/react";
+// import { Tag } from "@chakra-ui/react";
 import { Button } from "../../components/ui/button";
 import { StoreListType, StoreObj } from "@/types";
 import Loader from "../../components/Loader";
@@ -108,7 +108,7 @@ const StorePage = () => {
             <TableHead>EMAIL</TableHead>
             <TableHead>TITLE</TableHead>
             <TableHead className="text-right">ADDRESS</TableHead>
-            <TableHead className="text-right">TAG</TableHead>
+            {/* <TableHead className="text-right">TAG</TableHead> */}
             <TableHead className="text-right">ACTION</TableHead>
           </TableRow>
         </TableHeader>
@@ -120,13 +120,13 @@ const StorePage = () => {
                 <TableCell className="font-medium">{storeObj.email}</TableCell>
                 <TableCell>{storeObj.title}</TableCell>
                 <TableCell>{storeObj.address}</TableCell>
-                <TableCell className="text-right">
+                {/* <TableCell className="text-right">
                   {storeObj.tags.map((tag, index) => (
                     <Tag key={index} className="m-2">
                       {tag}
                     </Tag>
                   ))}
-                </TableCell>
+                </TableCell> */}
                 <TableCell className="text-right">
                   <Button
                     className={cn(

@@ -325,7 +325,7 @@ const Navbar = () => {
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </NavDropdown.Item>
-                {currentUserData && currentUserData.roles.includes("admin") && (
+                {currentUserData && currentUserData.roles.includes("superAdmin") && (
                   <NavDropdown.Item
                     onClick={handleClickAdminPanel}
                     className="flex items-center gap-2"
