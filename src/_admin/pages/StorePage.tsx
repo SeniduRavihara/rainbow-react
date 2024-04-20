@@ -17,13 +17,27 @@ import { Button } from "../../components/ui/button";
 import { StoreListType, StoreObj } from "@/types";
 import Loader from "../../components/Loader";
 import { cn } from "@/lib/utils";
-import { Tag } from "@chakra-ui/react";
+import { CircularProgress, Tag } from "@chakra-ui/react";
+import toast from "react-hot-toast";
+import { IoIosSearch } from "react-icons/io";
+import algoliasearch from "algoliasearch/lite";
+import { RxCross2 } from "react-icons/rx";
+import { Input } from "@/components/ui/input";
+
+const searchClient = algoliasearch(
+  "6K67WTIHLT",
+  "0cb3cddf578f097566b65642564992dc"
+);
+
+const searchIndex = searchClient.initIndex("stores");
 
 const StorePage = () => {
   const [storeList, setStoreList] = useState<StoreListType | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadingActive, setLoadingActive] = useState({ id: "", state: false });
   const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
+  const [loadingSearch, setLoadingSearch] = useState(false);
+  const [searchQuiery, setSearchQuiery] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -93,8 +107,84 @@ const StorePage = () => {
     }
   };
 
+  const handlesearch = async (searchQuery: string) => {
+    try {
+      setLoadingSearch(true);
+      const result = await searchIndex.search(searchQuery);
+      // console.log(result);
+
+      const storeList: StoreListType = result.hits.map((hit: any) => ({
+        id: hit.objectID,
+        title: hit.title,
+        active: hit.active,
+        address: hit.address,
+        email: hit.email,
+        tags: hit.tags,
+        createdAt: new Date(hit.createdAt),
+        phoneNumber: hit.phoneNumber,
+        whatsappNumber: hit.whatsappNumber,
+        storeIcon: hit.storeIcon,
+        storeImages: hit.storeImages,
+        userId: hit.userId,
+        info1: hit.info1,
+        info2: hit.info2,
+        published: hit.published,
+        schedulArr: hit.schedulArr,
+        fasebook: hit.fasebook,
+        instagram: hit.instagram,
+        linkedin: hit.linkedin,
+        twitter: hit.twitter,
+        youtube: hit.youtube,
+        tiktok: hit.tiktok,
+        website: hit.website,
+        rating: hit.rating,
+        reviewCount: hit.reviewCount,
+        category: hit.category || "",
+        visitCount: hit.visitCount,
+        verified: hit.verified || false,
+      }));
+      setLastDocument(null);
+      setStoreList(storeList);
+
+      setLoadingSearch(false);
+    } catch (error) {
+      toast.error("Network Problem");
+      console.log("Error");
+    }
+  };
+
   return (
-    <div className="pb-10">
+    <div className="pb-10 flex flex-col items-center justify-center">
+      <div className="flex w-full items-center gap-2 h-10 mb-10">
+        <Input
+          type="text"
+          placeholder="Restaurants near me"
+          className="outline-none w-[70%] px-2 font-md bg-green-50"
+          value={searchQuiery}
+          onChange={(e) => setSearchQuiery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handlesearch(searchQuiery);
+          }}
+        />
+
+        {searchQuiery && (
+          <RxCross2
+            onClick={() => {
+              setSearchQuiery("");
+            }}
+            className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
+          />
+        )}
+        {loadingSearch ? (
+          <CircularProgress size="30px" isIndeterminate color="green.300" />
+        ) : (
+          <IoIosSearch
+            onClick={() => handlesearch(searchQuiery)}
+            className="bg-orange-500 text-white text-2xl cursor-pointer rounded-md w-9 h-9 p-1"
+          />
+        )}
+      </div>
+
       {/* <Table>
         <TableHeader>
           <TableRow>
@@ -154,7 +244,7 @@ const StorePage = () => {
           {storeList &&
             storeList.map((storeObj, index) => (
               <tr key={index}>
-                <td className="font-medium">{index+1}</td>
+                <td className="font-medium">{index + 1}</td>
                 <td className="font-medium">{storeObj.email}</td>
                 <td>{storeObj.title}</td>
                 <td>{storeObj.address}</td>
@@ -190,7 +280,7 @@ const StorePage = () => {
         <Button
           className="flex items-center justify-center"
           onClick={fetchData}
-          disabled={loading}
+          disabled={loading && !storeList}
         >
           {loading ? <Loader /> : "Load More"}
         </Button>
