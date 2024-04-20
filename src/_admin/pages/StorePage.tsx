@@ -11,19 +11,13 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import Table from "react-bootstrap/Table";
 // import { Tag } from "@chakra-ui/react";
 import { Button } from "../../components/ui/button";
 import { StoreListType, StoreObj } from "@/types";
 import Loader from "../../components/Loader";
 import { cn } from "@/lib/utils";
+import { Tag } from "@chakra-ui/react";
 
 const StorePage = () => {
   const [storeList, setStoreList] = useState<StoreListType | null>(null);
@@ -101,14 +95,12 @@ const StorePage = () => {
 
   return (
     <div className="pb-10">
-      <Table>
+      {/* <Table>
         <TableHeader>
           <TableRow>
-            {/* <TableHead className="w-[100px]">Date</TableHead> */}
             <TableHead>EMAIL</TableHead>
             <TableHead>TITLE</TableHead>
             <TableHead className="text-right">ADDRESS</TableHead>
-            {/* <TableHead className="text-right">TAG</TableHead> */}
             <TableHead className="text-right">ACTION</TableHead>
           </TableRow>
         </TableHeader>
@@ -116,17 +108,16 @@ const StorePage = () => {
           {storeList &&
             storeList.map((storeObj, index) => (
               <TableRow key={index}>
-                {/* <TableCell className="font-medium">{storeObj.createdAt.toLocaleDateString()}</TableCell> */}
                 <TableCell className="font-medium">{storeObj.email}</TableCell>
                 <TableCell>{storeObj.title}</TableCell>
                 <TableCell>{storeObj.address}</TableCell>
-                {/* <TableCell className="text-right">
+                <TableCell className="text-right">
                   {storeObj.tags.map((tag, index) => (
                     <Tag key={index} className="m-2">
                       {tag}
                     </Tag>
                   ))}
-                </TableCell> */}
+                </TableCell>
                 <TableCell className="text-right">
                   <Button
                     className={cn(
@@ -146,6 +137,53 @@ const StorePage = () => {
               </TableRow>
             ))}
         </TableBody>
+      </Table> */}
+
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>EMAIL</th>
+            <th>TITLE</th>
+            <th>ADDRESS</th>
+            <th>TAGS</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          {storeList &&
+            storeList.map((storeObj, index) => (
+              <tr key={index}>
+                <td className="font-medium">{index+1}</td>
+                <td className="font-medium">{storeObj.email}</td>
+                <td>{storeObj.title}</td>
+                <td>{storeObj.address}</td>
+                <td className="text-right">
+                  {storeObj.tags.slice(0, 4).map((tag, index) => (
+                    <Tag key={index} className="m-2">
+                      {tag}
+                    </Tag>
+                  ))}
+                </td>
+                <td className="text-right">
+                  <Button
+                    className={cn(
+                      ` flex items-center justify-center gap-2`,
+                      storeObj.active ? "bg-blue-500" : "bg-red-500"
+                    )}
+                    disabled={
+                      loadingActive.id === storeObj.id && loadingActive.state
+                    }
+                    onClick={() => toggleActive(storeObj.id, storeObj.active)}
+                  >
+                    {loadingActive.id === storeObj.id &&
+                      loadingActive.state && <Loader />}
+                    {storeObj.active ? "Dective" : "Active"}
+                  </Button>
+                </td>
+              </tr>
+            ))}
+        </tbody>
       </Table>
 
       <div className="w-full flex items-center justify-center">
