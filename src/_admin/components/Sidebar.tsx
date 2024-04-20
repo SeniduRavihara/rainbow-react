@@ -7,6 +7,7 @@ import { useState } from "react";
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { MdManageAccounts } from "react-icons/md";
+import { logo } from "@/assets";
 
 // const sidebarItems = [
 //   { item: "Advertising", to: "set-adds", icon: <HiSpeakerphone /> },
@@ -21,14 +22,20 @@ function Sidebar() {
   const navigate = useNavigate();
 
   return (
-    <div className="w-3/12 h-screen p-5 flex flex-col items-center justify-between left-0  bg-[#3B3486] text-white">
+    <div className="w-3/12 h-screen p-5 flex flex-col items-center justify-between left-0  bg-green-600 text-white">
       <ul className="flex flex-col gap-5">
-        <h1
+        {/* <h1
           onClick={() => navigate("/")}
           className="text-3xl font-extrabold mb-10 cursor-pointer"
         >
           LOGO
-        </h1>
+        </h1> */}
+        <img
+          src={logo}
+          alt=""
+          className="w-44 h-15"
+          onClick={() => navigate("/")}
+        />
 
         <li onClick={() => setIsOpenAddsPage(!isOpenAddsPage)}>
           {/* <Link to="set-adds" className="flex items-center gap-3"> */}
