@@ -14,7 +14,7 @@ import HomePage from "./_public/pages/HomePage";
 import PrivateLayout from "./_private/PrivateLayout";
 import DataContextProvider from "./context/DataContext";
 import { ChakraProvider } from "@chakra-ui/react";
-import CreateStorePage from "./_private/pages/CreateStorePage";
+import CreateStorePage from "./_private/pages/create-store/CreateStorePage";
 import AdminLayout from "./_admin/AdminLayout";
 import { Toaster } from "react-hot-toast";
 // import StoreProfilePage from "./_private/pages/StoreProfilePage";
@@ -33,6 +33,8 @@ import StoreDetailsPage from "./_public/pages/StoreDetailsPage";
 import ManageStorePage from "./_private/pages/ManageStorePage";
 import DetailsPageAddsManage from "./components/admin/DetailsPageAddsManage";
 import AllCategoryPage from "./_public/pages/AllCategoryPage";
+// import ManageStore from "./_private/pages/manage-store/ManageStore";
+import ManagmentPage from "./_admin/pages/ManagmentPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -58,6 +60,7 @@ const router = createBrowserRouter(
       <Route element={<PrivateLayout />}>
         <Route path="/create-store" element={<CreateStorePage />} />
         <Route path="/manage-store" element={<ManageStorePage />} />
+        {/* <Route path="/manage-store" element={<ManageStore />} /> */}
       </Route>
 
       {/* admin routes */}
@@ -80,6 +83,7 @@ const router = createBrowserRouter(
           </Route>
           <Route index element={<AnalyticsPage />} />
           <Route path="comments" element={<CommentsPage />} />
+          <Route path="manage" element={<ManagmentPage />} />
         </Route>
       </Route>
     </Route>

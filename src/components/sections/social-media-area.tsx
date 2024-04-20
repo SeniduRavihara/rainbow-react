@@ -10,11 +10,11 @@ import {
 // import { Link } from "react-router-dom";
 
 const SocialMediaArea = ({
-  facebookUrl,
-  linkedinUrl,
-  youtubeUrl,
-  twitterUrl,
-  instagramUrl,
+  facebookUrl = "test",
+  linkedinUrl = "test",
+  youtubeUrl = "test",
+  twitterUrl = "test",
+  instagramUrl = "test",
 }: {
   facebookUrl?: string;
   linkedinUrl?: string;

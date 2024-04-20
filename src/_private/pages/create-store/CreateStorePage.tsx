@@ -1,4 +1,4 @@
-import ImageSwiper from "../components/ImageSwiper";
+import ImageSwiper from "../../components/ImageSwiper";
 import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import React, { forwardRef, useEffect, useState } from "react";
@@ -15,8 +15,12 @@ import {
 } from "@/firebase/api";
 import toast from "react-hot-toast";
 import Loader from "@/components/Loader";
-import { Kbd, Tag } from "@chakra-ui/react";
-import { IoIosArrowBack, IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
+import { Checkbox, Kbd, Tag } from "@chakra-ui/react";
+import {
+  IoIosArrowBack,
+  IoMdArrowDropleft,
+  IoMdArrowDropright,
+} from "react-icons/io";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 import { TimeValue } from "@/types";
 import { cleanAddress } from "@/lib/utils";
@@ -32,7 +36,6 @@ import Form from "react-bootstrap/Form";
 import { categories } from "@/constants";
 // import CustomTag from "@/components/CustomTag";
 // import { RxCross2 } from "react-icons/rx";
-
 
 const CreateStorePage = () => {
   const [title, setTitle] = useState("");
@@ -79,7 +82,8 @@ const CreateStorePage = () => {
   const [website, setWebsite] = useState("");
 
   // const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
-  const [category, setCategory] = useState("")
+  const [category, setCategory] = useState("");
+  const [displayProfile, setDisplayProfile] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -198,7 +202,7 @@ const CreateStorePage = () => {
   const handleCatogaryClick = (label: string) => {
     // if (!label || categoriesArr.includes(label)) return;
     // setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
-    setCategory(label)
+    setCategory(label);
   };
 
   // const handleRemoveCatogary = (label: string) => {
@@ -597,8 +601,9 @@ const CreateStorePage = () => {
                 </h1>
 
                 <div className="col-span-2 flex flex-row-reverse gap-5 items-center justify-center">
-                  {category && <div className="bg-blue-500 text-white px-3 py-2 rounded-md">
-                    {/* {categoriesArr.map((catogary, index) => (
+                  {category && (
+                    <div className="bg-blue-500 text-white px-3 py-2 rounded-md">
+                      {/* {categoriesArr.map((catogary, index) => (
                       <CustomTag key={index} styles="m-1">
                         <div>{catogary}</div>
                         <RxCross2
@@ -607,8 +612,9 @@ const CreateStorePage = () => {
                         />
                       </CustomTag>
                     ))} */}
-                    {category}
-                  </div>}
+                      {category}
+                    </div>
+                  )}
 
                   <Dropdown>
                     <Dropdown.Toggle
@@ -636,6 +642,15 @@ const CreateStorePage = () => {
                   </Dropdown>
                 </div>
               </>
+
+              <div>
+                <Checkbox
+                  onChange={() => setDisplayProfile(!displayProfile)}
+                  isChecked={displayProfile}
+                >
+                  Display your profile
+                </Checkbox>
+              </div>
 
               <div className="w-full col-span-2 flex items-center justify-center mb-10">
                 <Button
