@@ -8,10 +8,9 @@ import { useNavigate } from "react-router-dom";
 // import { StoreListType } from "@/types";
 import { fetchCatogaryData } from "@/firebase/api";
 import { categories } from "@/constants";
-import { mic } from "@/assets";
 
 const CategoriesArea = () => {
-  const [isShowAll, setIsShowAll] = useState(false);
+  // const [isShowAll, setIsShowAll] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [visibleCategories, setVisibleCategories] = useState(categories);
   // const [scrollPosition, setScrollPosition] = useState(0);
@@ -31,7 +30,7 @@ const CategoriesArea = () => {
   // }, [searchResultStores]);
 
   useEffect(() => {
-    setIsShowAll(false);
+    // setIsShowAll(false);
 
     if (screenWidth <= 500) {
       setVisibleCategories(categories.slice(0, 5));
@@ -93,24 +92,7 @@ const CategoriesArea = () => {
   return (
     <div className="flex flex-col items-center justify-center w-full">
       <ul className="">
-        {isShowAll ? (
-          <div>
-            {categories.map((categoryObj, index) => (
-              <li
-                key={index}
-                className="cursor-pointer"
-                onClick={() => handleCategaryIconClick(categoryObj.label)}
-              >
-                <CategoryCard
-                  label={categoryObj.label}
-                  icon={categoryObj.icon}
-                />
-              </li>
-            ))}
-
-            <CategoryCard label="fjlkdfs" icon={mic} />
-          </div>
-        ) : (
+        
           <div className="w-full grid gap-x-20 grid-cols-3 xsm:grid-cols-4 sm:grid-cols-5  md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 px-14 sm:px-20 ">
             {visibleCategories.map((categoryObj, index) => (
               <li
@@ -127,17 +109,17 @@ const CategoriesArea = () => {
 
             <div
               onClick={handleAllClick}
-              className="lg:hidden text-center flex flex-col items-center mt-[20px] cursor-pointer"
+              className="lg: text-center flex flex-col items-center justify-center mt-[20px] cursor-pointer"
             >
               <div className="p-1 w-[100px] h-[100px] text-center flex-col bg-blue-400 text-white flex items-center justify-center rounded-lg">
                 <div className="w-[30px] xsm:w-[40px] flex items-center justify-center">
                   All Catogaries
                 </div>
-                {/* <div className="mt-[10px] font-medium text-sm">abel</div> */}
+                
               </div>
             </div>
           </div>
-        )}
+       
       </ul>
 
       {/* <div className="px-10 sm:px-20 mt-4 w-full md:hidden">
