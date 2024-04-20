@@ -32,10 +32,7 @@ const ManagmentPage = () => {
     setLoading(true);
 
     const collectionRef = collection(db, "users");
-    const q = query(
-      collectionRef,
-      where("roles", "array-contains", "admin")
-    );
+    const q = query(collectionRef, where("roles", "array-contains", "admin"));
 
     const queryStoresSnapshot = await getDocs(q);
     const currentUserArr = queryStoresSnapshot.docs.map((doc) => ({
@@ -44,7 +41,7 @@ const ManagmentPage = () => {
     })) as CurrentUserDataType[];
 
     console.log(currentUserArr);
-    
+
     setAdminUsers(currentUserArr);
 
     setLoading(false);
@@ -100,29 +97,33 @@ const ManagmentPage = () => {
         <Button onClick={handleClickAssign}>Assign</Button>
       </div>
 
-      {loading ? <>Loading...</>:<Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Email</th>
-            {/* <th>Phone</th> */}
-          </tr>
-        </thead>
-        <tbody>
-          {adminUsers?.map(
-            (useObj, index) =>
-              useObj && (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{useObj.email}</td>
-                  <td>{useObj.name}</td>
-                  {/* <td>{useObj.phone}</td> */}
-                </tr>
-              )
-          )}
-        </tbody>
-      </Table>}
+      {loading ? (
+        <>Loading...</>
+      ) : (
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              {/* <th>Phone</th> */}
+            </tr>
+          </thead>
+          <tbody>
+            {adminUsers?.map(
+              (useObj, index) =>
+                useObj && (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{useObj.email}</td>
+                    <td>{useObj.name}</td>
+                    {/* <td>{useObj.phone}</td> */}
+                  </tr>
+                )
+            )}
+          </tbody>
+        </Table>
+      )}
     </div>
   );
 };
