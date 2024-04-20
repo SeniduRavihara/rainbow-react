@@ -1,19 +1,20 @@
 import CategoryCard from "../CategoryCard";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
+// import { Button } from "../ui/button";
+// import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import { useData } from "@/hooks/useData";
 // import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 // import { StoreListType } from "@/types";
 import { fetchCatogaryData } from "@/firebase/api";
 import { categories } from "@/constants";
+import { mic } from "@/assets";
 
 const CategoriesArea = () => {
   const [isShowAll, setIsShowAll] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [visibleCategories, setVisibleCategories] = useState(categories);
-  const [scrollPosition, setScrollPosition] = useState(0);
+  // const [scrollPosition, setScrollPosition] = useState(0);
 
   const navigate = useNavigate();
 
@@ -33,13 +34,13 @@ const CategoriesArea = () => {
     setIsShowAll(false);
 
     if (screenWidth <= 500) {
-      setVisibleCategories(categories.slice(0, 6));
+      setVisibleCategories(categories.slice(0, 5));
     } else if (screenWidth <= 600) {
-      setVisibleCategories(categories.slice(0, 8));
+      setVisibleCategories(categories.slice(0, 7));
     } else if (screenWidth <= 768) {
-      setVisibleCategories(categories.slice(0, 10));
+      setVisibleCategories(categories.slice(0, 9));
     } else {
-      setVisibleCategories(categories);
+      setVisibleCategories(categories.slice(0, 17));
     }
   }, [screenWidth]);
 
@@ -57,14 +58,14 @@ const CategoriesArea = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (isShowAll) {
-      handleAllClick();
-    } else {
-      handleLessClick();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isShowAll]);
+  // useEffect(() => {
+  //   if (isShowAll) {
+  //     handleAllClick();
+  //   } else {
+  //     handleLessClick();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isShowAll]);
 
   const handleCategaryIconClick = async (label: string) => {
     await fetchCatogaryData(
@@ -81,30 +82,20 @@ const CategoriesArea = () => {
   };
 
   const handleAllClick = () => {
-    const currentScrollPosition = window.scrollY;
-    setScrollPosition(currentScrollPosition);
+    // const currentScrollPosition = window.scrollY;
+    // setScrollPosition(currentScrollPosition);
+    navigate("/all-catogaries");
   };
-  const handleLessClick = () => {
-    window.scrollTo(0, scrollPosition);
-  };
+  // const handleLessClick = () => {
+  //   window.scrollTo(0, scrollPosition);
+  // };
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <ul className=" w-full grid gap-x-20 grid-cols-3 xsm:grid-cols-4 sm:grid-cols-5  md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 px-14 sm:px-20 ">
-        {isShowAll
-          ? categories.map((categoryObj, index) => (
-              <li
-                key={index}
-                className="cursor-pointer"
-                onClick={() => handleCategaryIconClick(categoryObj.label)}
-              >
-                <CategoryCard
-                  label={categoryObj.label}
-                  icon={categoryObj.icon}
-                />
-              </li>
-            ))
-          : visibleCategories.map((categoryObj, index) => (
+      <ul className="">
+        {isShowAll ? (
+          <div>
+            {categories.map((categoryObj, index) => (
               <li
                 key={index}
                 className="cursor-pointer"
@@ -116,9 +107,40 @@ const CategoriesArea = () => {
                 />
               </li>
             ))}
+
+            <CategoryCard label="fjlkdfs" icon={mic} />
+          </div>
+        ) : (
+          <div className="w-full grid gap-x-20 grid-cols-3 xsm:grid-cols-4 sm:grid-cols-5  md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 px-14 sm:px-20 ">
+            {visibleCategories.map((categoryObj, index) => (
+              <li
+                key={index}
+                className="cursor-pointer"
+                onClick={() => handleCategaryIconClick(categoryObj.label)}
+              >
+                <CategoryCard
+                  label={categoryObj.label}
+                  icon={categoryObj.icon}
+                />
+              </li>
+            ))}
+
+            <div
+              onClick={handleAllClick}
+              className="lg:hidden text-center flex flex-col items-center mt-[20px] cursor-pointer"
+            >
+              <div className="p-1 w-[100px] h-[100px] text-center flex-col bg-blue-400 text-white flex items-center justify-center rounded-lg">
+                <div className="w-[30px] xsm:w-[40px] flex items-center justify-center">
+                  All Catogaries
+                </div>
+                {/* <div className="mt-[10px] font-medium text-sm">abel</div> */}
+              </div>
+            </div>
+          </div>
+        )}
       </ul>
 
-      <div className="px-10 sm:px-20 mt-4 w-full md:hidden">
+      {/* <div className="px-10 sm:px-20 mt-4 w-full md:hidden">
         <Button
           onClick={() => {
             setIsShowAll(!isShowAll);
@@ -137,7 +159,7 @@ const CategoriesArea = () => {
             </>
           )}
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };

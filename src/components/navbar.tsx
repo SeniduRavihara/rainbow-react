@@ -85,7 +85,7 @@ const Navbar = () => {
   );
   return (
     <div className="w-full fixed bg-white pt-3 h-[70px] px-4 md:px-5 flex items-center justify-between  border-b-2 border-[#00000010]">
-      <div className="flex items-center justify-center">
+      <div className="flex items-center gap-2 justify-center">
         {/* ----------------Mobile---------------------- */}
         <div className="flex lg:hidden gap-5">
           <Sheet>
@@ -132,7 +132,7 @@ const Navbar = () => {
         <img
           src={logo}
           alt=""
-          className="w-40 h-14 cursor-pointer"
+          className="w-28 h-11 sm:w-40 sm:h-14 cursor-pointer"
           onClick={hadleLogoClick}
         />
       </div>

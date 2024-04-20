@@ -4,7 +4,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
@@ -93,7 +92,7 @@ const RegisterForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Create an account"
+      headerLabel="Signup"
       backButtonLabel="Already have an account?"
       backButtonHref="/login"
       showSocial
@@ -106,10 +105,10 @@ const RegisterForm = () => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  {/* <FormLabel>Name</FormLabel> */}
                   <FormControl>
                     <Input
-                      placeholder="John Doe"
+                      placeholder="Name"
                       // disabled={isPending}
                       {...field}
                     />
@@ -124,11 +123,11 @@ const RegisterForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  {/* <FormLabel>Email</FormLabel> */}
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="john.doe@example.com"
+                      placeholder="Email"
                       // disabled={isPending}
                       {...field}
                     />
@@ -143,7 +142,7 @@ const RegisterForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  {/* <FormLabel>Password</FormLabel> */}
                   <FormControl>
                     <Input
                       type="password"

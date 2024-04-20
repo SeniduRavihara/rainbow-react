@@ -289,9 +289,11 @@ const StoreDetailsPage = () => {
                     <div>{selectedStore?.address}</div>
                   </div>
 
-                  <div className="flex gap-1">
-                    {selectedStore?.tags.map((tag, index) => (
-                      <Tag key={index}>{tag}</Tag>
+                  <div className="my-1">
+                    {selectedStore?.tags.slice(0, 4).map((tag, index) => (
+                      <Tag key={index} className="mx-[2px]">
+                        {tag}
+                      </Tag>
                     ))}
                   </div>
 

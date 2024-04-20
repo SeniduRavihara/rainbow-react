@@ -38,7 +38,7 @@ const ServicesArea = () => {
           <div className=" fstotsediv w-[80%] flex gap-3 items-center justify-between flex-col xl:flex-row p-5 border-2 border-[#00000037] rounded-t-md rounded-b-0">
             <div className="oth-ser-div-left">
               <h1>Bills & Recharge</h1>
-              <p>Bills & Recharge Pay your bills & recharge instantly with </p>
+              <p>Pay your bills & recharge instantly with </p>
               <a href="#" className="expr-link">
                 Srilanka Business
               </a>
@@ -103,9 +103,9 @@ const ServicesArea = () => {
         <div className="flex flex-col">
           <div className="text-center">
             <h1 className="font-semibold text-2xl">Bills & Recharge</h1>
-            <p>Pay your bills & recharge instantly with</p>
+            <p>Pay your bills & recharge instantly with </p>
             <Link to="/" className="expr-link text-[#005eff] font-semibold">
-              Explore More
+              Srilanka Business
             </Link>
           </div>
 
@@ -132,10 +132,12 @@ const ServicesArea = () => {
           </div>
         </div>
 
+        {/* -------------------------- */}
+
         <div className="flex flex-col">
           <div className="text-center">
             <h1 className="font-semibold text-2xl">Travel Bookings</h1>
-            <p>Instance bookings for your best experience</p>
+            <p>Instance bookings for your best experience </p>
             <Link to="/" className="expr-link text-[#005eff] font-semibold">
               Explore More
             </Link>

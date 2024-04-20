@@ -8,6 +8,7 @@ import {
 import BackButton from "./BackButton";
 import Header from "./Header";
 import Social from "./Social";
+import { AbsoluteCenter, Box, Divider } from "@chakra-ui/react";
 
 type CardWrapperProps = {
   children: React.ReactNode;
@@ -32,15 +33,22 @@ const CardWrapper = ({
 
       <CardContent>{children}</CardContent>
 
+      <CardFooter className="flex justify-between">
+        <BackButton href={backButtonHref} label={backButtonLabel} />
+      </CardFooter>
+
+      <Box position="relative" padding="10" className="-mt-10">
+        <Divider colorScheme="red" className="border" />
+        <AbsoluteCenter bg="white" px="4" className="text-muted-foreground">
+          or
+        </AbsoluteCenter>
+      </Box>
+
       {showSocial && (
         <CardFooter className="flex justify-between">
           <Social />
         </CardFooter>
       )}
-
-      <CardFooter className="flex justify-between">
-        <BackButton href={backButtonHref} label={backButtonLabel} />
-      </CardFooter>
     </Card>
   );
 };

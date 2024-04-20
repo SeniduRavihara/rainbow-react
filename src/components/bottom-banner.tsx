@@ -2,7 +2,7 @@ const BottomBanner = () => {
   return (
     <div className="asdttryas">
       <div className="cmp-copyright">
-        © 2024 ABCDEFG. ALL RIGHTS RESERVED. SOLUTION BY{" "}
+        © 2024 Srilanka Business. ALL RIGHTS RESERVED. {" "}
         <a
           href="https://www.imagini.lk"
           target="_blank"
