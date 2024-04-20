@@ -33,7 +33,7 @@ function Sidebar() {
         <img
           src={logo}
           alt=""
-          className="w-44 h-15"
+          className="w-44 h-15 cursor-pointer"
           onClick={() => navigate("/")}
         />
 
