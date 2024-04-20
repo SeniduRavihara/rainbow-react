@@ -336,7 +336,7 @@ const ManageStorePage = () => {
         <IoIosArrowBack />
       </Link>
 
-      <h1 className="text-3xl font-bold mb-6 mt-4">Manage Store</h1>
+      <h1 className="text-3xl font-bold mb-6 mt-4">Business Profile</h1>
       {currentUserData && currentUserData.haveStore && currentUserStore ? (
         <div className="flex flex-col gap-2 md:p-5">
           {/* <h2 className="text-xl font-semibold mb-4">Your Store</h2> */}

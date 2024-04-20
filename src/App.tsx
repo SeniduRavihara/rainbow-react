@@ -32,6 +32,7 @@ import CommentsPage from "./_admin/pages/CommentsPage";
 import StoreDetailsPage from "./_public/pages/StoreDetailsPage";
 import ManageStorePage from "./_private/pages/ManageStorePage";
 import DetailsPageAddsManage from "./components/admin/DetailsPageAddsManage";
+import AllCategoryPage from "./_public/pages/AllCategoryPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -49,6 +50,7 @@ const router = createBrowserRouter(
           path="/search-results/:category"
           element={<SearchResultsPage />}
         />
+        <Route path="/all-catogaries" element={<AllCategoryPage />} />
         <Route path="/store-details/:storeId" element={<StoreDetailsPage />} />
       </Route>
 

@@ -6,7 +6,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
@@ -77,7 +76,7 @@ const LoginForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Welcome back"
+      headerLabel="Login"
       backButtonLabel="Don't have an account?"
       backButtonHref="/signup"
       showSocial
@@ -90,11 +89,11 @@ const LoginForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  {/* <FormLabel>Email</FormLabel> */}
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="john.doe@example.com"
+                      placeholder="Email"
                       // disabled={isPending}
                       {...field}
                     />
@@ -109,7 +108,7 @@ const LoginForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  {/* <FormLabel>Password</FormLabel> */}
                   <FormControl>
                     <Input
                       type="password"

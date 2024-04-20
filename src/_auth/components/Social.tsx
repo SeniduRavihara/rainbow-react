@@ -19,22 +19,24 @@ const Social = () => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-4 justify-center items-center gap-x-2">
+    <div className="w-full flex flex-col gap-4 justify-center items-center gap-x-2 text-muted-foreground">
       <Button
         size="lg"
-        className="w-full"
+        className="w-full relative"
         variant="outline"
         onClick={handleGoogleSignin}
       >
-        <FcGoogle className="h-5 w-5" />
+        <FcGoogle className="text-2xl absolute left-5 hover:text-muted-foreground" />
+        <div>Login with Google</div>
       </Button>
       <Button
         size="lg"
-        className="w-full"
+        className="w-full relative bg-indigo-800 text-white hover:bg-indigo-700"
         variant="outline"
         onClick={handleFacebookSignin}
       >
-        <FaFacebook className="h-5 w-5" />
+        <FaFacebook className="text-2xl absolute left-5" />
+        <div>Login with Facebook</div>
       </Button>
     </div>
   );
