@@ -89,7 +89,7 @@ export type StoreObj = {
   address: string;
   email: string;
   tags: string[];
-  createdAt: Date;
+  createdAt: Timestamp;
   phoneNumber: string;
   whatsappNumber: string;
   storeIcon: string;
