@@ -3,8 +3,8 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { db, storage } from "@/firebase/config";
 import { useData } from "@/hooks/useData";
-import { StoreObj, TimeValue } from "@/types";
-import { doc, onSnapshot } from "firebase/firestore";
+import { StoreListType, StoreObj, TimeValue } from "@/types";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import {
@@ -95,11 +95,19 @@ const ManageStorePage = () => {
 
   useEffect(() => {
     if (currentUserData) {
-      const documentRef = doc(db, "store", currentUserData?.id);
-      const unsubscribe = onSnapshot(documentRef, (QuerySnapshot) => {
-        const userStore = QuerySnapshot.data() as StoreObj;
+      const collectionRef = collection(db, "store");
 
-        setCurrentUserStore(userStore);
+      const q = query(collectionRef, where("userId", "==", currentUserData.id));
+
+      const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
+          const storeListArr = QuerySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          })) as StoreListType;
+
+        console.log(storeListArr);
+        setCurrentUserStore(storeListArr[0]);
+        
       });
 
       return unsubscribe;
@@ -145,18 +153,19 @@ const ManageStorePage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    if (currentUser) {
+    if (currentUser && currentUserStore) {
       await handleUpload();
       const storeIconUrl =
-        (await uploadStoreIcon(currentUser.uid)) || storeIcon?.imageUrl;
+        (await uploadStoreIcon(currentUserStore.id)) ||
+        (storeIcon?.imageUrl ?? "");
       // console.log("STORE", storeIconUrl);
 
       // const validStoreImages = storeImages.filter((img) => img !== undefined);
       const storeImageUrls = storeImages
         .map((img) => img.imageUrl)
-        .filter((img) => img !== undefined);
+        .filter((img): img is string => img !== undefined);
 
-      await updateStore(currentUser?.uid, {
+      await updateStore(currentUserStore?.id, {
         title,
         address,
         phoneNumber,
@@ -759,7 +768,7 @@ const ManageStorePage = () => {
                       type="button"
                       onClick={() =>
                         togglePublish(
-                          currentUserData.id,
+                          currentUserStore.id,
                           currentUserStore.published
                         )
                       }

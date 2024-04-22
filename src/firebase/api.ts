@@ -24,6 +24,7 @@ import {
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { CurrentUserDataType, StoreListType, StoreObj } from "@/types";
 import toast from "react-hot-toast";
+import { v4 } from "uuid";
 
 // --------------------------------------
 export const logout = async () => {
@@ -179,7 +180,7 @@ export const createStore = async (uid: string, payload: any) => {
   // console.log("PAYLOAD", payload);
 
   try {
-    await setDoc(doc(db, "store", uid), {
+    await setDoc(doc(db, "store", `${uid}--${v4().replace("-", "")}`), {
       ...payload,
       userId: uid,
       active: false,
@@ -197,11 +198,11 @@ export const createStore = async (uid: string, payload: any) => {
 };
 
 // -------------------------------------------
-export const updateStore = async (uid: string, payload: any) => {
+export const updateStore = async (storeId: string, payload: any) => {
   // console.log(payload);
 
   try {
-    await updateDoc(doc(db, "store", uid), {
+    await updateDoc(doc(db, "store", storeId), {
       ...payload,
     });
     console.log("Document Update successfully");
@@ -455,9 +456,9 @@ export const fetchStoreById = async (id: string) => {
 // };
 
 //--------------------------------------------------
-export const togglePublish = async (uid: string, published: boolean) => {
+export const togglePublish = async (storeId: string, published: boolean) => {
   try {
-    const documentRef = doc(db, "store", uid);
+    const documentRef = doc(db, "store", storeId);
     await updateDoc(documentRef, {
       published: !published,
     });
@@ -735,4 +736,21 @@ export const getIdFromEmail = async (email: string) => {
   if (!matchingUser) return null; // Return null if there are no matching users
 
   return matchingUser;
+};
+
+// ---------------------------------------
+
+export const removeAsAdmin = async (uid: string, roles: string[]) => {
+  try {
+    // Remove "admin" role from the roles array
+    const updatedRoles = roles.filter((role) => role !== "admin");
+
+    // Update the document in Firestore
+    const documentRef = doc(db, "users", uid);
+    await updateDoc(documentRef, {
+      roles: updatedRoles,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

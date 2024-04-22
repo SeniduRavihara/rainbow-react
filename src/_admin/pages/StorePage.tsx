@@ -154,7 +154,7 @@ const StorePage = () => {
   };
 
   return (
-    <div className="pb-10 flex flex-col items-center justify-center w-full">
+    <div className="pb-10 flex flex-col items-center justify-center">
       <div className="flex w-full items-center gap-2 h-10 mb-10">
         <Input
           type="text"

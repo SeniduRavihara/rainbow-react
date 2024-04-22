@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getIdFromEmail } from "@/firebase/api";
+import { getIdFromEmail, removeAsAdmin } from "@/firebase/api";
 import { db } from "@/firebase/config";
 import { CurrentUserDataType } from "@/types";
 import {
   collection,
   doc,
-  getDocs,
+  onSnapshot,
   query,
   updateDoc,
   where,
@@ -15,37 +15,34 @@ import Table from "react-bootstrap/Table";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Select } from "@chakra-ui/react";
+import { RxCross2 } from "react-icons/rx";
 
 const ManagmentPage = () => {
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState("admin");
   const [loading, setLoading] = useState(false);
   const [adminUsers, setAdminUsers] = useState<CurrentUserDataType[] | null>(
     null
   );
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
     setLoading(true);
-
     const collectionRef = collection(db, "users");
     const q = query(collectionRef, where("roles", "array-contains", "admin"));
 
-    const queryStoresSnapshot = await getDocs(q);
-    const currentUserArr = queryStoresSnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    })) as CurrentUserDataType[];
+    const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
+      const adminUsersArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as CurrentUserDataType[];
 
-    console.log(currentUserArr);
-
-    setAdminUsers(currentUserArr);
+      setAdminUsers(adminUsersArr);
+    });
 
     setLoading(false);
-  };
+
+    return unsubscribe;
+  }, []);
 
   const handleClickAssign = () => {
     if (!role) return;
@@ -66,6 +63,8 @@ const ManagmentPage = () => {
             : [...matchingUser.roles, role],
         });
 
+        toast.success("Role assigned successfully");
+
         setRole("");
       } catch (error) {
         console.log(error);
@@ -73,6 +72,11 @@ const ManagmentPage = () => {
     };
 
     updateRoles();
+  };
+
+  const handleClickRemoveAsAdmin = async (uid: string, roles: string[]) => {
+    await removeAsAdmin(uid, roles);
+    toast.success("Admin role removed successfully");
   };
 
   return (
@@ -92,6 +96,7 @@ const ManagmentPage = () => {
 
         <Select value={role} onChange={(e) => setRole(e.target.value)}>
           <option value="admin">Admin</option>
+          <option value="user">User</option>
         </Select>
 
         <Button onClick={handleClickAssign}>Assign</Button>
@@ -106,7 +111,8 @@ const ManagmentPage = () => {
               <th>#</th>
               <th>Name</th>
               <th>Email</th>
-              {/* <th>Phone</th> */}
+              <th>Phone</th>
+              <th>Remove As Admin</th>
             </tr>
           </thead>
           <tbody>
@@ -115,9 +121,18 @@ const ManagmentPage = () => {
                 useObj && (
                   <tr key={index}>
                     <td>{index + 1}</td>
-                    <td>{useObj.email}</td>
                     <td>{useObj.name}</td>
-                    {/* <td>{useObj.phone}</td> */}
+                    <td>{useObj.email}</td>
+                    <td>under development</td>
+                    <td className="text-right">
+                      <Button
+                        onClick={() =>
+                          handleClickRemoveAsAdmin(useObj.id, useObj.roles)
+                        }
+                      >
+                        <RxCross2 />
+                      </Button>
+                    </td>
                   </tr>
                 )
             )}

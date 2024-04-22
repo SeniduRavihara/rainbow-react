@@ -35,6 +35,7 @@ import DetailsPageAddsManage from "./components/admin/DetailsPageAddsManage";
 import AllCategoryPage from "./_public/pages/AllCategoryPage";
 // import ManageStore from "./_private/pages/manage-store/ManageStore";
 import ManagmentPage from "./_admin/pages/ManagmentPage";
+import ManageStoresPage from "./_private/pages/manage-stores/ManageStoresPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -60,7 +61,7 @@ const router = createBrowserRouter(
       <Route element={<PrivateLayout />}>
         <Route path="/create-store" element={<CreateStorePage />} />
         <Route path="/manage-store" element={<ManageStorePage />} />
-        {/* <Route path="/manage-store" element={<ManageStore />} /> */}
+        <Route path="/manage-stores" element={<ManageStoresPage />} />
       </Route>
 
       {/* admin routes */}

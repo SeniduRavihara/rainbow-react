@@ -6,17 +6,8 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoIosMenu } from "react-icons/io";
 import { IonIcon } from "@ionic/react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {  LogOut, User, Shield, Store } from "lucide-react";
+import { LogOut, User, Shield, Store } from "lucide-react";
 import NavDropdown from "react-bootstrap/Dropdown";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuGroup,
-//   DropdownMenuItem,
-//   DropdownMenuLabel,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
 import {
   languageOutline,
   chevronDownOutline,
@@ -207,9 +198,7 @@ const Navbar = () => {
                                 {messageObj.fromName}
                               </div>
                               <div>{messageObj.message}</div>
-                              <div className="text-sm">
-                                {messageObj.phone}
-                              </div>
+                              <div className="text-sm">{messageObj.phone}</div>
                             </div>
                             <div className="flex gap-3 text-[12px] ml-4 font-semibold text-gray-600/70">
                               <div className="">
@@ -325,22 +314,39 @@ const Navbar = () => {
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </NavDropdown.Item>
-                {currentUserData && currentUserData.roles.includes("superAdmin") && (
+
+                {currentUserData &&
+                  currentUserData.roles.includes("superAdmin") && (
+                    <NavDropdown.Item
+                      onClick={handleClickAdminPanel}
+                      className="flex items-center gap-2"
+                    >
+                      <Shield className="mr-2 h-4 w-4" />
+                      <span>Admin</span>
+                    </NavDropdown.Item>
+                  )}
+
+                {currentUserData && currentUserData.roles.includes("admin") && (
                   <NavDropdown.Item
-                    onClick={handleClickAdminPanel}
+                    onClick={() => navigate("/manage-stores")}
                     className="flex items-center gap-2"
                   >
-                    <Shield className="mr-2 h-4 w-4" />
-                    <span>Admin</span>
+                    <Store className="mr-2 h-4 w-4" />
+                    <span>Manage Stores</span>
                   </NavDropdown.Item>
                 )}
-                <NavDropdown.Item
-                  onClick={handleCreateStoreClick}
-                  className="flex items-center gap-2"
-                >
-                  <Store className="mr-2 h-4 w-4" />
-                  <span>Manage Store</span>
-                </NavDropdown.Item>
+
+                {currentUserData &&
+                  !currentUserData.roles.includes("admin") && (
+                    <NavDropdown.Item
+                      onClick={handleCreateStoreClick}
+                      className="flex items-center gap-2"
+                    >
+                      <Store className="mr-2 h-4 w-4" />
+                      <span>Manage Store</span>
+                    </NavDropdown.Item>
+                  )}
+
                 <NavDropdown.Item
                   onClick={logout}
                   className="flex items-center gap-2"
