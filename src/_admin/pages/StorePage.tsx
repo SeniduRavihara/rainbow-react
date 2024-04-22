@@ -17,7 +17,7 @@ import { Button } from "../../components/ui/button";
 import { StoreListType, StoreObj } from "@/types";
 import Loader from "../../components/Loader";
 import { cn } from "@/lib/utils";
-import { CircularProgress, Tag } from "@chakra-ui/react";
+import { CircularProgress } from "@chakra-ui/react";
 import toast from "react-hot-toast";
 import { IoIosSearch } from "react-icons/io";
 import algoliasearch from "algoliasearch/lite";
@@ -120,7 +120,7 @@ const StorePage = () => {
         address: hit.address,
         email: hit.email,
         tags: hit.tags,
-        createdAt: new Date(hit.createdAt),
+        createdAt: hit.createdAt,
         phoneNumber: hit.phoneNumber,
         whatsappNumber: hit.whatsappNumber,
         storeIcon: hit.storeIcon,
@@ -154,7 +154,7 @@ const StorePage = () => {
   };
 
   return (
-    <div className="pb-10 flex flex-col items-center justify-center">
+    <div className="pb-10 flex flex-col items-center justify-center w-full">
       <div className="flex w-full items-center gap-2 h-10 mb-10">
         <Input
           type="text"
@@ -233,10 +233,12 @@ const StorePage = () => {
         <thead>
           <tr>
             <th>#</th>
-            <th>EMAIL</th>
-            <th>TITLE</th>
-            <th>ADDRESS</th>
-            <th>TAGS</th>
+            <th>Business Name</th>
+            <th>Business Category</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Telephone</th>
+            <th>Registered/Requested Date</th>
             <th>ACTION</th>
           </tr>
         </thead>
@@ -245,16 +247,19 @@ const StorePage = () => {
             storeList.map((storeObj, index) => (
               <tr key={index}>
                 <td className="font-medium">{index + 1}</td>
-                <td className="font-medium">{storeObj.email}</td>
                 <td>{storeObj.title}</td>
+                <td>{storeObj.category}</td>
                 <td>{storeObj.address}</td>
-                <td className="text-right">
+                <td className="font-medium">{storeObj.email}</td>
+                {/* <td className="text-right">
                   {storeObj.tags.slice(0, 4).map((tag, index) => (
                     <Tag key={index} className="m-2">
                       {tag}
                     </Tag>
                   ))}
-                </td>
+                </td> */}
+                <td className="font-medium">{storeObj.phoneNumber}</td>
+                <td className="font-medium">{storeObj.createdAt.toDate().toDateString()}</td>
                 <td className="text-right">
                   <Button
                     className={cn(

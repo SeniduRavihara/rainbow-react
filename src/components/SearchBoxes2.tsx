@@ -79,7 +79,7 @@ const SearchBoxes2 = () => {
         address: hit.address,
         email: hit.email,
         tags: hit.tags,
-        createdAt: new Date(hit.createdAt),
+        createdAt: hit.createdAt,
         phoneNumber: hit.phoneNumber,
         whatsappNumber: hit.whatsappNumber,
         storeIcon: hit.storeIcon,
