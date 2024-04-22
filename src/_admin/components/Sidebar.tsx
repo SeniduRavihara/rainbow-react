@@ -61,11 +61,11 @@ function Sidebar() {
         </li>
 
         <li>
-          <Link to="stores" className="flex items-center gap-3">
+          <Link to="business" className="flex items-center gap-3">
             <div>
               <BiSolidBookContent />{" "}
             </div>
-            Stores
+            Business
           </Link>
         </li>
 
