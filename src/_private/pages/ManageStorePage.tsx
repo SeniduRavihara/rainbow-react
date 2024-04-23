@@ -4,7 +4,13 @@ import { Button } from "@/components/ui/button";
 import { db, storage } from "@/firebase/config";
 import { useData } from "@/hooks/useData";
 import { StoreListType, StoreObj, TimeValue } from "@/types";
-import { collection, doc, getDoc, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import {
@@ -93,37 +99,51 @@ const ManageStorePage = () => {
   const { currentUserData, locationArr } = useData();
   const { currentUser } = useAuth();
 
-  const params = useParams()
+  const params = useParams();
 
-useEffect(() => {
-  async function fetchData() {
-    if (currentUserData) {
-      // if (params) {
-      //   console.log(params.storeId);
-        
-      //   return;
-      // }
+  useEffect(() => {
+    async function fetchData() {
+      if (currentUserData && params.storeId) {
+        if (params.storeId === "userStore") {
+          const collectionRef = collection(db, "store");
+          const q = query(
+            collectionRef,
+            where("userId", "==", currentUserData.id)
+          );
 
-      const collectionRef = collection(db, "store");
-      const q = query(collectionRef, where("userId", "==", currentUserData.id));
+          const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const storeListArr = querySnapshot.docs.map((doc) => ({
+              ...doc.data(),
+              id: doc.id,
+            })) as StoreListType;
 
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const storeListArr = querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        })) as StoreListType;
+            console.log(storeListArr);
+            setCurrentUserStore(storeListArr[0]);
+          });
 
-        console.log(storeListArr);
-        setCurrentUserStore(storeListArr[0]);
-      });
+          return unsubscribe;
+        } else {
+           const documentRef = doc(db, "store", params.storeId);
+           const unsubscribe = onSnapshot(documentRef, (snapshot) => {
+             if (snapshot.exists()) {
+               setCurrentUserStore({
+                 ...snapshot.data(),
+                 id: snapshot.id,
+               } as StoreObj);
+             } else {
+               setCurrentUserStore(null);
+             }
+           });
 
-      return unsubscribe;
+           // Return the unsubscribe function to stop listening for updates when the component unmounts
+           return () => unsubscribe();
+
+        }
+      }
     }
-  }
 
-  fetchData(); // Call the async function immediately
-}, [currentUserData, params]);
-
+    fetchData(); // Call the async function immediately
+  }, [currentUserData, params]);
 
   useEffect(() => {
     if (currentUserStore) {
@@ -774,7 +794,7 @@ useEffect(() => {
                       )}
                     </Button>
 
-                    <Button
+                    {currentUserStore && <Button
                       variant="destructive"
                       type="button"
                       onClick={() =>
@@ -786,7 +806,7 @@ useEffect(() => {
                       className="md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white"
                     >
                       {currentUserStore.published ? "Unpublish" : "Publish"}
-                    </Button>
+                    </Button>}
                   </div>
                 </div>
               </form>

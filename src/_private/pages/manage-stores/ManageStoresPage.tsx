@@ -5,15 +5,6 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Table from "react-bootstrap/Table";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 const ManageStoresPage = () => {
   const [loading, setLoading] = useState(false);
@@ -57,7 +48,7 @@ const ManageStoresPage = () => {
   if (loading) return <>Loading...</>;
 
   return (
-    <div>
+    <div className="w-full flex items-center justify-center flex-col">
       <div>
         <h2 className="text-xl font-semibold mb-4">Create Your Store</h2>
         <p className="mb-4">
@@ -67,20 +58,6 @@ const ManageStoresPage = () => {
         <Link to="/create-store" className="text-blue-500 hover:underline">
           Create Store
         </Link>
-
-
-        <Dialog>
-          <DialogTrigger>Open</DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
-              <DialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
 
         <Table striped bordered hover>
           <thead>
