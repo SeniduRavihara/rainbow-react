@@ -60,7 +60,7 @@ const router = createBrowserRouter(
       {/* private routes */}
       <Route element={<PrivateLayout />}>
         <Route path="/create-store" element={<CreateStorePage />} />
-        <Route path="/manage-store" element={<ManageStorePage />} />
+        <Route path="/manage-store/:storeId" element={<ManageStorePage />} />
         <Route path="/manage-stores" element={<ManageStoresPage />} />
       </Route>
 

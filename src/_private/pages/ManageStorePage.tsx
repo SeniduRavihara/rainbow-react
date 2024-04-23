@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { db, storage } from "@/firebase/config";
 import { useData } from "@/hooks/useData";
 import { StoreListType, StoreObj, TimeValue } from "@/types";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, query, where } from "firebase/firestore";
 import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import {
@@ -15,7 +15,7 @@ import {
 // import { RxCross2 } from "react-icons/rx";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { forwardRef, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Kbd, Tag } from "@chakra-ui/react";
 import { addLocation, togglePublish, updateStore } from "@/firebase/api";
 import { useAuth } from "@/hooks/useAuth";
@@ -93,26 +93,37 @@ const ManageStorePage = () => {
   const { currentUserData, locationArr } = useData();
   const { currentUser } = useAuth();
 
-  useEffect(() => {
-    if (currentUserData) {
-      const collectionRef = collection(db, "store");
+  const params = useParams()
 
+useEffect(() => {
+  async function fetchData() {
+    if (currentUserData) {
+      // if (params) {
+      //   console.log(params.storeId);
+        
+      //   return;
+      // }
+
+      const collectionRef = collection(db, "store");
       const q = query(collectionRef, where("userId", "==", currentUserData.id));
 
-      const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
-          const storeListArr = QuerySnapshot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          })) as StoreListType;
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const storeListArr = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        })) as StoreListType;
 
         console.log(storeListArr);
         setCurrentUserStore(storeListArr[0]);
-        
       });
 
       return unsubscribe;
     }
-  }, [currentUserData]);
+  }
+
+  fetchData(); // Call the async function immediately
+}, [currentUserData, params]);
+
 
   useEffect(() => {
     if (currentUserStore) {

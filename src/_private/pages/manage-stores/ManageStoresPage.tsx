@@ -3,7 +3,17 @@ import { useData } from "@/hooks/useData";
 import { StoreListType } from "@/types";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Table from "react-bootstrap/Table";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const ManageStoresPage = () => {
   const [loading, setLoading] = useState(false);
@@ -11,17 +21,19 @@ const ManageStoresPage = () => {
     useState<StoreListType | null>(null);
 
   const { currentUserData } = useData();
+  const navigate = useNavigate();
 
-  console.log(currentUserStores);
-  
   useEffect(() => {
     const fetchData = async () => {
-      // if (!currentUserData) return;
+      if (!currentUserData) return;
 
       setLoading(true);
 
       const collectionRef = collection(db, "store");
-      const q = query(collectionRef, where("uid", "==", currentUserData?.id));
+      const q = query(
+        collectionRef,
+        where("userId", "==", currentUserData?.id)
+      );
 
       const queryStoresSnapshot = await getDocs(q);
       const currentUserStoresArr = queryStoresSnapshot.docs.map((doc) => ({
@@ -30,11 +42,17 @@ const ManageStoresPage = () => {
       })) as StoreListType;
 
       setCurrentUserStores(currentUserStoresArr);
+      console.log("Senidu", currentUserStoresArr);
+
       setLoading(false);
     };
 
     fetchData();
-  }, [currentUserData?.id]);
+  }, [currentUserData, currentUserData?.id]);
+
+  const handleStoreClick = (storeId: string) => {
+    navigate(`/manage-store/${storeId}`);
+  };
 
   if (loading) return <>Loading...</>;
 
@@ -50,18 +68,97 @@ const ManageStoresPage = () => {
           Create Store
         </Link>
 
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">
-            Benefits of Having a Store
-          </h2>
-          <ul className=" pl-6">
-            <li>Reach a wider audience</li>
-            <li>Manage your products and inventory</li>
-            <li>Accept payments online</li>
-            <li>Track sales and analytics</li>
-            {/* Add more benefits as needed */}
-          </ul>
-        </div>
+
+        <Dialog>
+          <DialogTrigger>Open</DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Are you absolutely sure?</DialogTitle>
+              <DialogDescription>
+                This action cannot be undone. This will permanently delete your
+                account and remove your data from our servers.
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Business Name</th>
+              <th>Business Category</th>
+              <th>Address</th>
+              <th>Email</th>
+              <th>Telephone</th>
+              <th>Registered/Requested Date</th>
+              <th>ACTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentUserStores &&
+              currentUserStores.map((storeObj, index) => (
+                <tr
+                  key={index}
+                  className="cursor-pointer"
+                  onClick={() => handleStoreClick(storeObj.id)}
+                >
+                  <td className="font-medium">{index + 1}</td>
+                  <td>{storeObj.title}</td>
+                  <td>{storeObj.category}</td>
+                  <td>{storeObj.address}</td>
+                  <td className="font-medium">{storeObj.email}</td>
+                  {/* <td className="text-right">
+                  {storeObj.tags.slice(0, 4).map((tag, index) => (
+                    <Tag key={index} className="m-2">
+                      {tag}
+                    </Tag>
+                  ))}
+                </td> */}
+                  <td className="font-medium">{storeObj.phoneNumber}</td>
+                  <td className="font-medium">
+                    {storeObj.createdAt.toDate().toDateString()}
+                  </td>
+
+                  {/* <td className="text-right">
+                    <Button
+                      className={cn(
+                        ` flex items-center justify-center gap-2`,
+                        storeObj.active ? "bg-blue-500" : "bg-red-500"
+                      )}
+                      disabled={
+                        loadingActive.id === storeObj.id && loadingActive.state
+                      }
+                      onClick={() => toggleActive(storeObj.id, storeObj.active)}
+                    >
+                      {loadingActive.id === storeObj.id &&
+                        loadingActive.state && <Loader />}
+                      {storeObj.active ? "Dective" : "Active"}
+                    </Button>
+                  </td>
+
+                  <td className="text-right">
+                    <Button
+                      className={cn(
+                        ` flex items-center justify-center gap-2`,
+                        storeObj.verified ? "bg-blue-500" : "bg-red-500"
+                      )}
+                      disabled={
+                        loadingVerify.id === storeObj.id && loadingVerify.state
+                      }
+                      onClick={() =>
+                        toggleVerify(storeObj.id, storeObj.verified)
+                      }
+                    >
+                      {loadingVerify.id === storeObj.id &&
+                        loadingVerify.state && <Loader />}
+                      {storeObj.verified ? "Remove" : "Verify"}
+                    </Button>
+                  </td> */}
+                </tr>
+              ))}
+          </tbody>
+        </Table>
       </div>
     </div>
   );
