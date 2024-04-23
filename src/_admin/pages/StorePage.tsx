@@ -35,6 +35,7 @@ const StorePage = () => {
   const [storeList, setStoreList] = useState<StoreListType | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadingActive, setLoadingActive] = useState({ id: "", state: false });
+  const [loadingVerify, setLoadingVerify] = useState({ id: "", state: false });
   const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchQuiery, setSearchQuiery] = useState("");
@@ -99,6 +100,36 @@ const StorePage = () => {
         });
 
         setLoadingActive((pre) => ({ ...pre, state: false, id }));
+        return updatedList;
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  const toggleVerify = async (id: string, verified: boolean) => {
+    setLoadingVerify((pre) => ({ ...pre, state: true, id }));
+    const documentRef = doc(db, "store", id);
+    try {
+      await updateDoc(documentRef, {
+        verified: !verified,
+      });
+
+      setStoreList((prev) => {
+        if (!prev) return prev;
+
+        const updatedList = prev.map((item) => {
+          if (item.id === id) {
+            return {
+              ...item,
+              verified: !verified,
+            };
+          }
+          return item;
+        });
+
+        setLoadingVerify((pre) => ({ ...pre, state: false, id }));
         return updatedList;
       });
     } catch (error) {
@@ -185,50 +216,6 @@ const StorePage = () => {
         )}
       </div>
 
-      {/* <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>EMAIL</TableHead>
-            <TableHead>TITLE</TableHead>
-            <TableHead className="text-right">ADDRESS</TableHead>
-            <TableHead className="text-right">ACTION</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {storeList &&
-            storeList.map((storeObj, index) => (
-              <TableRow key={index}>
-                <TableCell className="font-medium">{storeObj.email}</TableCell>
-                <TableCell>{storeObj.title}</TableCell>
-                <TableCell>{storeObj.address}</TableCell>
-                <TableCell className="text-right">
-                  {storeObj.tags.map((tag, index) => (
-                    <Tag key={index} className="m-2">
-                      {tag}
-                    </Tag>
-                  ))}
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button
-                    className={cn(
-                      ` flex items-center justify-center gap-2`,
-                      storeObj.active ? "bg-blue-500" : "bg-red-500"
-                    )}
-                    disabled={
-                      loadingActive.id === storeObj.id && loadingActive.state
-                    }
-                    onClick={() => toggleActive(storeObj.id, storeObj.active)}
-                  >
-                    {loadingActive.id === storeObj.id &&
-                      loadingActive.state && <Loader />}
-                    {storeObj.active ? "Dective" : "Active"}
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-        </TableBody>
-      </Table> */}
-
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -240,6 +227,7 @@ const StorePage = () => {
             <th>Telephone</th>
             <th>Registered/Requested Date</th>
             <th>ACTION</th>
+            <th>VERIFY</th>
           </tr>
         </thead>
         <tbody>
@@ -259,7 +247,10 @@ const StorePage = () => {
                   ))}
                 </td> */}
                 <td className="font-medium">{storeObj.phoneNumber}</td>
-                <td className="font-medium">{storeObj.createdAt.toDate().toDateString()}</td>
+                <td className="font-medium">
+                  {storeObj.createdAt.toDate().toDateString()}
+                </td>
+
                 <td className="text-right">
                   <Button
                     className={cn(
@@ -274,6 +265,23 @@ const StorePage = () => {
                     {loadingActive.id === storeObj.id &&
                       loadingActive.state && <Loader />}
                     {storeObj.active ? "Dective" : "Active"}
+                  </Button>
+                </td>
+
+                <td className="text-right">
+                  <Button
+                    className={cn(
+                      ` flex items-center justify-center gap-2`,
+                      storeObj.verified ? "bg-blue-500" : "bg-red-500"
+                    )}
+                    disabled={
+                      loadingVerify.id === storeObj.id && loadingVerify.state
+                    }
+                    onClick={() => toggleVerify(storeObj.id, storeObj.verified)}
+                  >
+                    {loadingVerify.id === storeObj.id &&
+                      loadingVerify.state && <Loader />}
+                    {storeObj.verified ? "Remove" : "Verify"}
                   </Button>
                 </td>
               </tr>
