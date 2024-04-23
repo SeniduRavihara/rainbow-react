@@ -61,7 +61,7 @@ const CreateStorePage = () => {
   ]);
   const [dayIndex, setDayIndex] = useState(0);
   const { currentUser } = useAuth();
-  const { locationArr } = useData();
+  const { locationArr, currentUserData } = useData();
   const navigate = useNavigate();
 
   const [storeImages, setStoreImages] = useState<
@@ -121,7 +121,13 @@ const CreateStorePage = () => {
     }
     setLoading(false);
     toast.success("Store created successfully");
-    navigate("/manage-store");
+
+    if (currentUserData?.roles.includes("admin")) {
+      navigate("/manage-stores");
+      return;
+    }
+
+    navigate("/manage-store/userStore");
   };
 
   const handleUpload = async () => {

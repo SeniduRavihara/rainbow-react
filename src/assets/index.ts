@@ -61,6 +61,8 @@ import imageGalery from "./img/image-gallery.png";
 import logo from "./img/SRILANKA BUSINESS LOGO.png";
 import mic from "./img/mic-icon.png"
 
+import allCategories from "./img/category-img/all-categories.png"
+
 const placeholderSliderAdds = [
   placeholderAdd1,
   placeholderAdd2,
@@ -127,4 +129,5 @@ export {
   imageGalery,
   logo,
   mic,
+  allCategories,
 };

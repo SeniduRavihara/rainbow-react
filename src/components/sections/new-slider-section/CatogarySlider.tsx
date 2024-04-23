@@ -40,7 +40,7 @@ const CatogarySlider = () => {
       setAdds((pre) =>
         pre.map((addObj, index) => ({
           ...addObj,
-          src: sectionAdds[index].imageUrl,
+          src: sectionAdds[index].imageUrl || "",
         }))
       );
     }
