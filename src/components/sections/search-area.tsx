@@ -74,6 +74,7 @@ const SearchArea = () => {
             ]}
             wrapper="span"
             speed={1}
+            cursor={false}
             deletionSpeed={40}
             // style={{display: "inline-block" }}
             repeat={Infinity}

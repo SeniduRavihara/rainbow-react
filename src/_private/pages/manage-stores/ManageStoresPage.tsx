@@ -3,6 +3,7 @@ import { useData } from "@/hooks/useData";
 import { StoreListType } from "@/types";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const ManageStoresPage = () => {
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,6 @@ const ManageStoresPage = () => {
 
   console.log(currentUserStores);
   
-
   useEffect(() => {
     const fetchData = async () => {
       // if (!currentUserData) return;
@@ -38,6 +38,32 @@ const ManageStoresPage = () => {
 
   if (loading) return <>Loading...</>;
 
-  return <div>ManageStoresPage</div>;
+  return (
+    <div>
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Create Your Store</h2>
+        <p className="mb-4">
+          It seems like you haven't created a store yet. Create one now to start
+          selling!
+        </p>
+        <Link to="/create-store" className="text-blue-500 hover:underline">
+          Create Store
+        </Link>
+
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">
+            Benefits of Having a Store
+          </h2>
+          <ul className=" pl-6">
+            <li>Reach a wider audience</li>
+            <li>Manage your products and inventory</li>
+            <li>Accept payments online</li>
+            <li>Track sales and analytics</li>
+            {/* Add more benefits as needed */}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
 };
 export default ManageStoresPage;

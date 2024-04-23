@@ -14,7 +14,7 @@ const PrivateLayout = () => {
 
   if (!currentUserData) return <div>Loading...</div>;
 
-  if (location.pathname === "/create-store" && currentUserData.haveStore) return <Navigate to="/manage-store" />
+  if (location.pathname === "/create-store" && (currentUserData.haveStore && !currentUserData.roles.includes("admin"))) return <Navigate to="/manage-store" />
 
     return currentUserData.roles.includes("user") || currentUser ? (
       <Outlet />
