@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSpeechRecognition } from "react-speech-recognition";
 import SearchBoxes from "../SearchBoxes";
+import { TypeAnimation } from "react-type-animation";
 
 // const searchClient = algoliasearch(
 //   "6K67WTIHLT",
@@ -62,7 +63,22 @@ const SearchArea = () => {
       <h2 className="font-bold text-3xl hidden lg:flex">
         Search across &apos; thousands &apos;
         <span className="font-extrabold">+</span>
-        <span className="text-blue-600 ml-1"> Businesses</span>
+        <span className="text-blue-600 ml-1">
+          <TypeAnimation
+            sequence={[
+              // Same substring at the start will only be typed out once, initially
+              "Businesses",
+              3000, // wait 1s before replacing "Mice" with "Hamsters"
+              " Product and Services",
+              3000,
+            ]}
+            wrapper="span"
+            speed={1}
+            deletionSpeed={40}
+            // style={{display: "inline-block" }}
+            repeat={Infinity}
+          />
+        </span>
       </h2>
 
       {/* <div className="items-center gap-6 hidden lg:flex">
