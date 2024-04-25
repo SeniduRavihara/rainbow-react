@@ -754,3 +754,16 @@ export const removeAsAdmin = async (uid: string, roles: string[]) => {
     console.log(error);
   }
 };
+
+// -----------------------------------------
+
+export const createCategory = async ({
+  label,
+  icon,
+}: {
+  label: string;
+  icon: string;
+}) => {
+  const documentRef = doc(db, "categories", label);
+  await setDoc(documentRef, { label, icon });
+};

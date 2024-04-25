@@ -1,20 +1,14 @@
 import CategoryCard from "../CategoryCard";
 import { useEffect, useState } from "react";
-// import { Button } from "../ui/button";
-// import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import { useData } from "@/hooks/useData";
-// import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-// import { StoreListType } from "@/types";
 import { fetchCatogaryData } from "@/firebase/api";
 import { categories } from "@/constants";
 import { allCategories } from "@/assets";
 
 const CategoriesArea = () => {
-  // const [isShowAll, setIsShowAll] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [visibleCategories, setVisibleCategories] = useState(categories);
-  // const [scrollPosition, setScrollPosition] = useState(0);
 
   const navigate = useNavigate();
 

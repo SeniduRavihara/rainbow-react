@@ -1,4 +1,4 @@
-import CarouselAdds from "@/components/CarouselAdds";
+
 import Navbar from "../components/Navbar";
 import ResultList from "../components/search-result-page/ResultList";
 import SearchResultAddSection from "../components/search-result-page/SearchResultAddSection";
@@ -9,6 +9,7 @@ import BottomBanner from "@/components/bottom-banner";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useData } from "@/hooks/useData";
+import SearchResultCarosel from "../components/SearchResultCarosel";
 
 const SearchResultsPage = () => {
     const {
@@ -28,7 +29,8 @@ const SearchResultsPage = () => {
         <Navbar />
       </div>
       <div className="mt-48 725:mt-20 w-full">
-        <CarouselAdds />
+        {/* <CarouselAdds /> */}
+        <SearchResultCarosel />
 
         <div className="px-3 relative top-4 text-3xl font-bold font-">
           {category?.split("-")[0] === "category" && (

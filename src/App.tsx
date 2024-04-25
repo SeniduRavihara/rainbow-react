@@ -36,6 +36,8 @@ import AllCategoryPage from "./_public/pages/AllCategoryPage";
 // import ManageStore from "./_private/pages/manage-store/ManageStore";
 import ManagmentPage from "./_admin/pages/ManagmentPage";
 import ManageStoresPage from "./_private/pages/manage-stores/ManageStoresPage";
+import CreateCategoryPage from "./_admin/pages/CreateCategoryPage";
+import SearchResultSliderAddsManage from "./components/admin/SearchResultSliderAddsManage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -76,6 +78,10 @@ const router = createBrowserRouter(
               element={<SearchResultAddsManage />}
             />
             <Route path="slider-adds" element={<SliderAddsManage />} />
+            <Route
+              path="searchresult-slider-adds"
+              element={<SearchResultSliderAddsManage />}
+            />
             <Route path="section-adds" element={<SectionAddsManage />} />
             <Route
               path="details-page-adds"
@@ -85,6 +91,7 @@ const router = createBrowserRouter(
           <Route index element={<AnalyticsPage />} />
           <Route path="comments" element={<CommentsPage />} />
           <Route path="manage" element={<ManagmentPage />} />
+          <Route path="create-category" element={<CreateCategoryPage />} />
         </Route>
       </Route>
     </Route>
