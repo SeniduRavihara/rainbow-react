@@ -36,6 +36,12 @@ import AllCategoryPage from "./_public/pages/AllCategoryPage";
 // import ManageStore from "./_private/pages/manage-store/ManageStore";
 import ManagmentPage from "./_admin/pages/ManagmentPage";
 import ManageStoresPage from "./_private/pages/manage-stores/ManageStoresPage";
+import CreateCategoryPage from "./_admin/pages/CreateCategoryPage";
+import SearchResultSliderAddsManage from "./components/admin/SearchResultSliderAddsManage";
+import CreateGallery from "./_private/pages/create-store/CreateGallery";
+import AdvertizeYourBusiness from "./_public/pages/AdvertizeYourBusiness";
+import WeAreHiringPage from "./_public/pages/WeAreHiringPage";
+import InvestorPage from "./_public/pages/InvestorPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -54,12 +60,16 @@ const router = createBrowserRouter(
           element={<SearchResultsPage />}
         />
         <Route path="/all-catogaries" element={<AllCategoryPage />} />
+        <Route path="/advertise" element={<AdvertizeYourBusiness />} />
+        <Route path="/we-are-hiring" element={<WeAreHiringPage />} />
+        <Route path="/investor-page" element={<InvestorPage />} />
         <Route path="/store-details/:storeId" element={<StoreDetailsPage />} />
       </Route>
 
       {/* private routes */}
       <Route element={<PrivateLayout />}>
         <Route path="/create-store" element={<CreateStorePage />} />
+        <Route path="/setup-gallery/:storeId" element={<CreateGallery />} />
         <Route path="/manage-store/:storeId" element={<ManageStorePage />} />
         <Route path="/manage-stores" element={<ManageStoresPage />} />
       </Route>
@@ -76,6 +86,10 @@ const router = createBrowserRouter(
               element={<SearchResultAddsManage />}
             />
             <Route path="slider-adds" element={<SliderAddsManage />} />
+            <Route
+              path="searchresult-slider-adds"
+              element={<SearchResultSliderAddsManage />}
+            />
             <Route path="section-adds" element={<SectionAddsManage />} />
             <Route
               path="details-page-adds"
@@ -85,6 +99,7 @@ const router = createBrowserRouter(
           <Route index element={<AnalyticsPage />} />
           <Route path="comments" element={<CommentsPage />} />
           <Route path="manage" element={<ManagmentPage />} />
+          <Route path="create-category" element={<CreateCategoryPage />} />
         </Route>
       </Route>
     </Route>

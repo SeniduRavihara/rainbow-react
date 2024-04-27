@@ -684,6 +684,12 @@ const CreateStorePage = () => {
           </form>
         </div>
       </div>
+
+      <div className="mb-10">
+        <Link to="/setup-gallery">
+          <Button>Next</Button>
+        </Link>
+      </div>
     </div>
   );
 };

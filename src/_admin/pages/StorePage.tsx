@@ -142,7 +142,7 @@ const StorePage = () => {
     try {
       setLoadingSearch(true);
       const result = await searchIndex.search(searchQuery);
-      // console.log(result);
+      console.log(result);
 
       const storeList: StoreListType = result.hits.map((hit: any) => ({
         id: hit.objectID,
@@ -250,6 +250,7 @@ const StorePage = () => {
                 <td className="font-medium">
                   {storeObj.createdAt.toDate().toDateString()}
                 </td>
+                {/* above block have some problem ToDo to fix it */}
 
                 <td className="text-right">
                   <Button

@@ -91,13 +91,19 @@ const Navbar = () => {
                   <div className="txt">English</div>
                   <IonIcon icon={chevronDownOutline}></IonIcon>
                 </li>
-                <li className="cursor-pointer">We Are Hiring</li>
-                <li className="cursor-pointer">Invester Relation</li>
+                <li className="cursor-pointer">
+                  <Link to="/we-are-hiring">We Are Hiring</Link>
+                </li>
+                <li className="cursor-pointer">
+                  <Link to="/investor-page">Invester Relation</Link>
+                </li>
                 <li className="flex items-center justify-center gap-1 cursor-pointer">
-                  <div className="icon">
-                    <img src="/assets/img/loaudspeacker.png" alt="" />
-                  </div>
-                  <div>Advertise</div>
+                  <Link to="/advertise">
+                    <div className="icon">
+                      <img src="/assets/img/loaudspeacker.png" alt="" />
+                    </div>
+                    <div>Advertise</div>
+                  </Link>
                 </li>
                 <li className="cursor-pointer">
                   <div className="flex flex-col -mt-4">
@@ -135,13 +141,19 @@ const Navbar = () => {
           <div className="txt">English</div>
           <IonIcon icon={chevronDownOutline}></IonIcon>
         </li>
-        <li className="cursor-pointer">We Are Hiring</li>
-        <li className="cursor-pointer">Invester Relation</li>
+        <li className="cursor-pointer">
+          <Link to="/we-are-hiring">We Are Hiring</Link>
+        </li>
+        <li className="cursor-pointer">
+          <Link to="/investor-page">Invester Relation</Link>
+        </li>
         <li className="flex items-center justify-center gap-1 cursor-pointer">
-          <div className="icon">
-            <img src="/assets/img/loaudspeacker.png" alt="" />
-          </div>
-          <div>Advertise</div>
+          <Link to="/advertise">
+            <div className="icon">
+              <img src="/assets/img/loaudspeacker.png" alt="" />
+            </div>
+            <div>Advertise</div>
+          </Link>
         </li>
         <li className="cursor-pointer">
           <div className="flex flex-col -mt-4">

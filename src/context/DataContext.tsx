@@ -7,12 +7,7 @@ import {
   StoreObj,
   messageObjType,
 } from "@/types";
-import {
-  collection,
-  onSnapshot,
-  orderBy,
-  query,
-} from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
 
 export const DataContext = createContext<DataContextType>(INITIAL_DATA_CONTEXT);
@@ -38,7 +33,12 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
   const [sliderAdds, setSliderAdds] = useState<Array<{
     imageUrl: string;
     id: string;
-    link: string
+    link: string;
+  }> | null>(null);
+  const [searchResultSliderAdds, setSearchResultSliderAdds] = useState<Array<{
+    imageUrl: string;
+    id: string;
+    link: string;
   }> | null>(null);
 
   const [searchResultStores, setSearchResultStores] =
@@ -48,8 +48,10 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
   const [loadingStoreFetching, setLoadingStoreFetching] = useState(false);
   const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
   const [isAllFetched, setIsAllFetched] = useState(false);
-  const [locationArr, setLocationArr] =
-    useState<Array<{ location: string; id: string }> | null>(null);
+  const [locationArr, setLocationArr] = useState<Array<{
+    location: string;
+    id: string;
+  }> | null>(null);
 
   // const [messagesToAll, setMessagesToAll] = useState<messageObjType[] | null>(null);
   const [userMessages, setUserMessages] = useState<messageObjType[] | null>(
@@ -62,7 +64,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
       const sctionAddsArr = QuerySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-      })) as Array<{ imageUrl: string; id: string, link: string }>;
+      })) as Array<{ imageUrl: string; id: string; link: string }>;
 
       // console.log(sctionAddsArr);
       setSectionAdds(sctionAddsArr);
@@ -71,20 +73,20 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
-   useEffect(() => {
-     const collectionRef = collection(db, "sectionStaticAdds");
-     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-       const sctionStaticAddsArr = QuerySnapshot.docs.map((doc) => ({
-         ...doc.data(),
-         id: doc.id,
-       })) as Array<{ imageUrl: string; id: string; link: string }>;
+  useEffect(() => {
+    const collectionRef = collection(db, "sectionStaticAdds");
+    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+      const sctionStaticAddsArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as Array<{ imageUrl: string; id: string; link: string }>;
 
       //  console.log(sctionStaticAddsArr);
-       setSectionStaticAdds(sctionStaticAddsArr);
-     });
+      setSectionStaticAdds(sctionStaticAddsArr);
+    });
 
-     return unsubscribe;
-   }, []);
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     const collectionRef = collection(db, "sliderAdds");
@@ -96,6 +98,21 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
 
       // console.log(sliderAddsArr);
       setSliderAdds(sliderAddsArr);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const collectionRef = collection(db, "searchResultSliderAdds");
+    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+      const sliderAddsArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as Array<{ imageUrl: string; id: string; link: string }>;
+
+      console.log(sliderAddsArr);
+      setSearchResultSliderAdds(sliderAddsArr);
     });
 
     return unsubscribe;
@@ -206,6 +223,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     sectionAdds,
     sectionStaticAdds,
     sliderAdds,
+    searchResultSliderAdds,
     popularBrands,
     searchResultStores,
     setSearchResultStores,

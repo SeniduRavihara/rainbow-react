@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { HiSpeakerphone } from "react-icons/hi";
-import { BiSolidBookContent, BiSolidUserAccount } from "react-icons/bi";
+import { BiSolidBookContent, BiSolidCategory, BiSolidUserAccount } from "react-icons/bi";
 import { FaComments } from "react-icons/fa";
 import { DiGoogleAnalytics } from "react-icons/di";
 import { useState } from "react";
@@ -55,6 +55,7 @@ function Sidebar() {
                 <Link to="slider-adds">Slider Adds</Link>
                 <Link to="section-adds">Section Adds</Link>
                 <Link to="details-page-adds">DetailsPage Adds</Link>
+                <Link to="searchresult-slider-adds">SearchResultSlider Adds</Link>
               </div>
             )}
           </div>
@@ -102,6 +103,15 @@ function Sidebar() {
               <MdManageAccounts />{" "}
             </div>
             Manage
+          </Link>
+        </li>
+
+        <li>
+          <Link to="create-category" className="flex items-center gap-3">
+            <div>
+              <BiSolidCategory />{" "}
+            </div>
+            categories
           </Link>
         </li>
 
