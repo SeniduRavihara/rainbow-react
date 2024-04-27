@@ -30,9 +30,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Tag } from "@chakra-ui/react";
-import InfoTab from "../components/store-details-page/tabs/InfoTab";
 import { fetchStoreById } from "@/firebase/api";
 import ProductAndServices from "../components/store-details-page/ProductAndServices";
+import TabComponent from "../components/store-details-page/tabs/TabComponent";
 
 const StoreDetailsPage = () => {
   const { searchResultStores, currentUserData } = useData();
@@ -386,8 +386,8 @@ const StoreDetailsPage = () => {
             </div>
             <div className=" flex flex-col gap-4 md:flex-row md:flex md:justify-between">
               <div className="w-full flex flex-col md:w-9/12">
-                {/* <TabComponent selectedStore={selectedStore} /> */}
-                <div className="my-5 px-3">
+                <TabComponent selectedStore={selectedStore} />
+                {/* <div className="my-5 px-3">
                   <div className="">Information</div>
                   {selectedStore && (
                     <InfoTab
@@ -395,7 +395,7 @@ const StoreDetailsPage = () => {
                       info2={selectedStore.info2}
                     />
                   )}
-                </div>
+                </div> */}
 
                 <ProductAndServices
                   tags={selectedStore.tags}

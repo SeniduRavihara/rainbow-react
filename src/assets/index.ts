@@ -62,6 +62,10 @@ import logo from "./img/SRILANKA BUSINESS LOGO.png";
 import mic from "./img/mic-icon.png"
 
 import allCategories from "./img/category-img/all-categories.png"
+import iphoneMockup from "./iphone-Mock.png"
+import marktBusiness from "./market.png"
+import marketAnalysis from "./business-grow.jpeg"
+import anounce from "./market+analysis-640w.webp"
 
 const placeholderSliderAdds = [
   placeholderAdd1,
@@ -130,4 +134,8 @@ export {
   logo,
   mic,
   allCategories,
+  iphoneMockup,
+  marktBusiness,
+  marketAnalysis,
+  anounce,
 };

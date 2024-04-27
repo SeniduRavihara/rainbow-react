@@ -794,19 +794,21 @@ const ManageStorePage = () => {
                       )}
                     </Button>
 
-                    {currentUserStore && <Button
-                      variant="destructive"
-                      type="button"
-                      onClick={() =>
-                        togglePublish(
-                          currentUserStore.id,
-                          currentUserStore.published
-                        )
-                      }
-                      className="md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white"
-                    >
-                      {currentUserStore.published ? "Unpublish" : "Publish"}
-                    </Button>}
+                    {currentUserStore && (
+                      <Button
+                        variant="destructive"
+                        type="button"
+                        onClick={() =>
+                          togglePublish(
+                            currentUserStore.id,
+                            currentUserStore.published
+                          )
+                        }
+                        className="md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white"
+                      >
+                        {currentUserStore.published ? "Unpublish" : "Publish"}
+                      </Button>
+                    )}
                   </div>
                 </div>
               </form>
@@ -847,6 +849,12 @@ const ManageStorePage = () => {
           </div>
         </div>
       )}
+
+      <div className="mb-10">
+        <Link to={`/setup-gallery/${currentUserStore?.id}`}>
+          <Button>Next</Button>
+        </Link>
+      </div>
     </div>
   );
 };

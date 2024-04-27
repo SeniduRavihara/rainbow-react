@@ -38,6 +38,10 @@ import ManagmentPage from "./_admin/pages/ManagmentPage";
 import ManageStoresPage from "./_private/pages/manage-stores/ManageStoresPage";
 import CreateCategoryPage from "./_admin/pages/CreateCategoryPage";
 import SearchResultSliderAddsManage from "./components/admin/SearchResultSliderAddsManage";
+import CreateGallery from "./_private/pages/create-store/CreateGallery";
+import AdvertizeYourBusiness from "./_public/pages/AdvertizeYourBusiness";
+import WeAreHiringPage from "./_public/pages/WeAreHiringPage";
+import InvestorPage from "./_public/pages/InvestorPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -56,12 +60,16 @@ const router = createBrowserRouter(
           element={<SearchResultsPage />}
         />
         <Route path="/all-catogaries" element={<AllCategoryPage />} />
+        <Route path="/advertise" element={<AdvertizeYourBusiness />} />
+        <Route path="/we-are-hiring" element={<WeAreHiringPage />} />
+        <Route path="/investor-page" element={<InvestorPage />} />
         <Route path="/store-details/:storeId" element={<StoreDetailsPage />} />
       </Route>
 
       {/* private routes */}
       <Route element={<PrivateLayout />}>
         <Route path="/create-store" element={<CreateStorePage />} />
+        <Route path="/setup-gallery/:storeId" element={<CreateGallery />} />
         <Route path="/manage-store/:storeId" element={<ManageStorePage />} />
         <Route path="/manage-stores" element={<ManageStoresPage />} />
       </Route>
