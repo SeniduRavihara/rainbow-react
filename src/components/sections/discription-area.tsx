@@ -32,8 +32,8 @@ const DiscriptionArea = () => {
   };
 
   return (
-    <div className="flex flex-col gap-10 w-full py-10 px-3">
-      <div>
+    <div className="flex flex-col gap-10 w-full py-10 items-center justify-center">
+      <div className="w-[95%] md:w-[92%]">
         <h3 className="text-3xl font-semibold">
           One-Stop for All Local Businesses, Product and Services, Nearby Across
           srilanka
@@ -60,7 +60,7 @@ const DiscriptionArea = () => {
         </p>
       </div>
 
-      <div>
+      <div className="w-[95%] md:w-[92%]">
         <h3 className="text-3xl font-semibold">Popular Categories</h3>
         <br />
         {/* <div>
@@ -84,7 +84,7 @@ const DiscriptionArea = () => {
         </div>
       </div>
 
-      <div>
+      <div className="w-[95%] md:w-[92%]">
         <h3 className="text-3xl font-semibold">Popular Cities</h3>
         <br />
         {/* <div>

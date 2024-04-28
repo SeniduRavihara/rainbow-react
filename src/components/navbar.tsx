@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { HiOutlineUserCircle } from "react-icons/hi2";
 import { handleUserMessageDelete, logout, updateAsSeen } from "@/firebase/api";
 import { IoIosNotificationsOutline } from "react-icons/io";
@@ -26,6 +26,10 @@ const Navbar = () => {
 
   const { currentUserData, setSearchResultStores, userMessages } = useData();
   const navigate = useNavigate();
+
+  const location = useLocation()
+  console.log(location.pathname);
+  
 
   useEffect(() => {
     if (userMessages) {
@@ -91,7 +95,12 @@ const Navbar = () => {
                   <div className="txt">English</div>
                   <IonIcon icon={chevronDownOutline}></IonIcon>
                 </li>
-                <li className="cursor-pointer">
+                <li
+                  className={cn(
+                    "cursor-pointer",
+                    location.pathname == "/we-are-hiring" && "text-blue-400"
+                  )}
+                >
                   <Link to="/we-are-hiring">We Are Hiring</Link>
                 </li>
                 <li className="cursor-pointer">
@@ -141,14 +150,30 @@ const Navbar = () => {
           <div className="txt">English</div>
           <IonIcon icon={chevronDownOutline}></IonIcon>
         </li>
-        <li className="cursor-pointer">
+        <li
+          className={cn(
+            "cursor-pointer",
+            location.pathname == "/we-are-hiring" && "text-blue-400"
+          )}
+        >
           <Link to="/we-are-hiring">We Are Hiring</Link>
         </li>
-        <li className="cursor-pointer">
+        <li
+          className={cn(
+            "cursor-pointer",
+            location.pathname == "/investor-page" && "text-blue-400"
+          )}
+        >
           <Link to="/investor-page">Invester Relation</Link>
         </li>
         <li className="flex items-center justify-center gap-1 cursor-pointer">
-          <Link to="/advertise">
+          <Link
+            to="/advertise"
+            className={cn(
+              "cursor-pointer",
+              location.pathname == "/advertise" && "text-blue-400"
+            )}
+          >
             <div className="icon">
               <img src="/assets/img/loaudspeacker.png" alt="" />
             </div>
