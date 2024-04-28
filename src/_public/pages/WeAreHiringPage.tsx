@@ -10,7 +10,7 @@ const WeAreHiringPage = () => {
   return (
     <div className="">
       <main
-        className="flex min-h-screen flex-col items-center"
+        className="flex min-h-screen flex-col items-center "
         // style={{ width: "calc(100% - 200px)" }}
       >
         <div className="fixed top-0 left-0 z-50">
@@ -21,17 +21,19 @@ const WeAreHiringPage = () => {
         </div>
 
         <div className="mt-28 w-full">
-          <Section1 />
-          <Section2 />
-          <Section3 />
+          <div className="lg:w-[1024px] mx-auto">
+            <Section1 />
+            <Section2 />
+            <Section3 />
+            <Footer />
+          </div>
 
-          <Footer />
-          <div className="fixed bottom-0 w-full">
+          <div className="bottom-0 w-full">
             <BottomBanner />
           </div>
         </div>
       </main>
     </div>
   );
-}
-export default WeAreHiringPage
+};
+export default WeAreHiringPage;

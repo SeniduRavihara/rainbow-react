@@ -1,0 +1,188 @@
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.cascade-slider_container {
+     position: relative;
+     max-width: 1000px;
+     height: 40vh;
+     margin: 0 auto;
+}
+ .cascade-slider_item {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translateY(-50%) translateX(-50%) scale(0.3);
+     transition: all 1s ease;
+     opacity: 0;
+     z-index: -1;
+}
+ .cascade-slider_item.next {
+     left: 50%;
+     transform: translateY(-50%) translateX(-120%) scale(0.6);
+     opacity: 1;
+     z-index: 4 !important;
+}
+ .cascade-slider_item.prev {
+     left: 50%;
+     transform: translateY(-50%) translateX(20%) scale(0.6);
+     opacity: 1;
+     z-index: 2 !important;
+}
+ .cascade-slider_item.now {
+     top: 50%;
+     left: 50%;
+     transform: translateY(-50%) translateX(-50%) scale(1);
+     opacity: 1;
+     z-index: 5;
+}
+ .cascade-slider_arrow {
+     display: inline-block;
+     position: absolute;
+     top: 50%;
+     cursor: pointer;
+     z-index: 5;
+     transform: translate(0, -50%);
+     color: #fff;
+    font-size: 30px;
+}
+ .cascade-slider_arrow-left {
+     left: -4%;
+}
+ .cascade-slider_arrow-right {
+     right: -4%;
+}
+ .cascade-slider_nav {
+     position: absolute;
+     bottom: -120px;
+     width: 100%;
+     text-align: center;
+     z-index: 5;
+}
+ .cascade-slider_dot {
+     display: inline-block;
+     width: 1em;
+     height: 1em;
+     margin: 1em;
+     background: #ddd;
+     list-style: none;
+     cursor: pointer;
+}
+ .cascade-slider_dot:hover {
+     background: #555;
+}
+ .cascade-slider_dot.cur {
+     background: #555;
+}
+ .cascade-slider_slides img {
+     max-width: 150px;
+     border-radius: 35px;
+}
+ .cascade-slider_item:not(.now) img {
+     filter: grayscale(0.95);
+}
+ .cascade-slider_arrow img {
+     width: 25px;
+}
+ @media screen and (min-width: 414px) {
+     .cascade-slider_container {
+         height: 50vh;
+    }
+     .cascade-slider_slides img {
+         max-width: 200px;
+    }
+}
+ @media screen and (min-width: 576px) {
+     .cascade-slider_container {
+         height: 60vh;
+    }
+     .cascade-slider_slides img {
+         max-width: 270px;
+    }
+}
+ @media screen and (min-width: 768px) {
+     .cascade-slider_item.next {
+         left: 50%;
+         transform: translateY(-50%) translateX(-125%) scale(0.6);
+         opacity: 1;
+         z-index: 1;
+    }
+     .cascade-slider_item.prev {
+         left: 50%;
+         transform: translateY(-50%) translateX(25%) scale(0.6);
+         opacity: 1;
+         z-index: 1;
+    }
+     .cascade-slider_slides img {
+         max-width: 250px;
+    }
+}
+ @media screen and (min-width: 991px) {
+     .cascade-slider_item.next {
+         left: 50%;
+         transform: translateY(-50%) translateX(-115%) scale(0.55);
+         opacity: 1;
+         z-index: 4 !important;
+    }
+     .cascade-slider_item.prev {
+         left: 50%;
+         transform: translateY(-50%) translateX(15%) scale(0.55);
+         opacity: 1;
+         z-index: 4 !important;
+    }
+     .cascade-slider_item.next2 {
+         left: 50%;
+         transform: translateY(-50%) translateX(-150%) scale(0.37);
+         opacity: 1;
+         z-index: 1 !important;
+    }
+     .cascade-slider_item.prev2 {
+         left: 50%;
+         transform: translateY(-50%) translateX(50%) scale(0.37);
+         opacity: 1;
+         z-index: 2 !important;
+    }
+     .cascade-slider_slides img {
+         max-width: 300px;
+    }
+     .cascade-slider_container {
+         height: 67vh;
+    }
+}
+ @media screen and (min-width: 1100px) {
+     .cascade-slider_item.next {
+         left: 50%;
+         transform: translateY(-50%) translateX(-130%) scale(0.55);
+         opacity: 1;
+         z-index: 4 !important;
+    }
+     .cascade-slider_item.prev {
+         left: 50%;
+         transform: translateY(-50%) translateX(30%) scale(0.55);
+         opacity: 1;
+         z-index: 4 !important;
+    }
+     .cascade-slider_item.next2 {
+         left: 50%;
+         transform: translateY(-50%) translateX(-180%) scale(0.37);
+         opacity: 1;
+         z-index: 1 !important;
+    }
+     .cascade-slider_item.prev2 {
+         left: 50%;
+         transform: translateY(-50%) translateX(80%) scale(0.37);
+         opacity: 1;
+         z-index: 2 !important;
+    }
+     .cascade-slider_slides img {
+         max-width: 350px;
+    }
+}

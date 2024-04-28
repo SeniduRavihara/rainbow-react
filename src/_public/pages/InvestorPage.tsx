@@ -5,6 +5,7 @@ import TopBanner from "@/components/top-banner";
 import Section1 from "../components/investor-page/Section1";
 import Section2 from "../components/investor-page/Section2";
 import Section3 from "../components/investor-page/Section3";
+import Section4 from "../components/investor-page/Section4";
 
 const InvestorPage = () => {
   return (
@@ -24,6 +25,7 @@ const InvestorPage = () => {
           <Section1 />
           <Section2 />
           <Section3 />
+          <Section4 />
 
           <Footer />
           <div className="bottom-0 w-full">

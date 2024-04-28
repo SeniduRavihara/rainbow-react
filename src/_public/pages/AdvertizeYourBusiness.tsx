@@ -22,12 +22,14 @@ const AdvertizeYourBusiness = () => {
         </div>
 
         <div className="mt-28 w-full">
-          <Section1 />
-          <Section2 />
-          <Section3 />
+          <div className="lg:w-[1024px] mx-auto">
+            <Section1 />
+            <Section2 />
+            <Section3 />
+            <Footer />
+          </div>
 
-          <Footer />
-          <div className="fixed bottom-0 w-full">
+          <div className="bottom-0 w-full">
             <BottomBanner />
           </div>
         </div>
