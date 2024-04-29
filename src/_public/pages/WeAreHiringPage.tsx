@@ -21,7 +21,7 @@ const WeAreHiringPage = () => {
         </div>
 
         <div className="mt-28 w-full">
-          <div className="lg:w-[1024px] mx-auto px-10">
+          <div className="lg:w-[1024px] mx-auto px-2 md:px-10">
             <Section1 />
             <Section2 />
             <Section3 />
