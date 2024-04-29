@@ -5,6 +5,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Table from "react-bootstrap/Table";
+import { CircularProgress } from "@chakra-ui/react";
 
 const ManageStoresPage = () => {
   const [loading, setLoading] = useState(false);
@@ -45,7 +46,11 @@ const ManageStoresPage = () => {
     navigate(`/manage-store/${storeId}`);
   };
 
-  if (loading) return <>Loading...</>;
+  if (loading) return (
+    <div className="w-full h-screen flex items-center justify-center">
+      <CircularProgress size="60px" isIndeterminate color="green.300" />
+    </div>
+  );
 
   return (
     <div className="w-full flex items-center justify-center flex-col">

@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { postReview, updteReview } from "@/firebase/api";
 import { useAuth } from "@/hooks/useAuth";
 import { useData } from "@/hooks/useData";
+import { CircularProgress } from "@chakra-ui/react";
 
 const ReviewsAndRatings = ({
   selectedStoreId,
@@ -167,7 +168,11 @@ const ReviewsAndRatings = ({
     ));
   };
 
-  if (!selectedStoreId) return <>Loading...</>;
+  if (!selectedStoreId) return (
+    <div className="w-full h-screen flex items-center justify-center">
+      <CircularProgress size="60px" isIndeterminate color="green.300" />
+    </div>
+  );
   return (
     <div className="flex flex-col gap-4 mb-10 px-5">
       <h2 className="text-2xl font-bold">Reviews And Ratings</h2>

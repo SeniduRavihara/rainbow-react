@@ -117,6 +117,7 @@ export type StoreObj = {
   category: string;
   visitCount: number;
   verified: boolean;
+  gallery: string[];
 };
 
 export type StoreListType = Array<StoreObj>;
