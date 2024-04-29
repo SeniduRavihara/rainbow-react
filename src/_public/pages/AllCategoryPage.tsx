@@ -1,12 +1,17 @@
 // import CategoryCard from "@/components/CategoryCard";
 import { categories } from "@/constants";
 import { fetchCatogaryData } from "@/firebase/api";
+import { db } from "@/firebase/config";
 import { useData } from "@/hooks/useData";
-import { useEffect } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 
 const AllCategoryPage = () => {
+    const [visibleCategories, setVisibleCategories] = useState(categories);
+
+
   const navigate = useNavigate();
   const {
     lastDocument,
@@ -19,6 +24,20 @@ const AllCategoryPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+    useEffect(() => {
+      const collectionRef = collection(db, "categories");
+      const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+        const categoryArr = QuerySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+        })) as Array<{ icon: string; label: string }>;
+
+        console.log(categoryArr);
+        setVisibleCategories((pre) => [...pre, ...categoryArr]);
+      });
+
+      return unsubscribe;
+    }, []);
 
   const handleCategaryIconClick = async (label: string) => {
     await fetchCatogaryData(
@@ -50,7 +69,7 @@ const AllCategoryPage = () => {
 
       <ul className="">
         <div className="w-full grid grid-cols-2 lg:grid-cols-4 sm:grid-cols-3 gap-10 px-1">
-          {categories.map((categoryObj, index) => (
+          {visibleCategories.map((categoryObj, index) => (
             <li
               key={index}
               className="cursor-pointer flex items-center gap-3"

@@ -72,7 +72,6 @@ const Section3 = () => {
   return (
     <div className="app">
       <CascadeSlider images={images} />
-      
     </div>
   );
 }

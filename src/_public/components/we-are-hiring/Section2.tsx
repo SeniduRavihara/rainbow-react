@@ -1,15 +1,15 @@
 const Section2 = () => {
   return (
-    <div className="flex flex-col md:flex-row justify-between w-full">
+    <div className="flex flex-col md:flex-row justify-between w-full mt-10">
       <div className="flex flex-col gap-2 md:w-1/2">
-        <img src="/it-room1.jpg" className="w-[400px] h-[200px]" alt="" />
+        <img src="/it-room1.jpg" className="w-full h-[200px]" alt="" />
         <div className="flex gap-[10px]">
-          <img src="/it-room2.jpg" className="w-[195px]" alt="" />
-          <img src="/it-room3.jpeg" className="w-[195px]" alt="" />
+          <img src="/it-room2.jpg" className="w-[49%]" alt="" />
+          <img src="/it-room3.jpeg" className="w-[49%]" alt="" />
         </div>
       </div>
 
-      <div className="w-1/2">
+      <div className="md:w-1/2 mt-10 md:mt-0 ml-5">
         <h1 className="text-3xl font-bold">Our Story</h1>
         <p>
           Lorem ipsum dolor sit, amet consectetur adipisicing elit. Adipisci,
