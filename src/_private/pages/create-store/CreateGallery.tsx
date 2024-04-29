@@ -1,4 +1,3 @@
-
 import { db, storage } from "@/firebase/config";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -42,23 +41,22 @@ const CreateGallery = () => {
     }
   }, [imageList]);
 
-useEffect(() => {
-  if (params.storeId) {
-    const documentRef = doc(db, "store", params.storeId);
-    const unsubscribe = onSnapshot(documentRef, (QuerySnapshot) => {
-      if (QuerySnapshot) {
-        const data = QuerySnapshot.data();
-        if (data) {
-          setImageArr(data.gallery as Array<string>);
-          setVisibleImageArr((pre) => [...pre, ...(data.gallery || [])]);
+  useEffect(() => {
+    if (params.storeId) {
+      const documentRef = doc(db, "store", params.storeId);
+      const unsubscribe = onSnapshot(documentRef, (QuerySnapshot) => {
+        if (QuerySnapshot) {
+          const data = QuerySnapshot.data();
+          if (data) {
+            setImageArr(data.gallery as Array<string>);
+            setVisibleImageArr((pre) => [...pre, ...(data.gallery || [])]);
+          }
         }
-      }
-    });
+      });
 
-    return unsubscribe;
-  }
-}, [params.storeId]);
-
+      return unsubscribe;
+    }
+  }, [params.storeId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -107,12 +105,9 @@ useEffect(() => {
           const photoURL = await getDownloadURL(fileRef);
 
           tempImgArr.push(photoURL);
-
-    
         }
-          return tempImgArr
-
         console.log("All files uploaded successfully!");
+        return tempImgArr;
       } catch (error) {
         console.error("Error uploading files:", error);
         alert(

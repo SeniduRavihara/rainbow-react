@@ -27,9 +27,7 @@ const Navbar = () => {
   const { currentUserData, setSearchResultStores, userMessages } = useData();
   const navigate = useNavigate();
 
-  const location = useLocation()
-  console.log(location.pathname);
-  
+  const location = useLocation();
 
   useEffect(() => {
     if (userMessages) {
@@ -103,11 +101,22 @@ const Navbar = () => {
                 >
                   <Link to="/we-are-hiring">We Are Hiring</Link>
                 </li>
-                <li className="cursor-pointer">
+                <li
+                  className={cn(
+                    "cursor-pointer",
+                    location.pathname == "/investor-page" && "text-blue-400"
+                  )}
+                >
                   <Link to="/investor-page">Invester Relation</Link>
                 </li>
                 <li className="flex items-center justify-center gap-1 cursor-pointer">
-                  <Link to="/advertise">
+                  <Link
+                    to="/advertise"
+                    className={cn(
+                      "cursor-pointer",
+                      location.pathname == "/advertise" && "text-blue-400"
+                    )}
+                  >
                     <div className="icon">
                       <img src="/assets/img/loaudspeacker.png" alt="" />
                     </div>

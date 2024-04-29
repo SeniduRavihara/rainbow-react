@@ -4,6 +4,7 @@ import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ImageCropDialog from "../image-croper/CropDialog";
 import { Input } from "../ui/input";
+import { CircularProgress } from "@chakra-ui/react";
 
 interface ImageData {
   imageUrl: string;
@@ -163,7 +164,11 @@ const PopularBrandsManage = () => {
     setIsOpenCropDialog(false);
   };
 
-  if (!popularBrands) return <div>Loading...</div>;
+  if (!popularBrands) return (
+    <div className="w-full h-screen flex items-center justify-center">
+      <CircularProgress size="60px" isIndeterminate color="green.300" />
+    </div>
+  );
 
   return (
     <div className="w-full h-full pb-5">

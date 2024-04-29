@@ -124,22 +124,39 @@ const Navbar = () => {
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </NavDropdown.Item>
+
+                {currentUserData &&
+                  currentUserData.roles.includes("superAdmin") && (
+                    <NavDropdown.Item
+                      onClick={handleClickAdminPanel}
+                      className="flex items-center gap-2"
+                    >
+                      <Shield className="mr-2 h-4 w-4" />
+                      <span>Admin</span>
+                    </NavDropdown.Item>
+                  )}
+
                 {currentUserData && currentUserData.roles.includes("admin") && (
                   <NavDropdown.Item
-                    onClick={handleClickAdminPanel}
+                    onClick={() => navigate("/manage-stores")}
                     className="flex items-center gap-2"
                   >
-                    <Shield className="mr-2 h-4 w-4" />
-                    <span>Admin</span>
+                    <Store className="mr-2 h-4 w-4" />
+                    <span>Manage Stores</span>
                   </NavDropdown.Item>
                 )}
-                <NavDropdown.Item
-                  onClick={handleCreateStoreClick}
-                  className="flex items-center gap-2"
-                >
-                  <Store className="mr-2 h-4 w-4" />
-                  <span>Manage Store</span>
-                </NavDropdown.Item>
+
+                {currentUserData &&
+                  !currentUserData.roles.includes("admin") && (
+                    <NavDropdown.Item
+                      onClick={handleCreateStoreClick}
+                      className="flex items-center gap-2"
+                    >
+                      <Store className="mr-2 h-4 w-4" />
+                      <span>Manage Store</span>
+                    </NavDropdown.Item>
+                  )}
+
                 <NavDropdown.Item
                   onClick={logout}
                   className="flex items-center gap-2"

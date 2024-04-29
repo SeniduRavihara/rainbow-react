@@ -29,7 +29,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Tag } from "@chakra-ui/react";
+import { CircularProgress, Tag } from "@chakra-ui/react";
 import { fetchStoreById } from "@/firebase/api";
 import ProductAndServices from "../components/store-details-page/ProductAndServices";
 import TabComponent from "../components/store-details-page/tabs/TabComponent";
@@ -109,7 +109,9 @@ const StoreDetailsPage = () => {
 
       <div className="mt-40 725:mt-20 w-full ">
         {!selectedStore ? (
-          <>Loading...</>
+          <div className="w-full h-screen flex items-center justify-center">
+            <CircularProgress size="60px" isIndeterminate color="green.300" />
+          </div>
         ) : (
           <>
             {/* <Gallery /> */}

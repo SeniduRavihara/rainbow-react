@@ -173,6 +173,7 @@ const StorePage = () => {
         category: hit.category || "",
         visitCount: hit.visitCount,
         verified: hit.verified || false,
+        gallery: hit.gallery,
       }));
       setLastDocument(null);
       setStoreList(storeList);

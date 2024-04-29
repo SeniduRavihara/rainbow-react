@@ -1,7 +1,7 @@
 const Section2 = () => {
   return (
-    <div className="flex  justify-between w-full">
-      <div className="flex flex-col gap-2 w-1/2">
+    <div className="flex flex-col md:flex-row justify-between w-full">
+      <div className="flex flex-col gap-2 md:w-1/2">
         <img src="/it-room1.jpg" className="w-[400px] h-[200px]" alt="" />
         <div className="flex gap-[10px]">
           <img src="/it-room2.jpg" className="w-[195px]" alt="" />
