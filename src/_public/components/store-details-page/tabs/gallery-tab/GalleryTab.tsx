@@ -25,7 +25,7 @@ const GalleryTab = ({ gallery }: { gallery: string[] }) => {
     console.log("Wworking", formattedSlides);
     console.log(slides);
     
-  }, [gallery]);
+  }, [gallery, slides]);
 
   return (
     <div className="w-full h-full">
@@ -46,7 +46,7 @@ const GalleryTab = ({ gallery }: { gallery: string[] }) => {
         />}
 
         <Lightbox
-          plugins={[Captions, Download, Fullscreen, Zoom, Thumbnails]}
+          plugins={[Fullscreen, Zoom, Thumbnails]}
           captions={{
             showToggle: true,
             descriptionTextAlign: "end",
