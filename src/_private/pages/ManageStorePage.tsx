@@ -4,13 +4,7 @@ import { Button } from "@/components/ui/button";
 import { db, storage } from "@/firebase/config";
 import { useData } from "@/hooks/useData";
 import { StoreListType, StoreObj, TimeValue } from "@/types";
-import {
-  collection,
-  doc,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
 import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import {
@@ -95,11 +89,28 @@ const ManageStorePage = () => {
 
   // const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
   const [category, setCategory] = useState("");
+  const [visibleCategories, setVisibleCategories] =
+    useState<Array<{ icon: string; label: string }>>(categories);
 
   const { currentUserData, locationArr } = useData();
   const { currentUser } = useAuth();
 
   const params = useParams();
+
+    useEffect(() => {
+      const collectionRef = collection(db, "categories");
+      const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+        const categoryArr = QuerySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+        })) as Array<{ icon: string; label: string }>;
+
+        console.log(categoryArr);
+        setVisibleCategories((pre) => [...pre, ...categoryArr]);
+      });
+
+      return unsubscribe;
+    }, []);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -123,21 +134,20 @@ const ManageStorePage = () => {
 
           return unsubscribe;
         } else {
-           const documentRef = doc(db, "store", params.storeId);
-           const unsubscribe = onSnapshot(documentRef, (snapshot) => {
-             if (snapshot.exists()) {
-               setCurrentUserStore({
-                 ...snapshot.data(),
-                 id: snapshot.id,
-               } as StoreObj);
-             } else {
-               setCurrentUserStore(null);
-             }
-           });
+          const documentRef = doc(db, "store", params.storeId);
+          const unsubscribe = onSnapshot(documentRef, (snapshot) => {
+            if (snapshot.exists()) {
+              setCurrentUserStore({
+                ...snapshot.data(),
+                id: snapshot.id,
+              } as StoreObj);
+            } else {
+              setCurrentUserStore(null);
+            }
+          });
 
-           // Return the unsubscribe function to stop listening for updates when the component unmounts
-           return () => unsubscribe();
-
+          // Return the unsubscribe function to stop listening for updates when the component unmounts
+          return () => unsubscribe();
         }
       }
     }
@@ -755,7 +765,7 @@ const ManageStorePage = () => {
 
                         <Dropdown.Menu as={CustomMenu}>
                           <div className="h-[200px] overflow-y-scroll">
-                            {categories.map((catogaryObj, index) => (
+                            {visibleCategories.map((catogaryObj, index) => (
                               <Dropdown.Item
                                 eventKey={index + 1}
                                 onClick={() =>
