@@ -46,8 +46,8 @@ const ResultList = ({ category }: { category:string }) => {
   // }, []);
 
   useEffect(() => {
-    const startIndex = (currentPage - 1) * 5;
-    const endIndex = startIndex + 5;
+    const startIndex = (currentPage - 1) * 8;
+    const endIndex = startIndex + 8;
 
     // console.log(startIndex, endIndex);
     setVisibleStores(
@@ -66,7 +66,7 @@ const ResultList = ({ category }: { category:string }) => {
     scrollToTop();
     if (allPageCount <= currentPage) setCurrentPage((pre) => pre + 1);
 
-    if (searchResultStores && searchResultStores?.length / 5 === currentPage) {
+    if (searchResultStores && searchResultStores?.length / 8 === currentPage) {
       fetchCatogaryData(
         {
           lastDocument,

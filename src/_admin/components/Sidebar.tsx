@@ -22,7 +22,7 @@ function Sidebar() {
   const navigate = useNavigate();
 
   return (
-    <div className="w-3/12 h-screen p-5 flex flex-col items-center justify-between left-0  bg-green-600 text-white">
+    <div className="w-3/12 h-screen p-5 flex flex-col items-center justify-between left-0  bg-pink-700  text-white">
       <ul className="flex flex-col gap-5">
         {/* <h1
           onClick={() => navigate("/")}
@@ -55,7 +55,9 @@ function Sidebar() {
                 <Link to="slider-adds">Slider Adds</Link>
                 <Link to="section-adds">Section Adds</Link>
                 <Link to="details-page-adds">DetailsPage Adds</Link>
-                <Link to="searchresult-slider-adds">SearchResultSlider Adds</Link>
+                <Link to="searchresult-slider-adds">
+                  SearchResultSlider Adds
+                </Link>
               </div>
             )}
           </div>

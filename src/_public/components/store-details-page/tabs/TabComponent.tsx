@@ -16,7 +16,7 @@ const TabComponent = ({
         <TabList>
           <Tab>Information</Tab>
           {selectedStore && selectedStore?.gallery && <Tab>Gallery</Tab>}
-          {selectedStore && selectedStore?.gallery && <Tab>Street View</Tab>}
+          {selectedStore && selectedStore?.location && <Tab>Street View</Tab>}
           {selectedStore && selectedStore?.gallery && <Tab>Blog</Tab>}
         </TabList>
 
@@ -36,9 +36,9 @@ const TabComponent = ({
             </TabPanel>
           )}
 
-          {selectedStore && selectedStore?.gallery && (
+          {selectedStore && selectedStore?.location && (
             <TabPanel>
-              <StreetViewTab />
+              <StreetViewTab location={selectedStore?.location} />
             </TabPanel>
           )}
 

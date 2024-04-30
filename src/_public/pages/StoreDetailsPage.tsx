@@ -13,10 +13,8 @@ import RatingComponent from "../components/search-result-page/RatingComponent";
 import { IonIcon } from "@ionic/react";
 import { locationOutline } from "ionicons/icons";
 import ReviewsAndRatings from "../components/store-details-page/ReviewsAndRatings";
-// import Gallery from "../components/store-details-page/Gallery";
 import OpenTimes from "../components/store-details-page/OpenTimes";
 import DetailsPageAdds from "../components/store-details-page/DetailsPageAdds";
-// import TabComponent from "../components/store-details-page/tabs/TabComponent";
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { FaEye, FaPhoneAlt } from "react-icons/fa";
@@ -106,6 +104,10 @@ const StoreDetailsPage = () => {
       <div className="fixed top-0 left-0 z-50  p-2 md:p-5">
         <Navbar />
       </div>
+
+      {/* <div className="mt-20 725:mt-20 w-full ">
+        <SearchResultCarosel />
+      </div> */}
 
       <div className="mt-40 725:mt-20 w-full ">
         {!selectedStore ? (
