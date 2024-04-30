@@ -94,6 +94,7 @@ const SearchBoxes = () => {
         visitCount: hit.visitCount,
         verified: hit.verified || false,
         gallery: hit.gallery,
+        location: hit.location,
       }));
       setLastDocument(null);
       setSearchResultStores(

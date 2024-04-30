@@ -15,7 +15,7 @@ const ImageSlider = ({
   const navigate = useNavigate();
 
   const handleImageClick = (link: string) => {
-    console.log("SEnu", link);
+    // console.log("SEnu", link);
 
     if (images) {
       if (link.startsWith("http") || link.startsWith("https")) {
