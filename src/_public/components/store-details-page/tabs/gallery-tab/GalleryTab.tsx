@@ -1,4 +1,3 @@
-
 import Lightbox from "yet-another-react-lightbox";
 // import { slides } from "./data";
 import "yet-another-react-lightbox/styles.css";
@@ -16,16 +15,12 @@ import { useEffect, useState } from "react";
 
 const GalleryTab = ({ gallery }: { gallery: string[] }) => {
   const [index, setIndex] = useState<number>(-1);
-  const [slides, setSlides] = useState<Array<{src: string}>>()
+  const [slides, setSlides] = useState<Array<{ src: string }>>();
 
   useEffect(() => {
-  
     const formattedSlides = gallery.map((src) => ({ src }));
     setSlides(formattedSlides);
-    console.log("Wworking", formattedSlides);
-    console.log(slides);
-    
-  }, [gallery, slides]);
+  }, [gallery]);
 
   return (
     <div className="w-full h-full">
@@ -40,10 +35,12 @@ const GalleryTab = ({ gallery }: { gallery: string[] }) => {
       <>
         {/* <button onClick={() => setOpen(true)}>Open Lightbox</button> */}
 
-        {slides && <Images
-          data={slides}
-          onClick={(currentIndex) => setIndex(currentIndex)}
-        />}
+        {slides && (
+          <Images
+            data={slides}
+            onClick={(currentIndex) => setIndex(currentIndex)}
+          />
+        )}
 
         <Lightbox
           plugins={[Fullscreen, Zoom, Thumbnails]}
