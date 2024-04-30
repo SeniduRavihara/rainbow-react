@@ -3,8 +3,8 @@ import Lightbox from "yet-another-react-lightbox";
 // import { slides } from "./data";
 import "yet-another-react-lightbox/styles.css";
 import {
-  Captions,
-  Download,
+  // Captions,
+  // Download,
   Fullscreen,
   Thumbnails,
   Zoom,
