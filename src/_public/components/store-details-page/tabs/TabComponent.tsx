@@ -1,6 +1,6 @@
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import InfoTab from "./InfoTab";
-import GalleryTab from "./GalleryTab";
+import GalleryTab from "./gallery-tab/GalleryTab";
 import StreetViewTab from "./StreetViewTab";
 import BlogTab from "./BlogTab";
 import { StoreObj } from "@/types";

@@ -9,8 +9,7 @@ import { RxCross1 } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 
 const AllCategoryPage = () => {
-    const [visibleCategories, setVisibleCategories] = useState(categories);
-
+  const [visibleCategories, setVisibleCategories] = useState(categories);
 
   const navigate = useNavigate();
   const {
@@ -25,19 +24,19 @@ const AllCategoryPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
-    useEffect(() => {
-      const collectionRef = collection(db, "categories");
-      const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-        const categoryArr = QuerySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-        })) as Array<{ icon: string; label: string }>;
+  useEffect(() => {
+    const collectionRef = collection(db, "categories");
+    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+      const categoryArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+      })) as Array<{ icon: string; label: string }>;
 
-        console.log(categoryArr);
-        setVisibleCategories((pre) => [...pre, ...categoryArr]);
-      });
+      console.log(categoryArr);
+      setVisibleCategories((pre) => [...pre, ...categoryArr]);
+    });
 
-      return unsubscribe;
-    }, []);
+    return unsubscribe;
+  }, []);
 
   const handleCategaryIconClick = async (label: string) => {
     await fetchCatogaryData(

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 // import { IoArrowBack } from "react-icons/io5";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "@/firebase/config";
+import { db, storage } from "@/firebase/config";
 import { useAuth } from "@/hooks/useAuth";
 import {
   addLocation,
@@ -34,6 +34,7 @@ import { Label } from "@/components/ui/label";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
 import { categories } from "@/constants";
+import { collection, onSnapshot } from "firebase/firestore";
 // import CustomTag from "@/components/CustomTag";
 // import { RxCross2 } from "react-icons/rx";
 
@@ -84,6 +85,22 @@ const CreateStorePage = () => {
   // const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
   const [category, setCategory] = useState("");
   const [displayProfile, setDisplayProfile] = useState(true);
+  const [visibleCategories, setVisibleCategories] =
+    useState<Array<{ icon: string; label: string }>>(categories);
+
+  useEffect(() => {
+    const collectionRef = collection(db, "categories");
+    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+      const categoryArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+      })) as Array<{ icon: string; label: string }>;
+
+      console.log(categoryArr);
+      setVisibleCategories((pre) => [...pre, ...categoryArr]);
+    });
+
+    return unsubscribe;
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -632,7 +649,7 @@ const CreateStorePage = () => {
 
                     <Dropdown.Menu as={CustomMenu}>
                       <div className="h-[200px] overflow-y-scroll">
-                        {categories.map((catogaryObj, index) => (
+                        {visibleCategories.map((catogaryObj, index) => (
                           <Dropdown.Item
                             eventKey={index + 1}
                             onClick={() =>
