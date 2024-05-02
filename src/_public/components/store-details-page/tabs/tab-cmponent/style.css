@@ -1,0 +1,29 @@
+.tab-list-container {
+  width: 100%; /* Set a fixed width */
+  overflow-x: auto; /* Enable horizontal overflow */
+  overflow-y: hidden; /* Hide vertical overflow */
+  white-space: nowrap; /* Prevent line breaks */
+}
+
+.tab-list {
+  display: flex; /* Display tabs in a row */
+  gap: 4px; /* Adjust the gap between tabs */
+}
+
+.tab-list-container::-webkit-scrollbar {
+  width: 5px; /* Width of the scroll bar */
+  height: 8px;
+  
+}
+
+.tab-list-container::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color of the track */
+}
+
+.tab-list-container::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the thumb */
+}
+
+.tab-list-container::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color of the thumb on hover */
+}

@@ -103,6 +103,7 @@ const SearchBoxes2 = () => {
         verified: hit.verified || false,
         gallery: hit.gallery,
         location: hit.location,
+        companyProfilePdfUrl: hit.companyProfilePdfUrl,
       }));
       setLastDocument(null);
       setSearchResultStores(
