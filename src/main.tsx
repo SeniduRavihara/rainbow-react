@@ -22,6 +22,10 @@ import "@ionic/react/css/normalize.css";
 // import '@ionic/react/css/flex-utils.css';
 // import "@ionic/react/css/display.css";
 
+import { pdfjs } from "react-pdf";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
