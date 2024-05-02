@@ -3,6 +3,7 @@ const StreetViewTab = ({ location }: { location: string }) => {
 
   return (
     <div>
+      
       <iframe
         src={location}
         className="w-full"
