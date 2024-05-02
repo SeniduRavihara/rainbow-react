@@ -2,9 +2,8 @@ import { db, storage } from "@/firebase/config";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ImageCropDialog from "@/components/image-croper/CropDialog";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { Button } from "@/components/ui/button";
 
 interface ImageData {
   imageUrl: string;
@@ -197,12 +196,6 @@ const CreateGallery = () => {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="mb-10">
-        <Link to={`/add-location/${params.storeId}`}>
-          <Button>Next</Button>
-        </Link>
       </div>
     </div>
   );
