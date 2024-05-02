@@ -4,6 +4,7 @@ import GalleryTab from "./gallery-tab/GalleryTab";
 import StreetViewTab from "./StreetViewTab";
 import BlogTab from "./BlogTab";
 import { StoreObj } from "@/types";
+import CompanyProfileTab from "./CompanyProfileTab";
 
 const TabComponent = ({
   selectedStore,
@@ -18,6 +19,7 @@ const TabComponent = ({
           {selectedStore && selectedStore?.gallery && <Tab>Gallery</Tab>}
           {selectedStore && selectedStore?.gallery && <Tab>Street View</Tab>}
           {selectedStore && selectedStore?.gallery && <Tab>Blog</Tab>}
+          {selectedStore && selectedStore?.gallery && <Tab>Compay Profile</Tab>}
         </TabList>
 
         <TabPanels>
@@ -45,6 +47,12 @@ const TabComponent = ({
           {selectedStore && selectedStore?.gallery && (
             <TabPanel>
               <BlogTab />
+            </TabPanel>
+          )}
+
+          {selectedStore && selectedStore?.gallery && (
+            <TabPanel>
+              <CompanyProfileTab />
             </TabPanel>
           )}
         </TabPanels>
