@@ -38,10 +38,11 @@ import ManagmentPage from "./_admin/pages/ManagmentPage";
 import ManageStoresPage from "./_private/pages/manage-stores/ManageStoresPage";
 import CreateCategoryPage from "./_admin/pages/CreateCategoryPage";
 import SearchResultSliderAddsManage from "./components/admin/SearchResultSliderAddsManage";
+import CreateGallery from "./_private/pages/create-store/CreateGallery";
 import AdvertizeYourBusiness from "./_public/pages/AdvertizeYourBusiness";
 import WeAreHiringPage from "./_public/pages/WeAreHiringPage";
 import InvestorPage from "./_public/pages/InvestorPage";
-import AddTabData from "./_private/pages/create-store/tab-data/AddTabData";
+import AddGoogleMapLocation from "./_private/pages/create-store/AddGoogleMapLocation";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -69,9 +70,8 @@ const router = createBrowserRouter(
       {/* private routes */}
       <Route element={<PrivateLayout />}>
         <Route path="/create-store" element={<CreateStorePage />} />
-        {/* <Route path="/setup-gallery/:storeId" element={<CreateGallery />} /> */}
-        <Route path="/setup-tabs-data/:storeId" element={<AddTabData />} />
-        {/* <Route path="/add-location/:storeId" element={<AddGoogleMapLocation />} /> */}
+        <Route path="/setup-gallery/:storeId" element={<CreateGallery />} />
+        <Route path="/add-location/:storeId" element={<AddGoogleMapLocation />} />
         <Route path="/manage-store/:storeId" element={<ManageStorePage />} />
         <Route path="/manage-stores" element={<ManageStoresPage />} />
       </Route>
