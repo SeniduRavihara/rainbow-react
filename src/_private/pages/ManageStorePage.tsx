@@ -861,7 +861,7 @@ const ManageStorePage = () => {
       )}
 
       <div className="mb-10">
-        <Link to={`/setup-gallery/${currentUserStore?.id}`}>
+        <Link to={`/setup-tabs-data/${currentUserStore?.id}`}>
           <Button>Next</Button>
         </Link>
       </div>

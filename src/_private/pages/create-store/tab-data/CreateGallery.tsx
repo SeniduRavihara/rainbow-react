@@ -2,9 +2,7 @@ import { db, storage } from "@/firebase/config";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ImageCropDialog from "@/components/image-croper/CropDialog";
-import { Link, useParams } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { Button } from "@/components/ui/button";
 
 interface ImageData {
   imageUrl: string;
@@ -24,7 +22,7 @@ const initData: ImageData = {
   id: "",
 };
 
-const CreateGallery = () => {
+const CreateGallery = ({storeId}: {storeId: string}) => {
   const [isOpenCropDialog, setIsOpenCropDialog] = useState(false);
   const [imageData, setImageData] = useState<ImageData>(initData);
   const [imageList, setImageList] =
@@ -32,8 +30,7 @@ const CreateGallery = () => {
   const [imageArr, setImageArr] = useState<Array<string>>([""]);
   const [visibleImageArr, setVisibleImageArr] = useState<Array<string>>([""]);
 
-  const params = useParams();
-
+ 
   console.log(imageArr);
 
   useEffect(() => {
@@ -43,8 +40,8 @@ const CreateGallery = () => {
   }, [imageList]);
 
   useEffect(() => {
-    if (params.storeId) {
-      const documentRef = doc(db, "store", params.storeId);
+    if (storeId) {
+      const documentRef = doc(db, "store", storeId);
       const unsubscribe = onSnapshot(documentRef, (QuerySnapshot) => {
         if (QuerySnapshot) {
           const data = QuerySnapshot.data();
@@ -57,7 +54,7 @@ const CreateGallery = () => {
 
       return unsubscribe;
     }
-  }, [params.storeId]);
+  }, [storeId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -78,10 +75,10 @@ const CreateGallery = () => {
     if (!imageList) return;
 
     try {
-      if (params.storeId) {
+      if (storeId) {
         const downloadImgUrlArr = await handleUpload();
 
-        const documentRef = doc(db, "store", params.storeId);
+        const documentRef = doc(db, "store", storeId);
         await updateDoc(documentRef, {
           gallery: downloadImgUrlArr,
         });
@@ -98,7 +95,7 @@ const CreateGallery = () => {
 
         for (let i = 0; i < imageList.length; i++) {
           const file = imageList[i].cropedImageBlob;
-          const fileRef = ref(storage, `store_gallery/${params.storeId}/${i}`);
+          const fileRef = ref(storage, `store_gallery/${storeId}/${i}`);
 
           if (!file) return;
 
@@ -199,11 +196,12 @@ const CreateGallery = () => {
         </div>
       </div>
 
-      <div className="mb-10">
-        <Link to={`/add-location/${params.storeId}`}>
+      {/* <div className="mb-10">
+        <Link to={`/add-location/${storeId}`}>
           <Button>Next</Button>
         </Link>
-      </div>
+      </div> */}
+      
     </div>
   );
 };
