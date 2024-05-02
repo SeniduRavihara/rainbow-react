@@ -59,3 +59,9 @@ export function extractGoogleMapsLinkFromIframe(iframeHTML: string) {
   const match = iframeHTML.match(urlPattern);
   return match ? match[1] : "";
 }
+
+export function extractYoutubeLinkFromIframe(iframeHTML: string) {
+  const urlPattern = /src="(.*?)"/;
+  const match = iframeHTML.match(urlPattern);
+  return match ? match[1] : "";
+}

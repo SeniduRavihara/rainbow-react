@@ -104,6 +104,7 @@ const SearchBoxes2 = () => {
         gallery: hit.gallery,
         location: hit.location,
         companyProfilePdfUrl: hit.companyProfilePdfUrl,
+        youtubeVideos: hit.youtubeVideos,
       }));
       setLastDocument(null);
       setSearchResultStores(

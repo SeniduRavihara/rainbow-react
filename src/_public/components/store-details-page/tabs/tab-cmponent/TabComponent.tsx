@@ -22,13 +22,11 @@ const TabComponent = ({
           <Tab className="">Information</Tab>
           {selectedStore && selectedStore?.gallery && <Tab>Gallery</Tab>}
           {selectedStore && selectedStore?.location && <Tab>Street View</Tab>}
-          {selectedStore && selectedStore?.gallery && <Tab>Blog</Tab>}
           {selectedStore && selectedStore?.companyProfilePdfUrl && (
             <Tab>Compay Profile</Tab>
           )}
-          {selectedStore && selectedStore?.companyProfilePdfUrl && (
-            <Tab>Videos</Tab>
-          )}
+          {selectedStore && selectedStore?.gallery && <Tab>Blog</Tab>}
+          {selectedStore && selectedStore?.youtubeVideos && <Tab>Videos</Tab>}
           {selectedStore && selectedStore?.companyProfilePdfUrl && (
             <Tab>Our Products</Tab>
           )}
@@ -59,12 +57,6 @@ const TabComponent = ({
             </TabPanel>
           )}
 
-          {selectedStore && selectedStore?.gallery && (
-            <TabPanel>
-              <BlogTab />
-            </TabPanel>
-          )}
-
           {selectedStore && selectedStore?.companyProfilePdfUrl && (
             <TabPanel>
               <CompanyProfileTab
@@ -73,9 +65,15 @@ const TabComponent = ({
             </TabPanel>
           )}
 
-          {selectedStore && selectedStore?.companyProfilePdfUrl && (
+          {selectedStore && selectedStore?.gallery && (
             <TabPanel>
-              <Videos />
+              <BlogTab />
+            </TabPanel>
+          )}
+
+          {selectedStore && selectedStore?.youtubeVideos && (
+            <TabPanel>
+              <Videos youtubeVideos={selectedStore.youtubeVideos} />
             </TabPanel>
           )}
 

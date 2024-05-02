@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { db } from "@/firebase/config";
 import { extractGoogleMapsLinkFromIframe } from "@/lib/utils";
 import { doc, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { Link } from "react-router-dom";
 
 const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
@@ -24,7 +24,6 @@ const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
     }
   };
 
-  useEffect(() => {}, []);
 
   return (
     <div className="p-10 flex flex-col">
