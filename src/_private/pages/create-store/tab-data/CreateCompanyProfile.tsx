@@ -1,6 +1,143 @@
-const CreateCompanyProfile = () => {
+import { db, storage } from "@/firebase/config";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { Document, Page } from "react-pdf";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { Button } from "@/components/ui/button";
+import { doc, updateDoc } from "firebase/firestore";
+
+const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
+  const [pdf, setPdf] = useState<File | null>(null);
+  const [numPages, setNumPages] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const handleClickUpdate = async () => {
+    if (pdf) {
+      try {
+        const pdfDownloadUrl = await handleUploadPdf();
+
+          const documentRef = doc(db, "store", storeId);
+          await updateDoc(documentRef, {
+            companyProfilePdfUrl: pdfDownloadUrl,
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    // Check if a file is selected and if it's a PDF
+    if (selectedFile && selectedFile.type === "application/pdf") {
+      setPdf(selectedFile);
+    } else {
+      // Reset the selected file if it's not a PDF
+      setPdf(null);
+      // Optionally, you can display an error message to the user
+      toast.error("Please select a PDF file.");
+    }
+  };
+
+  const handleUploadPdf = async () => {
+    if (pdf) {
+      try {
+        const fileRef = ref(
+          storage,
+          `store_data/store-company-profile-pdfs/${storeId}.pdf`
+        );
+
+        await uploadBytes(fileRef, pdf);
+        const pdfUrl = await getDownloadURL(fileRef);
+        console.log("All files uploaded successfully!");
+        return pdfUrl;
+      } catch (error) {
+        console.error("Error uploading files:", error);
+        alert(
+          "An error occurred while uploading files. Please try again later."
+        );
+      }
+    } else {
+      alert("No images to upload!");
+    }
+  };
+
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    setNumPages(numPages);
+  };
+
+  const handleNextPage = () => {
+    if (pageNumber < numPages) {
+      setPageNumber(pageNumber + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (pageNumber > 1) {
+      setPageNumber(pageNumber - 1);
+    }
+  };
+
   return (
-    <div>CreateCompanyProfile</div>
-  )
-}
-export default CreateCompanyProfile
+    <div className="flex flex-col items-center justify-center">
+      {pdf && (
+        <div className="flex items-center justify-center flex-col">
+          <Document
+            file={pdf}
+            onLoadSuccess={onDocumentLoadSuccess}
+            className="w-full h-[800px] overflow-hidden"
+          >
+            <Page pageNumber={pageNumber} />
+          </Document>
+
+          <div className="mt-10 flex flex-col gap-2 items-center justify-center">
+            <div className="space-x-4">
+              <Button
+                onClick={handlePrevPage}
+                disabled={pageNumber <= 1}
+                variant="outline"
+              >
+                <IoIosArrowBack />
+              </Button>
+              <Button
+                onClick={handleNextPage}
+                disabled={pageNumber >= numPages}
+                variant="outline"
+              >
+                <IoIosArrowForward />
+              </Button>
+            </div>
+            <p>
+              Page {pageNumber} of {numPages}
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-col items-center justify-center mt-10">
+        <input
+          type="file"
+          id="pdf-input"
+          hidden
+          accept=".pdf" // Restrict file selection to only PDF files
+          onChange={handleFileChange}
+        />
+
+        <div className="flex items-center justify-center gap-5">
+          <label
+            htmlFor="pdf-input"
+            className="btn py-2 btn-primary text-white shadow-none"
+          >
+            Browse
+          </label>
+
+          <Button onClick={handleClickUpdate}>Update</Button>
+        </div>
+        {/* {pdf && <p>Selected PDF: {pdf.name}</p>} */}
+      </div>
+    </div>
+  );
+};
+
+export default CreateCompanyProfile;

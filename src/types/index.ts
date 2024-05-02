@@ -119,6 +119,7 @@ export type StoreObj = {
   verified: boolean;
   gallery: string[];
   location: string;
+  companyProfilePdfUrl: string;
 };
 
 export type StoreListType = Array<StoreObj>;

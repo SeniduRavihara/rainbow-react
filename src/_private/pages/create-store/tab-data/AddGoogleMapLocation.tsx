@@ -9,8 +9,8 @@ import { Link } from "react-router-dom";
 
 const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
   const [locationIfram, setLocationIfram] = useState("");
-
   const [show, setShow] = useState(false);
+  
   const handleClickAdd = async () => {
     if (!storeId) return;
     setShow(true);

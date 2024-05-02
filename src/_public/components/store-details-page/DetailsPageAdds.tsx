@@ -38,7 +38,7 @@ const DetailsPageAdds = ({
   return (
     <div>
       <h2 className="text-center">Advertise</h2>
-      <div className="px-10">
+      <div className="px-0 md:px-10">
         {randomAdd && (
           <img
             src={randomAdd.imageUrl}

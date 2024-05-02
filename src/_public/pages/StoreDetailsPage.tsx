@@ -32,7 +32,7 @@ import {
 import { CircularProgress, Tag } from "@chakra-ui/react";
 import { fetchStoreById } from "@/firebase/api";
 import ProductAndServices from "../components/store-details-page/ProductAndServices";
-import TabComponent from "../components/store-details-page/tabs/TabComponent";
+import TabComponent from "../components/store-details-page/tabs/tab-cmponent/TabComponent";
 
 const StoreDetailsPage = () => {
   const { searchResultStores, currentUserData } = useData();

@@ -2,6 +2,7 @@ import Accordion from "react-bootstrap/Accordion";
 import { useParams } from "react-router-dom";
 import CreateGallery from "./CreateGallery";
 import AddGoogleMapLocation from "./AddGoogleMapLocation";
+import CreateCompanyProfile from "./CreateCompanyProfile";
 
 const AddTabData = () => {
   const params = useParams();
@@ -26,7 +27,7 @@ const AddTabData = () => {
         <Accordion.Item eventKey="2">
           <Accordion.Header>Setup Company Profile</Accordion.Header>
           <Accordion.Body>
-            <AddGoogleMapLocation storeId={params.storeId || ""} />
+            <CreateCompanyProfile storeId={params.storeId || ""} />
           </Accordion.Body>
         </Accordion.Item>
 
