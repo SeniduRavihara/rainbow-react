@@ -12,12 +12,17 @@ const Section2 = () => {
       <div className="md:w-1/2 mt-10 md:mt-0 ml-5">
         <h1 className="text-3xl font-bold">Our Story</h1>
         <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Adipisci,
-          iusto sapiente dolore alias, nemo placeat sit a dolorum, rerum totam
-          voluptatum sint ad. Facere saepe aperiam quas quaerat nam similique.
-          Debitis porro ducimus adipisci, quidem omnis autem nam! Dicta officiis
-          commodi cupiditate magni veniam dolore quo qui eius velit eaque saepe
-          enim incidunt, quaerat nisi rem iure accusantium assumenda a!
+          Welcome to Sri Lanka Business. Mainly in Sri Lanka, we help you to
+          find many businesses and services that you need on a daily basis. In
+          addition, we have listed a lot of information of local businessmen all
+          over Sri Lanka. Our service extends from providing address and contact
+          details of business establishments around the country, to making
+          orders and reservations for Hotels, business places leisure, medical,
+          financial, travel and domestic purposes. We enlist business
+          information across varied sectors like Restaurants, Auto Care, Home
+          Decor, Personal and Pet Care, Fitness, Insurance, Real Estate, Sports,
+          Schools, etc. from all over the country. Holding informa- tion right
+          from major cities in srilanka.
         </p>
       </div>
     </div>
