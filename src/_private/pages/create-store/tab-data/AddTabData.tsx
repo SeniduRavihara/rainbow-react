@@ -1,7 +1,7 @@
 import Accordion from "react-bootstrap/Accordion";
 import { useParams } from "react-router-dom";
 import CreateGallery from "./CreateGallery";
-import AddGoogleMapLocation from "./AddGoogleMapLocation";
+import AddGoogleMapLocation from "../AddGoogleMapLocation";
 
 const AddTabData = () => {
   const params = useParams();
