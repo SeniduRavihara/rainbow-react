@@ -1,9 +1,6 @@
-
-const StreetViewTab = ({ location }: { location: string }) => {
-
+const StreetViewTab = () => {
   return (
     <div>
-      
       <iframe
         src={location}
         className="w-full"

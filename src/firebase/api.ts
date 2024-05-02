@@ -282,7 +282,7 @@ export const fetchData = async ({
     collectionRef,
     orderBy("createdAt", "desc"),
     startAfter(lastDocument?.createdAt ?? ""),
-    limit(8),
+    limit(5),
     where("active", "==", true),
     where("published", "==", true)
   );
@@ -337,7 +337,7 @@ export const fetchCatogaryData = async (
     collectionRef,
     orderBy("createdAt", "desc"),
     startAfter(lastDocument?.createdAt ?? ""),
-    limit(8),
+    limit(5),
     where("active", "==", true),
     where("published", "==", true),
     // where("categoriesArr", "array-contains", label),
@@ -396,7 +396,7 @@ export const fetchTagData = async (
     collectionRef,
     orderBy("createdAt", "desc"),
     startAfter(lastDocument?.createdAt ?? ""),
-    limit(8),
+    limit(5),
     where("active", "==", true),
     where("published", "==", true),
     where("tags", "array-contains", tag)
