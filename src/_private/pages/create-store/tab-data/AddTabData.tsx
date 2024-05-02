@@ -1,6 +1,6 @@
 import Accordion from "react-bootstrap/Accordion";
 import { useNavigate, useParams } from "react-router-dom";
-import CreateGallery from "./CreateGallery";
+// import CreateGallery from "./CreateGallery";
 import AddGoogleMapLocation from "./AddGoogleMapLocation";
 import CreateCompanyProfile from "./CreateCompanyProfile";
 import AddVideosTab from "./AddVideosTab";
@@ -10,6 +10,7 @@ import AddBlogTab from "./AddBlogTab";
 import { Button } from "@/components/ui/button";
 import { FaArrowLeft } from "react-icons/fa";
 import AddInfoTab from "./AddInfoTab";
+import AddGalleryTab from "./AddGalleryTab";
 
 const AddTabData = () => {
   const params = useParams();
@@ -36,7 +37,7 @@ const AddTabData = () => {
         <Accordion.Item eventKey="1">
           <Accordion.Header>Setup Gallery</Accordion.Header>
           <Accordion.Body>
-            <CreateGallery storeId={params.storeId || ""} />
+            <AddGalleryTab storeId={params.storeId || ""} />
           </Accordion.Body>
         </Accordion.Item>
 

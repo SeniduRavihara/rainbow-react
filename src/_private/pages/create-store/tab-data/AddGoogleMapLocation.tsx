@@ -1,16 +1,16 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { db } from "@/firebase/config";
 import { extractGoogleMapsLinkFromIframe } from "@/lib/utils";
 import { doc, updateDoc } from "firebase/firestore";
-import {  useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
   const [locationIfram, setLocationIfram] = useState("");
   const [show, setShow] = useState(false);
-  
+
   const handleClickAdd = async () => {
     if (!storeId) return;
     setShow(true);
@@ -24,17 +24,18 @@ const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
     }
   };
 
-
   return (
     <div className="p-10 flex flex-col">
       <Link
         target="_blank"
+        className="text-xl font-semibold text-blue-400 mb-5"
         to="https://firebasestorage.googleapis.com/v0/b/rainbow-32f4a.appspot.com/o/guide%2F0430.mp4?alt=media&token=23532649-00e1-4343-abf9-37458009e737"
       >
-        How to get the Link
+        Video Guide to get The Link
       </Link>
 
-      <div>
+      <Label>video embed url</Label>
+      <div className="flex items-center justify-center gap-2 mt-1">
         <Input
           type="text"
           value={locationIfram}
@@ -65,4 +66,4 @@ const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
   );
 };
 
-export default AddGoogleMapLocation
+export default AddGoogleMapLocation;

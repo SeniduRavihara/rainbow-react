@@ -17,12 +17,12 @@ const Images: FC<ImagesProps> = (props) => {
   };
 
   return (
-    <div className='images-container grid grid-cols-3'>
+    <div className="images-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {data.map((slide, index) => (
         <div
           onClick={() => handleClickImage(index)}
           key={index}
-          className='image'
+          className="image m-1 md:m-2"
         >
           <img src={slide.src} alt={slide.description} />
         </div>

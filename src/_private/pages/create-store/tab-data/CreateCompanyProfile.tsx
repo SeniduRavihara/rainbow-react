@@ -6,24 +6,29 @@ import { Document, Page } from "react-pdf";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Button } from "@/components/ui/button";
 import { doc, updateDoc } from "firebase/firestore";
+import { CircularProgress } from "@chakra-ui/react";
 
 const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
   const [pdf, setPdf] = useState<File | null>(null);
   const [numPages, setNumPages] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const handleClickUpdate = async () => {
     if (pdf) {
+      setLoading(true);
       try {
         const pdfDownloadUrl = await handleUploadPdf();
 
-          const documentRef = doc(db, "store", storeId);
-          await updateDoc(documentRef, {
-            companyProfilePdfUrl: pdfDownloadUrl,
-          });
+        const documentRef = doc(db, "store", storeId);
+        await updateDoc(documentRef, {
+          companyProfilePdfUrl: pdfDownloadUrl,
+        });
       } catch (error) {
         console.log(error);
       }
+
+      setLoading(false);
     }
   };
 
@@ -50,7 +55,7 @@ const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
 
         await uploadBytes(fileRef, pdf);
         const pdfUrl = await getDownloadURL(fileRef);
-        console.log("All files uploaded successfully!");
+        toast.success("Company Profile Updated successfully!");
         return pdfUrl;
       } catch (error) {
         console.error("Error uploading files:", error);
@@ -81,6 +86,37 @@ const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
 
   return (
     <div className="flex flex-col items-center justify-center">
+      <h1 className="font-semibold">
+        Browes the PDF Document of your company Profile and update
+      </h1>
+      <div className="flex flex-col items-center justify-center mt-4">
+        <input
+          type="file"
+          id="pdf-input"
+          hidden
+          accept=".pdf" // Restrict file selection to only PDF files
+          onChange={handleFileChange}
+        />
+
+        <div className="flex items-center justify-center gap-5">
+          <label
+            htmlFor="pdf-input"
+            className="btn py-2 btn-primary text-white shadow-none"
+          >
+            Browse
+          </label>
+
+          <div className="flex items-center justify-center gap-5">
+            {loading ? (
+              <CircularProgress size="30px" isIndeterminate color="green.300" />
+            ) : (
+              <Button onClick={handleClickUpdate}>Update</Button>
+            )}
+          </div>
+        </div>
+        {/* {pdf && <p>Selected PDF: {pdf.name}</p>} */}
+      </div>
+
       {pdf && (
         <div className="flex items-center justify-center flex-col">
           <Document
@@ -114,28 +150,6 @@ const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
           </div>
         </div>
       )}
-
-      <div className="flex flex-col items-center justify-center mt-10">
-        <input
-          type="file"
-          id="pdf-input"
-          hidden
-          accept=".pdf" // Restrict file selection to only PDF files
-          onChange={handleFileChange}
-        />
-
-        <div className="flex items-center justify-center gap-5">
-          <label
-            htmlFor="pdf-input"
-            className="btn py-2 btn-primary text-white shadow-none"
-          >
-            Browse
-          </label>
-
-          <Button onClick={handleClickUpdate}>Update</Button>
-        </div>
-        {/* {pdf && <p>Selected PDF: {pdf.name}</p>} */}
-      </div>
     </div>
   );
 };

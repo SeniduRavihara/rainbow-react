@@ -196,11 +196,6 @@ const CreateGallery = ({storeId}: {storeId: string}) => {
         </div>
       </div>
 
-      {/* <div className="mb-10">
-        <Link to={`/add-location/${storeId}`}>
-          <Button>Next</Button>
-        </Link>
-      </div> */}
       
     </div>
   );
