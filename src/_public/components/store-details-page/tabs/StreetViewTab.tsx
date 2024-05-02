@@ -1,4 +1,4 @@
-const StreetViewTab = () => {
+const StreetViewTab = ({ location }: { location: string }) => {
   return (
     <div>
       <iframe
