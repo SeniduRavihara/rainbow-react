@@ -4,6 +4,7 @@ import 'regenerator-runtime/runtime.js'; // warning: before App
 import App from "./App.tsx";
 import "./index.css";
 import "./style.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 
 
 /* Core CSS required for Ionic components to work properly */

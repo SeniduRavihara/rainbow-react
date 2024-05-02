@@ -176,6 +176,7 @@ const StorePage = () => {
         gallery: hit.gallery,
         location: hit.location,
         companyProfilePdfUrl: hit.companyProfilePdfUrl,
+        youtubeVideos: hit.youtubeVideos,
       }));
       setLastDocument(null);
       setStoreList(storeList);

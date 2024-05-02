@@ -113,13 +113,13 @@ export type StoreObj = {
   website: string;
   rating: number;
   reviewCount: number;
-  // categoriesArr: Array<string>;
   category: string;
   visitCount: number;
   verified: boolean;
   gallery: string[];
   location: string;
   companyProfilePdfUrl: string;
+  youtubeVideos: string[];
 };
 
 export type StoreListType = Array<StoreObj>;

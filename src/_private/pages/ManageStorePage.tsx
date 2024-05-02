@@ -380,7 +380,7 @@ const ManageStorePage = () => {
   return (
     <div className="w-full min-h-screen text-center relative">
       <Link
-        to="/"
+        to="/manage-stores"
         className="absolute top-0 left-5 w-10 h-10 text-4xl font-extralight"
       >
         <IoIosArrowBack />
