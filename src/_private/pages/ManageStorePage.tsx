@@ -104,7 +104,7 @@ const ManageStorePage = () => {
           ...doc.data(),
         })) as Array<{ icon: string; label: string }>;
 
-        console.log(categoryArr);
+        // console.log(categoryArr);
         setVisibleCategories((pre) => [...pre, ...categoryArr]);
       });
 

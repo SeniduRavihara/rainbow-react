@@ -2,7 +2,7 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import InfoTab from "../InfoTab";
 import GalleryTab from "../gallery-tab/GalleryTab";
 import StreetViewTab from "../StreetViewTab";
-import BlogTab from "../BlogTab";
+// import BlogTab from "../BlogTab";
 import { StoreObj } from "@/types";
 import CompanyProfileTab from "../CompanyProfileTab";
 import "./style.css";
@@ -18,20 +18,28 @@ const TabComponent = ({
   return (
     <div className="my-5">
       <Tabs className="">
-        <TabList className="overflow-x-scroll overflow-y-hidden scrollbar-hide flex gap-4 tab-list tab-list-container">
-          <Tab className="">Information</Tab>
-          {selectedStore && selectedStore?.gallery && <Tab>Gallery</Tab>}
-          {selectedStore && selectedStore?.location && <Tab>Street View</Tab>}
-          {selectedStore && selectedStore?.companyProfilePdfUrl && (
-            <Tab>Compay Profile</Tab>
+        <TabList className="overflow-x-scroll overflow-y-hidden scrollbar-hide flex gap- tab-list tab-list-container">
+          <Tab className="border mb-1">Information</Tab>
+          {selectedStore && selectedStore?.gallery && (
+            <Tab className="border mb-1">Gallery</Tab>
           )}
-          {selectedStore && selectedStore?.gallery && <Tab>Blog</Tab>}
-          {selectedStore && selectedStore?.youtubeVideos && <Tab>Videos</Tab>}
-          {selectedStore && selectedStore?.companyProfilePdfUrl && (
-            <Tab>Our Products</Tab>
+          {selectedStore && selectedStore?.location && (
+            <Tab className="border mb-1">Street View</Tab>
           )}
           {selectedStore && selectedStore?.companyProfilePdfUrl && (
-            <Tab>Contact</Tab>
+            <Tab className="border mb-1">Compay Profile</Tab>
+          )}
+          {/* {selectedStore && selectedStore?.gallery && (
+            <Tab className="border mb-1">Blog</Tab>
+          )} */}
+          {selectedStore && selectedStore?.youtubeVideos && (
+            <Tab className="border mb-1">Videos</Tab>
+          )}
+          {selectedStore && selectedStore?.companyProfilePdfUrl && (
+            <Tab className="border mb-1">Our Products</Tab>
+          )}
+          {selectedStore && selectedStore?.companyProfilePdfUrl && (
+            <Tab className="border mb-1">Contact</Tab>
           )}
         </TabList>
 
@@ -65,11 +73,11 @@ const TabComponent = ({
             </TabPanel>
           )}
 
-          {selectedStore && selectedStore?.gallery && (
+          {/* {selectedStore && selectedStore?.gallery && (
             <TabPanel>
               <BlogTab />
             </TabPanel>
-          )}
+          )} */}
 
           {selectedStore && selectedStore?.youtubeVideos && (
             <TabPanel>

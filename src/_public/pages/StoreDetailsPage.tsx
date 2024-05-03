@@ -48,9 +48,6 @@ const StoreDetailsPage = () => {
 
   const navigate = useNavigate();
 
-  console.log(selectedStore?.id);
-  
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

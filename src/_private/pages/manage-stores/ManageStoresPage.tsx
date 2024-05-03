@@ -36,7 +36,7 @@ const ManageStoresPage = () => {
       })) as StoreListType;
 
       setCurrentUserStores(currentUserStoresArr);
-      console.log("Senidu", currentUserStoresArr);
+      // console.log("Senidu", currentUserStoresArr);
 
       setLoading(false);
     };

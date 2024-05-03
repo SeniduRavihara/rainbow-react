@@ -180,7 +180,7 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
   };
 
   return (
-    <div className="px-10 flex flex-col items-center justify-center">
+    <div className="lg:px-10 flex flex-col items-center justify-center">
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
           <ImageCropDialog
@@ -273,15 +273,15 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
         </DialogContent>
       </Dialog>
 
-      <ul className="w-full mt-5 flex flex-wrap gap-5">
+      <ul className="w-full mt-3 flex flex-wrap gap-4 items-center justify-center">
         {productList.map((productObj, index) => (
           <li
             key={index}
-            className="flex flex-col items-center justify-items-center border p-3"
+            className="flex flex-col items-center justify-items-center border rounded-lg py-4 pb-2 gap-2"
           >
-            <img src={productObj.imageUrl} className="w-[100px]" alt="" />
-            <h3>{productObj.name}</h3>
-            <RxCross2 onClick={()=>handleDeleteProduct(productObj.id)} />
+            <img src={productObj.imageUrl} className="w-[180px]" alt="" />
+            <h3 className="font-semibold">{productObj.name}</h3>
+            <RxCross2 className="cursor-pointer hover:text-red-500 duration-200 text-2xl" onClick={() => handleDeleteProduct(productObj.id)} />
           </li>
         ))}
       </ul>
