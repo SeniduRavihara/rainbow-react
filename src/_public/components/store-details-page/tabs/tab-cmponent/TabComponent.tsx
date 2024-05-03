@@ -79,7 +79,7 @@ const TabComponent = ({
 
           {selectedStore && selectedStore?.companyProfilePdfUrl && (
             <TabPanel>
-              <OurProductsTab />
+              <OurProductsTab storeId={selectedStore?.id} />
             </TabPanel>
           )}
 

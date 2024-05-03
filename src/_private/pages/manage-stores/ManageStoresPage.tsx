@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import { CircularProgress } from "@chakra-ui/react";
+import { IoIosArrowBack } from "react-icons/io";
+import { LucidePlusCircle } from "lucide-react";
 
 const ManageStoresPage = () => {
   const [loading, setLoading] = useState(false);
@@ -54,17 +56,30 @@ const ManageStoresPage = () => {
 
   return (
     <div className="w-full flex items-center justify-center flex-col">
+      <Link
+        to="/"
+        className="absolute top-5 left-5 w-10 h-10 text-4xl font-extralight"
+      >
+        <IoIosArrowBack />
+      </Link>
+
       <div>
-        <h2 className="text-xl font-semibold mb-4">Create Your Store</h2>
+        <h2 className="text-2xl font-bold text-blue-500 text-center mt-4 mb-4">
+          Manage Your Stores
+        </h2>
         <p className="mb-4">
           It seems like you haven't created a store yet. Create one now to start
           selling!
         </p>
-        <Link to="/create-store" className="text-blue-500 hover:underline">
+        <Link
+          to="/create-store"
+          className="text-blue-500 text-xl hover:underline flex items-center gap-3"
+        >
+          <LucidePlusCircle />
           Create Store
         </Link>
 
-        <Table striped bordered hover>
+        <Table striped bordered hover className="mt-10">
           <thead>
             <tr>
               <th>#</th>

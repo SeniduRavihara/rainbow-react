@@ -40,7 +40,7 @@ const CatogarySlider = () => {
       setAdds((pre) =>
         pre.map((addObj, index) => ({
           ...addObj,
-          src: sectionAdds[index].imageUrl || "",
+          src: sectionAdds[index]?.imageUrl || "",
         }))
       );
     }
@@ -72,7 +72,7 @@ const CatogarySlider = () => {
   };
 
   return (
-    <div className="w-full flex flex-col md:flex-row gap-2 my-10 px-10 md:h-[200px] h-[400px]">
+    <div className="w-full flex flex-col md:flex-row gap-2 my-10 px-2 md:px-10 md:h-[200px] h-[400px]">
       <div className="w-full md:w-[40%] h-[250px]">
         <Carousel
           showStatus={false}

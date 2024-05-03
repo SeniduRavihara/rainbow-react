@@ -48,6 +48,9 @@ const StoreDetailsPage = () => {
 
   const navigate = useNavigate();
 
+  console.log(selectedStore?.id);
+  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -88,7 +91,7 @@ const StoreDetailsPage = () => {
     const fetchData = async () => {
       if (!searchResultStores && storeId) {
         const storeData = await fetchStoreById(storeId);
-        setSelectedStore(storeData || null);
+        setSelectedStore({ ...storeData, id: storeId } as StoreObj);
       } else {
         setSelectedStore(
           searchResultStores?.find((storeObj) => storeObj.id === storeId) ??
