@@ -22,7 +22,7 @@ const OurProductsTab = ({ storeId }: { storeId: string }) => {
           discription: string; // Potential source of error (typo in 'description')
         }>;
 
-        console.log(productListArr);
+        // console.log(productListArr);
         setProductList(productListArr);
       });
 
@@ -37,16 +37,15 @@ const OurProductsTab = ({ storeId }: { storeId: string }) => {
   if (!productList) return <CircularProgress size="30px" isIndeterminate color="green.300" />;
     return (
       <div>
-        <ul className="w-full mt-5 flex flex-wrap gap-5">
+        <ul className="w-full mt-3 flex flex-wrap gap-4 items-center justify-center">
           {productList.map((productObj, index) => (
             <li
               key={index}
-              className="flex flex-col items-center justify-items-center border p-3"
+              className="flex flex-col items-center justify-items-center border rounded-lg py-3 gap-2"
               onClick={handleProductClick}
             >
-              <img src={productObj.imageUrl} className="w-[100px]" alt="" />
-              <h3>{productObj.name}</h3>
-              
+              <img src={productObj.imageUrl} className="w-[180px]" alt="" />
+              <h3 className="font-semibold">{productObj.name}</h3>
             </li>
           ))}
         </ul>

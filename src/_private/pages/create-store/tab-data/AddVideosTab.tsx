@@ -14,8 +14,6 @@ const AddVideosTab = ({ storeId }: { storeId: string }) => {
   const [videoList, setVideoList] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  console.log(videoList);
-
   const handleClickAdd = async () => {
     setVideoList((pre) => [...pre, extractYoutubeLinkFromIframe(videoLink)]);
 
@@ -41,7 +39,7 @@ const AddVideosTab = ({ storeId }: { storeId: string }) => {
       <Link
         target="_blank"
         className="text-xl font-semibold text-blue-400 mb-5"
-        to="https://firebasestorage.googleapis.com/v0/b/rainbow-32f4a.appspot.com/o/guide%2F0430.mp4?alt=media&token=23532649-00e1-4343-abf9-37458009e737"
+        to="https://firebasestorage.googleapis.com/v0/b/rainbow-32f4a.appspot.com/o/guide%2Fyoutube%20guid.mp4?alt=media&token=02dac91e-7ea9-4587-9f1e-acff3b0e0471"
       >
         Video Guide to get The Link
       </Link>

@@ -24,9 +24,6 @@ const ResultList = ({ category }: { category:string }) => {
   // const params = useParams();
   // const category = params.category;
 
-  useEffect(() => {
-    console.log(searchResultStores);
-  }, [searchResultStores]);
 
   useEffect(() => {
     if (isAllFetched) setAllPageCount(currentPage);

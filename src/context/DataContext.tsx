@@ -111,7 +111,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
         id: doc.id,
       })) as Array<{ imageUrl: string; id: string; link: string }>;
 
-      console.log(sliderAddsArr);
+      // console.log(sliderAddsArr);
       setSearchResultSliderAdds(sliderAddsArr);
     });
 

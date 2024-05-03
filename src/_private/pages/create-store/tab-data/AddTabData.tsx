@@ -6,7 +6,7 @@ import CreateCompanyProfile from "./CreateCompanyProfile";
 import AddVideosTab from "./AddVideosTab";
 import AddOurProductsTab from "./AddOurProductsTab";
 import AddContactTab from "./AddContactTab";
-import AddBlogTab from "./AddBlogTab";
+// import AddBlogTab from "./AddBlogTab";
 import { Button } from "@/components/ui/button";
 import { FaArrowLeft } from "react-icons/fa";
 // import AddInfoTab from "./AddInfoTab";
@@ -55,12 +55,12 @@ const AddTabData = () => {
           </Accordion.Body>
         </Accordion.Item>
 
-        <Accordion.Item eventKey="4">
+        {/* <Accordion.Item eventKey="4">
           <Accordion.Header>Setup Blogs</Accordion.Header>
           <Accordion.Body>
             <AddBlogTab storeId={params.storeId || ""} />
           </Accordion.Body>
-        </Accordion.Item>
+        </Accordion.Item> */}
 
         <Accordion.Item eventKey="5">
           <Accordion.Header>Setup Videos</Accordion.Header>
