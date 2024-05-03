@@ -9,7 +9,7 @@ import AddContactTab from "./AddContactTab";
 import AddBlogTab from "./AddBlogTab";
 import { Button } from "@/components/ui/button";
 import { FaArrowLeft } from "react-icons/fa";
-import AddInfoTab from "./AddInfoTab";
+// import AddInfoTab from "./AddInfoTab";
 import AddGalleryTab from "./AddGalleryTab";
 
 const AddTabData = () => {
@@ -27,12 +27,12 @@ const AddTabData = () => {
       </Button>
 
       <Accordion >
-        <Accordion.Item eventKey="0">
+        {/* <Accordion.Item eventKey="0">
           <Accordion.Header>Setup Infomation</Accordion.Header>
           <Accordion.Body>
             <AddInfoTab storeId={params.storeId || ""} />
           </Accordion.Body>
-        </Accordion.Item>
+        </Accordion.Item> */}
 
         <Accordion.Item eventKey="1">
           <Accordion.Header>Setup Gallery</Accordion.Header>
