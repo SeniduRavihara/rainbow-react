@@ -298,7 +298,7 @@ const CreateStorePage = () => {
       </h1>
 
       <Link
-        to="/"
+        to="/manage-stores"
         className="absolute top-5 left-5 w-10 h-10 text-4xl font-extralight"
       >
         <IoIosArrowBack />

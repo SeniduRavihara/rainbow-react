@@ -67,7 +67,7 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
         discription: string;
       }>;
 
-      console.log(productListArr);
+      // console.log(productListArr);
       setProductList(productListArr);
     });
 
