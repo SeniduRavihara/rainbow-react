@@ -1,3 +1,4 @@
+import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,10 +11,13 @@ import { Link } from "react-router-dom";
 const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
   const [locationIfram, setLocationIfram] = useState("");
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleClickAdd = async () => {
     if (!storeId) return;
     setShow(true);
+    setLoading(true);
+
     try {
       const documentRef = doc(db, "store", storeId);
       await updateDoc(documentRef, {
@@ -22,6 +26,7 @@ const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
     } catch (error) {
       console.log(error);
     }
+    setLoading(false);
   };
 
   return (
@@ -41,11 +46,19 @@ const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
           value={locationIfram}
           onChange={(e) => setLocationIfram(e.target.value)}
         />
-        <Button onClick={handleClickAdd}>Add</Button>
+        <Button onClick={handleClickAdd}>
+          {loading ? (
+            <>
+              <Loader /> <span className="ml-3">Loading...</span>
+            </>
+          ) : (
+            "Update"
+          )}
+        </Button>
       </div>
 
       {show && locationIfram && (
-        <div>
+        <div className="mt-10">
           <iframe
             src={extractGoogleMapsLinkFromIframe(locationIfram) || ""}
             className="w-full"

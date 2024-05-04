@@ -40,6 +40,11 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     id: string;
     link: string;
   }> | null>(null);
+    const [detailsPageSliderAdds, setDetailsPageSliderAdds] = useState<Array<{
+      imageUrl: string;
+      id: string;
+      link: string;
+    }> | null>(null);
 
   const [searchResultStores, setSearchResultStores] =
     useState<StoreListType | null>(null);
@@ -113,6 +118,21 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
 
       // console.log(sliderAddsArr);
       setSearchResultSliderAdds(sliderAddsArr);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const collectionRef = collection(db, "detailsPageSliderAdds");
+    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+      const sliderAddsArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as Array<{ imageUrl: string; id: string; link: string }>;
+
+      // console.log(sliderAddsArr);
+      setDetailsPageSliderAdds(sliderAddsArr);
     });
 
     return unsubscribe;
@@ -224,6 +244,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     sectionStaticAdds,
     sliderAdds,
     searchResultSliderAdds,
+    detailsPageSliderAdds,
     popularBrands,
     searchResultStores,
     setSearchResultStores,

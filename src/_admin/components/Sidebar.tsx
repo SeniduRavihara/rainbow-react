@@ -1,13 +1,18 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { HiSpeakerphone } from "react-icons/hi";
-import { BiSolidBookContent, BiSolidCategory, BiSolidUserAccount } from "react-icons/bi";
-import { FaComments } from "react-icons/fa";
+import {
+  BiSolidBookContent,
+  BiSolidCategory,
+  BiSolidUserAccount,
+} from "react-icons/bi";
+// import { FaComments } from "react-icons/fa";
 import { DiGoogleAnalytics } from "react-icons/di";
 import { useState } from "react";
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { MdManageAccounts } from "react-icons/md";
 import { logo } from "@/assets";
+import { cn } from "@/lib/utils";
 
 // const sidebarItems = [
 //   { item: "Advertising", to: "set-adds", icon: <HiSpeakerphone /> },
@@ -21,15 +26,11 @@ function Sidebar() {
   const [isOpenAddsPage, setIsOpenAddsPage] = useState(false);
   const navigate = useNavigate();
 
+  const location = useLocation();
+
   return (
-    <div className="w-3/12 h-screen p-5 flex flex-col items-center justify-between left-0  bg-green-600 text-white">
+    <div className="w-[200px] h-screen p-5 flex flex-col items-center justify-between left-0  bg-green-600 text-white">
       <ul className="flex flex-col gap-5">
-        {/* <h1
-          onClick={() => navigate("/")}
-          className="text-3xl font-extrabold mb-10 cursor-pointer"
-        >
-          LOGO
-        </h1> */}
         <img
           src={logo}
           alt=""
@@ -38,7 +39,6 @@ function Sidebar() {
         />
 
         <li onClick={() => setIsOpenAddsPage(!isOpenAddsPage)}>
-          {/* <Link to="set-adds" className="flex items-center gap-3"> */}
           <div className="flex items-center gap-3 cursor-pointer">
             <div className="flex">
               <HiSpeakerphone />{" "}
@@ -46,23 +46,94 @@ function Sidebar() {
             Advertising
             {isOpenAddsPage ? <IoMdArrowDropright /> : <IoMdArrowDropdown />}
           </div>
-          {/* </Link> */}
           <div>
             {isOpenAddsPage && (
               <div className="flex flex-col gap-2 ml-5">
-                <Link to="popular-brands">Popular Brands</Link>
-                <Link to="search-result-adds">Search Result Adds</Link>
-                <Link to="slider-adds">Slider Adds</Link>
-                <Link to="section-adds">Section Adds</Link>
-                <Link to="details-page-adds">DetailsPage Adds</Link>
-                <Link to="searchresult-slider-adds">SearchResultSlider Adds</Link>
+                <Link
+                  to="popular-brands"
+                  className={`${
+                    location.pathname === "/admin/popular-brands"
+                      ? "text-blue-700 font-semibold"
+                      : ""
+                  }`}
+                >
+                  Popular Brands
+                </Link>
+                <Link
+                  to="search-result-adds"
+                  className={`${
+                    location.pathname === "/admin/search-result-adds"
+                      ? "text-blue-700 font-semibold"
+                      : ""
+                  }`}
+                >
+                  Search Result Adds
+                </Link>
+                <Link
+                  to="slider-adds"
+                  className={`${
+                    location.pathname === "/admin/slider-adds"
+                      ? "text-blue-700 font-semibold"
+                      : ""
+                  }`}
+                >
+                  Slider Adds
+                </Link>
+                <Link
+                  to="section-adds"
+                  className={`${
+                    location.pathname === "/admin/section-adds"
+                      ? "text-blue-700 font-semibold"
+                      : ""
+                  }`}
+                >
+                  Section Adds
+                </Link>
+                <Link
+                  to="details-page-adds"
+                  className={`${
+                    location.pathname === "/admin/details-page-adds"
+                      ? "text-blue-700 font-semibold"
+                      : ""
+                  }`}
+                >
+                  DetailsPage Adds
+                </Link>
+                <Link
+                  to="searchresult-slider-adds"
+                  className={`${
+                    location.pathname === "/admin/searchresult-slider-adds"
+                      ? "text-blue-700 font-semibold"
+                      : ""
+                  }`}
+                >
+                  SearchResultSlider Adds
+                </Link>
+                <Link
+                  to="detailspage-slider-adds"
+                  className={`${
+                    location.pathname === "/admin/detailspage-slider-adds"
+                      ? "text-blue-700 font-semibold"
+                      : ""
+                  }`}
+                >
+                  DetailsPageSlider Adds
+                </Link>
               </div>
             )}
           </div>
         </li>
 
         <li>
-          <Link to="business" className="flex items-center gap-3">
+          <Link
+            to="business"
+            className={cn(
+              "flex items-center gap-3",
+              location.pathname === "/admin/business"
+                ? "text-pink-800 font-semibold"
+                : ""
+            )}
+          >
             <div>
               <BiSolidBookContent />{" "}
             </div>
@@ -70,17 +141,25 @@ function Sidebar() {
           </Link>
         </li>
 
-        <li>
+        {/* <li>
           <Link to="comments" className="flex items-center gap-3">
             <div>
               <FaComments />{" "}
             </div>
             Comments
           </Link>
-        </li>
+        </li> */}
 
         <li>
-          <Link to="" className="flex items-center gap-3">
+          <Link
+            to=""
+            className={cn(
+              "flex items-center gap-3",
+              location.pathname === "/admin"
+                ? "text-pink-800 font-semibold"
+                : ""
+            )}
+          >
             <div>
               <DiGoogleAnalytics />{" "}
             </div>
@@ -89,7 +168,15 @@ function Sidebar() {
         </li>
 
         <li>
-          <Link to="message" className="flex items-center gap-3">
+          <Link
+            to="message"
+            className={cn(
+              "flex items-center gap-3",
+              location.pathname === "/admin/message"
+                ? "text-pink-800 font-semibold"
+                : ""
+            )}
+          >
             <div>
               <BiSolidUserAccount />{" "}
             </div>
@@ -98,7 +185,15 @@ function Sidebar() {
         </li>
 
         <li>
-          <Link to="manage" className="flex items-center gap-3">
+          <Link
+            to="manage"
+            className={cn(
+              "flex items-center gap-3",
+              location.pathname === "/admin/manage"
+                ? "text-pink-800 font-semibold"
+                : ""
+            )}
+          >
             <div>
               <MdManageAccounts />{" "}
             </div>
@@ -107,7 +202,15 @@ function Sidebar() {
         </li>
 
         <li>
-          <Link to="create-category" className="flex items-center gap-3">
+          <Link
+            to="create-category"
+            className={cn(
+              "flex items-center gap-3",
+              location.pathname === "/admin/create-category"
+                ? "text-pink-800 font-semibold"
+                : ""
+            )}
+          >
             <div>
               <BiSolidCategory />{" "}
             </div>
@@ -117,7 +220,12 @@ function Sidebar() {
 
         {/* {sidebarItems.map((sideItem) => (
           <li key={sideItem.item}>
-            <Link to={sideItem.to} className="flex items-center gap-3">
+            <Link to={sideItem.to} className={cn(
+              "flex items-center gap-3",
+              location.pathname === "/admin/business"
+                ? "text-pink-800 font-semibold"
+                : ""
+            )}>
               <div>{sideItem.icon}</div>
               {sideItem.item}
             </Link>

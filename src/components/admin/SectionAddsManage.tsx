@@ -4,6 +4,7 @@ import { uploadAdd } from "@/firebase/api";
 import { db } from "@/firebase/config";
 import ImageCropDialog from "../image-croper/CropDialog";
 import { Input } from "../ui/input";
+import toast from "react-hot-toast";
 
 interface ImageData {
   imageUrl: string;
@@ -163,6 +164,7 @@ const SectionAddsManage: React.FC = () => {
           imageUrl: addToUpdate?.imageUrl,
           link: addToUpdate?.link,
         });
+        toast.success("Link Uploaded successfully");
       } catch (error) {
         console.log(error);
       }
@@ -175,6 +177,7 @@ const SectionAddsManage: React.FC = () => {
         "section_adds",
         idToUpdate
       );
+      if (imageUrl) toast.success("Banner Uploaded successfully");
       const documentRef = doc(db, "sectionAdds", idToUpdate);
       await updateDoc(documentRef, { imageUrl, link: addToUpdate?.link });
     } catch (error) {
@@ -193,6 +196,7 @@ const SectionAddsManage: React.FC = () => {
            imageUrl: addToUpdate?.imageUrl,
            link: addToUpdate?.link,
          });
+         toast.success("Link Uploaded successfully");
        } catch (error) {
          console.log(error);
        }
@@ -205,6 +209,7 @@ const SectionAddsManage: React.FC = () => {
          "section_static_adds",
          idToUpdate
        );
+       if (imageUrl) toast.success("Banner Uploaded successfully");
        const documentRef = doc(db, "sectionStaticAdds", idToUpdate);
        await updateDoc(documentRef, { imageUrl, link: addToUpdate?.link });
      } catch (error) {

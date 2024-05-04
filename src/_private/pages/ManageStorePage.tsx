@@ -12,7 +12,6 @@ import {
   IoMdArrowDropleft,
   IoMdArrowDropright,
 } from "react-icons/io";
-// import { RxCross2 } from "react-icons/rx";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { forwardRef, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -29,7 +28,6 @@ import PhoneInput from "react-phone-number-input";
 // import "react-phone-number-input/style.css";
 import "@/styles/phone-number-input.css";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
@@ -44,8 +42,8 @@ const ManageStorePage = () => {
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<Array<string>>([]);
   const [loading, setLoading] = useState(false);
-  const [info1, setInfo1] = useState("");
-  const [info2, setInfo2] = useState("");
+  // const [info1, setInfo1] = useState("");
+  // const [info2, setInfo2] = useState("");
   const [timevalue, setTimevalue] = useState<TimeValue | null>(null);
   const [schedulArr, setSchedulArr] = useState<
     Array<{ day: string; time: TimeValue }>
@@ -157,8 +155,8 @@ const ManageStorePage = () => {
 
   useEffect(() => {
     if (currentUserStore) {
-      setInfo1(currentUserStore.info1);
-      setInfo2(currentUserStore.info2);
+      // setInfo1(currentUserStore.info1);
+      // setInfo2(currentUserStore.info2);
       setAddress(currentUserStore.address);
       setPhoneNumber(currentUserStore.phoneNumber);
       setWhatsappNumber(currentUserStore.whatsappNumber);
@@ -215,8 +213,8 @@ const ManageStorePage = () => {
         storeImages: storeImageUrls,
         storeIcon: storeIconUrl,
         email: currentUser.email,
-        info1,
-        info2,
+        // info1,
+        // info2,
         schedulArr,
         fasebook,
         instagram,
@@ -509,7 +507,7 @@ const ManageStorePage = () => {
                       />
                     </div>
 
-                    <div>
+                    {/* <div>
                       <Label htmlFor="info1">Discription1</Label>
                       <Textarea
                         id="info1"
@@ -531,7 +529,7 @@ const ManageStorePage = () => {
                         placeholder="info2"
                         className="h-[200px] focus-visible:ring-blue-500 focus-visible:ring-1"
                       />
-                    </div>
+                    </div> */}
                   </>
 
                   {/* ------------Shedul input---------------- */}
@@ -797,7 +795,7 @@ const ManageStorePage = () => {
                     >
                       {loading ? (
                         <>
-                          <Loader /> Loading...
+                          <Loader /> <span className="ml-3">Loading...</span>
                         </>
                       ) : (
                         "Update"
@@ -819,6 +817,14 @@ const ManageStorePage = () => {
                         {currentUserStore.published ? "Unpublish" : "Publish"}
                       </Button>
                     )}
+
+                    <div>
+                      <Link to={`/setup-tabs-data/${currentUserStore?.id}`}>
+                        <Button className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white ">
+                          Next
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </form>
@@ -859,12 +865,6 @@ const ManageStorePage = () => {
           </div>
         </div>
       )}
-
-      <div className="mb-10">
-        <Link to={`/setup-tabs-data/${currentUserStore?.id}`}>
-          <Button>Next</Button>
-        </Link>
-      </div>
     </div>
   );
 };

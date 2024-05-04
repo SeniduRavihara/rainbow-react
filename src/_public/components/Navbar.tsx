@@ -5,7 +5,7 @@ import { logout } from "@/firebase/api";
 import { IonIcon } from "@ionic/react";
 import { useData } from "@/hooks/useData";
 import { barChartOutline } from "ionicons/icons";
-import { LogOut, User, Shield, Store } from "lucide-react";
+import { LogOut, Shield, Store } from "lucide-react";
 import NavDropdown from "react-bootstrap/Dropdown";
 import SearchBoxes2 from "@/components/SearchBoxes2";
 import { logo } from "@/assets";
@@ -120,10 +120,10 @@ const Navbar = () => {
               </NavDropdown.Toggle>
 
               <NavDropdown.Menu>
-                <NavDropdown.Item className="flex items-center gap-2">
+                {/* <NavDropdown.Item className="flex items-center gap-2">
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
-                </NavDropdown.Item>
+                </NavDropdown.Item> */}
 
                 {currentUserData &&
                   currentUserData.roles.includes("superAdmin") && (

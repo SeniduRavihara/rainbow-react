@@ -6,7 +6,7 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoIosMenu } from "react-icons/io";
 import { IonIcon } from "@ionic/react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { LogOut, User, Shield, Store } from "lucide-react";
+import { LogOut, Shield, Store } from "lucide-react";
 import NavDropdown from "react-bootstrap/Dropdown";
 import {
   languageOutline,
@@ -302,10 +302,10 @@ const Navbar = () => {
               </NavDropdown.Toggle>
 
               <NavDropdown.Menu>
-                <NavDropdown.Item className="flex items-center gap-2">
+                {/* <NavDropdown.Item className="flex items-center gap-2">
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
-                </NavDropdown.Item>
+                </NavDropdown.Item> */}
 
                 {currentUserData &&
                   currentUserData.roles.includes("superAdmin") && (

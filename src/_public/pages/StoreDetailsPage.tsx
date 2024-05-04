@@ -33,7 +33,7 @@ import { CircularProgress, Tag } from "@chakra-ui/react";
 import { fetchStoreById } from "@/firebase/api";
 import ProductAndServices from "../components/store-details-page/ProductAndServices";
 import TabComponent from "../components/store-details-page/tabs/tab-cmponent/TabComponent";
-import SearchResultCarosel from "../components/SearchResultCarosel";
+import DetalsPageCarosel from "../components/DetalsPageCarosel";
 
 const StoreDetailsPage = () => {
   const { searchResultStores, currentUserData } = useData();
@@ -116,7 +116,7 @@ const StoreDetailsPage = () => {
         ) : (
           <>
             {/* <Gallery /> */}
-            <SearchResultCarosel />
+            <DetalsPageCarosel />
             <div className="w-full flex items-center justify-between pt-2 px-2">
               {/* ----------Desktop--------- */}
               <div className="hidden md:flex rounded-md max-w-[750px] h-44 ">

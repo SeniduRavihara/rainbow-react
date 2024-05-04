@@ -38,6 +38,7 @@ export const INITIAL_DATA_CONTEXT = {
   sectionStaticAdds: null,
   sliderAdds: null,
   searchResultSliderAdds: null,
+  detailsPageSliderAdds: null,
   popularBrands: null,
   searchResultStores: null,
   setSearchResultStores: () => {},
