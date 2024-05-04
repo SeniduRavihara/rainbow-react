@@ -41,9 +41,11 @@ const SearchResultsPage = () => {
           )}
         </div>
 
-        <div className="flex justify-between mt-10 gap-5 px-2 md:px-10">
-          <ResultList category={category?.split("-")[1]} />
-          <SearchResultAddSection />
+        <div className="flex items-center justify-center">
+          <div className="flex justify-between mt-10 gap-5 px-2 md:px-10 xl:w-[80%]">
+            <ResultList category={category?.split("-")[1]} />
+            <SearchResultAddSection />
+          </div>
         </div>
         <SocialMediaArea />
         <DiscriptionArea />

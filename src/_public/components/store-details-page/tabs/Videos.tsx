@@ -1,7 +1,7 @@
 const Videos = ({ youtubeVideos }: { youtubeVideos: string[] }) => {
   return (
-    <div className="w-full">
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+    <div className="w-full flex items-center justify-center">
+      <ul className="flex flex-wrap gap-3">
         {youtubeVideos.map((video, index) => (
           <li key={index}>
             <iframe
