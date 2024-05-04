@@ -42,6 +42,7 @@ import AdvertizeYourBusiness from "./_public/pages/AdvertizeYourBusiness";
 import WeAreHiringPage from "./_public/pages/WeAreHiringPage";
 import InvestorPage from "./_public/pages/InvestorPage";
 import AddTabData from "./_private/pages/create-store/tab-data/AddTabData";
+import DetailsPageSliderAddsManage from "./components/admin/DetailsPageSliderAddsManage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -91,6 +92,10 @@ const router = createBrowserRouter(
             <Route
               path="searchresult-slider-adds"
               element={<SearchResultSliderAddsManage />}
+            />
+            <Route
+              path="detailspage-slider-adds"
+              element={<DetailsPageSliderAddsManage />}
             />
             <Route path="section-adds" element={<SectionAddsManage />} />
             <Route

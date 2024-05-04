@@ -5,6 +5,7 @@ import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ImageCropDialog from "../image-croper/CropDialog";
 import { Input } from "../ui/input";
+import toast from "react-hot-toast";
 
 interface ImageData {
   imageUrl: string;
@@ -105,6 +106,7 @@ const SearchResultSliderAddsManage = () => {
           imageUrl: addToUpdate?.imageUrl,
           link: addToUpdate?.link,
         });
+        toast.success("Link Uploaded successfully");
       } catch (error) {
         console.log(error);
       }
@@ -117,6 +119,7 @@ const SearchResultSliderAddsManage = () => {
         "search_result_slider_adds",
         idToUpdate
       );
+      if (imageUrl) toast.success("Banner Uploaded successfully");
       try {
         const documentRef = doc(db, "searchResultSliderAdds", idToUpdate);
         await updateDoc(documentRef, {

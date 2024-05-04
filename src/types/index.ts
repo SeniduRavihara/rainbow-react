@@ -24,6 +24,11 @@ export type DataContextType = {
     id: string;
     link: string;
   }> | null;
+  detailsPageSliderAdds: Array<{
+    imageUrl: string;
+    id: string;
+    link: string;
+  }> | null;
   popularBrands: Array<{
     imageUrl: string;
     id: string;

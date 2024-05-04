@@ -1,10 +1,11 @@
+
+
 import { uploadAdd } from "@/firebase/api";
 import { db } from "@/firebase/config";
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ImageCropDialog from "../image-croper/CropDialog";
 import { Input } from "../ui/input";
-import { CircularProgress } from "@chakra-ui/react";
 import toast from "react-hot-toast";
 
 interface ImageData {
@@ -16,7 +17,7 @@ interface ImageData {
   id: string;
 }
 
-interface PopularBrands {
+interface SliderAdd {
   imageUrl: string;
   id: string;
   imageFile?: File;
@@ -31,26 +32,28 @@ const initData: ImageData = {
   croppedImageUrl: null,
   crop: null,
   zoom: null,
-  aspect: 4 / 3,
+  aspect: 16 / 3,
   id: "",
 };
 
-const PopularBrandsManage = () => {
+const DetailsPageSliderAddsManage = () => {
   const [isOpenCropDialog, setIsOpenCropDialog] = useState(false);
   const [imageData, setImageData] = useState<ImageData>(initData);
-  const [popularBrands, setPopularBrands] = useState<PopularBrands[] | null>(
-    null
-  );
+  const [sliderAdds, setSliderAdds] = useState<SliderAdd[] | null>(null);
+
+  // useEffect(() => {
+  //   console.log(sliderAdds);
+  // }, [sliderAdds]);
 
   useEffect(() => {
-    const collectionRef = collection(db, "pupularBrands");
+    const collectionRef = collection(db, "detailsPageSliderAdds");
     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-      const popularBrandsArr = QuerySnapshot.docs.map((doc) => ({
+      const sliderAddsArr = QuerySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-      })) as PopularBrands[];
-      // console.log(popularBrandsArr);
-      setPopularBrands(popularBrandsArr);
+      })) as SliderAdd[];
+      console.log(sliderAddsArr);
+      setSliderAdds(sliderAddsArr);
     });
 
     return unsubscribe;
@@ -69,7 +72,7 @@ const PopularBrandsManage = () => {
       imageFile: file,
     }));
 
-    setPopularBrands((prevState) =>
+    setSliderAdds((prevState) =>
       prevState
         ? prevState.map((add) =>
             add.id === id ? { ...add, imageFile: file, localUrl } : add
@@ -84,7 +87,7 @@ const PopularBrandsManage = () => {
     e: React.ChangeEvent<HTMLInputElement>,
     id: string
   ) => {
-    setPopularBrands((prevState) =>
+    setSliderAdds((prevState) =>
       prevState
         ? prevState.map((add) =>
             add.id === id ? { ...add, link: e.target.value } : add
@@ -94,13 +97,13 @@ const PopularBrandsManage = () => {
   };
 
   const handleClickUpdate = async (idToUpdate: string) => {
-    if (!popularBrands) return;
-    const addToUpdate = popularBrands.find(({ id }) => id === idToUpdate);
+    if (!sliderAdds) return;
+    const addToUpdate = sliderAdds.find(({ id }) => id === idToUpdate);
 
     if (!addToUpdate?.cropedImageBlob) {
       // console.error("Add not found or image file missing");
       try {
-        const documentRef = doc(db, "pupularBrands", idToUpdate);
+        const documentRef = doc(db, "detailsPageSliderAdds", idToUpdate);
         await updateDoc(documentRef, {
           imageUrl: addToUpdate?.imageUrl,
           link: addToUpdate?.link,
@@ -115,14 +118,15 @@ const PopularBrandsManage = () => {
     try {
       const imageUrl = await uploadAdd(
         addToUpdate.cropedImageBlob,
-        "popular_brands",
+        "details_page_slider_adds",
         idToUpdate
       );
-      if (imageUrl) toast.success("Banner Uploaded successfully");
+      if(imageUrl) toast.success("Banner Uploaded successfully")
       try {
-        const documentRef = doc(db, "pupularBrands", idToUpdate);
+        const documentRef = doc(db, "detailsPageSliderAdds", idToUpdate);
         await updateDoc(documentRef, {
           imageUrl,
+          link: addToUpdate?.link,
         });
       } catch (error) {
         console.log(error);
@@ -152,7 +156,7 @@ const PopularBrandsManage = () => {
       aspect,
     }));
 
-    setPopularBrands((prevState) =>
+    setSliderAdds((prevState) =>
       prevState
         ? prevState.map((add) =>
             add.id === imageData.id
@@ -165,15 +169,8 @@ const PopularBrandsManage = () => {
     setIsOpenCropDialog(false);
   };
 
-  if (!popularBrands)
-    return (
-      <div className="w-full h-screen flex items-center justify-center">
-        <CircularProgress size="60px" isIndeterminate color="green.300" />
-      </div>
-    );
-
   return (
-    <div className="w-full h-full pb-5">
+    <div className="w-full h-full">
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
           <ImageCropDialog
@@ -188,24 +185,25 @@ const PopularBrandsManage = () => {
       )}
       <div className="">
         <h2 className="text-primary font-bold mb-10 text-center">
-          Popular Brands (4:3 ~ 1000px:750px )
+          Search Result Page Slider Adds (16:3 ~ 1000px:312px )
         </h2>
-        <div className="grid grid-cols-2 w-full gap-5">
-          {popularBrands &&
-            popularBrands.map((brand) => (
-              <div key={brand.id} className="w-full">
+
+        <div className="flex flex-col w-full gap-5">
+          {sliderAdds &&
+            sliderAdds.map((add) => (
+              <div key={add.id} className="w-full">
                 <input
                   type="file"
-                  id={brand.id}
+                  id={add.id}
                   hidden
-                  onChange={(e) => handleChange(e, brand.id)}
+                  onChange={(e) => handleChange(e, add.id)}
                 />
                 <input type="text" hidden />
                 <div className="card">
                   <div>
                     <img
                       className="card-img-top"
-                      src={brand?.croppedImageUrl ?? brand.imageUrl}
+                      src={add?.croppedImageUrl ?? add.imageUrl}
                       alt="Card image cap"
                     />
                   </div>
@@ -214,23 +212,22 @@ const PopularBrandsManage = () => {
                     <Input
                       type="text"
                       value={
-                        popularBrands.find((addObj) => addObj.id === brand.id)
-                          ?.link
+                        sliderAdds.find((addObj) => addObj.id === add.id)?.link
                       }
-                      onChange={(e) => handleChangeInput(e, brand.id)}
+                      onChange={(e) => handleChangeInput(e, add.id)}
                     />
                   </div>
 
                   <div className="card-body">
                     <div className="flex items-center justify-center gap-10">
                       <label
-                        htmlFor={brand.id}
+                        htmlFor={add.id}
                         className="btn btn-primary text-white shadow-none"
                       >
                         Brower
                       </label>
                       <button
-                        onClick={() => handleClickUpdate(brand.id)}
+                        onClick={() => handleClickUpdate(add.id)}
                         className="index1img1update btn btn-warning text-white shadow-none"
                       >
                         Update
@@ -244,5 +241,5 @@ const PopularBrandsManage = () => {
       </div>
     </div>
   );
-};
-export default PopularBrandsManage;
+}
+export default DetailsPageSliderAddsManage
