@@ -66,20 +66,22 @@ const AddVideosTab = ({ storeId }: { storeId: string }) => {
 
       {videoLink && <div></div>}
 
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-10">
-        {videoList.map((video, index) => (
-          <li key={index}>
-            <iframe
-              src={video}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            ></iframe>
-          </li>
-        ))}
-      </ul>
+      <div className="w-full flex items-center justify-center">
+        <ul className="flex flex-wrap gap-3 mt-10">
+          {videoList.map((video, index) => (
+            <li key={index}>
+              <iframe
+                src={video}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              ></iframe>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
