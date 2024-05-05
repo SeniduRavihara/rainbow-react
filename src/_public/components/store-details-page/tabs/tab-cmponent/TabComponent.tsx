@@ -9,12 +9,66 @@ import "./style.css";
 import Videos from "../Videos";
 import OurProductsTab from "../OurProductsTab";
 import ContactTab from "../ContactTab";
+import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/firebase/config";
 
 const TabComponent = ({
   selectedStore,
 }: {
   selectedStore: StoreObj | null;
 }) => {
+  const [haveProducts, setHaveProducts] = useState(false);
+  const [haveContacts, setHaveContacts] = useState(false);
+
+  useEffect(() => {
+    const checkCollection = async () => {
+      if (selectedStore?.id) {
+        try {
+          const collectionRef = collection(
+            db,
+            "store",
+            selectedStore?.id,
+            "products"
+          );
+          const querySnapshot = await getDocs(collectionRef);
+          const documentsExist = !querySnapshot.empty;
+          // console.log("SENUUUUU", documentsExist);
+          
+          setHaveProducts(documentsExist);
+        } catch (error) {
+          console.error("Error checking collection:", error);
+          setHaveProducts(false);
+        }
+      }
+    };
+
+    checkCollection();
+  }, [selectedStore?.id]);
+
+  useEffect(() => {
+    const checkCollection = async () => {
+      if (selectedStore?.id) {
+        try {
+          const collectionRef = collection(
+            db,
+            "store",
+            selectedStore?.id,
+            "contacts"
+          );
+          const querySnapshot = await getDocs(collectionRef);
+          const documentsExist = !querySnapshot.empty;
+          setHaveContacts(documentsExist);
+        } catch (error) {
+          console.error("Error checking collection:", error);
+          setHaveContacts(false);
+        }
+      }
+    };
+
+    checkCollection();
+  }, [selectedStore?.id]);
+
   return (
     <div className="my-5">
       <Tabs className="">
@@ -35,10 +89,10 @@ const TabComponent = ({
           {selectedStore && selectedStore?.youtubeVideos && (
             <Tab className="border mb-1">Videos</Tab>
           )}
-          {selectedStore && selectedStore?.companyProfilePdfUrl && (
+          {selectedStore && haveProducts && (
             <Tab className="border mb-1">Our Products</Tab>
           )}
-          {selectedStore && selectedStore?.companyProfilePdfUrl && (
+          {selectedStore && haveContacts && (
             <Tab className="border mb-1">Contact</Tab>
           )}
         </TabList>
@@ -85,13 +139,13 @@ const TabComponent = ({
             </TabPanel>
           )}
 
-          {selectedStore && selectedStore?.companyProfilePdfUrl && (
+          {selectedStore && haveProducts && (
             <TabPanel>
               <OurProductsTab storeId={selectedStore?.id} />
             </TabPanel>
           )}
 
-          {selectedStore && selectedStore?.companyProfilePdfUrl && (
+          {selectedStore && haveContacts && (
             <TabPanel>
               <ContactTab storeId={selectedStore?.id} />
             </TabPanel>
