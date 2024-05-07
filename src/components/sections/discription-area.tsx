@@ -34,7 +34,7 @@ const DiscriptionArea = () => {
   return (
     <div className="flex flex-col gap-10 w-full py-10 items-center justify-center">
       <div className="w-[95%] md:w-[92%]">
-        <h3 className="text-3xl font-semibold">
+        <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold">
           One-Stop for All Local Businesses, Product and Services, Nearby Across
           srilanka
         </h3>
@@ -61,21 +61,23 @@ const DiscriptionArea = () => {
       </div>
 
       <div className="w-[95%] md:w-[92%]">
-        <h3 className="text-3xl font-semibold">Popular Categories</h3>
+        <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+          Popular Categories
+        </h3>
         <br />
         {/* <div>
           {popularCategories.map((category) => (
             <CustomTag>{category}</CustomTag>
           ))}
         </div> */}
-        <div className="my-1 gap-2  flex flex-wrap">
+        <div className="my-1 gap-1 md:gap-2  flex flex-wrap">
           {popularCategories.map((catoegory, index) => (
             <div
               key={index}
               onClick={() => handleCategaryClick(catoegory)}
               className="flex items-center justify-center"
             >
-              <CustomTag styles="text-gray-600 text-sm px-1 bg-white cursor-pointer rounded-0 border-gray-400  borderl-0">
+              <CustomTag styles="text-gray-600 text-[13px] md:text-sm px-1 bg-white cursor-pointer rounded-0 border-gray-400  borderl-0">
                 {catoegory}
               </CustomTag>
               <div className="w-[2px] h-4 bg-slate-400"></div>
@@ -85,14 +87,16 @@ const DiscriptionArea = () => {
       </div>
 
       <div className="w-[95%] md:w-[92%]">
-        <h3 className="text-3xl font-semibold">Popular Cities</h3>
+        <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+          Popular Cities
+        </h3>
         <br />
         {/* <div>
           {popularCategories.map((category) => (
             <CustomTag>{category}</CustomTag>
           ))}
         </div> */}
-        <div className="my-1 gap-2  flex flex-wrap">
+        <div className="my-1 gap-1 md:gap-2  flex flex-wrap">
           {popularCities.map((catoegory, index) => (
             <div
               key={index}

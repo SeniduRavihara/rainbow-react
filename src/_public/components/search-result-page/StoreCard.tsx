@@ -22,7 +22,7 @@ import { postEnquery } from "@/firebase/api";
 import { useData } from "@/hooks/useData";
 import { useAuth } from "@/hooks/useAuth";
 import { whatsapp } from "@/assets";
-import { MdVerified } from "react-icons/md";
+// import { MdVerified } from "react-icons/md";
 import { Label } from "@/components/ui/label";
 
 type StoreCardProps = {
@@ -130,7 +130,9 @@ const StoreCard = ({
               <div className="text-sm text-[#2a2a2a]">
                 <span id="ratingCount">{reviewCount}</span> Reviews
               </div>
-              {verified && <MdVerified />}
+              {verified && (
+                <img src="/icons/verified_2x.gif" className="w-11 h-5" />
+              )}
             </div>
 
             <div className="users-located-place flex items-center">
@@ -154,7 +156,11 @@ const StoreCard = ({
                 className="flex gap-1 items-center px-2 py-1 rounded-md justify-center bg-green-600 hover:bg-green-600/90 text-white"
               >
                 <FaPhoneAlt className="text-xs" />
-                <h4>{whatsappnumber}</h4>
+                <h4>
+                  <a className="text-white" href={`tel:${whatsappnumber}`}>
+                    {whatsappnumber}
+                  </a>
+                </h4>
               </Button>
               <Dialog open={openModel} onOpenChange={setOpenModel}>
                 <DialogTrigger>
@@ -282,7 +288,11 @@ const StoreCard = ({
                 className="flex gap-1 items-center px-2 py-1 rounded-md justify-center bg-green-600 hover:bg-green-600/90 text-white"
               >
                 <FaPhoneAlt className="text-xs" />
-                <h4>{whatsappnumber}</h4>
+                <h4>
+                  <a className="text-white" href={`tel:${whatsappnumber}`}>
+                    {whatsappnumber}
+                  </a>
+                </h4>
               </Button>
               <Dialog open={openModel} onOpenChange={setOpenModel}>
                 <DialogTrigger>
