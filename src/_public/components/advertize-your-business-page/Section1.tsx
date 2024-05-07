@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
-import PhoneInput from "react-phone-number-input";
+// import PhoneInput from "react-phone-number-input";
 
 const Section1 = () => {
   const [phone, setPhone] = useState("");
