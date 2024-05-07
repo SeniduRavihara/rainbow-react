@@ -1,16 +1,34 @@
 const Section2 = () => {
   return (
-    <div className="flex flex-col md:flex-row justify-between w-full mt-10">
-      <div className="flex flex-col gap-2 md:w-1/2">
-        <img src="/it-room1.jpg" className="w-full h-[200px]" alt="" />
+    <div className="flex flex-col md:flex-row justify-center w-full mt-10 relative">
+      <img
+        src="/img/logo.png"
+        className="w-60 md:w-72 absolute rotate-[140deg] -left-36 top-36 -z-10 "
+        alt=""
+      />
+
+      <div className="flex flex-col gap-2 md:w-[400px]">
+        <img
+          src="/hiring-page-imgs/it-room1.jpg"
+          className="w-full h-[200px] object-cover"
+          alt=""
+        />
         <div className="flex gap-[10px]">
-          <img src="/it-room2.jpg" className="w-[49%]" alt="" />
-          <img src="/it-room3.jpeg" className="w-[49%]" alt="" />
+          <img
+            src="/hiring-page-imgs/it-room2.jpg"
+            className="w-[49%] object-cover"
+            alt=""
+          />
+          <img
+            src="/hiring-page-imgs/it-room3.jpg"
+            className="w-[49%] object-cover"
+            alt=""
+          />
         </div>
       </div>
 
       <div className="md:w-1/2 mt-10 md:mt-0 ml-5">
-        <h1 className="text-3xl font-bold">Our Story</h1>
+        <h1 className="text-3xl font-bold mb-3">Our Story</h1>
         <p>
           Welcome to Sri Lanka Business. Mainly in Sri Lanka, we help you to
           find many businesses and services that you need on a daily basis. In

@@ -63,10 +63,14 @@ const CascadeSlider = ({ images }: { images: string[] }) => {
 
 const Section3 = () => {
   const images = [
-    "https://images.pexels.com/photos/270640/pexels-photo-270640.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    "https://images.pexels.com/photos/3178938/pexels-photo-3178938.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    "https://images.pexels.com/photos/4158/apple-iphone-smartphone-desk.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    // Add more image URLs here
+    "/invester-page-imgs/001.jpg",
+    "/invester-page-imgs/002.jpg",
+    "/invester-page-imgs/003.jpg",
+    "/invester-page-imgs/004.jpg",
+    "/invester-page-imgs/005.jpg",
+    "/invester-page-imgs/006.jpg",
+    "/invester-page-imgs/007.jpg",
+    "/invester-page-imgs/008.jpg",
   ];
 
   return (

@@ -15,7 +15,7 @@ const Section3 = () => {
         </h1>
 
         <h3 className="font-medium text-xl text-center">
-          Advertise with Srilanka Business
+          Advertise with <span className="text-red-500">Srilanka Business</span>
         </h3>
       </div>
 
