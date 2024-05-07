@@ -63,6 +63,14 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     null
   );
 
+  // useEffect(()=>{
+  //   if(searchItem){
+  //     localStorage.setItem("searchItem", searchItem);
+  //   }
+
+  //   setSearchitem(localStorage.getItem("searchItem") || "");
+  // },[searchItem])
+
   useEffect(() => {
     const collectionRef = collection(db, "sectionAdds");
     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {

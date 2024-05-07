@@ -1,4 +1,3 @@
-
 import Navbar from "../components/Navbar";
 import ResultList from "../components/search-result-page/ResultList";
 import SearchResultAddSection from "../components/search-result-page/SearchResultAddSection";
@@ -11,17 +10,71 @@ import { useParams } from "react-router-dom";
 import { useData } from "@/hooks/useData";
 import SearchResultCarosel from "../components/SearchResultCarosel";
 
-const SearchResultsPage = () => {
-    const {
-      searchResultStores,
-    } = useData();
 
-  const params = useParams()
+const SearchResultsPage = () => {
+  const { searchResultStores } = useData();
+
+  const params = useParams();
   const category = params?.category ?? "";
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // useEffect(() => {
+  //   if (category) {
+  //     if (category !== searchItem) {
+  //       const fetchAddsByCategory = async () => {
+  //         try {
+  //           const categoryString = category?.split("-")[1] || "";
+
+  //           const collectionRef = collection(db, "store");
+  //           const q = query(
+  //             collectionRef,
+  //             where("category", "==", categoryString)
+  //           );
+
+  //           const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //             const searchResultStoresArr = querySnapshot.docs.map((doc) => ({
+  //               ...doc.data(),
+  //               id: doc.id,
+  //             })) as StoreListType;
+
+  //             console.log(searchResultStoresArr);
+
+  //             setSearchResultStores(searchResultStoresArr);
+  //           });
+
+  //           return unsubscribe;
+  //         } catch (error) {
+  //           console.error("Error fetching adds by category:", error);
+  //         }
+  //       };
+
+  //       fetchAddsByCategory();
+  //     }
+  //   }
+  // }, [category, searchItem, setSearchResultStores]);
+
+  // useEffect(() => {
+  //   if (category) {
+  //     if (category === searchItem) {
+  //       if (searchResultStores) {
+  //         localStorage.setItem("storeData", JSON.stringify(searchResultStores));
+  //       }
+  //     }
+  //   }
+  // }, [category, searchItem, searchResultStores, setSearchResultStores]);
+
+  // useEffect(() => {
+  //   if (category) {
+  //     if (category === searchItem) {
+  //       setSearchResultStores(
+  //         JSON.parse(localStorage.getItem("storeData") || "[]")
+  //       );
+  //     }
+  //   }
+  // }, [category, searchItem, setSearchResultStores]);
 
   return (
     <div className="w-full min-h-screen">
