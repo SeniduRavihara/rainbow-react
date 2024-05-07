@@ -25,6 +25,7 @@ const searchIndex = searchClient.initIndex("stores");
 const SearchBoxes2 = () => {
   const { locationArr } = useData();
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [scrollDirection, setScrollDirection] = useState("");
   const [loadingSearch, setLoadingSearch] = useState(false);
 
   useEffect(() => {
@@ -39,6 +40,29 @@ const SearchBoxes2 = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    let previousScrollPosition = window.pageYOffset;
+
+    const handleScroll = () => {
+      const currentScrollPosition = window.pageYOffset;
+
+      if (currentScrollPosition < previousScrollPosition) {
+        setScrollDirection("up");
+      } else if (currentScrollPosition > previousScrollPosition) {
+        setScrollDirection("down");
+      }
+
+      previousScrollPosition = currentScrollPosition;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const {
     setSearchResultStores,
     location,
@@ -253,13 +277,15 @@ const SearchBoxes2 = () => {
       </div>
 
       {/* ----------------------------------------------------------- */}
+
       <div
         className={cn(
-          "items-center bg-white 725:hidden absolute top-24 flex left-0 bg-slate-40 w-full justify-center px-",
-          scrollPosition >= 30 && "hidden"
+          "items-center bg- backdrop-blur-lg 725:hidden fixed top-20 flex left-0 w-full justify-center",
+          scrollDirection === "down" && "hidden",
+          scrollPosition <= 30 && "backdrop-blur-none"
         )}
       >
-        <SearchBox styles="px-2 w-[90%] md:w-[80%]">
+        <SearchBox styles="px-2 w-[90%] md:w-[80%] bg-white mt-2 mb-2">
           <div className="flex w-full justify-between items-center gap-2 h-10">
             {loadingSearch ? (
               <CircularProgress size="30px" isIndeterminate color="green.300" />

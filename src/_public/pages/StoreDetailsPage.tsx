@@ -108,7 +108,7 @@ const StoreDetailsPage = () => {
         <Navbar />
       </div>
 
-      <div className="mt-40 725:mt-20 w-full ">
+      <div className="mt-44 725:mt-20 w-full ">
         {!selectedStore ? (
           <div className="w-full h-screen flex items-center justify-center">
             <CircularProgress size="60px" isIndeterminate color="green.300" />
