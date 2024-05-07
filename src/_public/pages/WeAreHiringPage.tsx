@@ -10,9 +10,16 @@ const WeAreHiringPage = () => {
   return (
     <div className="">
       <main
-        className="flex min-h-screen flex-col items-center "
+        className="flex min-h-screen w-screen flex-col items-center relative overflow-x-hidden"
         // style={{ width: "calc(100% - 200px)" }}
       >
+        <img
+          src="/img/logo.png"
+          className="w-60 md:w-72 absolute -rotate-45 -right-10 top-0 -z-10 "
+          alt=""
+        />
+        
+
         <div className="fixed top-0 left-0 z-50">
           <TopBanner />
           <div className="fixed top-7 left-0 w-screen pr-4">

@@ -1,0 +1,74 @@
+
+
+.app {
+  margin-top: 10rem;
+  color: white;
+}
+
+.slider {
+  position: relative;
+}
+
+.slider__track {
+  display: flex;
+  justify-content: center;
+  left: 0;
+  max-width: 120rem;
+  position: relative;
+  top: 0;
+}
+
+
+.slider__list {
+  list-style-type: none;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  justify-content: center;
+  max-width: 120rem;
+  padding: 5rem 0;
+  transition: transform 0.5s;
+  width: 100%;
+}
+
+.slider__item {
+  height: 17rem;
+  perspective: 600px;
+  width: 10rem;
+}
+
+.card {
+  box-shadow: 0 0 1rem 0.2rem rgba(0, 0, 0, 0.4);
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+  width: 100%;
+  background: #16141a;
+}
+.card--center {
+  transform: scale(1.2);
+}
+.card--left-inner {
+  transform: rotateY(30deg) scale(0.8);
+}
+.card--left-outer {
+  transform: rotateY(30deg) scale(0.78);
+}
+.card--right-inner {
+  transform: rotateY(-30deg) scale(0.8);
+}
+.card--right-outer {
+  transform: rotateY(-30deg) scale(0.78);
+}
+
+.card__face {
+  align-items: center;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+

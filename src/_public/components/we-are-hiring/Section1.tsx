@@ -3,7 +3,7 @@ import { FaArrowRight } from "react-icons/fa";
 
 const Section1 = () => {
   return (
-    <div className="flex flex-col-reverse md:flex-row justify-between items-center">
+    <div className="flex flex-col-reverse md:flex-row justify-between items-center md:px-10">
       <div className="space-y-3 mt-10 md:mt-0">
         <h1 className="text-3xl">
           Grow With Us And Build Your <span className="font-bold">Career</span>
@@ -17,8 +17,12 @@ const Section1 = () => {
         </Button>
       </div>
 
-      <div className="mt-10 md:mt-0">
-        <img src="/business-mans.jpg" className="w-[300px]" alt="" />
+      <div className="mt-10 md:mt-10 md:mr-">
+        <img
+          src="/hiring-page-imgs/business-mans.png"
+          className="w-[400px]"
+          alt=""
+        />
       </div>
     </div>
   );
