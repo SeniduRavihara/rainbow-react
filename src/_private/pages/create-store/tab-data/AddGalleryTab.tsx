@@ -41,7 +41,7 @@ const handleUpload = async () => {
         const file = selectedFiles[index];
         const fileRef = ref(
           storage,
-          `store_data/store-gallery/${storeId}/${index}`
+          `store_data/${storeId}/store-gallery/${index}`
         );
 
         if (!file) continue; // Skip if file is null

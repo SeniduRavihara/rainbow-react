@@ -247,7 +247,7 @@ export const uploadAdd = async (
   id: string
 ) => {
   try {
-    const fileRef = ref(storage, `/${path}/${id}`);
+    const fileRef = ref(storage, `advertise/${path}/${id}`);
     await uploadBytes(fileRef, file);
     const photoURL = await getDownloadURL(fileRef);
     console.log("Add Image uploaded successfully!");
