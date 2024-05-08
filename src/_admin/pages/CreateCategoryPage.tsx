@@ -4,10 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createCategory } from "@/firebase/api";
 import { db, storage } from "@/firebase/config";
-import { collection, onSnapshot } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { RxCross2 } from "react-icons/rx";
 
 const CreateCategoryPage = () => {
   const [label, setLabel] = useState("");
@@ -32,7 +33,7 @@ const CreateCategoryPage = () => {
         id: string;
       }[];
 
-      console.log(categoriesArr);
+      // console.log(categoriesArr);
       setCategories(categoriesArr);
     });
 
@@ -79,6 +80,37 @@ const CreateCategoryPage = () => {
     }
   };
 
+  const handleDeleteCategory = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this product?"))
+      return;
+
+    try {
+      // Find the product by id
+      const product = categories.find((category) => category.id === id);
+      if (!product) {
+        console.error("Category not found");
+        return;
+      }
+
+      // Delete the product document
+      const documentRef = doc(db, "categories", id);
+      await deleteDoc(documentRef);
+      toast.success("Product successfully deleted!");
+
+      // Delete the image from storage
+      const imageRef = ref(
+        storage,
+        `categories/${id}`
+      );
+      await deleteObject(imageRef);
+      toast.success("Image successfully deleted!");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete product and image");
+    }
+  };
+
+
   return (
     <div>
       <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
@@ -102,8 +134,12 @@ const CreateCategoryPage = () => {
 
       <ul className="w-full grid gap-x-20 grid-cols-3 xsm:grid-cols-4 sm:grid-cols-5  md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 ">
         {categories.map((categoryObj, index) => (
-          <li key={index}>
+          <li key={index} className="flex flex-col items-center justify-center">
             <CategoryCard label={categoryObj.label} icon={categoryObj.icon} />
+            <RxCross2
+              className="cursor-pointer hover:text-red-500 duration-200 text-2xl mt-1"
+              onClick={() => handleDeleteCategory(categoryObj.id)}
+            />
           </li>
         ))}
       </ul>

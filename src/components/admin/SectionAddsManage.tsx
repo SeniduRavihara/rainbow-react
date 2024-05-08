@@ -375,7 +375,7 @@ const SectionAddsManage: React.FC = () => {
           <h2 className="text-primary font-bold mb-10 text-center">
             Section Adds (15:20 ~ 1000px:1333px )
           </h2>
-          <div className="flex flex-col w-full gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full gap-5">
             {sectionStaticAdds &&
               sectionStaticAdds.map((add) => (
                 <div key={add.id} className="w-full">

@@ -50,7 +50,7 @@ const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
       try {
         const fileRef = ref(
           storage,
-          `store_data/store-company-profile-pdfs/${storeId}.pdf`
+          `store_data/${storeId}/store-company-profile-pdfs/${storeId}.pdf`
         );
 
         await uploadBytes(fileRef, pdf);

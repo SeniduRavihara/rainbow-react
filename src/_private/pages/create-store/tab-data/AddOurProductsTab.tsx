@@ -14,8 +14,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { db, storage } from "@/firebase/config";
 import { CircularProgress } from "@chakra-ui/react";
-import { addDoc, collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
-import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+} from "firebase/firestore";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
@@ -51,7 +62,7 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
   const [productDiscription, setProductDiscription] = useState("");
 
   const [productList, setProductList] = useState<
-    Array<{ imageUrl: string; id: string; name: string; discription:string }>
+    Array<{ imageUrl: string; id: string; name: string; discription: string }>
   >([]);
 
   useEffect(() => {
@@ -96,35 +107,35 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
     setLoading(false);
   };
 
-const handleDeleteProduct = async (id: string) => {
-  if (!window.confirm("Are you sure you want to delete this product?")) return;
-
-  try {
-    // Find the product by id
-    const product = productList.find((product) => product.id === id);
-    if (!product) {
-      console.error("Product not found");
+  const handleDeleteProduct = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this product?"))
       return;
+
+    try {
+      // Find the product by id
+      const product = productList.find((product) => product.id === id);
+      if (!product) {
+        console.error("Product not found");
+        return;
+      }
+
+      // Delete the product document
+      const documentRef = doc(db, "store", storeId, "products", id);
+      await deleteDoc(documentRef);
+      toast.success("Product successfully deleted!");
+
+      // Delete the image from storage
+      const imageRef = ref(
+        storage,
+        `store_data/${storeId}/products/${productName}`
+      );
+      await deleteObject(imageRef);
+      toast.success("Image successfully deleted!");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete product and image");
     }
-
-    // Delete the product document
-    const documentRef = doc(db, "store", storeId, "products", id);
-    await deleteDoc(documentRef);
-    toast.success("Product successfully deleted!");
-
-    // Delete the image from storage
-    const imageRef = ref(
-      storage,
-      `store_data/${storeId}/products/${productName}`
-    );
-    await deleteObject(imageRef);
-    toast.success("Image successfully deleted!");
-  } catch (error) {
-    console.log(error);
-    toast.error("Failed to delete product and image");
-  }
-};
-
+  };
 
   const uploadProductImage = async () => {
     try {
@@ -298,7 +309,10 @@ const handleDeleteProduct = async (id: string) => {
           >
             <img src={productObj.imageUrl} className="w-[180px]" alt="" />
             <h3 className="font-semibold">{productObj.name}</h3>
-            <RxCross2 className="cursor-pointer hover:text-red-500 duration-200 text-2xl" onClick={() => handleDeleteProduct(productObj.id)} />
+            <RxCross2
+              className="cursor-pointer hover:text-red-500 duration-200 text-2xl"
+              onClick={() => handleDeleteProduct(productObj.id)}
+            />
           </li>
         ))}
       </ul>

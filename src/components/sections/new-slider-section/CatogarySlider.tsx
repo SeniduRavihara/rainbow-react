@@ -4,7 +4,6 @@ import { useData } from "@/hooks/useData";
 import { useEffect, useState } from "react";
 import { placeholderSectionAdds } from "@/assets";
 import { MdArrowForwardIos } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
 
 const images = [
   {
@@ -33,7 +32,7 @@ const CatogarySlider = () => {
   const { sectionAdds, sectionStaticAdds } = useData();
   const [adds, setAdds] = useState(images);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     if (sectionAdds) {
@@ -54,7 +53,7 @@ const CatogarySlider = () => {
         window.open(url, "_blank");
       } else {
         // If the URL is a relative path within your application, use navigate()
-        navigate(url);
+        // window.open(url);
       }
     }
   };
@@ -66,7 +65,7 @@ const CatogarySlider = () => {
         window.open(link, "_blank");
       } else {
         // If the URL is a relative path within your application, use navigate()
-        navigate(link);
+        // window.open(link, "_blank");
       }
     }
   };
