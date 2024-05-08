@@ -5,7 +5,15 @@ import { FaArrowRight } from "react-icons/fa";
 
 
 const Section3 = () => {
-  const [phone, setPhone] = useState<string | undefined>();
+   const [phone, setPhone] = useState("");
+
+   const handleClickGetStarted = () => {
+     if (phone) {
+       window.open(
+         `https://wa.me/715335640?text=I'm%20interested%20in%20advertising%20my%20business%20with%20Srilanka%20Business.%20Could%20you%20please%20provide%20me%20with%20more%20information%20on%20the%20advertising%20options%20available%3F%0AMy%20phone%20number%20is%3A%20${phone}`
+       );
+     }
+   };
 
   return (
     <div className="flex flex-col gap-5 mt-10">
@@ -40,7 +48,10 @@ const Section3 = () => {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
-              <Button className="px-2 md:px-4 bg-blue-500 rounded-none">
+              <Button
+                className="px-2 md:px-4 bg-blue-500 hover:bg-blue-500/90 rounded-none"
+                onClick={handleClickGetStarted}
+              >
                 Get Started
                 <FaArrowRight className="hidden md:block md:ml-2" />
               </Button>

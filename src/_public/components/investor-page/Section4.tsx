@@ -8,7 +8,7 @@ const Section4 = () => {
 
       <br />
 
-      <p className="text-center px-10">
+      <p className="px-4 md:px-10 text-justify">
         Welcome to Sri Lanka Business. Mainly in Sri Lanka, we help you to find
         many businesses and services that you need on a daily basis. In
         addition, we have listed a lot of information of local businessmen all
@@ -17,7 +17,7 @@ const Section4 = () => {
 
       <br />
 
-      <p className=" px-10 text-justify">
+      <p className="px-4 md:px-10 text-justify">
         Our service extends from providing address and contact details of
         business establishments around the country, to making orders and
         reservations for Hotels, business places leisure, medical, financial,

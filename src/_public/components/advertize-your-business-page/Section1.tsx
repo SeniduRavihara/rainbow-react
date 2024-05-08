@@ -8,10 +8,12 @@ import { TiTick } from "react-icons/ti";
 const Section1 = () => {
   const [phone, setPhone] = useState("");
 
-  const handleClickGetStarted = ()=>{
-    window.open(
-      `https://wa.me/781718964`
-    );
+  const handleClickGetStarted = () => {
+    if (phone) {
+      window.open(
+        `https://wa.me/715335640?text=I'm%20interested%20in%20advertising%20my%20business%20with%20Srilanka%20Business.%20Could%20you%20please%20provide%20me%20with%20more%20information%20on%20the%20advertising%20options%20available%3F%0AMy%20phone%20number%20is%3A%20${phone}`
+      );
+    }
   };
 
   return (
@@ -30,16 +32,23 @@ const Section1 = () => {
 
         <div>
           <div className="border-2 flex px-1 py-1 rounded-lg items-center justify-between border-blue-500 relative">
-            <p className="absolute -top-3 bg-white px-1 text-sm text-blue-500">Enter Mobile No</p>
+            <p className="absolute -top-3 bg-white px-1 text-sm text-blue-500">
+              Enter Mobile No
+            </p>
             <img src="/icons/sri-lanka-flag.png" alt="" className="w-12 h-6" />
-            <p className="text-lg md:text-xl md:ml-2 font-bold text-gray-600">+94</p>
+            <p className="text-lg md:text-xl md:ml-2 font-bold text-gray-600">
+              +94
+            </p>
             <input
               type="tel"
               className="focus:outline-none px-2 md:ml-3 md:text-xl font-medium w-[100px] md:w-[200px]"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
-            <Button className="px-2 md:px-4" onClick={handleClickGetStarted}>
+            <Button
+              className="px-2 md:px-4 bg-blue-500 hover:bg-blue-500/90"
+              onClick={handleClickGetStarted}
+            >
               Get Started
               <FaArrowRight className="hidden md:block md:ml-2" />
             </Button>
