@@ -8,6 +8,12 @@ import { TiTick } from "react-icons/ti";
 const Section1 = () => {
   const [phone, setPhone] = useState("");
 
+  const handleClickGetStarted = ()=>{
+    window.open(
+      `https://wa.me/781718964`
+    );
+  };
+
   return (
     <div className="flex flex-col md:flex-row gap-10 justify-between items-center p-10">
       <div className="flex flex-col gap-3">
@@ -33,7 +39,7 @@ const Section1 = () => {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
-            <Button className="px-2 md:px-4">
+            <Button className="px-2 md:px-4" onClick={handleClickGetStarted}>
               Get Started
               <FaArrowRight className="hidden md:block md:ml-2" />
             </Button>
