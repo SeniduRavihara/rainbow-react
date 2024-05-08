@@ -1,11 +1,11 @@
 const Section2 = () => {
   return (
     <div className="mt-10">
-      <h1 className="text-center text-2xl">
+      <h1 className="text-center text-3xl sm:text-4xl mb-5">
         Key <span className="text-red-500 font-semibold mb">Highlights</span>
       </h1>
 
-      <ul className="flex gap-5 items-center justify-center">
+      <ul className="flex gap-4 sm:gap-10 items-center justify-center px-2">
         <li>
           <img
             src="/icons/icons8-tourist-group-100.png"

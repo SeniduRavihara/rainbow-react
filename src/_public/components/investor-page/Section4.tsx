@@ -1,7 +1,7 @@
 const Section4 = () => {
   return (
     <div>
-      <h1 className="text-center text-4xl">
+      <h1 className="text-center text-3xl sm:text-4xl">
         About{" "}
         <span className="font-semibold text-red-500">Srilanka Business</span>
       </h1>

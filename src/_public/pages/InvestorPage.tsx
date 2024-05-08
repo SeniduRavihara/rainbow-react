@@ -22,7 +22,7 @@ const InvestorPage = () => {
           </div>
         </div>
 
-        <div className="mt-26 w-full">
+        <div className="mt-26 w-full overflow-hidden">
           <Section1 />
           <Section2 />
           {/* <Section3 /> */}

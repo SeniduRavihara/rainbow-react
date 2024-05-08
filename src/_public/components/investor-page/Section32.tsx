@@ -33,7 +33,7 @@ const Slide = ({ currentIdx, idx }: { currentIdx: number; idx: number }) => {
   );
 };
 
-const items = [35, 20, 10, 0, -10, -20, -35];
+const items = [30, 20, 10, 0, -10, -20, -30];
 
 
 const Section32 = () => {
@@ -42,7 +42,7 @@ const Section32 = () => {
     useEffect(() => {
       const intervalId = setInterval(() => {
         setCurrentIdx((prev) => (prev + 1) % images.length);
-      }, 4000); // Change interval as needed (in milliseconds)
+      }, 3000); // Change interval as needed (in milliseconds)
 
       return () => clearInterval(intervalId);
     }, []);
