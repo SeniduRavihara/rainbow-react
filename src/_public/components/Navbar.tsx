@@ -10,6 +10,7 @@ import NavDropdown from "react-bootstrap/Dropdown";
 import SearchBoxes2 from "@/components/SearchBoxes2";
 import { logo } from "@/assets";
 import { forwardRef } from "react";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const { setSearchResultStores, currentUserData } = useData();
@@ -70,7 +71,19 @@ const Navbar = () => {
             <div className="icon">
               <img src="/assets/img/loaudspeacker.png" alt="" />
             </div>
-            <div>Advertise</div>
+            {/* <div>Advertise</div> */}
+            <Link
+              to="/advertise"
+              className={cn(
+                "cursor-pointer",
+                location.pathname == "/advertise" && "text-blue-400"
+              )}
+            >
+              <div className="icon">
+                <img src="/assets/img/loaudspeacker.png" alt="" />
+              </div>
+              <div>Advertise</div>
+            </Link>
           </li>
           <li className="cursor-pointer">
             <div className="flex flex-col -mt-4">

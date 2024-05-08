@@ -35,7 +35,7 @@ const Section3 = () => {
               {/* <p className="text-xl font-bold text-gray-600">+94</p> */}
               <input
                 type="tel"
-                className="focus:outline-none px-2 font-medium bg-blue-50"
+                className="focus:outline-none px-2 font-medium bg-blue-50 w-[150px] sm:w-auto"
                 placeholder="Enter Mobile No"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
