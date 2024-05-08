@@ -3,7 +3,7 @@ import { anounce, marketAnalysis, marktBusiness } from "@/assets";
 const Section2 = () => {
   return (
     <div>
-      <h1 className="text-2xl md:text-4xl font-bold text-center md:px-32 px-2">
+      <h1 className="text-2xl md:text-4xl font-bold text-center md:px-32 px-2 mb-3 md:mb-5">
         Srilanka Busines Ads Help You To Achieve Your Goals
       </h1>
 

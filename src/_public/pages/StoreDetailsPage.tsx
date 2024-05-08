@@ -165,6 +165,9 @@ const StoreDetailsPage = () => {
                       <span id="ratingCount">{selectedStore?.reviewCount}</span>{" "}
                       Reviews
                     </div>
+                    {selectedStore.verified && (
+                      <img src="/icons/verified_2x.gif" className="w-11 h-5" />
+                    )}
                   </div>
 
                   <div className="users-located-place flex items-center">
@@ -286,6 +289,9 @@ const StoreDetailsPage = () => {
                     <div className="text-sm text-[#2a2a2a]">
                       <span id="ratingCount">1</span> Ratings
                     </div>
+                    {selectedStore.verified && (
+                      <img src="/icons/verified_2x.gif" className="w-11 h-5" />
+                    )}
                   </div>
 
                   <div className="users-located-place flex items-center">
