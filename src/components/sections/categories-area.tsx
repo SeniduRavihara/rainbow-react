@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { fetchCatogaryData } from "@/firebase/api";
 import { categories } from "@/constants";
 import { allCategories } from "@/assets";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "@/firebase/config";
 
 const CategoriesArea = () => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -26,19 +24,19 @@ const CategoriesArea = () => {
   //   console.log(searchResultStores);
   // }, [searchResultStores]);
 
-  useEffect(() => {
-    const collectionRef = collection(db, "categories");
-    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-      const categoryArr = QuerySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-      })) as Array<{ icon: string; label: string }>;
+  // useEffect(() => {
+  //   const collectionRef = collection(db, "categories");
+  //   const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+  //     const categoryArr = QuerySnapshot.docs.map((doc) => ({
+  //       ...doc.data(),
+  //     })) as Array<{ icon: string; label: string }>;
 
-      // console.log(categoryArr);
-      setVisibleCategories(pre=> [...pre, ...categoryArr]);
-    });
+  //     // console.log(categoryArr);
+  //     setVisibleCategories(pre=> [...pre, ...categoryArr]);
+  //   });
 
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
 
   useEffect(() => {
     // setIsShowAll(false);

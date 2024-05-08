@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button"
 
 const Section3 = () => {
+    const handleClickContactUs = () => {
+      window.open(
+        `https://wa.me/715335640`
+      );
+    };
+
   return (
     <div className="w-full flex flex-col items-center justify-center mt-28">
       <div>
@@ -12,7 +18,9 @@ const Section3 = () => {
         </h3>
       </div>
 
-      <Button className="mt-4 px-20 rounded-xl">Contact Us</Button>
+      <Button className="mt-4 px-20 rounded-xl" onClick={handleClickContactUs}>
+        Contact Us
+      </Button>
     </div>
   );
 }
