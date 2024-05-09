@@ -188,6 +188,10 @@ const StorePage = () => {
     }
   };
 
+  // console.log(storeList && new Date(storeList[0].createdAt._seconds * 1000).toDateString());
+
+  
+
   return (
     <div className="pb-10 flex flex-col items-center justify-center">
       <div className="flex w-full items-center gap-2 h-10 mb-10">
@@ -206,6 +210,7 @@ const StorePage = () => {
           <RxCross2
             onClick={() => {
               setSearchQuiery("");
+              setLoading(false);
             }}
             className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
           />
@@ -252,7 +257,13 @@ const StorePage = () => {
                 </td> */}
                 <td className="font-medium">{storeObj.phoneNumber}</td>
                 <td className="font-medium">
-                  {storeObj.createdAt.toDate().toDateString()}
+                  {/* {storeObj.createdAt.toDate().toDateString()} */}
+                  {storeObj.createdAt &&
+                  typeof storeObj.createdAt.toDate === "function"
+                    ? storeObj.createdAt.toDate().toDateString()
+                    : new Date(
+                        (storeObj.createdAt as any)._seconds * 1000
+                      ).toDateString()}
                 </td>
                 {/* above block have some problem ToDo to fix it */}
 
