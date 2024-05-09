@@ -109,7 +109,7 @@ function Sidebar() {
                 >
                   SearchResultSlider Adds
                 </Link>
-                <Link
+                {/* <Link
                   to="detailspage-slider-adds"
                   className={`${
                     location.pathname === "/admin/detailspage-slider-adds"
@@ -118,7 +118,7 @@ function Sidebar() {
                   }`}
                 >
                   DetailsPageSlider Adds
-                </Link>
+                </Link> */}
               </div>
             )}
           </div>

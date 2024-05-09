@@ -16,7 +16,7 @@ const AdminLayout = () => {
     </div>
   );
 
-  return currentUserData.roles.includes("superAdmin") ? (
+  return currentUserData.roles.includes("admin") ? (
     <Outlet />
   ) : (
     <Navigate to="/" />
