@@ -180,7 +180,10 @@ export const createStore = async (uid: string, payload: any) => {
   // console.log("PAYLOAD", payload);
 
   try {
-    await setDoc(doc(db, "store", `${uid}--${v4().replace("-", "")}`), {
+
+    const storeId = `${uid}--${v4().replace("-", "")}`;
+
+    await setDoc(doc(db, "store", storeId), {
       ...payload,
       userId: uid,
       active: false,
@@ -191,6 +194,17 @@ export const createStore = async (uid: string, payload: any) => {
       visitCount: 0,
       verified: false,
     });
+
+    for (let index = 0; index < 4; index++) {
+      console.log("payload");
+      try {
+        await addDoc(collection(db, "store", storeId, "top-slider"), {
+          imageUrl: "",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
     console.log("Document successfully written to Firestore!");
   } catch (error) {
     console.error("Error writing document:", error);
@@ -205,6 +219,24 @@ export const updateStore = async (storeId: string, payload: any) => {
     await updateDoc(doc(db, "store", storeId), {
       ...payload,
     });
+
+    const collectionRef = collection(db, "store", storeId, "top-slider");
+    const querySnapshot = await getDocs(collectionRef);
+    const documentsExist = !querySnapshot.empty;
+
+    if (!documentsExist) {
+      for (let index = 0; index < 4; index++) {
+        console.log("payload");
+        try {
+          await addDoc(collection(db, "store", storeId, "top-slider"), {
+            imageUrl: "",
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+
     console.log("Document Update successfully");
   } catch (error) {
     console.error("Error writing document:", error);

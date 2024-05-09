@@ -1,12 +1,9 @@
-
-
-import { uploadAdd } from "@/firebase/api";
-import { db } from "@/firebase/config";
+import { db, storage } from "@/firebase/config";
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import ImageCropDialog from "../image-croper/CropDialog";
-import { Input } from "../ui/input";
+import ImageCropDialog from "@/components/image-croper/CropDialog";
 import toast from "react-hot-toast";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 interface ImageData {
   imageUrl: string;
@@ -23,8 +20,7 @@ interface SliderAdd {
   imageFile?: File;
   localUrl?: string;
   cropedImageBlob?: Blob;
-  croppedImageUrl: string;
-  link: string;
+  croppedImageUrl?: string;
 }
 
 const initData: ImageData = {
@@ -32,11 +28,11 @@ const initData: ImageData = {
   croppedImageUrl: null,
   crop: null,
   zoom: null,
-  aspect: 16 / 3,
+  aspect: 16 / 5,
   id: "",
 };
 
-const DetailsPageSliderAddsManage = () => {
+const UpdateTopSlider = ({ storeId }: { storeId: string }) => {
   const [isOpenCropDialog, setIsOpenCropDialog] = useState(false);
   const [imageData, setImageData] = useState<ImageData>(initData);
   const [sliderAdds, setSliderAdds] = useState<SliderAdd[] | null>(null);
@@ -46,18 +42,19 @@ const DetailsPageSliderAddsManage = () => {
   // }, [sliderAdds]);
 
   useEffect(() => {
-    const collectionRef = collection(db, "detailsPageSliderAdds");
+    const collectionRef = collection(db, "store", storeId, "top-slider");
     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
       const sliderAddsArr = QuerySnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-      })) as SliderAdd[];
+      })) as Array<{ imageUrl: string; id: string }>;
+
       console.log(sliderAddsArr);
       setSliderAdds(sliderAddsArr);
     });
 
     return unsubscribe;
-  }, []);
+  }, [storeId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
     if (!e.target.files) return;
@@ -83,19 +80,6 @@ const DetailsPageSliderAddsManage = () => {
     setIsOpenCropDialog(true);
   };
 
-  const handleChangeInput = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    id: string
-  ) => {
-    setSliderAdds((prevState) =>
-      prevState
-        ? prevState.map((add) =>
-            add.id === id ? { ...add, link: e.target.value } : add
-          )
-        : prevState
-    );
-  };
-
   const handleClickUpdate = async (idToUpdate: string) => {
     if (!sliderAdds) return;
     const addToUpdate = sliderAdds.find(({ id }) => id === idToUpdate);
@@ -103,12 +87,11 @@ const DetailsPageSliderAddsManage = () => {
     if (!addToUpdate?.cropedImageBlob) {
       // console.error("Add not found or image file missing");
       try {
-        const documentRef = doc(db, "detailsPageSliderAdds", idToUpdate);
+        const documentRef = doc(db, "store", storeId, "top-slider", idToUpdate);
         await updateDoc(documentRef, {
           imageUrl: addToUpdate?.imageUrl,
-          link: addToUpdate?.link,
         });
-        toast.success("Link Uploaded successfully");
+        toast.success("Banner Uploaded successfully");
       } catch (error) {
         console.log(error);
       }
@@ -118,21 +101,41 @@ const DetailsPageSliderAddsManage = () => {
     try {
       const imageUrl = await uploadAdd(
         addToUpdate.cropedImageBlob,
-        "details_page_slider_adds",
+        storeId,
         idToUpdate
       );
-      if(imageUrl) toast.success("Banner Uploaded successfully")
+      if (imageUrl) toast.success("Banner Uploaded successfully");
       try {
-        const documentRef = doc(db, "detailsPageSliderAdds", idToUpdate);
+        const documentRef = doc(db, "store", storeId, "top-slider", idToUpdate);
         await updateDoc(documentRef, {
           imageUrl,
-          link: addToUpdate?.link,
         });
       } catch (error) {
         console.log(error);
       }
     } catch (error) {
       console.error("Error uploading add:", error);
+    }
+  };
+
+  const uploadAdd = async (
+    file: File | Blob,
+    storeIdPath: string,
+    id: string
+  ) => {
+    try {
+      const fileRef = ref(
+        storage,
+        `store_data/${storeIdPath}/top-slider/${id}`
+      );
+      await uploadBytes(fileRef, file);
+      const photoURL = await getDownloadURL(fileRef);
+      console.log("Add Image uploaded successfully!");
+
+      return photoURL;
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+      throw new Error("Failed to upload profile picture");
     }
   };
 
@@ -185,7 +188,7 @@ const DetailsPageSliderAddsManage = () => {
       )}
       <div className="">
         <h2 className="text-primary font-bold mb-10 text-center">
-          Search Result Page Slider Adds (16:3 ~ 1000px:312px )
+          Top Slider (16:3 ~ 1000px:312px )
         </h2>
 
         <div className="flex flex-col w-full gap-5">
@@ -205,16 +208,6 @@ const DetailsPageSliderAddsManage = () => {
                       className="card-img-top"
                       src={add?.croppedImageUrl ?? add.imageUrl}
                       alt="Card image cap"
-                    />
-                  </div>
-
-                  <div className="mt-4 px-3 flex justify-center items-center">
-                    <Input
-                      type="text"
-                      value={
-                        sliderAdds.find((addObj) => addObj.id === add.id)?.link
-                      }
-                      onChange={(e) => handleChangeInput(e, add.id)}
                     />
                   </div>
 
@@ -241,5 +234,5 @@ const DetailsPageSliderAddsManage = () => {
       </div>
     </div>
   );
-}
-export default DetailsPageSliderAddsManage
+};
+export default UpdateTopSlider;

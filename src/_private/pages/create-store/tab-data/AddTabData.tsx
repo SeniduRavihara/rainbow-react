@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { FaArrowLeft } from "react-icons/fa";
 import AddInfoTab from "./AddInfoTab";
 import AddGalleryTab from "./AddGalleryTab";
+import UpdateTopSlider from "@/_private/components/UpdateTopSlider";
 
 const AddTabData = () => {
   const params = useParams();
@@ -26,7 +27,7 @@ const AddTabData = () => {
         <FaArrowLeft />
       </Button>
 
-      <Accordion >
+      <Accordion>
         <Accordion.Item eventKey="0">
           <Accordion.Header>Setup Infomation</Accordion.Header>
           <Accordion.Body>
@@ -80,6 +81,20 @@ const AddTabData = () => {
           <Accordion.Header>Setup Contact</Accordion.Header>
           <Accordion.Body>
             <AddContactTab storeId={params.storeId || ""} />
+          </Accordion.Body>
+        </Accordion.Item>
+
+        <Accordion.Item eventKey="7">
+          <Accordion.Header>Setup Contact</Accordion.Header>
+          <Accordion.Body>
+            <AddContactTab storeId={params.storeId || ""} />
+          </Accordion.Body>
+        </Accordion.Item>
+
+        <Accordion.Item eventKey="8">
+          <Accordion.Header>Setup Top Slider</Accordion.Header>
+          <Accordion.Body>
+            <UpdateTopSlider storeId={params.storeId || ""} />
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
