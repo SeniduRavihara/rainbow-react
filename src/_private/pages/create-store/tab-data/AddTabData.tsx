@@ -84,12 +84,6 @@ const AddTabData = () => {
           </Accordion.Body>
         </Accordion.Item>
 
-        <Accordion.Item eventKey="7">
-          <Accordion.Header>Setup Contact</Accordion.Header>
-          <Accordion.Body>
-            <AddContactTab storeId={params.storeId || ""} />
-          </Accordion.Body>
-        </Accordion.Item>
 
         <Accordion.Item eventKey="8">
           <Accordion.Header>Setup Top Slider</Accordion.Header>

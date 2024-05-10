@@ -11,12 +11,14 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { Label } from "@/components/ui/label";
 
 const ForgetPasswordPage = () => {
   const [email, setEmail] = useState("");
+
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,6 +29,8 @@ const ForgetPasswordPage = () => {
       try {
         await sendPasswordResetEmail(auth, email);
         toast.success("Check In your Email");
+        setEmail("")
+        navigate("/login");
       } catch (error) {
         console.log(error);
       }
