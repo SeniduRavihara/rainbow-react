@@ -12,7 +12,7 @@ import {
 const Footer = () => {
   return (
     <div className="w-full p-10">
-      <h3 className="text-2xl  font-semibold mb-5">Qucik Links</h3>
+      {/* <h3 className="text-2xl  font-semibold mb-5">Qucik Links</h3> */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
         <ul>
           <h1 className="text-orange-500 font-semibold mb-2 text-lg">
@@ -57,12 +57,15 @@ const Footer = () => {
           </div>
 
           <h1 className="text-xl font-semibold mt-3">Help Desk</h1>
-          <p className="text-red-500 text-lg font-semibold">0113 184 000</p>
+
+          <a className="text-white" href="tel:0113184000">
+            <p className="text-red-500 text-lg font-semibold">0113 184 000</p>
+          </a>
 
           <h1 className="text-xl font-semibold mt-2">COMPLAIN</h1>
-          <p className="text-red-500 text-lg font-semibold mb-3">
-            0775 124 000
-          </p>
+          <a className="text-white" href="tel:0775124000">
+            <p className="text-red-500 text-lg font-semibold">0775 124 000</p>
+          </a>
 
           <a href="info@srilankanusiness.lk">info@srilankanusiness.lk</a>
           <br />
@@ -78,19 +81,29 @@ const Footer = () => {
           <h1 className="text-orange-500 font-semibold mt-3">Follow Us</h1>
           <ul className="flex gap-2 mt-2">
             <li className="scl-md-links">
-              <img src={fb} alt="" />
+              <a href="">
+                <img src={fb} alt="" />
+              </a>
             </li>
             <li className="scl-md-links">
-              <img src={twitter} alt="" />
+              <a href="">
+                <img src={twitter} alt="" />
+              </a>
             </li>
             <li className="scl-md-links">
-              <img src={insta} alt="" />
+              <a href="">
+                <img src={insta} alt="" />
+              </a>
             </li>
             <li className="scl-md-links">
-              <img src={yt} alt="" />
+              <a href="">
+                <img src={yt} alt="" />
+              </a>
             </li>
             <li className="w-[30px] -mt-[2px]">
-              <img src={web} alt="" />
+              <a href="">
+                <img src={web} alt="" />
+              </a>
             </li>
           </ul>
         </div>
