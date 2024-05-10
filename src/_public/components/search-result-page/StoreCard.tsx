@@ -35,6 +35,7 @@ type StoreCardProps = {
   reviewCount: number;
   rating: number;
   verified: boolean;
+  showProfile: boolean;
 };
 
 const StoreCard = ({
@@ -47,6 +48,7 @@ const StoreCard = ({
   id,
   reviewCount = 0,
   verified = false,
+  showProfile = false,
 }: StoreCardProps) => {
   const [enquery, setEnquery] = useState("");
   const [openModel, setOpenModel] = useState(false);
@@ -58,7 +60,11 @@ const StoreCard = ({
   const navigate = useNavigate();
 
   const handleStoreClick = (id: string) => {
-    navigate(`/store-details/${id}`);
+    // console.log("SENIDU", showProfile);
+    
+    if (showProfile) {
+      navigate(`/store-details/${id}`);
+    }
   };
 
   const hndelCancelClick = () => {
@@ -75,7 +81,7 @@ const StoreCard = ({
           imageUrl: currentUser?.photoURL || "",
           message: enquery,
           email: currentUser?.email || "",
-          phone: phoneNum
+          phone: phoneNum,
         },
         id
       );

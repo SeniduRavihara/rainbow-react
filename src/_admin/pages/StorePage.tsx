@@ -37,6 +37,10 @@ const StorePage = () => {
   const [loading, setLoading] = useState(false);
   const [loadingActive, setLoadingActive] = useState({ id: "", state: false });
   const [loadingVerify, setLoadingVerify] = useState({ id: "", state: false });
+  const [loadingShowProfile, setLoadingShowProfile] = useState({
+    id: "",
+    state: false,
+  });
   const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchQuiery, setSearchQuiery] = useState("");
@@ -143,6 +147,36 @@ const StorePage = () => {
     }
   };
 
+  const toggleShowProfile = async (id: string, showProfile: boolean) => {
+    setLoadingShowProfile((pre) => ({ ...pre, state: true, id }));
+    const documentRef = doc(db, "store", id);
+    try {
+      await updateDoc(documentRef, {
+        showProfile: !showProfile,
+      });
+
+      setStoreList((prev) => {
+        if (!prev) return prev;
+
+        const updatedList = prev.map((item) => {
+          if (item.id === id) {
+            return {
+              ...item,
+              showProfile: !showProfile,
+            };
+          }
+          return item;
+        });
+
+        setLoadingShowProfile((pre) => ({ ...pre, state: false, id }));
+        return updatedList;
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   const handlesearch = async (searchQuery: string) => {
     try {
       setLoadingSearch(true);
@@ -182,6 +216,7 @@ const StorePage = () => {
         location: hit.location,
         companyProfilePdfUrl: hit.companyProfilePdfUrl,
         youtubeVideos: hit.youtubeVideos,
+        showProfile: hit.showProfile,
       }));
       setLastDocument(null);
       setStoreList(storeList);
@@ -194,7 +229,7 @@ const StorePage = () => {
   };
 
   const openStoreReview = (storeId: string) => {
-    setOpenRviewWindow((pre) => ({ ...pre, storeId, open:true }));
+    setOpenRviewWindow((pre) => ({ ...pre, storeId, open: true }));
   };
 
   // console.log(storeList && new Date(storeList[0].createdAt._seconds * 1000).toDateString());
@@ -262,6 +297,7 @@ const StorePage = () => {
             <th>Registered/Requested Date</th>
             <th>ACTION</th>
             <th>VERIFY</th>
+            <th>ShowProfile</th>
           </tr>
         </thead>
         <tbody>
@@ -269,7 +305,10 @@ const StorePage = () => {
             storeList.map((storeObj, index) => (
               <tr key={index}>
                 <td className="font-medium">{index + 1}</td>
-                <td onClick={() => openStoreReview(storeObj.id)} className="cursor-pointer">
+                <td
+                  onClick={() => openStoreReview(storeObj.id)}
+                  className="cursor-pointer"
+                >
                   {storeObj.title}
                 </td>
                 <td>{storeObj.category}</td>
@@ -325,6 +364,26 @@ const StorePage = () => {
                     {loadingVerify.id === storeObj.id &&
                       loadingVerify.state && <Loader />}
                     {storeObj.verified ? "Remove" : "Verify"}
+                  </Button>
+                </td>
+
+                <td className="text-right">
+                  <Button
+                    className={cn(
+                      ` flex items-center justify-center gap-2`,
+                      !storeObj.showProfile ? "bg-blue-500" : "bg-red-500"
+                    )}
+                    disabled={
+                      loadingShowProfile.id === storeObj.id &&
+                      loadingShowProfile.state
+                    }
+                    onClick={() =>
+                      toggleShowProfile(storeObj.id, storeObj.showProfile)
+                    }
+                  >
+                    {loadingShowProfile.id === storeObj.id &&
+                      loadingShowProfile.state && <Loader />}
+                    {storeObj.showProfile ? "Hide" : "Show"}
                   </Button>
                 </td>
               </tr>

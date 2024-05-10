@@ -97,6 +97,7 @@ const SearchBoxes = () => {
         location: hit.location,
         companyProfilePdfUrl: hit.companyProfilePdfUrl,
         youtubeVideos: hit.youtubeVideos,
+        showProfile: hit.showProfile,
       }));
       setLastDocument(null);
       setSearchResultStores(

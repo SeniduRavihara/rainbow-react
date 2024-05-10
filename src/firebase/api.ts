@@ -182,7 +182,6 @@ export const createStore = async (uid: string, payload: any) => {
   try {
     const storeId = `${uid}--${v4().replace(/-/g, "")}`;
 
-
     await setDoc(doc(db, "store", storeId), {
       ...payload,
       userId: uid,
@@ -193,6 +192,7 @@ export const createStore = async (uid: string, payload: any) => {
       rating: 0,
       visitCount: 0,
       verified: false,
+      showProfile: false,
     });
 
     for (let index = 0; index < 4; index++) {
