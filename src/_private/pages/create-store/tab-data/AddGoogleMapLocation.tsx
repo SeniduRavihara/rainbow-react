@@ -36,7 +36,7 @@ const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
         className="text-xl font-semibold text-blue-400 mb-5"
         to="https://firebasestorage.googleapis.com/v0/b/rainbow-32f4a.appspot.com/o/guide%2F0430.mp4?alt=media&token=23532649-00e1-4343-abf9-37458009e737"
       >
-        Video Guide to get The Link
+        Video Guide To Get The Location Link
       </Link>
 
       <Label>video embed url</Label>

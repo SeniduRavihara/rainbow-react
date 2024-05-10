@@ -249,7 +249,7 @@ const StorePage = () => {
 
           <iframe
             className="w-full h-full"
-            src={`/store-details/${openRviewWindow.storeId}`}
+            src={`/business-profile/${openRviewWindow.storeId}`}
             frameBorder="1"
           ></iframe>
         </div>

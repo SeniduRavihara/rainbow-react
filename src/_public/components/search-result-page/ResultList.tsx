@@ -25,8 +25,6 @@ const ResultList = ({ category }: { category:string }) => {
   // const category = params.category;
 
   console.log(visibleStores);
-  
-
 
   useEffect(() => {
     if (isAllFetched) setAllPageCount(currentPage);
@@ -86,7 +84,7 @@ const ResultList = ({ category }: { category:string }) => {
   };
 
   // const handleStoreClick = (id: string)=>{
-  //   navigate(`/store-details/${id}`);
+  //   navigate(`/business-profile/${id}`);
   // }
 
   if (loadingStoreFetching) {

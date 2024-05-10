@@ -183,7 +183,7 @@ const ReviewsAndRatings = ({
         </div>
         <div className="flex flex-col">
           <h2 className="text-xl font-semibold">{getReviewCount()} Review</h2>
-          <p>Jd rating index based on {getReviewCount()} review the web</p>
+          <p>SLB rating index based on {getReviewCount()} review in the web</p>
         </div>
       </div>
 
