@@ -63,7 +63,7 @@ const StoreCard = ({
     // console.log("SENIDU", showProfile);
     
     if (showProfile) {
-      navigate(`/store-details/${id}`);
+      navigate(`/business-profile/${id}`);
     }
   };
 

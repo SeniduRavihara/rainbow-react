@@ -51,6 +51,7 @@ import insta from "./img/social-platforms/insta.png";
 import linkedin from "./img/social-platforms/linkedin.png";
 import twitter from "./img/social-platforms/twitter_x_new_logo_x_rounded_icon_256078.png";
 import yt from "./img/social-platforms/yt.png";
+import web from "./img/social-platforms/web.png";
 import appStore from "./img/Download_on_the_App_Store_Badge.svg.png";
 import playStore from "./img/Google_Play_Store_badge_EN.svg.png";
 import whatsapp from "./img/icons8-whatsapp.svg";
@@ -59,13 +60,17 @@ import placeholderReviewPic from "./img/icons8-male-user-94.png";
 import imageGalery from "./img/image-gallery.png";
 
 import logo from "./img/SRILANKA BUSINESS LOGO.png";
-import mic from "./img/mic-icon.png"
+import mic from "./img/mic-icon.png";
 
-import allCategories from "./img/category-img/all-categories.png"
-import iphoneMockup from "./iphone-Mock.png"
-import marktBusiness from "./market.png"
-import marketAnalysis from "./business-grow.jpeg"
-import anounce from "./market+analysis-640w.webp"
+import allCategories from "./img/category-img/all-categories.png";
+import iphoneMockup from "./iphone-Mock.png";
+import marktBusiness from "./market.png";
+import marketAnalysis from "./business-grow.jpeg";
+import anounce from "./market+analysis-640w.webp";
+
+import visa from "./img/visa.png";
+import master from "./img/master.png";
+import americanExpress from "./img/american-express.png";
 
 const placeholderSliderAdds = [
   placeholderAdd1,
@@ -126,6 +131,7 @@ export {
   linkedin,
   twitter,
   yt,
+  web,
   appStore,
   playStore,
   whatsapp,
@@ -138,4 +144,7 @@ export {
   marktBusiness,
   marketAnalysis,
   anounce,
+  visa,
+  master,
+  americanExpress,
 };
