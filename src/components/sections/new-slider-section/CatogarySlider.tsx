@@ -71,8 +71,8 @@ const CatogarySlider = () => {
   };
 
   return (
-    <div className="w-full flex flex-col md:flex-row gap-2 my-10 px-2 md:px-10 md:h-[200px] h-[400px]">
-      <div className="w-full md:w-[40%] h-[250px]">
+    <div className="w-full flex flex-col bg-slate-100 justify-center items-center md:flex-row gap-2 my-10 px-2 md:px-10 md:h-[200px h-[400px">
+      <div className="w-full lg:w-w-[65%] h-[250px flex items-center justify-center">
         <Carousel
           showStatus={false}
           interval={3000}
@@ -87,15 +87,15 @@ const CatogarySlider = () => {
             <div key={index}>
               <img
                 src={image.src}
-                className="h-[200px] object-cover rounded-xl"
+                className="h-[200px w-[100px] object-cover rounded-xl"
               />
             </div>
           ))}
         </Carousel>
       </div>
 
-      <div className="w-full md:w-[60%] flex gap-2 h-[200px]">
-        {sectionStaticAdds?.map((addObj, index) => (
+      <div className="w-full md:w-[60% flex gap-2 h-[200px">
+        {sectionStaticAdds?.slice(0, 4).map((addObj, index) => (
           <div key={index} className="w-[25%] relative flex">
             <div
               onClick={() => handleStaticImageClick(addObj.link)}
@@ -106,7 +106,7 @@ const CatogarySlider = () => {
             <img
               src={addObj.imageUrl}
               alt=""
-              className="w-full h-full object-cover rounded-xl"
+              className="w-full h-full object-cove rounded-xl"
             />
           </div>
         ))}

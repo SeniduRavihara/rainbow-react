@@ -61,7 +61,7 @@ const ImageSlider = ({
               src={imageUrl}
               alt="img"
               draggable="false"
-              className="rounded-lg w-full h-full object-cover"
+              className="rounded-lg w-[200px] h-full object-cover"
             />
           </li>
         ))}

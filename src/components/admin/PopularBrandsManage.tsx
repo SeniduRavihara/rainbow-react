@@ -188,7 +188,7 @@ const PopularBrandsManage = () => {
       )}
       <div className="">
         <h2 className="text-primary font-bold mb-10 text-center">
-          Popular Brands (4:3 ~ 1000px:750px )
+          Popular Brands (4:3 ~ 400px:312px )
         </h2>
         <div className="grid grid-cols-2 w-full gap-5">
           {popularBrands &&

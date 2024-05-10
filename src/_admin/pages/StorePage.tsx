@@ -23,6 +23,7 @@ import { IoIosSearch } from "react-icons/io";
 import algoliasearch from "algoliasearch/lite";
 import { RxCross2 } from "react-icons/rx";
 import { Input } from "@/components/ui/input";
+import { IoArrowBack } from "react-icons/io5";
 
 const searchClient = algoliasearch(
   "6K67WTIHLT",
@@ -39,6 +40,10 @@ const StorePage = () => {
   const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchQuiery, setSearchQuiery] = useState("");
+  const [openRviewWindow, setOpenRviewWindow] = useState({
+    open: false,
+    storeId: "",
+  });
 
   useEffect(() => {
     fetchData();
@@ -188,16 +193,36 @@ const StorePage = () => {
     }
   };
 
-  // console.log(storeList && new Date(storeList[0].createdAt._seconds * 1000).toDateString());
+  const openStoreReview = (storeId: string) => {
+    setOpenRviewWindow((pre) => ({ ...pre, storeId, open:true }));
+  };
 
-  
+  // console.log(storeList && new Date(storeList[0].createdAt._seconds * 1000).toDateString());
 
   return (
     <div className="pb-10 flex flex-col items-center justify-center">
+      {openRviewWindow.open && (
+        <div className="w-screen h-screen absolute top-0 left-0 flex flex-col items-center justify-center">
+          <div
+            className="bg-green-500 hover:bg-green-600 duration-300 w-full flex items-center justify-center"
+            onClick={() =>
+              setOpenRviewWindow((pre) => ({ ...pre, open: false }))
+            }
+          >
+            <IoArrowBack className="text-5xl text-white" />
+          </div>
+
+          <iframe
+            className="w-full h-full"
+            src={`/store-details/${openRviewWindow.storeId}`}
+            frameBorder="1"
+          ></iframe>
+        </div>
+      )}
       <div className="flex w-full items-center gap-2 h-10 mb-10">
         <Input
           type="text"
-          placeholder="Restaurants near me"
+          placeholder="Search Stores"
           className="outline-none w-[70%] px-2 font-md bg-green-50"
           value={searchQuiery}
           onChange={(e) => setSearchQuiery(e.target.value)}
@@ -244,7 +269,9 @@ const StorePage = () => {
             storeList.map((storeObj, index) => (
               <tr key={index}>
                 <td className="font-medium">{index + 1}</td>
-                <td>{storeObj.title}</td>
+                <td onClick={() => openStoreReview(storeObj.id)} className="cursor-pointer">
+                  {storeObj.title}
+                </td>
                 <td>{storeObj.category}</td>
                 <td>{storeObj.address}</td>
                 <td className="font-medium">{storeObj.email}</td>
