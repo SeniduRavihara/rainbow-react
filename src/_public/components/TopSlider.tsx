@@ -55,7 +55,7 @@ const TopSlider = ({ storeId }: { storeId: string }) => {
             <img
               alt="Adds"
               src={sliderAddObj.imageUrl ?? placeholderSliderAdds[index]}
-              className="h-[180px] md:h-[250px] object-cover"
+              className="h-[180px md:h-[250px object-cover"
             />
           </div>
         ))}

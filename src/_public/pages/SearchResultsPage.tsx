@@ -85,7 +85,7 @@ const SearchResultsPage = () => {
         {/* <CarouselAdds /> */}
         <SearchResultCarosel />
 
-        <div className="px-3 relative top-4 text-3xl font-bold font-">
+        <div className="px-3 relative top-4 text-xl sm:text-2xl md:text-3xl font-bold font-">
           {category?.split("-")[0] === "category" && (
             <div>
               {!searchResultStores && "No any "}Search result for '

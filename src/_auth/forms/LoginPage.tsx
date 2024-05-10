@@ -1,5 +1,5 @@
 // import { getUserRole, login, logout } from "@/firebase/api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -122,6 +122,16 @@ const LoginForm = () => {
               )}
             />
           </div>
+
+          <Button
+            variant="link"
+            type="button"
+            className="font-normal w-full"
+            size="sm"
+            asChild
+          >
+            <Link to="/reset-password">Forget Password</Link>
+          </Button>
 
           <Button type="submit" className="w-full">
             Login
