@@ -13,10 +13,8 @@ import RatingComponent from "../components/search-result-page/RatingComponent";
 import { IonIcon } from "@ionic/react";
 import { locationOutline } from "ionicons/icons";
 import ReviewsAndRatings from "../components/store-details-page/ReviewsAndRatings";
-// import Gallery from "../components/store-details-page/Gallery";
 import OpenTimes from "../components/store-details-page/OpenTimes";
 import DetailsPageAdds from "../components/store-details-page/DetailsPageAdds";
-// import TabComponent from "../components/store-details-page/tabs/TabComponent";
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { FaEye, FaPhoneAlt } from "react-icons/fa";
@@ -48,6 +46,14 @@ const StoreDetailsPage = () => {
   }> | null>(null);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // console.log("Senidu", selectedStore?.showProfile);
+    
+    // if (!selectedStore?.showProfile) {
+    //   navigate("/");
+    // }
+  }, [navigate, selectedStore?.showProfile]);
 
   useEffect(() => {
     window.scrollTo(0, 0);

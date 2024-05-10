@@ -32,7 +32,14 @@ import { Label } from "@/components/ui/label";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
 import { categories } from "@/constants";
-// import CustomTag from "@/components/CustomTag";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const ManageStorePage = () => {
   const [title, setTitle] = useState("");
@@ -90,25 +97,27 @@ const ManageStorePage = () => {
   const [visibleCategories, setVisibleCategories] =
     useState<Array<{ icon: string; label: string }>>(categories);
 
+  const [requestPhone, setRequestPhone] = useState("");
+  const [openRequestModel, setOpenRequestModel] = useState(false);
+
   const { currentUserData, locationArr } = useData();
   const { currentUser } = useAuth();
 
   const params = useParams();
 
-    useEffect(() => {
-      const collectionRef = collection(db, "categories");
-      const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-        const categoryArr = QuerySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-        })) as Array<{ icon: string; label: string }>;
+  useEffect(() => {
+    const collectionRef = collection(db, "categories");
+    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+      const categoryArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+      })) as Array<{ icon: string; label: string }>;
 
-        // console.log(categoryArr);
-        setVisibleCategories((pre) => [...pre, ...categoryArr]);
-      });
+      // console.log(categoryArr);
+      setVisibleCategories((pre) => [...pre, ...categoryArr]);
+    });
 
-      return unsubscribe;
-    }, []);
-
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -309,6 +318,14 @@ const ManageStorePage = () => {
     // if (!label || categoriesArr.includes(label)) return;
     // setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
     setCategory(label);
+  };
+
+  const handleClickRequest = () => {
+    if (requestPhone) {
+      window.open(
+        `https://wa.me/715335640?text=I%20need%20to%20show%20my%20business%20profile.%20My%20phone%20number%20is%3A%20${requestPhone}`
+      );
+    }
   };
 
   // const handleRemoveCatogary = (label: string) => {
@@ -818,13 +835,71 @@ const ManageStorePage = () => {
                       </Button>
                     )}
 
-                    <div>
-                      <Link to={`/setup-tabs-data/${currentUserStore?.id}`}>
-                        <Button className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white ">
-                          Next
-                        </Button>
-                      </Link>
-                    </div>
+                    {currentUserStore.showProfile ? (
+                      <div>
+                        <Link to={`/setup-tabs-data/${currentUserStore?.id}`}>
+                          <Button className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white ">
+                            Next
+                          </Button>
+                        </Link>
+                      </div>
+                    ) : (
+                      <Dialog
+                        open={openRequestModel}
+                        onOpenChange={setOpenRequestModel}
+                      >
+                        <DialogTrigger>
+                          <Button
+                            asChild
+                            size="sm"
+                            className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white"
+                          >
+                            <h4>Request For Create Profile</h4>
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px] flex items-center justify-center flex-col">
+                          <DialogHeader>
+                            <DialogTitle>Send Your Request</DialogTitle>
+                          </DialogHeader>
+
+                          <div className="grid gap-4 py-2 w-full">
+                            <div className="">
+                              <Label>Phone No</Label>
+                              <Input
+                                id="name"
+                                className=""
+                                placeholder="Your Phone Number"
+                                value={requestPhone}
+                                onChange={(e) =>
+                                  setRequestPhone(e.target.value)
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          <DialogFooter className="sm:justify-start">
+                            <div className="w-full flex items-center justify-center gap-2 px-10">
+                              <Button
+                                type="button"
+                                onClick={() => {
+                                  setOpenRequestModel(false);
+                                  setRequestPhone("");
+                                }}
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                type="button"
+                                onClick={handleClickRequest}
+                                className=" md:w-[200px] m-[10px] flex items-center justify-center p-3 text-white "
+                              >
+                                Request For Create Profile
+                              </Button>
+                            </div>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    )}
                   </div>
                 </div>
               </form>

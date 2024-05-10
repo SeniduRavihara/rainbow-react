@@ -125,6 +125,7 @@ export type StoreObj = {
   location: string;
   companyProfilePdfUrl: string;
   youtubeVideos: string[];
+  showProfile: boolean;
 };
 
 export type StoreListType = Array<StoreObj>;

@@ -183,7 +183,7 @@ const SearchResultSliderAddsManage = () => {
       )}
       <div className="">
         <h2 className="text-primary font-bold mb-10 text-center">
-          Search Result Page Slider Adds (16:3 ~ 1000px:200px )
+          Search Result Page Slider Adds (16:3 ~ 1000px:190px )
         </h2>
 
         <div className="flex flex-col w-full gap-5">

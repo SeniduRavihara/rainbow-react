@@ -24,6 +24,9 @@ const ResultList = ({ category }: { category:string }) => {
   // const params = useParams();
   // const category = params.category;
 
+  console.log(visibleStores);
+  
+
 
   useEffect(() => {
     if (isAllFetched) setAllPageCount(currentPage);
@@ -113,6 +116,7 @@ const ResultList = ({ category }: { category:string }) => {
                 reviewCount={data.reviewCount}
                 rating={data.rating}
                 verified={data.verified}
+                showProfile={data.showProfile}
               />
             </li>
           ))}
