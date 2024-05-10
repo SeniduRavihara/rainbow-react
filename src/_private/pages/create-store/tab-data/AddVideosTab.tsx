@@ -41,7 +41,7 @@ const AddVideosTab = ({ storeId }: { storeId: string }) => {
         className="text-xl font-semibold text-blue-400 mb-5"
         to="https://firebasestorage.googleapis.com/v0/b/rainbow-32f4a.appspot.com/o/guide%2Fyoutube%20guid.mp4?alt=media&token=02dac91e-7ea9-4587-9f1e-acff3b0e0471"
       >
-        Video Guide to get The Link
+        Video Guide To Get The Video Link
       </Link>
 
       <div>
