@@ -180,7 +180,6 @@ export const createStore = async (uid: string, payload: any) => {
   // console.log("PAYLOAD", payload);
 
   try {
-
     const storeId = `${uid}--${v4().replace("-", "")}`;
 
     await setDoc(doc(db, "store", storeId), {
@@ -236,6 +235,11 @@ export const updateStore = async (storeId: string, payload: any) => {
         }
       }
     }
+
+    const documentRef = doc(db, "store", storeId);
+    await updateDoc(documentRef, {
+      active: false,
+    });
 
     console.log("Document Update successfully");
   } catch (error) {

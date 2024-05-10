@@ -39,7 +39,7 @@ const initData2: ImageData = {
   croppedImageUrl: null,
   crop: null,
   zoom: null,
-  aspect: 15 / 20,
+  aspect: 4 / 5,
   id: "",
 };
 
@@ -373,7 +373,7 @@ const SectionAddsManage: React.FC = () => {
         )}
         <div className="w-full">
           <h2 className="text-primary font-bold mb-10 text-center">
-            Section Adds (15:20 ~ 1000px:1333px )
+            Section Adds (4:5 ~ 250px:312px )
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full gap-5">
             {sectionStaticAdds &&
