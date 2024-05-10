@@ -42,6 +42,7 @@ import AdvertizeYourBusiness from "./_public/pages/AdvertizeYourBusiness";
 import WeAreHiringPage from "./_public/pages/WeAreHiringPage";
 import InvestorPage from "./_public/pages/InvestorPage";
 import AddTabData from "./_private/pages/create-store/tab-data/AddTabData";
+import ForgetPasswordPage from "./_auth/forms/ForgetPasswordPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -50,6 +51,7 @@ const router = createBrowserRouter(
       <Route element={<AuthLayout />}>
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/reset-password" element={<ForgetPasswordPage />} />
       </Route>
 
       {/* public routes */}

@@ -180,7 +180,8 @@ export const createStore = async (uid: string, payload: any) => {
   // console.log("PAYLOAD", payload);
 
   try {
-    const storeId = `${uid}--${v4().replace("-", "")}`;
+    const storeId = `${uid}--${v4().replace(/-/g, "")}`;
+
 
     await setDoc(doc(db, "store", storeId), {
       ...payload,

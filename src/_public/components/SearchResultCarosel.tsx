@@ -65,7 +65,7 @@ const SearchResultCarosel = () => {
             <img
               alt="Adds"
               src={sliderAddObj.imageUrl ?? placeholderSliderAdds[index]}
-              className="cursor-pointer h-[100px] md:h-[200px]"
+              className="cursor-pointer h-[100px md:h-[200px"
             />
           </div>
         ))}
