@@ -38,11 +38,12 @@ const DetailsPageAdds = ({
   return (
     <div>
       <h2 className="text-center">Advertise</h2>
-      <div className="px-0 md:px-10">
+      <div className="px-0 md:px-10 flex items-center justify-center">
         {randomAdd && (
           <img
             src={randomAdd.imageUrl}
             alt={`Ad ${randomAdd.id}`}
+            className="w-[200px] lg:w-full mt-2"
             onClick={() => handleImageClick(randomAdd.link)}
           />
         )}
