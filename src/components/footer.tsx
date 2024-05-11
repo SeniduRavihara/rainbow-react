@@ -18,32 +18,62 @@ const Footer = () => {
           <h1 className="text-orange-500 font-semibold mb-2 text-lg">
             Customer Care
           </h1>
-          <li>About Us</li>
-          <li>Investor Relations</li>
-          <li>We are Hiring</li>
-          <li>Customer Care</li>
-          <li>Free Listing</li>
-          <li>What&apos;s New</li>
-          <li>report Bug</li>
+          <li>
+            <a href="">About Us</a>
+          </li>
+          <li>
+            <a href="">Investor Relations</a>
+          </li>
+          <li>
+            <a href="">We are Hiring</a>
+          </li>
+          <li>
+            <a href="">Customer Care</a>
+          </li>
+          <li>
+            <a href="">Free Listing</a>
+          </li>
+          <li>
+            <a href="">What&apos;s New</a>
+          </li>
+          <li>
+            <a href="">report Bug</a>
+          </li>
         </ul>
 
         <ul>
           <h1 className="text-orange-500 font-semibold  mb-2 text-lg">
             Srilanka Business
           </h1>
-          <li>About</li>
+          <li>
+            <a href="">About</a>
+          </li>
           <li>
             Careers
             <ul className="ml-10">
-              <li>Stores</li>
-              <li>Donates</li>
-              <li>Blog</li>
+              <li>
+                <a href="">Stores</a>
+              </li>
+              <li>
+                <a href="">Donates</a>
+              </li>
+              <li>
+                <a href="">Blog</a>
+              </li>
             </ul>
           </li>
-          <li>Terms & Conditions</li>
-          <li>Privacy Policy</li>
-          <li>Mobile App</li>
-          <li>PayLater Edu</li>
+          <li>
+            <a href="">Terms & Conditions</a>
+          </li>
+          <li>
+            <a href="">Privacy Policy</a>
+          </li>
+          <li>
+            <a href="">Mobile App</a>
+          </li>
+          <li>
+            <a href="">PayLater Edu</a>
+          </li>
         </ul>
 
         <div>

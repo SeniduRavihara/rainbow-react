@@ -65,7 +65,7 @@ const ManageStoresPage = () => {
 
       <div>
         <h2 className="text-2xl font-bold text-blue-500 text-center mt-4 mb-4">
-          Manage Your Stores
+          Manage Your Business Profiles
         </h2>
         <p className="mb-4">
           It seems like you haven't created a store yet. Create one now to start
