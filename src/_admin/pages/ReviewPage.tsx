@@ -4,18 +4,23 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import Navbar from "../components/Navbar";
+
 import SocialMediaArea from "@/components/sections/social-media-area";
 import DiscriptionArea from "@/components/sections/discription-area";
 import Footer from "@/components/footer";
 import BottomBanner from "@/components/bottom-banner";
-import RatingComponent from "../components/search-result-page/RatingComponent";
+import RatingComponent from "@/_public/components/search-result-page/RatingComponent";
 import { IonIcon } from "@ionic/react";
 import { locationOutline } from "ionicons/icons";
-import ReviewsAndRatings from "../components/store-details-page/ReviewsAndRatings";
-import OpenTimes from "../components/store-details-page/OpenTimes";
-import DetailsPageAdds from "../components/store-details-page/DetailsPageAdds";
-import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import ReviewsAndRatings from "@/_public/components/store-details-page/ReviewsAndRatings";
+import OpenTimes from "@/_public/components/store-details-page/OpenTimes";
+import DetailsPageAdds from "@/_public/components/store-details-page/DetailsPageAdds";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+} from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { FaEye, FaPhoneAlt } from "react-icons/fa";
 import { fb, insta, linkedin, twitter, whatsapp, yt } from "@/assets";
@@ -28,14 +33,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CircularProgress, Tag } from "@chakra-ui/react";
-import { fetchStoreById } from "@/firebase/api";
-import ProductAndServices from "../components/store-details-page/ProductAndServices";
-import TabComponent from "../components/store-details-page/tabs/tab-cmponent/TabComponent";
-import TopSlider from "../components/TopSlider";
+import ProductAndServices from "@/_public/components/store-details-page/ProductAndServices";
+import TabComponent from "@/_public/components/store-details-page/tabs/tab-cmponent/TabComponent";
+import ReviewTopSlider from "../components/ReviewTopSlider";
 
-const StoreDetailsPage = () => {
-  const { searchResultStores, currentUserData } = useData();
+const ReviewPage = () => {
+  const { currentUserData } = useData();
   const [selectedStore, setSelectedStore] = useState<StoreObj | null>(null);
+  const [haveLatestUpdate, setHaveLatestUpdate] = useState(false);
 
   const params = useParams();
   const storeId = params.storeId;
@@ -48,32 +53,32 @@ const StoreDetailsPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // console.log("Senidu", selectedStore?.showProfile);
-    // if (!selectedStore?.showProfile) {
-    //   navigate("/");
-    // }
-  }, [navigate, selectedStore?.showProfile]);
-
-  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
-    const updateVisitCount = async () => {
-      if (selectedStore && storeId) {
+    const checkDocument = async () => {
+      if (storeId) {
         try {
-          const documentRef = doc(db, "store", storeId);
-          await updateDoc(documentRef, {
-            visitCount: selectedStore.visitCount + 1,
-          });
+          const documentRef = doc(db, "latestStore", storeId);
+          const documentSnapshot = await getDoc(documentRef);
+
+          // Check if the document exists
+          const documentExists = documentSnapshot.exists();
+
+          console.log(documentExists);
+
+          // Update state based on document existence
+          setHaveLatestUpdate(documentExists);
         } catch (error) {
-          console.log(error);
+          console.error("Error checking document existence:", error);
+          setHaveLatestUpdate(false);
         }
       }
     };
 
-    updateVisitCount();
-  }, [selectedStore, storeId]);
+    checkDocument();
+  }, [storeId]);
 
   useEffect(() => {
     const collectionRef = collection(db, "detailsPageAdds");
@@ -92,27 +97,54 @@ const StoreDetailsPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!searchResultStores && storeId) {
-        const storeData = await fetchStoreById(storeId);
-        setSelectedStore({ ...storeData, id: storeId } as StoreObj);
-      } else {
-        setSelectedStore(
-          searchResultStores?.find((storeObj) => storeObj.id === storeId) ??
-            null
-        );
+      if (storeId) {
+        try {
+          const documentRef = doc(db, "latestStore", storeId);
+          const documentSnapshot = await getDoc(documentRef);
+
+          // Check if the document exists
+          const documentExists = documentSnapshot.exists();
+
+          console.log(documentExists);
+
+          if (documentExists) {
+            const documentRef = doc(db, "latestStore", storeId);
+            const storeData = await getDoc(documentRef);
+
+            // const storeData = await fetchStoreById(storeId);
+            setSelectedStore({ ...storeData.data(), id: storeId } as StoreObj);
+          } else {
+            const documentRef = doc(db, "store", storeId);
+            const storeData = await getDoc(documentRef);
+
+            // const storeData = await fetchStoreById(storeId);
+            setSelectedStore({ ...storeData.data(), id: storeId } as StoreObj);
+          }
+        } catch (error) {
+          console.error("Error checking document existence:", error);
+        }
       }
     };
 
     fetchData();
-  }, [navigate, searchResultStores, storeId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storeId, haveLatestUpdate]);
+
+  //   const fetchStoreById = async (storeId: string) => {
+
+  //       const documentRef = doc(db, "latestStore", storeId);
+  //       try {
+  //         const storeData = await getDoc(documentRef);
+  //         return storeData?.data() as StoreObj;
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+
+  //   };
 
   // if (!selectedStore) return <div>Loading...</div>;
   return (
     <div className="w-full">
-      <div className="fixed top-0 left-0 z-50  p-2 md:p-5">
-        <Navbar />
-      </div>
-
       <div className="mt-44 725:mt-20 w-full ">
         {!selectedStore ? (
           <div className="w-full h-screen flex items-center justify-center">
@@ -121,7 +153,7 @@ const StoreDetailsPage = () => {
         ) : (
           <>
             {/* <Gallery /> */}
-            <TopSlider storeId={selectedStore.id} />
+            <ReviewTopSlider storeId={selectedStore.id} />
 
             <div className="w-full flex items-center justify-between pt-2 px-2">
               {/* ----------Desktop--------- */}
@@ -373,36 +405,26 @@ const StoreDetailsPage = () => {
 
               {/* ------ */}
 
-              <div className=" flex-col gap-6 hidden md:flex items-center justify-center">
+              <div className=" flex-col gap-6 hidden md:flex">
                 <h2 className="text-3xl text-center text-blue-500 font-medium">
                   Share
                 </h2>
                 <div className="ad flex">
-                  {selectedStore?.fasebook && (
-                    <a href={selectedStore?.fasebook} className="scl-md-links">
-                      <img src={fb} alt="" />
-                    </a>
-                  )}
-                  {selectedStore?.youtube && (
-                    <a href={selectedStore?.youtube} className="scl-md-links">
-                      <img src={yt} alt="" />
-                    </a>
-                  )}
-                  {selectedStore?.instagram && (
-                    <a href={selectedStore?.instagram} className="scl-md-links">
-                      <img src={insta} alt="" />
-                    </a>
-                  )}
-                  {selectedStore?.linkedin && (
-                    <a href={selectedStore?.linkedin} className="scl-md-links">
-                      <img src={linkedin} alt="" />
-                    </a>
-                  )}
-                  {selectedStore?.twitter && (
-                    <a href={selectedStore?.twitter} className="scl-md-links">
-                      <img src={twitter} alt="" />
-                    </a>
-                  )}
+                  <a href="#" className="scl-md-links">
+                    <img src={fb} alt="" />
+                  </a>
+                  <a href="#" className="scl-md-links">
+                    <img src={yt} alt="" />
+                  </a>
+                  <a href="#" className="scl-md-links">
+                    <img src={insta} alt="" />
+                  </a>
+                  <a href="#" className="scl-md-links">
+                    <img src={linkedin} alt="" />
+                  </a>
+                  <a href="#" className="scl-md-links">
+                    <img src={twitter} alt="" />
+                  </a>
                 </div>
                 <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
                   <h2>Enquire Now</h2>
@@ -437,7 +459,13 @@ const StoreDetailsPage = () => {
               </div>
             </div>
 
-            <SocialMediaArea />
+            <SocialMediaArea
+              facebookUrl={selectedStore?.fasebook}
+              instagramUrl={selectedStore?.instagram}
+              linkedinUrl={selectedStore?.linkedin}
+              twitterUrl={selectedStore?.twitter}
+              youtubeUrl={selectedStore?.youtube}
+            />
           </>
         )}
         <DiscriptionArea />
@@ -448,4 +476,4 @@ const StoreDetailsPage = () => {
   );
 };
 
-export default StoreDetailsPage;
+export default ReviewPage;

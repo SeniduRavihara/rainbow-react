@@ -11,14 +11,52 @@ import { Button } from "@/components/ui/button";
 import { FaArrowLeft } from "react-icons/fa";
 import AddInfoTab from "./AddInfoTab";
 import AddGalleryTab from "./AddGalleryTab";
-import UpdateTopSlider from "@/_private/components/UpdateTopSlider";
+import UpdateTopSlider from "@/_private/pages/create-store/tab-data/UpdateTopSlider";
+import toast from "react-hot-toast";
+import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { StoreObj } from "@/types";
+import { db } from "@/firebase/config";
 
 const AddTabData = () => {
+  const [currentUserStore, setCurrentUserStore] = useState<StoreObj | null>(
+    null
+  );
   const params = useParams();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (params.storeId) {
+      const documentRef = doc(db, "store", params.storeId);
+      const unsubscribe = onSnapshot(documentRef, (QuerySnapshot) => {
+        // console.log(sctionAddsArr);
+        setCurrentUserStore(QuerySnapshot.data() as StoreObj);
+      });
+
+      return unsubscribe;
+    }
+  }, [params.storeId]);
+
   const handlePrevClick = () => {
     if (params.storeId) navigate(`/manage-store/${params.storeId}`);
+  };
+
+  const handleClickRequestSend = async () => {
+    if (currentUserStore) {
+      const adminMessagesCollectionRef = collection(db, "adminMessages");
+      await addDoc(adminMessagesCollectionRef, {
+        message: `I want To Update My Busness Profile: ${currentUserStore.title}`,
+        createdAt: new Date(),
+        imageUrl: "",
+        fromName: "",
+        fromId: currentUserStore.userId,
+        toName: "admin",
+        toId: "",
+        seen: false,
+      });
+
+      toast.success("Request Send to Admin");
+    }
   };
 
   return (
@@ -84,7 +122,6 @@ const AddTabData = () => {
           </Accordion.Body>
         </Accordion.Item>
 
-
         <Accordion.Item eventKey="8">
           <Accordion.Header>Setup Top Slider</Accordion.Header>
           <Accordion.Body>
@@ -92,6 +129,13 @@ const AddTabData = () => {
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
+
+      <Button
+        onClick={handleClickRequestSend}
+        className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white "
+      >
+        Request For Update
+      </Button>
     </div>
   );
 };

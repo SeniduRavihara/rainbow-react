@@ -5,7 +5,8 @@ import {
 } from "@/firebase/api";
 import { db } from "@/firebase/config";
 import { getTimeDifference } from "@/lib/utils";
-import { Timestamp, collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { messageObjType } from "@/types";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 
@@ -13,11 +14,8 @@ const Message = () => {
   const [messageFor, setMessageFor] = useState("all");
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
-  const [messagesToAll, setMessagesToAll] = useState<Array<{
-    message: string;
-    createdAt: Timestamp;
-    id: string;
-  }> | null>(null);
+  const [messagesToAll, setMessagesToAll] =
+    useState<Array<messageObjType> | null>(null);
 
   const handleSubmit = async () => {
     try {
@@ -35,14 +33,14 @@ const Message = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const collectionRef = collection(db, "messagesToAll");
+      const collectionRef = collection(db, "adminMessages");
       const q = query(collectionRef, orderBy("createdAt", "desc"));
 
       const unsubscribe = onSnapshot(q, async (QuerySnapshot) => {
         const messageArr = QuerySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
-        })) as Array<{ message: string; id: string; createdAt: Timestamp }>;
+        })) as Array<messageObjType>;
 
         setMessagesToAll(messageArr);
         // console.log(messageArr);
@@ -127,7 +125,11 @@ const Message = () => {
               </div>
               <RxCross1
                 className="cursor-pointer"
-                onClick={() => handleMessageDelete(messageObj.id)}
+                onClick={() => {
+                  console.log(messageObj);
+                  
+                  handleMessageDelete(messageObj.toId, messageObj.id);
+                }}
               />
             </li>
           ))}

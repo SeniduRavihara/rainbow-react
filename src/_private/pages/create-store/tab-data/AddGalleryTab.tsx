@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { db, storage } from "@/firebase/config";
 import { CircularProgress } from "@chakra-ui/react";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -20,52 +20,58 @@ const AddGalleryTab = ({ storeId }: { storeId: string }) => {
     try {
       const downloadUrls = await handleUpload();
 
-      const documentRef = doc(db, "store", storeId);
-      await updateDoc(documentRef, {
+      const documentRef = doc(db, "latestStore", storeId);
+      const latestData = await getDoc(documentRef);
+
+      await setDoc(documentRef, {
+        ...latestData.data(),
         gallery: downloadUrls,
       });
-
     } catch (error) {
       console.log(error);
     }
-     setLoading(false);
+    setLoading(false);
   };
 
-const handleUpload = async () => {
-  if (selectedFiles.length > 0) {
-    // Check if any files are selected
-    try {
-      const downloadUrls: string[] = [];
+  const handleUpload = async () => {
+    if (selectedFiles.length > 0) {
+      // Check if any files are selected
+      try {
+        const downloadUrls: string[] = [];
 
-      for (let index = 0; index < selectedFiles.length; index++) {
-        const file = selectedFiles[index];
-        const fileRef = ref(
-          storage,
-          `store_data/${storeId}/store-gallery/${index}`
+        for (let index = 0; index < selectedFiles.length; index++) {
+          const file = selectedFiles[index];
+          const fileRef = ref(
+            storage,
+            `store_data/${storeId}/latest/store-gallery/${index}`
+          );
+
+          if (!file) continue; // Skip if file is null
+
+          await uploadBytes(fileRef, file);
+          const photoURL = await getDownloadURL(fileRef);
+
+          downloadUrls.push(photoURL);
+        }
+
+        toast.success("All files uploaded successfully!");
+        return downloadUrls;
+      } catch (error) {
+        console.error("Error uploading files:", error);
+        alert(
+          "An error occurred while uploading files. Please try again later."
         );
-
-        if (!file) continue; // Skip if file is null
-
-        await uploadBytes(fileRef, file);
-        const photoURL = await getDownloadURL(fileRef);
-
-        downloadUrls.push(photoURL);
       }
-
-      toast.success("All files uploaded successfully!");
-      return downloadUrls;
-    } catch (error) {
-      console.error("Error uploading files:", error);
-      alert("An error occurred while uploading files. Please try again later.");
+    } else {
+      alert("No images to upload!");
     }
-  } else {
-    alert("No images to upload!");
-  }
-};
-
+  };
 
   return (
     <div className="flex flex-col items-center justify-center ">
+      <h1 className="text-xl font-semibold mb-4">
+        Need a Admin Aprove for update the gallery, Please send a admin Request
+      </h1>
       <div className="flex items-center justify-center gap-5">
         <label
           htmlFor="image-input"

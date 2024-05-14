@@ -193,6 +193,7 @@ export const createStore = async (uid: string, payload: any) => {
       visitCount: 0,
       verified: false,
       showProfile: false,
+      haveUpdate: false,
     });
 
     for (let index = 0; index < 4; index++) {
@@ -206,6 +207,8 @@ export const createStore = async (uid: string, payload: any) => {
       }
     }
     console.log("Document successfully written to Firestore!");
+
+    return storeId;
   } catch (error) {
     console.error("Error writing document:", error);
   }
@@ -241,6 +244,55 @@ export const updateStore = async (storeId: string, payload: any) => {
     await updateDoc(documentRef, {
       active: false,
     });
+
+    console.log("Document Update successfully");
+  } catch (error) {
+    console.error("Error writing document:", error);
+  }
+};
+
+// ------------------------------------------------------
+
+export const updateStore2 = async (storeId: string, payload: any) => {
+  // console.log(payload);
+
+  try {
+    await updateDoc(doc(db, "store", storeId), {
+      ...payload,
+    });
+
+    console.log("Document Update successfully");
+  } catch (error) {
+    console.error("Error writing document:", error);
+  }
+};
+
+// ---------------------------------------------
+
+export const updateStore3 = async (storeId: string, payload: any) => {
+  // console.log(payload);
+
+  try {
+    await setDoc(doc(db, "latestStore", storeId), {
+      ...payload,
+    });
+
+    const collectionRef = collection(db, "store", storeId, "top-slider");
+    const querySnapshot = await getDocs(collectionRef);
+    const documentsExist = !querySnapshot.empty;
+
+    if (!documentsExist) {
+      for (let index = 0; index < 4; index++) {
+        console.log("payload");
+        try {
+          await addDoc(collection(db, "store", storeId, "top-slider"), {
+            imageUrl: "",
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
 
     console.log("Document Update successfully");
   } catch (error) {
@@ -519,23 +571,24 @@ export const togglePublish = async (storeId: string, published: boolean) => {
 // };
 
 export const createMessageToAll = async (message: string) => {
-  const collectionRef = collection(db, "users");
-  const querySnapshot = await getDocs(collectionRef);
+  try {
+    const collectionRef = collection(db, "users");
+    const querySnapshot = await getDocs(collectionRef);
 
-  const adminMessagesCollectionRef = collection(db, "amdinMessages");
-  const { id: adminMessageId } = await addDoc(adminMessagesCollectionRef, {
-    message,
-    createdAt: new Date(),
-    imageUrl: "",
-    fromName: "admin",
-    fromId: "",
-    toName: "all",
-    toId: "",
-    seen: false,
-  });
+    const adminMessagesCollectionRef = collection(db, "adminMessages");
+    const { id: adminMessageId } = await addDoc(adminMessagesCollectionRef, {
+      message,
+      createdAt: new Date(),
+      imageUrl: "",
+      fromName: "admin",
+      fromId: "",
+      toName: "all",
+      toId: "",
+      seen: false,
+    });
 
-  querySnapshot.forEach(async (doc) => {
-    try {
+    // Create an array of promises for adding messages to each user
+    const addMessagePromises = querySnapshot.docs.map(async (doc) => {
       const userMessagesRef = collection(doc.ref, "messages");
       await addDoc(userMessagesRef, {
         message,
@@ -548,11 +601,16 @@ export const createMessageToAll = async (message: string) => {
         toId: "",
         seen: false,
       });
-    } catch (error) {
-      console.log("Error adding message to user:", doc.id, error);
-      throw error;
-    }
-  });
+    });
+
+    // Wait for all messages to be added to users
+    await Promise.all(addMessagePromises);
+
+    console.log("Message sent to all users successfully.");
+  } catch (error) {
+    console.log("Error sending message to all users:", error);
+    throw error;
+  }
 };
 
 // -------------------------------------------------------
@@ -572,12 +630,12 @@ export const createMessageToUser = async (message: string, email: string) => {
 
   if (!userIdForSetMessage) return "There are no matching user";
 
-  const userMessagesRef = collection(
-    db,
-    "users",
-    userIdForSetMessage,
-    "messages"
-  );
+  // const userMessagesRef = collection(
+  //   db,
+  //   "users",
+  //   userIdForSetMessage,
+  //   "messages"
+  // );
 
   try {
     const adminMessagesCollectionRef = collection(db, "adminMessages");
@@ -587,22 +645,27 @@ export const createMessageToUser = async (message: string, email: string) => {
       imageUrl: "",
       fromName: "admin",
       fromId: "",
-      toName: matchingUser.id,
-      toId: "",
+      toName: email,
+      toId: matchingUser.id,
       seen: false,
     });
 
-    await addDoc(userMessagesRef, {
-      message,
-      messageId: adminMessageId,
-      createdAt: new Date(),
-      imageUrl: "",
-      fromName: "admin",
-      fromId: "",
-      toName: matchingUser.id,
-      toId: userIdForSetMessage,
-      seen: false,
-    });
+    console.log(adminMessageId);
+
+    await setDoc(
+      doc(db, "users", userIdForSetMessage, "messages", adminMessageId),
+      {
+        message,
+        messageId: adminMessageId,
+        createdAt: new Date(),
+        imageUrl: "",
+        fromName: "admin",
+        fromId: "",
+        toName: matchingUser.id,
+        toId: userIdForSetMessage,
+        seen: false,
+      }
+    );
     console.log("New Message added..");
   } catch (error) {
     console.log(error);
@@ -631,9 +694,16 @@ export const updateAsSeen = async (uid: string) => {
 
 // ------------------------------------
 
-export const handleMessageDelete = async (id: string) => {
+export const handleMessageDelete = async (
+  userId: string,
+  messageId: string
+) => {
+  if (!userId && !messageId) return;
   try {
-    const documentRef = doc(db, "messagesToAll", id);
+    const documentRef1 = doc(db, "adminMessages", messageId);
+    await deleteDoc(documentRef1);
+
+    const documentRef = doc(db, "users", userId, "messages", messageId);
     await deleteDoc(documentRef);
     console.log("Message deleted successfully");
   } catch (error) {

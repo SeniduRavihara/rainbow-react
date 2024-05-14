@@ -39,7 +39,7 @@ const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
         Video Guide To Get The Location Link
       </Link>
 
-      <Label>video embed url</Label>
+      <Label>Location embed url</Label>
       <div className="flex items-center justify-center gap-2 mt-1">
         <Input
           type="text"

@@ -12,10 +12,11 @@ import {
   addLocation,
   createStore,
   updateProfileForHaveStore,
+  updateStore2,
 } from "@/firebase/api";
 import toast from "react-hot-toast";
 import Loader from "@/components/Loader";
-import { Checkbox, Kbd, Tag } from "@chakra-ui/react";
+import { Kbd, Tag } from "@chakra-ui/react";
 import {
   IoIosArrowBack,
   IoMdArrowDropleft,
@@ -84,7 +85,6 @@ const CreateStorePage = () => {
 
   // const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
   const [category, setCategory] = useState("");
-  const [displayProfile, setDisplayProfile] = useState(true);
   const [visibleCategories, setVisibleCategories] =
     useState<Array<{ icon: string; label: string }>>(categories);
 
@@ -106,17 +106,16 @@ const CreateStorePage = () => {
     e.preventDefault();
     setLoading(true);
     if (currentUser) {
-      await handleUpload();
-      const storeIconUrl = await uploadStoreIcon(currentUser.uid);
+      // await handleUpload();
 
-      await createStore(currentUser?.uid, {
+      const payLoad = {
         title,
         address,
         phoneNumber,
         whatsappNumber,
         tags,
         storeImages: storeImages.map((img) => img.imageUrl),
-        storeIcon: storeIconUrl,
+        storeIcon: "",
         email: currentUser.email,
         info1,
         info2,
@@ -129,7 +128,24 @@ const CreateStorePage = () => {
         website,
         tiktok,
         category,
-      });
+      };
+
+      const storeId = await createStore(currentUser?.uid, payLoad);
+
+      if (storeId) {
+        console.log("HAVE STOREID", storeId);
+        
+        await handleUpload(storeId);
+        console.log("STORE IMAGES", storeImages);
+        const storeIconUrl = await uploadStoreIcon(storeId);
+
+        await updateStore2(storeId, {
+          ...payLoad,
+          storeIcon: storeIconUrl,
+          storeImages: storeImages.map((img) => img.imageUrl),
+        });
+      }
+
       updateProfileForHaveStore(currentUser?.uid, true);
       await addLocation(
         cleanAddress(address),
@@ -147,14 +163,14 @@ const CreateStorePage = () => {
     navigate("/manage-store/userStore");
   };
 
-  const handleUpload = async () => {
+  const handleUpload = async (storeId: string) => {
     if (storeImages.length > 0) {
       try {
         for (let i = 0; i < storeImages.length; i++) {
           const file = storeImages[i].file;
           const fileRef = ref(
             storage,
-            `store_images/${currentUser?.uid}/${storeImages[i].index}`
+            `store_data/${storeId}/store-images/${storeImages[i].index}`
           );
           await uploadBytes(fileRef, file);
           const photoURL = await getDownloadURL(fileRef);
@@ -183,10 +199,13 @@ const CreateStorePage = () => {
     }
   };
 
-  const uploadStoreIcon = async (id: string) => {
+  const uploadStoreIcon = async (storeId: string) => {
     if (storeIcon) {
       try {
-        const fileRef = ref(storage, `store_icons/${id}`);
+        const fileRef = ref(
+          storage,
+          `store_data/${storeId}/store_icons/${storeId}`
+        );
         await uploadBytes(fileRef, storeIcon);
         const photoURL = await getDownloadURL(fileRef);
 
@@ -666,14 +685,14 @@ const CreateStorePage = () => {
                 </div>
               </>
 
-              <div>
+              {/* <div>
                 <Checkbox
                   onChange={() => setDisplayProfile(!displayProfile)}
                   isChecked={displayProfile}
                 >
                   Display your profile
                 </Checkbox>
-              </div>
+              </div> */}
 
               <div className="w-full col-span-2 flex items-center justify-center mb-10">
                 <Button
@@ -702,11 +721,11 @@ const CreateStorePage = () => {
         </div>
       </div>
 
-      <div className="mb-10">
+      {/* <div className="mb-10">
         <Link to="/setup-gallery">
           <Button>Next</Button>
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 };

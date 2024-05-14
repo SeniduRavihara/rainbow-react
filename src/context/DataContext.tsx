@@ -7,7 +7,7 @@ import {
   StoreObj,
   messageObjType,
 } from "@/types";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
 
 export const DataContext = createContext<DataContextType>(INITIAL_DATA_CONTEXT);
@@ -40,11 +40,11 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     id: string;
     link: string;
   }> | null>(null);
-    const [detailsPageSliderAdds, setDetailsPageSliderAdds] = useState<Array<{
-      imageUrl: string;
-      id: string;
-      link: string;
-    }> | null>(null);
+  const [detailsPageSliderAdds, setDetailsPageSliderAdds] = useState<Array<{
+    imageUrl: string;
+    id: string;
+    link: string;
+  }> | null>(null);
 
   const [searchResultStores, setSearchResultStores] =
     useState<StoreListType | null>(null);
@@ -70,6 +70,24 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
 
   //   setSearchitem(localStorage.getItem("searchItem") || "");
   // },[searchItem])
+
+  // useEffect(() => {
+  //   const collectionRef = doc(db, "store");
+  //   const unsubscribe = onSnapshot(collectionRef,async (QuerySnapshot) => {
+  //     const storeData = QuerySnapshot.docs.map((doc) => ({
+  //       ...doc.data(),
+  //       id: doc.id,
+  //     })) as Array<StoreObj>;
+
+  //     console.log("UPDATE",storeData);
+
+  //      const latestCollectionRef = doc(db, "latestStore", storeData.id);
+  //      await updateDoc(latestCollectionRef, storeData)
+
+  //   });
+
+  //   return unsubscribe;
+  // }, []);
 
   useEffect(() => {
     const collectionRef = collection(db, "sectionAdds");

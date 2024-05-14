@@ -17,8 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { loginSchema } from "@/schemas";
-import { getUserRole, login, logout } from "@/firebase/api";
-import toast from "react-hot-toast";
+import { getUserRole, login } from "@/firebase/api";
+// import toast from "react-hot-toast";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -38,12 +38,12 @@ const LoginForm = () => {
       const user = await login(values);
       const roles = await getUserRole(user.uid);
 
-      if (!user.emailVerified) {
-        await logout();
-        form.reset();
-        toast.error("Verify Your email to login");
-        return;
-      }
+      // if (!user.emailVerified) {
+      //   await logout();
+      //   form.reset();
+      //   toast.error("Verify Your email to login");
+      //   return;
+      // }
 
       if (roles && roles.includes("admin")) {
         navigate("/admin");

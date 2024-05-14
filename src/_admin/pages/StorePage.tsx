@@ -1,11 +1,14 @@
-import { db } from "@/firebase/config";
+import { db, storage } from "@/firebase/config";
 import {
   collection,
+  deleteDoc,
   doc,
+  getDoc,
   getDocs,
   limit,
   orderBy,
   query,
+  setDoc,
   startAfter,
   updateDoc,
 } from "firebase/firestore";
@@ -24,6 +27,14 @@ import algoliasearch from "algoliasearch/lite";
 import { RxCross2 } from "react-icons/rx";
 import { Input } from "@/components/ui/input";
 import { IoArrowBack } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
+import {
+  deleteObject,
+  getDownloadURL,
+  listAll,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 
 const searchClient = algoliasearch(
   "6K67WTIHLT",
@@ -41,18 +52,50 @@ const StorePage = () => {
     id: "",
     state: false,
   });
+  const [loadingUpdate, setLoadingShowUpdate] = useState({
+    id: "",
+    state: false,
+  });
   const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchQuiery, setSearchQuiery] = useState("");
+  // const [haveLatestUpdate, setHaveLatestUpdate] = useState(false);
+
   const [openRviewWindow, setOpenRviewWindow] = useState({
     open: false,
     storeId: "",
   });
 
+  const navigate = useNavigate();
+  
+
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // useEffect(() => {
+  //   const fetchTopSliderData = async () => {
+  //     try {
+  //       const topSliderCollectionRef = collection(
+  //         db,
+  //         "latestStore",
+  //         "d24BHiObBfNOVy8ss2vDrn6qrg52--b99b89111f8d4db8b8988b9238f6b9f0",
+  //         "top-slider"
+  //       );
+  //       const topSliderSnapshot = await getDocs(topSliderCollectionRef);
+
+  //       topSliderSnapshot.forEach((doc) => {
+  //         const storeData2 = doc.data();
+  //         console.log(storeData2);
+  //       });
+  //     } catch (error) {
+  //       console.error("Error fetching top-slider data:", error);
+  //     }
+  //   };
+
+  //   fetchTopSliderData();
+  // }, []);
 
   const fetchData = async () => {
     setLoading(true);
@@ -177,6 +220,451 @@ const StorePage = () => {
     }
   };
 
+  // const checkDocumentExsistance = async (storeId: string) => {
+  //   try {
+  //     const documentRef = doc(db, "latestStore", storeId);
+  //     const documentSnapshot = await getDoc(documentRef);
+
+  //     // Check if the document exists
+  //     const documentExists = documentSnapshot.exists();
+
+  //     console.log(documentExists);
+
+  //     setHaveLatestUpdate(documentExists);
+  //   } catch (error) {
+  //     console.error("Error checking document existence:", error);
+  //     setHaveLatestUpdate(false);
+  //   }
+  // };
+
+  const handleAllowUpdate = async (storeId: string) => {
+    setLoadingShowUpdate((pre) => ({ ...pre, state: true, id: storeId }));
+
+    const documentRef = doc(db, "store", storeId);
+    const storeDataSnapshot = await getDoc(documentRef);
+    const storeObj = storeDataSnapshot.data() as StoreObj;
+
+    const documentReflatest = doc(db, "latestStore", storeId);
+    const snapshot = await getDoc(documentReflatest);
+    const storeData = snapshot.data() as StoreObj;
+
+    const exists = snapshot.exists();
+
+    if (exists) {
+      const dataToUpdate = {
+        id: snapshot.id || storeObj.id,
+        title: storeData.title || storeObj.title,
+        active: storeData.active || storeObj.active,
+        address: storeData.address || storeObj.address,
+        email: storeData.email || storeObj.email,
+        tags: storeData.tags || storeObj.tags,
+        createdAt: storeData.createdAt || storeObj.createdAt,
+        phoneNumber: storeData.phoneNumber || storeObj.phoneNumber,
+        whatsappNumber: storeData.whatsappNumber || storeObj.whatsappNumber,
+        storeIcon: storeData.storeIcon || storeObj.storeIcon,
+        storeImages: storeData.storeImages || storeObj.storeImages,
+        userId: storeData.userId || storeObj.userId,
+        info1: storeData.info1 || storeObj.info1,
+        info2: storeData.info2 || storeObj.info2,
+        published: storeData.published || storeObj.published,
+        schedulArr: storeData.schedulArr || storeObj.schedulArr,
+        fasebook: storeData.fasebook || storeObj.fasebook,
+        instagram: storeData.instagram || storeObj.instagram,
+        linkedin: storeData.linkedin || storeObj.linkedin,
+        twitter: storeData.twitter || storeObj.twitter,
+        youtube: storeData.youtube || storeObj.youtube,
+        tiktok: storeData.tiktok || storeObj.tiktok,
+        website: storeData.website || storeObj.website,
+        rating: storeData.rating || storeObj.rating,
+        reviewCount: storeData.reviewCount || storeObj.reviewCount,
+        category: storeData.category || storeObj.category,
+        visitCount: storeData.visitCount || storeObj.visitCount,
+        verified: storeData.verified || storeObj.verified,
+        gallery: storeData.gallery || storeObj.gallery || "",
+        location: storeData.location || storeObj.location || "",
+        companyProfilePdfUrl:
+          storeData.companyProfilePdfUrl || storeObj.companyProfilePdfUrl || "",
+        youtubeVideos: storeData.youtubeVideos || storeObj.youtubeVideos || "",
+        showProfile: storeData.showProfile || storeObj.showProfile,
+      };
+
+      console.log(dataToUpdate);
+
+      await updateDoc(doc(db, "store", storeId), {
+        ...dataToUpdate,
+      });
+
+      // -------------
+
+      if (storeData?.gallery) {
+        try {
+          // Get a reference to the latest store images location
+          const oldImagesRef = ref(
+            storage,
+            `/store_data/${storeId}/latest/store-gallery`
+          );
+
+          // List all the images in the latest store images location
+          const oldImagesList = await listAll(oldImagesRef);
+
+          const galleryUrlsArr: string[] = [];
+
+          // Iterate over each image and move it to the new location
+          await Promise.all(
+            oldImagesList.items.map(async (oldImageRef) => {
+              // Get the image's download URL
+              const downloadURL = await getDownloadURL(oldImageRef);
+              console.log(downloadURL);
+
+              // Calculate the new image path
+              const newImagePath = `/store_data/${storeId}/store-gallery/${oldImageRef.name}`;
+
+              // Fetch the image's data
+              const imageData = await fetch(downloadURL);
+
+              // Convert the image data to a Blob
+              const imageBlob = await imageData.blob();
+
+              // Upload the image to the new location
+              const newImageRef = ref(storage, newImagePath);
+              await uploadBytes(newImageRef, imageBlob);
+
+              galleryUrlsArr.push(await getDownloadURL(newImageRef));
+
+              console.log(
+                `Gallery '${oldImageRef.name}' successfully moved to new location: ${newImagePath}`
+              );
+
+              await deleteObject(oldImageRef);
+              console.log(
+                "Gallery successfully deleted from old location in Storage!"
+              );
+            })
+          );
+
+          console.log(galleryUrlsArr);
+          await updateDoc(doc(db, "store", storeId), {
+            gallery: galleryUrlsArr,
+          });
+          await updateDoc(doc(db, "latestStore", storeId), {
+            gallery: galleryUrlsArr,
+          });
+
+          console.log("All images successfully moved to new location!");
+
+          console.log("Latest store document successfully deleted!");
+        } catch (error) {
+          console.error("Error handling allow update:", error);
+        }
+      }
+
+      // --------------
+
+      if (storeData?.storeImages) {
+        // console.log(docObj.data());
+        const documentRef = doc(db, "store", storeId);
+
+        await updateDoc(documentRef, { storeImages: storeData?.storeImages });
+
+        try {
+          const documentRef = doc(db, "store", storeId);
+          const storeDataSnapshot = await getDoc(documentRef);
+          const storeObj = storeDataSnapshot.data() as StoreObj;
+
+          const storeImages = storeObj.storeImages;
+
+          // Get a reference to the latest store images location
+          let index = 1;
+          const storeImageUrlsArr: string[] = [];
+          for (const url of storeImages) {
+            console.log(url);
+            // Fetch the image's data
+            const imageData = await fetch(url);
+
+            //     // Convert the image data to a Blob
+            const imageBlob = await imageData.blob();
+
+            const newImagePath = `/store_data/${storeId}/store-images/${index}`;
+            const newImageRef = ref(storage, newImagePath);
+            await uploadBytes(newImageRef, imageBlob);
+
+            // Store the new image's download URL
+            storeImageUrlsArr.push(await getDownloadURL(newImageRef));
+
+            // Log success message
+            console.log(
+              `Image '${index}' successfully moved to new location: ${newImagePath}`
+            );
+
+            index++;
+          }
+          await updateDoc(documentRef, {
+            storeImages: storeImageUrlsArr,
+          });
+          await updateDoc(doc(db, "latestStore", storeId), {
+            storeImages: storeImageUrlsArr,
+          });
+
+          const oldImagesRef = ref(
+            storage,
+            `/store_data/${storeId}/latest/store-images`
+          );
+
+          // List all the images in the latest store images location
+          const oldImagesList = await listAll(oldImagesRef);
+
+          for (const oldImageRef of oldImagesList.items) {
+            try {
+              // Delete the old image from the old location in Firebase Storage
+              await deleteObject(oldImageRef);
+              console.log(
+                "Image successfully deleted from old location in Storage!"
+              );
+            } catch (error) {
+              console.error("Error processing image:", error);
+            }
+          }
+        } catch (error) {
+          console.error("Error handling allow update:", error);
+        }
+      }
+
+      if (storeData?.companyProfilePdfUrl) {
+        try {
+          // Get a reference to the latest store images location
+          const oldPdfRef = ref(
+            storage,
+            `/store_data/${storeId}/latest/store-company-profile-pdfs/${storeId}.pdf`
+          );
+
+          const downloadURL = await getDownloadURL(oldPdfRef);
+
+          const newPdfPath = `/store_data/${storeId}/store-company-profile-pdfs/${storeId}.pdf`;
+
+          // Fetch the image's data
+          const pdfData = await fetch(downloadURL);
+
+          // Convert the image data to a Blob
+          const imageBlob = await pdfData.blob();
+
+          // Upload the image to the new location
+          const newImageRef = ref(storage, newPdfPath);
+          await uploadBytes(newImageRef, imageBlob);
+
+          const newPdfUrl = await getDownloadURL(newImageRef);
+
+          console.log(
+            `PDF '${oldPdfRef.name}' successfully moved to new location: ${newPdfPath}`
+          );
+
+          await deleteObject(oldPdfRef);
+          console.log("PDF successfully deleted from old location in Storage!");
+
+          console.log(newPdfUrl);
+          await updateDoc(doc(db, "store", storeId), {
+            companyProfilePdfUrl: newPdfUrl,
+          });
+          await updateDoc(doc(db, "latestStore", storeId), {
+            companyProfilePdfUrl: newPdfUrl,
+          });
+
+          console.log("All images successfully moved to new location!");
+
+          console.log("Latest store document successfully deleted!");
+        } catch (error) {
+          console.error("Error handling allow update:", error);
+        }
+      }
+
+      if (storeData?.storeIcon) {
+        try {
+          // Get a reference to the latest store images location
+          const oldStoreIconRef = ref(
+            storage,
+            `/store_data/${storeId}/latest/store_icons/${storeId}`
+          );
+
+          const downloadURL = await getDownloadURL(oldStoreIconRef);
+
+          const newPdfPath = `/store_data/${storeId}/store_icons/${storeId}`;
+
+          // Fetch the image's data
+          const iconData = await fetch(downloadURL);
+
+          // Convert the image data to a Blob
+          const imageBlob = await iconData.blob();
+
+          // Upload the image to the new location
+          const newImageRef = ref(storage, newPdfPath);
+          await uploadBytes(newImageRef, imageBlob);
+
+          const newIconUrl = await getDownloadURL(newImageRef);
+
+          console.log(
+            `ICON '${oldStoreIconRef.name}' successfully moved to new location: ${newPdfPath}`
+          );
+
+          await deleteObject(oldStoreIconRef);
+          console.log(
+            "ICON successfully deleted from old location in Storage!"
+          );
+
+          console.log(newIconUrl);
+          await updateDoc(doc(db, "store", storeId), {
+            storeIcon: newIconUrl,
+          });
+          await updateDoc(doc(db, "latestStore", storeId), {
+            storeIcon: newIconUrl,
+          });
+
+          console.log("All images successfully moved to new location!");
+
+          console.log("Latest store document successfully deleted!");
+        } catch (error) {
+          console.error("Error handling allow update:", error);
+        }
+      }
+    }
+
+    // ---------
+
+    const topSliderCollectioReflatest = collection(
+      db,
+      "latestStore",
+      storeId,
+      "top-slider"
+    );
+    const topSliderSnapshot = await getDocs(topSliderCollectioReflatest);
+    const topSliderExists = !topSliderSnapshot.empty;
+    // console.log("FIRST SEN", topSliderExists);
+
+    if (topSliderExists) {
+      for (const docObj of topSliderSnapshot.docs) {
+        // console.log(docObj.data());
+        const topSliderDocumentRef = doc(
+          db,
+          "store",
+          storeId,
+          "top-slider",
+          docObj.data().id // Assuming doc is the DocumentSnapshot object
+        );
+        await setDoc(topSliderDocumentRef, { ...docObj.data() });
+
+        const latestTopSliderDocumentRef = doc(
+          db,
+          "latestStore",
+          storeId,
+          "top-slider",
+          docObj.data().id // Assuming doc is the DocumentSnapshot object
+        );
+
+        await deleteDoc(latestTopSliderDocumentRef);
+      }
+
+      try {
+        // Get a reference to the latest store images location
+        const oldTopSliderRef = ref(
+          storage,
+          `/store_data/${storeId}/latest/top-slider`
+        );
+
+        // List all the images in the latest store images location
+        const oldImagesList = await listAll(oldTopSliderRef);
+
+        let i = 0;
+
+        // Iterate over each image and move it to the new location
+        for (const oldImageRef of oldImagesList.items) {
+          try {
+            // Get the image's download URL
+            const downloadURL = await getDownloadURL(oldImageRef);
+            console.log(i, downloadURL);
+            i++;
+
+            // Fetch the image's data
+            const imageData = await fetch(downloadURL);
+
+            // Convert the image data to a Blob
+            const imageBlob = await imageData.blob();
+
+            // Upload the image to the new location
+            const newImagePath = `/store_data/${storeId}/top-slider/${oldImageRef.name}`;
+            const newImageRef = ref(storage, newImagePath);
+            await uploadBytes(newImageRef, imageBlob);
+
+            // Get the download URL of the uploaded image
+            const newImageDownloadUrl = await getDownloadURL(newImageRef);
+
+            // Update the document in Firestore with the new image URL
+            await updateDoc(
+              doc(db, "store", storeId, "top-slider", oldImageRef.name),
+              {
+                imageUrl: newImageDownloadUrl,
+              }
+            );
+            await updateDoc(
+              doc(db, "latestStore", storeId, "top-slider", oldImageRef.name),
+              {
+                imageUrl: newImageDownloadUrl,
+              }
+            );
+
+            // Log success message
+            console.log(
+              `Image '${oldImageRef.name}' successfully moved to new location: ${newImagePath}`
+            );
+
+            // Delete the old image from the old location in Firebase Storage
+            // await deleteObject(oldImageRef);
+            // console.log(
+            //   "Image successfully deleted from old location in Storage!"
+            // );
+
+            // Delete the corresponding document from Firestore
+            const oldTopSliderDocumentRef = doc(
+              db,
+              "latestStore",
+              storeId,
+              "top-slider",
+              oldImageRef.name
+            );
+            await deleteDoc(oldTopSliderDocumentRef);
+          } catch (error) {
+            console.error("Error processing image:", error);
+          }
+        }
+
+        await Promise.all(
+          oldImagesList.items.map(async (oldImageRef) => {
+            console.log("NOT RUN YET");
+
+            try {
+              await deleteObject(oldImageRef);
+              console.log(
+                "Image successfully deleted from old location in Storage!"
+              );
+            } catch (error) {
+              console.error("Error deleting image from old location:", error);
+            }
+          })
+        );
+
+
+        // console.log("All images successfully moved to new location!");
+
+        // console.log("Latest store document successfully deleted!");
+      } catch (error) {
+        console.error("Error handling allow update:", error);
+      }
+    }
+
+    // ---------------
+
+    await deleteDoc(documentReflatest);
+
+    setLoadingShowUpdate((pre) => ({ ...pre, state: false, storeId }));
+  };
+
   const handlesearch = async (searchQuery: string) => {
     try {
       setLoadingSearch(true);
@@ -229,13 +717,14 @@ const StorePage = () => {
   };
 
   const openStoreReview = (storeId: string) => {
-    setOpenRviewWindow((pre) => ({ ...pre, storeId, open: true }));
+    navigate(`/admin/profile-review/${storeId}`);
+    // setOpenRviewWindow((pre) => ({ ...pre, storeId, open: true }));
   };
 
   // console.log(storeList && new Date(storeList[0].createdAt._seconds * 1000).toDateString());
 
   return (
-    <div className="pb-10 flex flex-col items-center justify-center">
+    <div className="pb-10 flex flex-col items-center justify-center overflow-scroll">
       {openRviewWindow.open && (
         <div className="w-screen h-screen absolute top-0 left-0 flex flex-col items-center justify-center">
           <div
@@ -254,6 +743,7 @@ const StorePage = () => {
           ></iframe>
         </div>
       )}
+
       <div className="flex w-full items-center gap-2 h-10 mb-10">
         <Input
           type="text"
@@ -285,19 +775,20 @@ const StorePage = () => {
         )}
       </div>
 
-      <Table striped bordered hover>
+      <Table striped bordered hover className="">
         <thead>
           <tr>
             <th>#</th>
             <th>Business Name</th>
             <th>Business Category</th>
-            <th>Address</th>
+            <th className="w-[10px]">Address</th>
             <th>Email</th>
             <th>Telephone</th>
             <th>Registered/Requested Date</th>
             <th>ACTION</th>
             <th>VERIFY</th>
             <th>ShowProfile</th>
+            <th>Allow Update</th>
           </tr>
         </thead>
         <tbody>
@@ -328,7 +819,7 @@ const StorePage = () => {
                   typeof storeObj.createdAt.toDate === "function"
                     ? storeObj.createdAt.toDate().toDateString()
                     : new Date(
-                        (storeObj.createdAt as any)._seconds * 1000
+                        (storeObj.createdAt as any)?._seconds * 1000
                       ).toDateString()}
                 </td>
                 {/* above block have some problem ToDo to fix it */}
@@ -384,6 +875,19 @@ const StorePage = () => {
                     {loadingShowProfile.id === storeObj.id &&
                       loadingShowProfile.state && <Loader />}
                     {storeObj.showProfile ? "Hide" : "Show"}
+                  </Button>
+                </td>
+
+                <td className="text-right">
+                  <Button
+                    className={cn(` flex items-center justify-center gap-2`)}
+                    onClick={() => handleAllowUpdate(storeObj.id)}
+                  >
+                    {loadingUpdate.id === storeObj.id && loadingUpdate.state ? (
+                      <Loader />
+                    ) : (
+                      "Allow"
+                    )}
                   </Button>
                 </td>
               </tr>

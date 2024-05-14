@@ -43,6 +43,7 @@ import WeAreHiringPage from "./_public/pages/WeAreHiringPage";
 import InvestorPage from "./_public/pages/InvestorPage";
 import AddTabData from "./_private/pages/create-store/tab-data/AddTabData";
 import ForgetPasswordPage from "./_auth/forms/ForgetPasswordPage";
+import ReviewPage from "./_admin/pages/ReviewPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -83,6 +84,8 @@ const router = createBrowserRouter(
         <Route path="/admin" element={<AdminPage2 />}>
           <Route path="message" element={<MessagePage />} />
           <Route path="business" element={<StorePage />} />
+          <Route path="profile-review/:storeId" element={<ReviewPage />} />
+
           <Route path="" element={<SetAddsPage />}>
             <Route path="popular-brands" element={<PopularBrandsManage />} />
             <Route

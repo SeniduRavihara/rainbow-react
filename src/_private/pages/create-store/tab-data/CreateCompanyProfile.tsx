@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { Document, Page } from "react-pdf";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Button } from "@/components/ui/button";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { CircularProgress } from "@chakra-ui/react";
 
 const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
@@ -20,8 +20,11 @@ const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
       try {
         const pdfDownloadUrl = await handleUploadPdf();
 
-        const documentRef = doc(db, "store", storeId);
-        await updateDoc(documentRef, {
+        const documentRef = doc(db, "latestStore", storeId);
+        const latestData = await getDoc(documentRef);
+
+        await setDoc(documentRef, {
+          ...latestData.data(),
           companyProfilePdfUrl: pdfDownloadUrl,
         });
       } catch (error) {
@@ -50,7 +53,7 @@ const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
       try {
         const fileRef = ref(
           storage,
-          `store_data/${storeId}/store-company-profile-pdfs/${storeId}.pdf`
+          `store_data/${storeId}/latest/store-company-profile-pdfs/${storeId}.pdf`
         );
 
         await uploadBytes(fileRef, pdf);
@@ -86,6 +89,11 @@ const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
 
   return (
     <div className="flex flex-col items-center justify-center">
+      <h1 className="text-xl font-semibold mb-4">
+        Need a Admin Aprove for update the Company Profile PDF, Please send a
+        admin Request
+      </h1>
+
       <h1 className="font-semibold">
         Browes the PDF Document of your company Profile and update
       </h1>
