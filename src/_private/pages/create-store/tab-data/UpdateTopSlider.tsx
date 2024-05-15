@@ -1,5 +1,13 @@
 import { db, storage } from "@/firebase/config";
-import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import ImageCropDialog from "@/components/image-croper/CropDialog";
 import toast from "react-hot-toast";
@@ -36,25 +44,94 @@ const UpdateTopSlider = ({ storeId }: { storeId: string }) => {
   const [isOpenCropDialog, setIsOpenCropDialog] = useState(false);
   const [imageData, setImageData] = useState<ImageData>(initData);
   const [sliderAdds, setSliderAdds] = useState<SliderAdd[] | null>(null);
-
-  // useEffect(() => {
-  //   console.log(sliderAdds);
-  // }, [sliderAdds]);
+  const [haveLatestUpdate, setHaveLatestUpdate] = useState(false);
 
   useEffect(() => {
-    const collectionRef = collection(db, "store", storeId, "top-slider");
-    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-      const sliderAddsArr = QuerySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      })) as Array<{ imageUrl: string; id: string }>;
+    const checkDocument = async () => {
+      if (storeId) {
+        try {
+          const collectionRef = collection(
+            db,
+            "latestStore",
+            storeId,
+            "top-slider"
+          );
+          const collectionSnapshot = await getDocs(collectionRef);
 
-      console.log(sliderAddsArr);
-      setSliderAdds(sliderAddsArr);
-    });
+          // Check if the colletion exists
+          const collectionExists = !collectionSnapshot.empty;
 
-    return unsubscribe;
-  }, [storeId]);
+          // console.log(collectionExists);
+
+          // Update state based on document existence
+          setHaveLatestUpdate(collectionExists);
+
+          if (!collectionExists) {
+            const collectionRef = collection(
+              db,
+              "store",
+              storeId,
+              "top-slider"
+            );
+            const unsubscribe = onSnapshot(
+              collectionRef,
+              async (QuerySnapshot) => {
+                const sliderAddsArr = QuerySnapshot.docs.map((doc) => ({
+                  ...doc.data(),
+                  id: doc.id,
+                })) as Array<{ imageUrl: string; id: string }>;
+
+                // console.log(sliderAddsArr);
+                setSliderAdds(sliderAddsArr);
+
+                for (const sliderObj of sliderAddsArr) {
+                  try {
+                    const latestDocumentRef = doc(
+                      db,
+                      "latestStore",
+                      storeId,
+                      "top-slider",
+                      sliderObj.id
+                    );
+
+                    await setDoc(latestDocumentRef, { ...sliderObj });
+                  } catch (error) {
+                    console.error("Error setting document:", error);
+                    // Handle the error here, such as logging or throwing it
+                  }
+                }
+              }
+            );
+
+            return unsubscribe;
+          } else {
+            const collectionRef = collection(
+              db,
+              "latestStore",
+              storeId,
+              "top-slider"
+            );
+            const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+              const sliderAddsArr = QuerySnapshot.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id,
+              })) as Array<{ imageUrl: string; id: string }>;
+
+              // console.log(sliderAddsArr);
+              setSliderAdds(sliderAddsArr);
+            });
+
+            return unsubscribe;
+          }
+        } catch (error) {
+          console.error("Error checking document existence:", error);
+          setHaveLatestUpdate(false);
+        }
+      }
+    };
+
+    checkDocument();
+  }, [haveLatestUpdate, storeId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
     if (!e.target.files) return;
@@ -87,10 +164,17 @@ const UpdateTopSlider = ({ storeId }: { storeId: string }) => {
     if (!addToUpdate?.cropedImageBlob) {
       // console.error("Add not found or image file missing");
       try {
-        const documentRef = doc(db, "store", storeId, "top-slider", idToUpdate);
+        const documentRef = doc(
+          db,
+          "latestStore",
+          storeId,
+          "top-slider",
+          idToUpdate
+        );
         await updateDoc(documentRef, {
           imageUrl: addToUpdate?.imageUrl,
         });
+
         toast.success("Banner Uploaded successfully");
       } catch (error) {
         console.log(error);
@@ -106,9 +190,27 @@ const UpdateTopSlider = ({ storeId }: { storeId: string }) => {
       );
       if (imageUrl) toast.success("Banner Uploaded successfully");
       try {
-        const documentRef = doc(db, "store", storeId, "top-slider", idToUpdate);
+        const documentRef = doc(
+          db,
+          "latestStore",
+          storeId,
+          "top-slider",
+          idToUpdate
+        );
         await updateDoc(documentRef, {
           imageUrl,
+        });
+
+        const contactDocumentRef = doc(db, "latestStore", storeId);
+        const latestData = await getDoc(contactDocumentRef);
+
+        await updateDoc(contactDocumentRef, {
+          haveUpdate: [
+            ...(latestData?.data()?.haveUpdate ?? []),
+            latestData?.data()?.haveUpdate.includes("topSlider")
+              ? undefined
+              : "topSlider",
+          ].filter((txt) => txt),
         });
       } catch (error) {
         console.log(error);
@@ -126,7 +228,7 @@ const UpdateTopSlider = ({ storeId }: { storeId: string }) => {
     try {
       const fileRef = ref(
         storage,
-        `store_data/${storeIdPath}/top-slider/${id}`
+        `store_data/${storeIdPath}/latest/top-slider/${id}`
       );
       await uploadBytes(fileRef, file);
       const photoURL = await getDownloadURL(fileRef);

@@ -130,6 +130,7 @@ const SearchBoxes2 = () => {
         companyProfilePdfUrl: hit.companyProfilePdfUrl,
         youtubeVideos: hit.youtubeVideos,
         showProfile: hit.showProfile,
+        haveUpdate: hit.haveUpdate,
       }));
       setLastDocument(null);
       setSearchResultStores(

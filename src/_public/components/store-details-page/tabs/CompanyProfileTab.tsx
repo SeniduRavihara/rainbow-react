@@ -35,7 +35,11 @@ const CompanyProfileTab = ({
         onLoadSuccess={onDocumentLoadSuccess}
         className="w-full h-[600px] overflow-hidden"
       >
-        <Page pageNumber={pageNumber} />
+        <Page
+          pageNumber={pageNumber}
+          renderTextLayer={false}
+          renderAnnotationLayer={false}
+        />
       </Document>
 
       <div className="mt-10 flex flex-col gap-2 items-center justify-center">

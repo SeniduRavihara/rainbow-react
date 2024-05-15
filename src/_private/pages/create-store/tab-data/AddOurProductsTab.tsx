@@ -15,11 +15,13 @@ import { Label } from "@/components/ui/label";
 import { db, storage } from "@/firebase/config";
 import { CircularProgress } from "@chakra-ui/react";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
+  getDoc,
   onSnapshot,
+  setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import {
   deleteObject,
@@ -66,7 +68,7 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
   >([]);
 
   useEffect(() => {
-    const collectionRef = collection(db, "store", storeId, "products");
+    const collectionRef = collection(db, "latestStore", storeId, "products");
     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
       const productListArr = QuerySnapshot.docs.map((doc) => ({
         ...doc.data(),
@@ -91,14 +93,26 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
     setLoading(true);
 
     try {
-      const collectionRef = collection(db, "store", storeId, "products");
+      const documentRef = doc(db, "latestStore", storeId, "products", productName);
 
       const imageUrl = await uploadProductImage();
 
-      await addDoc(collectionRef, {
+      await setDoc(documentRef, {
         name: productName,
         discription: productDiscription,
         imageUrl: imageUrl,
+      });
+
+      const productsDocumentRef = doc(db, "latestStore", storeId);
+      const latestData = await getDoc(productsDocumentRef);
+
+      await updateDoc(productsDocumentRef, {
+        haveUpdate: [
+          ...(latestData?.data()?.haveUpdate ?? []),
+          latestData?.data()?.haveUpdate.includes("products")
+            ? undefined
+            : "products",
+        ].filter((txt) => txt),
       });
     } catch (error) {
       console.log(error);
@@ -120,14 +134,26 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
       }
 
       // Delete the product document
-      const documentRef = doc(db, "store", storeId, "products", id);
+      const documentRef = doc(db, "latestStore", storeId, "products", id);
       await deleteDoc(documentRef);
       toast.success("Product successfully deleted!");
+
+      const productsDocumentRef = doc(db, "latestStore", storeId);
+      const latestData = await getDoc(productsDocumentRef);
+
+      await updateDoc(productsDocumentRef, {
+        haveUpdate: [
+          ...(latestData?.data()?.haveUpdate ?? []),
+          latestData?.data()?.haveUpdate.includes("products")
+            ? undefined
+            : "products",
+        ].filter((txt) => txt),
+      });
 
       // Delete the image from storage
       const imageRef = ref(
         storage,
-        `store_data/${storeId}/products/${productName}`
+        `store_data/${storeId}/latest/products/${productName}`
       );
       await deleteObject(imageRef);
       toast.success("Image successfully deleted!");
@@ -145,7 +171,7 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
 
       const fileRef = ref(
         storage,
-        `store_data/${storeId}/products/${productName}`
+        `store_data/${storeId}/latest/products/${productName}`
       );
 
       await uploadBytes(fileRef, productImage.cropedImageBlob);

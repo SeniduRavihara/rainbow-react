@@ -41,6 +41,7 @@ const config = {
         "1150": "1150px",
         "725": "725px",
         "550": "550px",
+        "360": "360px",
       },
       colors: {
         border: "hsl(var(--border))",

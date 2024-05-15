@@ -7,12 +7,12 @@ import { useEffect, useState } from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-const TopSlider = ({ storeId }: { storeId: string }) => {
+const ReviewTopSlider = ({ storeId }: { storeId: string }) => {
   const [sliderImages, setSliderImages] =
     useState<Array<{ imageUrl: string; id: string; link: string }>>();
 
   useEffect(() => {
-    const collectionRef = collection(db, "store", storeId, "top-slider");
+    const collectionRef = collection(db, "latestStore", storeId, "top-slider");
     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
       const sliderAddsArr = QuerySnapshot.docs.map((doc) => ({
         ...doc.data(),
@@ -50,20 +50,17 @@ const TopSlider = ({ storeId }: { storeId: string }) => {
         transitionTime={800}
         showThumbs={false}
       >
-        {sliderImages.map(
-          (sliderAddObj, index) =>
-            sliderAddObj.imageUrl && (
-              <div key={index}>
-                <img
-                  alt="Adds"
-                  src={sliderAddObj.imageUrl ?? placeholderSliderAdds[index]}
-                  className="h-[180px md:h-[250px object-cover"
-                />
-              </div>
-            )
-        )}
+        {sliderImages.map((sliderAddObj, index) => (
+          <div key={index}>
+            <img
+              alt="Adds"
+              src={sliderAddObj.imageUrl ?? placeholderSliderAdds[index]}
+              className="h-[180px md:h-[250px object-cover"
+            />
+          </div>
+        ))}
       </Carousel>
     </div>
   );
 };
-export default TopSlider;
+export default ReviewTopSlider;

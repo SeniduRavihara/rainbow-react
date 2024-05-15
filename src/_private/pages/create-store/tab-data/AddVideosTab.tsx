@@ -9,7 +9,13 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
-const AddVideosTab = ({ storeId }: { storeId: string }) => {
+const AddVideosTab = ({
+  storeId,
+  videos,
+}: {
+  storeId: string;
+  videos: string[];
+}) => {
   const [videoLink, setVideoLink] = useState("");
   const [videoList, setVideoList] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -23,7 +29,7 @@ const AddVideosTab = ({ storeId }: { storeId: string }) => {
   const handleClickUpdate = async () => {
     setLoading(true);
     try {
-      const documentRef = doc(db, "store", storeId);
+      const documentRef = doc(db, "latestStore", storeId);
       await updateDoc(documentRef, {
         youtubeVideos: videoList,
       });
@@ -82,6 +88,25 @@ const AddVideosTab = ({ storeId }: { storeId: string }) => {
           ))}
         </ul>
       </div>
+
+      {videoList.length === 0 && (
+        <div className="w-full flex items-center justify-center">
+          <ul className="flex flex-wrap gap-3 mt-10">
+            {videos.map((video, index) => (
+              <li key={index}>
+                <iframe
+                  src={video}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                ></iframe>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

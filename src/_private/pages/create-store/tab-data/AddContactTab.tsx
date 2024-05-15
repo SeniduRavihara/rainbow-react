@@ -7,7 +7,9 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   onSnapshot,
+  updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
@@ -24,7 +26,7 @@ const AddContactTab = ({ storeId }: { storeId: string }) => {
 
   useEffect(() => {
     if (storeId) {
-      const collectionRef = collection(db, "store", storeId, "contacts");
+      const collectionRef = collection(db, "latestStore", storeId, "contacts");
       const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
         const contactstListArr = QuerySnapshot.docs.map((doc) => ({
           ...doc.data(),
@@ -48,11 +50,24 @@ const AddContactTab = ({ storeId }: { storeId: string }) => {
     setLoading(true);
 
     try {
-      const collectionRef = collection(db, "store", storeId, "contacts");
+      const collectionRef = collection(db, "latestStore", storeId, "contacts");
       await addDoc(collectionRef, {
         type: contactMethod,
         contact,
       });
+
+      const documentRef = doc(db, "latestStore", storeId);
+      const latestData = await getDoc(documentRef);
+
+      await updateDoc(documentRef, {
+        haveUpdate: [
+          ...(latestData?.data()?.haveUpdate ?? []),
+          latestData?.data()?.haveUpdate.includes("contacts")
+            ? undefined
+            : "contacts",
+        ].filter((txt) => txt),
+      });
+
       toast.success("Contact successfully added!");
       setContact("");
       setContactMethod("phone");
@@ -65,8 +80,21 @@ const AddContactTab = ({ storeId }: { storeId: string }) => {
 
   const handleClickRemoveContact = async (id: string) => {
     try {
-      const documentRef = doc(db, "store", storeId, "contacts", id);
+      const documentRef = doc(db, "latestStore", storeId, "contacts", id);
       await deleteDoc(documentRef);
+
+       const latestDocumentRef = doc(db, "latestStore", storeId);
+       const latestData = await getDoc(latestDocumentRef);
+
+       await updateDoc(latestDocumentRef, {
+         haveUpdate: [
+           ...(latestData?.data()?.haveUpdate ?? []),
+           latestData?.data()?.haveUpdate.includes("contacts")
+             ? undefined
+             : "contacts",
+         ].filter((txt) => txt),
+       });
+
       toast.success("Contact successfully deleted!");
     } catch (error) {
       console.log(error);

@@ -4,7 +4,14 @@ import { Button } from "@/components/ui/button";
 import { db, storage } from "@/firebase/config";
 import { useData } from "@/hooks/useData";
 import { StoreListType, StoreObj, TimeValue } from "@/types";
-import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import {
@@ -16,7 +23,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { forwardRef, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Kbd, Tag } from "@chakra-ui/react";
-import { addLocation, togglePublish, updateStore } from "@/firebase/api";
+import { addLocation, togglePublish, updateStore3 } from "@/firebase/api";
 import { useAuth } from "@/hooks/useAuth";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 // import "@wojtekmaj/react-timerange-picker/dist/TimeRangePicker.css";
@@ -105,6 +112,8 @@ const ManageStorePage = () => {
 
   const params = useParams();
 
+  // console.log(storeImages);
+
   useEffect(() => {
     const collectionRef = collection(db, "categories");
     const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
@@ -122,32 +131,62 @@ const ManageStorePage = () => {
   useEffect(() => {
     async function fetchData() {
       if (currentUserData && params.storeId) {
+        // const documentReflatest = doc(db, "latestStore", params.storeId);
+        // const snapshot = await getDoc(documentReflatest);
+        // const latestStoreData = snapshot.data() as StoreObj;
+        // const exists = snapshot.exists();
+
         if (params.storeId === "userStore") {
-          const collectionRef = collection(db, "store");
-          const q = query(
-            collectionRef,
-            where("userId", "==", currentUserData.id)
-          );
+          // if (exiss) {
+            console.log("RUNNING");
+            
+            const collectionRef = collection(db, "latestStore");
+            const q = query(
+              collectionRef,
+              where("userId", "==", currentUserData.id)
+            );
 
-          const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const storeListArr = querySnapshot.docs.map((doc) => ({
-              ...doc.data(),
-              id: doc.id,
-            })) as StoreListType;
+            const unsubscribe = onSnapshot(q, (querySnapshot) => {
+              const storeListArr = querySnapshot.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id,
+              })) as StoreListType;
 
-            console.log(storeListArr);
-            setCurrentUserStore(storeListArr[0]);
-          });
+              // console.log(storeListArr);
+              setCurrentUserStore(storeListArr[0]);
+            });
 
-          return unsubscribe;
+            return unsubscribe;
+
+            // const documentRef = doc(db, "latestStore", params.storeId);
+            // const unsubscribe = onSnapshot(documentRef, (snapshot) => {
+            //   if (snapshot.exists()) {
+            //     setCurrentUserStore({
+            //       ...snapshot.data(),
+            //       id: snapshot.id,
+            //     } as StoreObj);
+            //   } else {
+            //     setCurrentUserStore(null);
+            //   }
+            // });
+
+            // // Return the unsubscribe function to stop listening for updates when the component unmounts
+            // return () => unsubscribe();
+          // }
         } else {
-          const documentRef = doc(db, "store", params.storeId);
+          // if (exists) {            console.log("RUNNING");
+            console.log("RUNNING2");
+
+          const documentRef = doc(db, "latestStore", params.storeId);
           const unsubscribe = onSnapshot(documentRef, (snapshot) => {
             if (snapshot.exists()) {
               setCurrentUserStore({
                 ...snapshot.data(),
                 id: snapshot.id,
               } as StoreObj);
+
+              // console.log(snapshot.data());
+              
             } else {
               setCurrentUserStore(null);
             }
@@ -155,6 +194,7 @@ const ManageStorePage = () => {
 
           // Return the unsubscribe function to stop listening for updates when the component unmounts
           return () => unsubscribe();
+          // }
         }
       }
     }
@@ -179,6 +219,7 @@ const ManageStorePage = () => {
       setTiktok(currentUserStore.tiktok);
       setWebsite(currentUserStore.website);
       setCategory(currentUserStore.category || "");
+      setSchedulArr(currentUserStore.schedulArr);
       setStoreImages((pre) =>
         pre.map((imgObj, index) => {
           return { ...imgObj, imageUrl: currentUserStore.storeImages[index] };
@@ -202,7 +243,20 @@ const ManageStorePage = () => {
     e.preventDefault();
     setLoading(true);
     if (currentUser && currentUserStore) {
-      await handleUpload();
+      toast.success("Request Send to Admin");
+      const adminMessagesCollectionRef = collection(db, "adminMessages");
+      await addDoc(adminMessagesCollectionRef, {
+        message: `I want To Update My Busness Profile: ${currentUserStore.title}`,
+        createdAt: new Date(),
+        imageUrl: "",
+        fromName: "",
+        fromId: currentUser.uid,
+        toName: "admin",
+        toId: "",
+        seen: false,
+      });
+
+      await handleUpload(currentUserStore?.id);
       const storeIconUrl =
         (await uploadStoreIcon(currentUserStore.id)) ||
         (storeIcon?.imageUrl ?? "");
@@ -213,7 +267,7 @@ const ManageStorePage = () => {
         .map((img) => img.imageUrl)
         .filter((img): img is string => img !== undefined);
 
-      await updateStore(currentUserStore?.id, {
+      await updateStore3(currentUserStore?.id, {
         title,
         address,
         phoneNumber,
@@ -233,6 +287,14 @@ const ManageStorePage = () => {
         tiktok,
         website,
         category,
+        haveUpdate: [
+          ...(currentUserStore?.haveUpdate ?? []),
+          currentUserStore?.haveUpdate.includes("normal")
+            ? undefined
+            : "normal",
+          ...(storeIcon?.file ? ["storeIcon"] : []),
+          ...(storeImages.filter((obj)=> obj.file).length >= 1 ? ["storeImages"] : []),
+        ].filter((txt) => txt),
       });
       // updateProfileForHaveStore(currentUser?.uid, true);
       await addLocation(
@@ -244,10 +306,13 @@ const ManageStorePage = () => {
     toast.success("Store Updated Successfully");
   };
 
-  const uploadStoreIcon = async (id: string) => {
+  const uploadStoreIcon = async (storeId: string) => {
     if (storeIcon?.file) {
       try {
-        const fileRef = ref(storage, `store_icons/${id}`);
+        const fileRef = ref(
+          storage,
+          `store_data/${storeId}/latest/store_icons/${storeId}`
+        );
         await uploadBytes(fileRef, storeIcon.file);
         const photoURL = await getDownloadURL(fileRef);
 
@@ -258,20 +323,24 @@ const ManageStorePage = () => {
     }
   };
 
-  const handleUpload = async () => {
+  const handleUpload = async (storeId: string) => {
     if (storeImages.length > 0) {
       try {
         for (let i = 0; i < storeImages.length; i++) {
           const file = storeImages[i].file;
           const fileRef = ref(
             storage,
-            `store_images/${currentUser?.uid}/${storeImages[i].index}`
+            `store_data/${storeId}/latest/store-images/${storeImages[i].index}`
           );
+          console.log("Working");
 
-          if (!file) return;
+          if (!file) continue;
+
+          console.log("Working");
 
           await uploadBytes(fileRef, file);
           const photoURL = await getDownloadURL(fileRef);
+          console.log("URL", photoURL);
 
           // Update storeImages state with the uploaded image's URL
           setStoreImages((prevImages) => {
@@ -320,12 +389,27 @@ const ManageStorePage = () => {
     setCategory(label);
   };
 
-  const handleClickRequest = () => {
-    if (requestPhone) {
-      window.open(
-        `https://wa.me/715335640?text=I%20need%20to%20show%20my%20business%20profile.%20My%20phone%20number%20is%3A%20${requestPhone}`
-      );
+  const handleClickRequest = async () => {
+    if (currentUserStore) {
+      const adminMessagesCollectionRef = collection(db, "adminMessages");
+      await addDoc(adminMessagesCollectionRef, {
+        message: `I want To Show My Busness Profile: ${title} my Phone No is:`,
+        createdAt: new Date(),
+        imageUrl: "",
+        fromName: "",
+        fromId: currentUserStore.userId,
+        toName: "admin",
+        toId: "",
+        seen: false,
+      });
+
+      toast.success("Request Send to Admin");
     }
+    // if (requestPhone) {
+    //   window.open(
+    //     `https://wa.me/715335640?text=I%20need%20to%20show%20my%20business%20profile.%20My%20phone%20number%20is%3A%20${requestPhone}`
+    //   );
+    // }
   };
 
   // const handleRemoveCatogary = (label: string) => {
@@ -395,14 +479,14 @@ const ManageStorePage = () => {
   return (
     <div className="w-full min-h-screen text-center relative">
       <Link
-        to="/manage-stores"
+        to={params.storeId === "userStore"? "/": "/manage-stores"}
         className="absolute top-0 left-5 w-10 h-10 text-4xl font-extralight"
       >
         <IoIosArrowBack />
       </Link>
 
       <h1 className="text-3xl font-bold mb-6 mt-4">Business Profile</h1>
-      {currentUserData && currentUserData.haveStore && currentUserStore ? (
+      {currentUserData && currentUserStore ? (
         <div className="flex flex-col gap-2 md:p-5">
           {/* <h2 className="text-xl font-semibold mb-4">Your Store</h2> */}
           <div className="flex flex-col gap-10 items-center justify-between">
@@ -815,7 +899,7 @@ const ManageStorePage = () => {
                           <Loader /> <span className="ml-3">Loading...</span>
                         </>
                       ) : (
-                        "Update"
+                        "Request For Update"
                       )}
                     </Button>
 

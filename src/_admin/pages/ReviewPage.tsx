@@ -4,72 +4,43 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import Navbar from "../components/Navbar";
+
 import SocialMediaArea from "@/components/sections/social-media-area";
 import DiscriptionArea from "@/components/sections/discription-area";
 import Footer from "@/components/footer";
 import BottomBanner from "@/components/bottom-banner";
-import RatingComponent from "../components/search-result-page/RatingComponent";
+import RatingComponent from "@/_public/components/search-result-page/RatingComponent";
 import { IonIcon } from "@ionic/react";
 import { locationOutline } from "ionicons/icons";
-import ReviewsAndRatings from "../components/store-details-page/ReviewsAndRatings";
-import OpenTimes from "../components/store-details-page/OpenTimes";
-import DetailsPageAdds from "../components/store-details-page/DetailsPageAdds";
-import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import ReviewsAndRatings from "@/_public/components/store-details-page/ReviewsAndRatings";
+import OpenTimes from "@/_public/components/store-details-page/OpenTimes";
+import DetailsPageAdds from "@/_public/components/store-details-page/DetailsPageAdds";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+} from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { FaEye, FaPhoneAlt } from "react-icons/fa";
-import { whatsapp } from "@/assets";
+import { fb, insta, linkedin, twitter, whatsapp, yt } from "@/assets";
 import { PiShareFatLight } from "react-icons/pi";
 import { Button } from "@/components/ui/button";
 import { MdOutlineEdit } from "react-icons/md";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CircularProgress, Tag } from "@chakra-ui/react";
-import { fetchStoreById, postEnquery } from "@/firebase/api";
-import ProductAndServices from "../components/store-details-page/ProductAndServices";
-import TabComponent from "../components/store-details-page/tabs/tab-cmponent/TabComponent";
-import TopSlider from "../components/TopSlider";
-import { useAuth } from "@/hooks/useAuth";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  EmailShareButton,
-  FacebookShareButton,
-  LinkedinShareButton,
-  TelegramShareButton,
-  TwitterShareButton,
-  ViberShareButton,
-  WhatsappShareButton,
-} from "react-share";
-import {
-  EmailIcon,
-  FacebookIcon,
-  LinkedinIcon,
-  TelegramIcon,
-  ViberIcon,
-  WhatsappIcon,
-  XIcon,
-} from "react-share";
+import ProductAndServices from "@/_public/components/store-details-page/ProductAndServices";
+import TabComponent from "@/_public/components/store-details-page/tabs/tab-cmponent/TabComponent";
+import ReviewTopSlider from "../components/ReviewTopSlider";
 
-const StoreDetailsPage = () => {
-  const [enquery, setEnquery] = useState("");
-  const [openModel, setOpenModel] = useState(false);
-  const [phoneNum, setPhoneNum] = useState("");
-
-  const { searchResultStores, currentUserData } = useData();
-  const { currentUser } = useAuth();
+const ReviewPage = () => {
+  const { currentUserData } = useData();
   const [selectedStore, setSelectedStore] = useState<StoreObj | null>(null);
+  const [haveLatestUpdate, setHaveLatestUpdate] = useState(false);
 
   const params = useParams();
   const storeId = params.storeId;
@@ -82,32 +53,32 @@ const StoreDetailsPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // console.log("Senidu", selectedStore?.showProfile);
-    // if (!selectedStore?.showProfile) {
-    //   navigate("/");
-    // }
-  }, [navigate, selectedStore?.showProfile]);
-
-  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
-    const updateVisitCount = async () => {
-      if (selectedStore && storeId) {
+    const checkDocument = async () => {
+      if (storeId) {
         try {
-          const documentRef = doc(db, "store", storeId);
-          await updateDoc(documentRef, {
-            visitCount: selectedStore.visitCount + 1,
-          });
+          const documentRef = doc(db, "latestStore", storeId);
+          const documentSnapshot = await getDoc(documentRef);
+
+          // Check if the document exists
+          const documentExists = documentSnapshot.exists();
+
+          console.log(documentExists);
+
+          // Update state based on document existence
+          setHaveLatestUpdate(documentExists);
         } catch (error) {
-          console.log(error);
+          console.error("Error checking document existence:", error);
+          setHaveLatestUpdate(false);
         }
       }
     };
 
-    updateVisitCount();
-  }, [selectedStore, storeId]);
+    checkDocument();
+  }, [storeId]);
 
   useEffect(() => {
     const collectionRef = collection(db, "detailsPageAdds");
@@ -126,50 +97,54 @@ const StoreDetailsPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!searchResultStores && storeId) {
-        const storeData = await fetchStoreById(storeId);
-        setSelectedStore({ ...storeData, id: storeId } as StoreObj);
-      } else {
-        setSelectedStore(
-          searchResultStores?.find((storeObj) => storeObj.id === storeId) ??
-            null
-        );
+      if (storeId) {
+        try {
+          const documentRef = doc(db, "latestStore", storeId);
+          const documentSnapshot = await getDoc(documentRef);
+
+          // Check if the document exists
+          const documentExists = documentSnapshot.exists();
+
+          console.log(documentExists);
+
+          if (documentExists) {
+            const documentRef = doc(db, "latestStore", storeId);
+            const storeData = await getDoc(documentRef);
+
+            // const storeData = await fetchStoreById(storeId);
+            setSelectedStore({ ...storeData.data(), id: storeId } as StoreObj);
+          } else {
+            const documentRef = doc(db, "store", storeId);
+            const storeData = await getDoc(documentRef);
+
+            // const storeData = await fetchStoreById(storeId);
+            setSelectedStore({ ...storeData.data(), id: storeId } as StoreObj);
+          }
+        } catch (error) {
+          console.error("Error checking document existence:", error);
+        }
       }
     };
 
     fetchData();
-  }, [navigate, searchResultStores, storeId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storeId, haveLatestUpdate]);
 
-  const hndelCancelClick = () => {
-    setOpenModel(false);
-    setEnquery("");
-  };
+  //   const fetchStoreById = async (storeId: string) => {
 
-  const handleAddEnquery = async () => {
-    if (enquery && selectedStore) {
-      await postEnquery(
-        {
-          fromId: currentUserData?.id || "",
-          fromName: currentUserData?.name || "",
-          imageUrl: currentUser?.photoURL || "",
-          message: enquery,
-          email: currentUser?.email || "",
-          phone: phoneNum,
-        },
-        selectedStore?.id.split("--")[0]
-      );
-    }
-    setOpenModel(false);
-    setEnquery("");
-  };
+  //       const documentRef = doc(db, "latestStore", storeId);
+  //       try {
+  //         const storeData = await getDoc(documentRef);
+  //         return storeData?.data() as StoreObj;
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+
+  //   };
 
   // if (!selectedStore) return <div>Loading...</div>;
   return (
     <div className="w-full">
-      <div className="fixed top-0 left-0 z-50  p-2 md:p-5">
-        <Navbar />
-      </div>
-
       <div className="mt-44 725:mt-20 w-full ">
         {!selectedStore ? (
           <div className="w-full h-screen flex items-center justify-center">
@@ -178,7 +153,7 @@ const StoreDetailsPage = () => {
         ) : (
           <>
             {/* <Gallery /> */}
-            <TopSlider storeId={selectedStore.id} />
+            <ReviewTopSlider storeId={selectedStore.id} />
 
             <div className="w-full flex items-center justify-between pt-2 px-2">
               {/* ----------Desktop--------- */}
@@ -430,108 +405,31 @@ const StoreDetailsPage = () => {
 
               {/* ------ */}
 
-              <div className=" flex-col gap-6 hidden md:flex items-center justify-center">
+              <div className=" flex-col gap-6 hidden md:flex">
                 <h2 className="text-3xl text-center text-blue-500 font-medium">
                   Share
                 </h2>
-                <div className="flex gap-2">
-                  <FacebookShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                  >
-                    <FacebookIcon className="w-7 h-7 rounded-lg" />
-                  </FacebookShareButton>
-                  <TwitterShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                  >
-                    <XIcon className="w-7 h-7 rounded-lg" />
-                  </TwitterShareButton>
-                  <LinkedinShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                  >
-                    <LinkedinIcon className="w-7 h-7 rounded-lg" />
-                  </LinkedinShareButton>
-                  <WhatsappShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                  >
-                    <WhatsappIcon className="w-7 h-7 rounded-lg" />
-                  </WhatsappShareButton>
-                  <TelegramShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                  >
-                    <TelegramIcon className="w-7 h-7 rounded-lg" />
-                  </TelegramShareButton>
-                  <EmailShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                  >
-                    <EmailIcon className="w-7 h-7 rounded-lg" />
-                  </EmailShareButton>
-                  <ViberShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                  >
-                    <ViberIcon className="w-7 h-7 rounded-lg" />
-                  </ViberShareButton>
+                <div className="ad flex">
+                  <a href="#" className="scl-md-links">
+                    <img src={fb} alt="" />
+                  </a>
+                  <a href="#" className="scl-md-links">
+                    <img src={yt} alt="" />
+                  </a>
+                  <a href="#" className="scl-md-links">
+                    <img src={insta} alt="" />
+                  </a>
+                  <a href="#" className="scl-md-links">
+                    <img src={linkedin} alt="" />
+                  </a>
+                  <a href="#" className="scl-md-links">
+                    <img src={twitter} alt="" />
+                  </a>
                 </div>
-                {/* <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
+                <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
                   <h2>Enquire Now</h2>
                   <p className="text-xs">Get free details instantly via SMS</p>
-                </button> */}
-                <Dialog open={openModel} onOpenChange={setOpenModel}>
-                  <DialogTrigger>
-                    <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
-                      <h2>Enquire Now</h2>
-                      <p className="text-xs">
-                        Get free details instantly via SMS
-                      </p>
-                    </button>
-                    {/* <Button
-                      asChild
-                      size="sm"
-                      className=" flex px-2 py-1 gap-1 text-white items-center justify-center bg-blue-400 hover:bg-blue-400/90"
-                    >
-                      <h4>Send Enquery</h4>
-                    </Button> */}
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>Add your Enquery</DialogTitle>
-                    </DialogHeader>
-
-                    <div className="grid gap-4 py-2">
-                      <div className="space-y-3">
-                        <div>
-                          <Label htmlFor="name">Message</Label>
-                          <Input
-                            id="name"
-                            className="col-span-3"
-                            placeholder="Type your message..."
-                            value={enquery}
-                            onChange={(e) => setEnquery(e.target.value)}
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="phone">Phone Number</Label>
-                          <Input
-                            id="phone"
-                            className="col-span-3"
-                            placeholder="Phone number"
-                            value={phoneNum}
-                            onChange={(e) => setPhoneNum(e.target.value)}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <DialogFooter className="sm:justify-start">
-                      <div className="w-full flex items-center justify-center gap-2 px-10">
-                        <Button type="button" onClick={hndelCancelClick}>
-                          Cancel
-                        </Button>
-                        <Button onClick={handleAddEnquery}>Send</Button>
-                      </div>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+                </button>
               </div>
             </div>
             <div className=" flex flex-col gap-4 md:flex-row md:flex md:justify-between">
@@ -547,110 +445,6 @@ const StoreDetailsPage = () => {
                   )}
                 </div> */}
 
-                <div className="mb-10 flex-col gap-6 flex md:hidden items-center justify-center">
-                  <h2 className="text-3xl text-center text-blue-500 font-medium">
-                    Share
-                  </h2>
-                  <div className="flex gap-2">
-                    <FacebookShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                    >
-                      <FacebookIcon className="w-7 h-7 rounded-lg" />
-                    </FacebookShareButton>
-                    <TwitterShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                    >
-                      <XIcon className="w-7 h-7 rounded-lg" />
-                    </TwitterShareButton>
-                    <LinkedinShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                    >
-                      <LinkedinIcon className="w-7 h-7 rounded-lg" />
-                    </LinkedinShareButton>
-                    <WhatsappShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                    >
-                      <WhatsappIcon className="w-7 h-7 rounded-lg" />
-                    </WhatsappShareButton>
-                    <TelegramShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                    >
-                      <TelegramIcon className="w-7 h-7 rounded-lg" />
-                    </TelegramShareButton>
-                    <EmailShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                    >
-                      <EmailIcon className="w-7 h-7 rounded-lg" />
-                    </EmailShareButton>
-                    <ViberShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
-                    >
-                      <ViberIcon className="w-7 h-7 rounded-lg" />
-                    </ViberShareButton>
-                  </div>
-                  {/* <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
-                  <h2>Enquire Now</h2>
-                  <p className="text-xs">Get free details instantly via SMS</p>
-                </button> */}
-                  <Dialog open={openModel} onOpenChange={setOpenModel}>
-                    <DialogTrigger>
-                      <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
-                        <h2>Enquire Now</h2>
-                        <p className="text-xs">
-                          Get free details instantly via SMS
-                        </p>
-                      </button>
-                      {/* <Button
-                      asChild
-                      size="sm"
-                      className=" flex px-2 py-1 gap-1 text-white items-center justify-center bg-blue-400 hover:bg-blue-400/90"
-                    >
-                      <h4>Send Enquery</h4>
-                    </Button> */}
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Add your Enquery</DialogTitle>
-                      </DialogHeader>
-
-                      <div className="grid gap-4 py-2">
-                        <div className="space-y-3">
-                          <div>
-                            <Label htmlFor="name">Message</Label>
-                            <Input
-                              id="name"
-                              className="col-span-3"
-                              placeholder="Type your message..."
-                              value={enquery}
-                              onChange={(e) => setEnquery(e.target.value)}
-                            />
-                          </div>
-
-                          <div>
-                            <Label htmlFor="phone">Phone Number</Label>
-                            <Input
-                              id="phone"
-                              className="col-span-3"
-                              placeholder="Phone number"
-                              value={phoneNum}
-                              onChange={(e) => setPhoneNum(e.target.value)}
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <DialogFooter className="sm:justify-start">
-                        <div className="w-full flex items-center justify-center gap-2 px-10">
-                          <Button type="button" onClick={hndelCancelClick}>
-                            Cancel
-                          </Button>
-                          <Button onClick={handleAddEnquery}>Send</Button>
-                        </div>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-
                 <ProductAndServices
                   tags={selectedStore.tags}
                   category={selectedStore.category}
@@ -665,7 +459,13 @@ const StoreDetailsPage = () => {
               </div>
             </div>
 
-            <SocialMediaArea />
+            <SocialMediaArea
+              facebookUrl={selectedStore?.fasebook}
+              instagramUrl={selectedStore?.instagram}
+              linkedinUrl={selectedStore?.linkedin}
+              twitterUrl={selectedStore?.twitter}
+              youtubeUrl={selectedStore?.youtube}
+            />
           </>
         )}
         <DiscriptionArea />
@@ -676,4 +476,4 @@ const StoreDetailsPage = () => {
   );
 };
 
-export default StoreDetailsPage;
+export default ReviewPage;

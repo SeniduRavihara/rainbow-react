@@ -8,9 +8,15 @@ import { doc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
+const AddGoogleMapLocation = ({
+  storeId,
+  preLocationIframe,
+}: {
+  storeId: string;
+  preLocationIframe: string;
+}) => {
   const [locationIfram, setLocationIfram] = useState("");
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const handleClickAdd = async () => {
@@ -19,7 +25,7 @@ const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
     setLoading(true);
 
     try {
-      const documentRef = doc(db, "store", storeId);
+      const documentRef = doc(db, "latestStore", storeId);
       await updateDoc(documentRef, {
         location: extractGoogleMapsLinkFromIframe(locationIfram),
       });
@@ -39,7 +45,7 @@ const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
         Video Guide To Get The Location Link
       </Link>
 
-      <Label>video embed url</Label>
+      <Label>Location embed url</Label>
       <div className="flex items-center justify-center gap-2 mt-1">
         <Input
           type="text"
@@ -57,10 +63,14 @@ const AddGoogleMapLocation = ({ storeId }: { storeId: string }) => {
         </Button>
       </div>
 
-      {show && locationIfram && (
+      {show && (
         <div className="mt-10">
           <iframe
-            src={extractGoogleMapsLinkFromIframe(locationIfram) || ""}
+            src={
+              extractGoogleMapsLinkFromIframe(locationIfram) ||
+              preLocationIframe ||
+              ""
+            }
             className="w-full"
             height="450"
             style={{ border: 0 }}
