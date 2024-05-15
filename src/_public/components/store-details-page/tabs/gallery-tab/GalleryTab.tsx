@@ -36,10 +36,12 @@ const GalleryTab = ({ gallery }: { gallery: string[] }) => {
         {/* <button onClick={() => setOpen(true)}>Open Lightbox</button> */}
 
         {slides && (
-          <Images
-            data={slides}
-            onClick={(currentIndex) => setIndex(currentIndex)}
-          />
+          <div className="max-h-[500px] p-2 overflow-y-scroll">
+            <Images
+              data={slides}
+              onClick={(currentIndex) => setIndex(currentIndex)}
+            />
+          </div>
         )}
 
         <Lightbox

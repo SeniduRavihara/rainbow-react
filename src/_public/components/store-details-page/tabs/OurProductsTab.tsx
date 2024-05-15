@@ -36,7 +36,7 @@ const OurProductsTab = ({ storeId }: { storeId: string }) => {
 
   if (!productList) return <CircularProgress size="30px" isIndeterminate color="green.300" />;
     return (
-      <div>
+      <div className="max-h-[500px] p-2 overflow-y-scroll">
         <ul className="w-full mt-3 flex flex-wrap gap-4 items-center justify-center">
           {productList.map((productObj, index) => (
             <li
@@ -44,7 +44,11 @@ const OurProductsTab = ({ storeId }: { storeId: string }) => {
               className="flex flex-col items-center justify-items-center border rounded-lg py-3 gap-2"
               onClick={handleProductClick}
             >
-              <img src={productObj.imageUrl} className="w-[180px]" alt="" />
+              <img
+                src={productObj.imageUrl}
+                className="w-[full] 360:w-[130px] xsm:w-[150px] md:w-[180px]"
+                alt=""
+              />
               <h3 className="font-semibold">{productObj.name}</h3>
             </li>
           ))}

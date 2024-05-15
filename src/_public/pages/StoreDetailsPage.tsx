@@ -547,6 +547,110 @@ const StoreDetailsPage = () => {
                   )}
                 </div> */}
 
+                <div className="mb-10 flex-col gap-6 flex md:hidden items-center justify-center">
+                  <h2 className="text-3xl text-center text-blue-500 font-medium">
+                    Share
+                  </h2>
+                  <div className="flex gap-2">
+                    <FacebookShareButton
+                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    >
+                      <FacebookIcon className="w-7 h-7 rounded-lg" />
+                    </FacebookShareButton>
+                    <TwitterShareButton
+                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    >
+                      <XIcon className="w-7 h-7 rounded-lg" />
+                    </TwitterShareButton>
+                    <LinkedinShareButton
+                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    >
+                      <LinkedinIcon className="w-7 h-7 rounded-lg" />
+                    </LinkedinShareButton>
+                    <WhatsappShareButton
+                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    >
+                      <WhatsappIcon className="w-7 h-7 rounded-lg" />
+                    </WhatsappShareButton>
+                    <TelegramShareButton
+                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    >
+                      <TelegramIcon className="w-7 h-7 rounded-lg" />
+                    </TelegramShareButton>
+                    <EmailShareButton
+                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    >
+                      <EmailIcon className="w-7 h-7 rounded-lg" />
+                    </EmailShareButton>
+                    <ViberShareButton
+                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    >
+                      <ViberIcon className="w-7 h-7 rounded-lg" />
+                    </ViberShareButton>
+                  </div>
+                  {/* <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
+                  <h2>Enquire Now</h2>
+                  <p className="text-xs">Get free details instantly via SMS</p>
+                </button> */}
+                  <Dialog open={openModel} onOpenChange={setOpenModel}>
+                    <DialogTrigger>
+                      <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
+                        <h2>Enquire Now</h2>
+                        <p className="text-xs">
+                          Get free details instantly via SMS
+                        </p>
+                      </button>
+                      {/* <Button
+                      asChild
+                      size="sm"
+                      className=" flex px-2 py-1 gap-1 text-white items-center justify-center bg-blue-400 hover:bg-blue-400/90"
+                    >
+                      <h4>Send Enquery</h4>
+                    </Button> */}
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>Add your Enquery</DialogTitle>
+                      </DialogHeader>
+
+                      <div className="grid gap-4 py-2">
+                        <div className="space-y-3">
+                          <div>
+                            <Label htmlFor="name">Message</Label>
+                            <Input
+                              id="name"
+                              className="col-span-3"
+                              placeholder="Type your message..."
+                              value={enquery}
+                              onChange={(e) => setEnquery(e.target.value)}
+                            />
+                          </div>
+
+                          <div>
+                            <Label htmlFor="phone">Phone Number</Label>
+                            <Input
+                              id="phone"
+                              className="col-span-3"
+                              placeholder="Phone number"
+                              value={phoneNum}
+                              onChange={(e) => setPhoneNum(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <DialogFooter className="sm:justify-start">
+                        <div className="w-full flex items-center justify-center gap-2 px-10">
+                          <Button type="button" onClick={hndelCancelClick}>
+                            Cancel
+                          </Button>
+                          <Button onClick={handleAddEnquery}>Send</Button>
+                        </div>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
                 <ProductAndServices
                   tags={selectedStore.tags}
                   category={selectedStore.category}
