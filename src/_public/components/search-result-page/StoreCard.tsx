@@ -83,7 +83,7 @@ const StoreCard = ({
           email: currentUser?.email || "",
           phone: phoneNum,
         },
-        id
+        id.split("--")[0]
       );
     }
     setOpenModel(false);

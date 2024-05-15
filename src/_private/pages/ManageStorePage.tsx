@@ -8,7 +8,6 @@ import {
   addDoc,
   collection,
   doc,
-  getDoc,
   onSnapshot,
   query,
   where,
@@ -113,7 +112,7 @@ const ManageStorePage = () => {
 
   const params = useParams();
 
-  console.log(storeImages);
+  // console.log(storeImages);
 
   useEffect(() => {
     const collectionRef = collection(db, "categories");
@@ -132,29 +131,16 @@ const ManageStorePage = () => {
   useEffect(() => {
     async function fetchData() {
       if (currentUserData && params.storeId) {
-        const documentReflatest = doc(db, "latestStore", params.storeId);
-        const snapshot = await getDoc(documentReflatest);
-        // const storeData = snapshot.data() as StoreObj;
-        const exists = snapshot.exists();
+        // const documentReflatest = doc(db, "latestStore", params.storeId);
+        // const snapshot = await getDoc(documentReflatest);
+        // const latestStoreData = snapshot.data() as StoreObj;
+        // const exists = snapshot.exists();
 
         if (params.storeId === "userStore") {
-          if (exists) {
-            const documentRef = doc(db, "latestStore", params.storeId);
-            const unsubscribe = onSnapshot(documentRef, (snapshot) => {
-              if (snapshot.exists()) {
-                setCurrentUserStore({
-                  ...snapshot.data(),
-                  id: snapshot.id,
-                } as StoreObj);
-              } else {
-                setCurrentUserStore(null);
-              }
-            });
-
-            // Return the unsubscribe function to stop listening for updates when the component unmounts
-            return () => unsubscribe();
-          } else {
-            const collectionRef = collection(db, "store");
+          // if (exiss) {
+            console.log("RUNNING");
+            
+            const collectionRef = collection(db, "latestStore");
             const q = query(
               collectionRef,
               where("userId", "==", currentUserData.id)
@@ -166,44 +152,49 @@ const ManageStorePage = () => {
                 id: doc.id,
               })) as StoreListType;
 
-              console.log(storeListArr);
+              // console.log(storeListArr);
               setCurrentUserStore(storeListArr[0]);
             });
 
             return unsubscribe;
-          }
+
+            // const documentRef = doc(db, "latestStore", params.storeId);
+            // const unsubscribe = onSnapshot(documentRef, (snapshot) => {
+            //   if (snapshot.exists()) {
+            //     setCurrentUserStore({
+            //       ...snapshot.data(),
+            //       id: snapshot.id,
+            //     } as StoreObj);
+            //   } else {
+            //     setCurrentUserStore(null);
+            //   }
+            // });
+
+            // // Return the unsubscribe function to stop listening for updates when the component unmounts
+            // return () => unsubscribe();
+          // }
         } else {
-          if (exists) {
-            const documentRef = doc(db, "latestStore", params.storeId);
-            const unsubscribe = onSnapshot(documentRef, (snapshot) => {
-              if (snapshot.exists()) {
-                setCurrentUserStore({
-                  ...snapshot.data(),
-                  id: snapshot.id,
-                } as StoreObj);
-              } else {
-                setCurrentUserStore(null);
-              }
-            });
+          // if (exists) {            console.log("RUNNING");
+            console.log("RUNNING2");
 
-            // Return the unsubscribe function to stop listening for updates when the component unmounts
-            return () => unsubscribe();
-          } else {
-            const documentRef = doc(db, "store", params.storeId);
-            const unsubscribe = onSnapshot(documentRef, (snapshot) => {
-              if (snapshot.exists()) {
-                setCurrentUserStore({
-                  ...snapshot.data(),
-                  id: snapshot.id,
-                } as StoreObj);
-              } else {
-                setCurrentUserStore(null);
-              }
-            });
+          const documentRef = doc(db, "latestStore", params.storeId);
+          const unsubscribe = onSnapshot(documentRef, (snapshot) => {
+            if (snapshot.exists()) {
+              setCurrentUserStore({
+                ...snapshot.data(),
+                id: snapshot.id,
+              } as StoreObj);
 
-            // Return the unsubscribe function to stop listening for updates when the component unmounts
-            return () => unsubscribe();
-          }
+              // console.log(snapshot.data());
+              
+            } else {
+              setCurrentUserStore(null);
+            }
+          });
+
+          // Return the unsubscribe function to stop listening for updates when the component unmounts
+          return () => unsubscribe();
+          // }
         }
       }
     }
@@ -228,6 +219,7 @@ const ManageStorePage = () => {
       setTiktok(currentUserStore.tiktok);
       setWebsite(currentUserStore.website);
       setCategory(currentUserStore.category || "");
+      setSchedulArr(currentUserStore.schedulArr);
       setStoreImages((pre) =>
         pre.map((imgObj, index) => {
           return { ...imgObj, imageUrl: currentUserStore.storeImages[index] };
@@ -295,6 +287,14 @@ const ManageStorePage = () => {
         tiktok,
         website,
         category,
+        haveUpdate: [
+          ...(currentUserStore?.haveUpdate ?? []),
+          currentUserStore?.haveUpdate.includes("normal")
+            ? undefined
+            : "normal",
+          ...(storeIcon?.file ? ["storeIcon"] : []),
+          ...(storeImages.filter((obj)=> obj.file).length >= 1 ? ["storeImages"] : []),
+        ].filter((txt) => txt),
       });
       // updateProfileForHaveStore(currentUser?.uid, true);
       await addLocation(
@@ -479,14 +479,14 @@ const ManageStorePage = () => {
   return (
     <div className="w-full min-h-screen text-center relative">
       <Link
-        to="/manage-stores"
+        to={params.storeId === "userStore"? "/": "/manage-stores"}
         className="absolute top-0 left-5 w-10 h-10 text-4xl font-extralight"
       >
         <IoIosArrowBack />
       </Link>
 
       <h1 className="text-3xl font-bold mb-6 mt-4">Business Profile</h1>
-      {currentUserData && currentUserData.haveStore && currentUserStore ? (
+      {currentUserData && currentUserStore ? (
         <div className="flex flex-col gap-2 md:p-5">
           {/* <h2 className="text-xl font-semibold mb-4">Your Store</h2> */}
           <div className="flex flex-col gap-10 items-center justify-between">

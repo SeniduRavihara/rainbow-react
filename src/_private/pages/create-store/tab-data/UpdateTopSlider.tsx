@@ -2,6 +2,7 @@ import { db, storage } from "@/firebase/config";
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   onSnapshot,
   setDoc,
@@ -45,39 +46,16 @@ const UpdateTopSlider = ({ storeId }: { storeId: string }) => {
   const [sliderAdds, setSliderAdds] = useState<SliderAdd[] | null>(null);
   const [haveLatestUpdate, setHaveLatestUpdate] = useState(false);
 
-  // useEffect(() => {
-  //   console.log(sliderAdds);
-  // }, [sliderAdds]);
-
-  // useEffect(() => {
-  //   const checkDocument = async () => {
-  //     if (storeId) {
-  //       try {
-  //         const documentRef = doc(db, "latestStore", storeId);
-  //         const documentSnapshot = await getDoc(documentRef);
-
-  //         // Check if the document exists
-  //         const documentExists = documentSnapshot.exists();
-
-  //         console.log(documentExists);
-
-  //         // Update state based on document existence
-  //         setHaveLatestUpdate(documentExists);
-  //       } catch (error) {
-  //         console.error("Error checking document existence:", error);
-  //         setHaveLatestUpdate(false);
-  //       }
-  //     }
-  //   };
-
-  //   checkDocument();
-  // }, [storeId]);
-
   useEffect(() => {
     const checkDocument = async () => {
       if (storeId) {
         try {
-          const collectionRef = collection(db, "latestStore", storeId, "top-slider");
+          const collectionRef = collection(
+            db,
+            "latestStore",
+            storeId,
+            "top-slider"
+          );
           const collectionSnapshot = await getDocs(collectionRef);
 
           // Check if the colletion exists
@@ -153,8 +131,6 @@ const UpdateTopSlider = ({ storeId }: { storeId: string }) => {
     };
 
     checkDocument();
-
-    
   }, [haveLatestUpdate, storeId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
@@ -198,6 +174,7 @@ const UpdateTopSlider = ({ storeId }: { storeId: string }) => {
         await updateDoc(documentRef, {
           imageUrl: addToUpdate?.imageUrl,
         });
+
         toast.success("Banner Uploaded successfully");
       } catch (error) {
         console.log(error);
@@ -206,7 +183,7 @@ const UpdateTopSlider = ({ storeId }: { storeId: string }) => {
     }
 
     try {
-      const imageUrl = await uploadAdd( 
+      const imageUrl = await uploadAdd(
         addToUpdate.cropedImageBlob,
         storeId,
         idToUpdate
@@ -222,6 +199,18 @@ const UpdateTopSlider = ({ storeId }: { storeId: string }) => {
         );
         await updateDoc(documentRef, {
           imageUrl,
+        });
+
+        const contactDocumentRef = doc(db, "latestStore", storeId);
+        const latestData = await getDoc(contactDocumentRef);
+
+        await updateDoc(contactDocumentRef, {
+          haveUpdate: [
+            ...(latestData?.data()?.haveUpdate ?? []),
+            latestData?.data()?.haveUpdate.includes("topSlider")
+              ? undefined
+              : "topSlider",
+          ].filter((txt) => txt),
         });
       } catch (error) {
         console.log(error);
@@ -300,11 +289,6 @@ const UpdateTopSlider = ({ storeId }: { storeId: string }) => {
         </div>
       )}
       <div className="">
-        <h1 className="text-xl font-semibold mb-4 text-center">
-          Need a Admin Aprove for update the Top Slider, Please send a admin
-          Request
-        </h1>
-
         <h2 className="text-primary font-bold mb-10 text-center">
           Top Slider (16:3 ~ 1000px:312px )
         </h2>

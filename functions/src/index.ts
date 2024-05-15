@@ -1,9 +1,12 @@
 import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
 import algoliasearch from "algoliasearch";
 
 const env = functions.config();
 const client = algoliasearch(env.algolia.app_id, env.algolia.admin_api_key);
 const index = client.initIndex("stores");
+
+admin.initializeApp();
 
 export const onStoreCreated = functions.firestore
   .document("store/{storeId}")
@@ -20,7 +23,7 @@ export const onStoreDelete = functions.firestore
     return index.deleteObject(ctx.params.storeId);
   });
 
-exports.onStoreUpdate = functions.firestore
+export const onStoreUpdate = functions.firestore
   .document("store/{storeId}")
   .onUpdate(async (change, context) => {
     const newData = change.after.data(); // Get the updated data
@@ -32,3 +35,79 @@ exports.onStoreUpdate = functions.firestore
     });
   });
 
+// ---------------------------
+
+export const onStoreUpdateSyncWithLatestStore = functions.firestore
+  .document("store/{storeId}")
+  .onUpdate(async (change, context) => {
+    const newData = change.after.data(); // Get the updated data
+    const storeId = context.params.storeId; // Get the ID of the updated document
+
+    // Update specific fields in latestStore document without overwriting its entire content
+    const latestStoreRef = admin.firestore().doc(`latestStore/${storeId}`);
+    await latestStoreRef.set(
+      {
+        ...newData,
+      },
+      { merge: true }
+    );
+
+    // You can also update other fields in latestStore document
+    // based on the newData or other logic
+
+    return null; // This is necessary if you're using async functions
+  });
+
+export const onStoreDeleteLatestStoreDelete = functions.firestore
+  .document("store/{storeId}")
+  .onDelete(async (snapshot, context) => {
+    const storeId = context.params.storeId; // Get the ID of the deleted document
+
+    // Delete corresponding document in latestStore collection
+    const latestStoreRef = admin.firestore().doc(`latestStore/${storeId}`);
+    await latestStoreRef.delete();
+
+    return null; // This is necessary if you're using async functions
+  });
+
+export const onStoreCreateLatestStoreCreate = functions.firestore
+  .document("store/{storeId}")
+  .onCreate(async (snapshot, context) => {
+    const newData = snapshot.data(); // Get the newly created data
+    const storeId = context.params.storeId; // Get the ID of the newly created document
+
+    // Create corresponding document in latestStore collection
+    const latestStoreRef = admin.firestore().doc(`latestStore/${storeId}`);
+    await latestStoreRef.set(newData);
+
+    return null; // This is necessary if you're using async functions
+  });
+
+// export const onTopSliderChange = functions.firestore
+//   .document("store/{storeId}/top-slider/{sliderId}")
+//   .onWrite(async (change, context) => {
+//     const storeId = context.params.storeId; // Get the ID of the store document
+//     const latestStoreRef = admin.firestore().doc(`latestStore/${storeId}`);
+
+//     try {
+//       // Get all documents from the top-slider subcollection
+//       const topSliderQuerySnapshot = await admin
+//         .firestore()
+//         .collection(`store/${storeId}/top-slider`)
+//         .get();
+
+//       // Extract data from each document
+//       const topSliderData = topSliderQuerySnapshot.docs.map((doc) => {
+//             await latestStoreRef.set(newData);
+
+//       });
+
+//       // Update the latestStore document with the top-slider data
+//       // await latestStoreRef.set({ topSlider: topSliderData }, { merge: true });
+
+//       return null;
+//     } catch (error) {
+//       console.error("Error fetching top-slider data:", error);
+//       throw error;
+//     }
+//   });

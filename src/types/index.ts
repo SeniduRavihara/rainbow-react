@@ -126,7 +126,7 @@ export type StoreObj = {
   companyProfilePdfUrl: string;
   youtubeVideos: string[];
   showProfile: boolean;
-  haveUpdate: boolean
+  haveUpdate: string[]
 };
 
 export type StoreListType = Array<StoreObj>;

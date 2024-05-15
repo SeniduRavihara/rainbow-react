@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   addLocation,
   createStore,
+  syncLatestStoreWithStore,
   updateProfileForHaveStore,
   updateStore2,
 } from "@/firebase/api";
@@ -95,7 +96,7 @@ const CreateStorePage = () => {
         ...doc.data(),
       })) as Array<{ icon: string; label: string }>;
 
-      console.log(categoryArr);
+      // console.log(categoryArr);
       setVisibleCategories((pre) => [...pre, ...categoryArr]);
     });
 
@@ -109,41 +110,42 @@ const CreateStorePage = () => {
       // await handleUpload();
 
       const payLoad = {
+        storeImages: storeImages.map((img) => img.imageUrl),
+        storeIcon: "",
         title,
         address,
         phoneNumber,
         whatsappNumber,
-        tags,
-        storeImages: storeImages.map((img) => img.imageUrl),
-        storeIcon: "",
-        email: currentUser.email,
         info1,
         info2,
         schedulArr,
+        tags,
         fasebook,
         instagram,
         linkedin,
         twitter,
         youtube,
-        website,
         tiktok,
+        website,
         category,
+        email: currentUser.email,
       };
 
       const storeId = await createStore(currentUser?.uid, payLoad);
 
       if (storeId) {
-        console.log("HAVE STOREID", storeId);
-        
+        // console.log("HAVE STOREID", storeId);
+
         await handleUpload(storeId);
-        console.log("STORE IMAGES", storeImages);
+        // console.log("STORE IMAGES", storeImages);
         const storeIconUrl = await uploadStoreIcon(storeId);
 
         await updateStore2(storeId, {
-          ...payLoad,
           storeIcon: storeIconUrl,
           storeImages: storeImages.map((img) => img.imageUrl),
         });
+
+        await syncLatestStoreWithStore(storeId);
       }
 
       updateProfileForHaveStore(currentUser?.uid, true);

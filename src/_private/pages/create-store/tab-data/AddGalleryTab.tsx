@@ -6,7 +6,13 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-const AddGalleryTab = ({ storeId }: { storeId: string }) => {
+const AddGalleryTab = ({
+  storeId,
+  gallery,
+}: {
+  storeId: string;
+  gallery: string[];
+}) => {
   const [selectedFiles, setSelectedFiles] = useState<Array<File>>([]);
   const [loading, setLoading] = useState(false);
 
@@ -26,6 +32,12 @@ const AddGalleryTab = ({ storeId }: { storeId: string }) => {
       await setDoc(documentRef, {
         ...latestData.data(),
         gallery: downloadUrls,
+        haveUpdate: [
+          ...(latestData?.data()?.haveUpdate ?? []),
+          latestData?.data()?.haveUpdate.includes("gallery")
+            ? undefined
+            : "gallery",
+        ].filter((txt) => txt),
       });
     } catch (error) {
       console.log(error);
@@ -69,9 +81,6 @@ const AddGalleryTab = ({ storeId }: { storeId: string }) => {
 
   return (
     <div className="flex flex-col items-center justify-center ">
-      <h1 className="text-xl font-semibold mb-4">
-        Need a Admin Aprove for update the gallery, Please send a admin Request
-      </h1>
       <div className="flex items-center justify-center gap-5">
         <label
           htmlFor="image-input"
@@ -110,6 +119,20 @@ const AddGalleryTab = ({ storeId }: { storeId: string }) => {
             />
           ))}
       </div>
+
+      {selectedFiles.length === 0 && (
+        <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 gap-4">
+          {gallery.length > 0 &&
+            gallery.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt={img}
+                className="w-[200px] h-auto"
+              />
+            ))}
+        </div>
+      )}
     </div>
   );
 };

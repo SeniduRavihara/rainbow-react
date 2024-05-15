@@ -89,7 +89,7 @@ const ManageStoresPage = () => {
               <th>Email</th>
               <th>Telephone</th>
               <th>Registered/Requested Date</th>
-              <th>ACTION</th>
+              {/* <th>ACTION</th> */}
             </tr>
           </thead>
           <tbody>

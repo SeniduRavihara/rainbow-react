@@ -18,23 +18,57 @@ import DetailsPageAdds from "../components/store-details-page/DetailsPageAdds";
 import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { FaEye, FaPhoneAlt } from "react-icons/fa";
-import { fb, insta, linkedin, twitter, whatsapp, yt } from "@/assets";
+import { whatsapp } from "@/assets";
 import { PiShareFatLight } from "react-icons/pi";
 import { Button } from "@/components/ui/button";
 import { MdOutlineEdit } from "react-icons/md";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CircularProgress, Tag } from "@chakra-ui/react";
-import { fetchStoreById } from "@/firebase/api";
+import { fetchStoreById, postEnquery } from "@/firebase/api";
 import ProductAndServices from "../components/store-details-page/ProductAndServices";
 import TabComponent from "../components/store-details-page/tabs/tab-cmponent/TabComponent";
 import TopSlider from "../components/TopSlider";
+import { useAuth } from "@/hooks/useAuth";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  LinkedinShareButton,
+  TelegramShareButton,
+  TwitterShareButton,
+  ViberShareButton,
+  WhatsappShareButton,
+} from "react-share";
+import {
+  EmailIcon,
+  FacebookIcon,
+  LinkedinIcon,
+  TelegramIcon,
+  ViberIcon,
+  WhatsappIcon,
+  XIcon,
+} from "react-share";
 
 const StoreDetailsPage = () => {
+  const [enquery, setEnquery] = useState("");
+  const [openModel, setOpenModel] = useState(false);
+  const [phoneNum, setPhoneNum] = useState("");
+
   const { searchResultStores, currentUserData } = useData();
+  const { currentUser } = useAuth();
   const [selectedStore, setSelectedStore] = useState<StoreObj | null>(null);
 
   const params = useParams();
@@ -105,6 +139,29 @@ const StoreDetailsPage = () => {
 
     fetchData();
   }, [navigate, searchResultStores, storeId]);
+
+  const hndelCancelClick = () => {
+    setOpenModel(false);
+    setEnquery("");
+  };
+
+  const handleAddEnquery = async () => {
+    if (enquery && selectedStore) {
+      await postEnquery(
+        {
+          fromId: currentUserData?.id || "",
+          fromName: currentUserData?.name || "",
+          imageUrl: currentUser?.photoURL || "",
+          message: enquery,
+          email: currentUser?.email || "",
+          phone: phoneNum,
+        },
+        selectedStore?.id.split("--")[0]
+      );
+    }
+    setOpenModel(false);
+    setEnquery("");
+  };
 
   // if (!selectedStore) return <div>Loading...</div>;
   return (
@@ -377,37 +434,104 @@ const StoreDetailsPage = () => {
                 <h2 className="text-3xl text-center text-blue-500 font-medium">
                   Share
                 </h2>
-                <div className="ad flex">
-                  {selectedStore?.fasebook && (
-                    <a href={selectedStore?.fasebook} className="scl-md-links">
-                      <img src={fb} alt="" />
-                    </a>
-                  )}
-                  {selectedStore?.youtube && (
-                    <a href={selectedStore?.youtube} className="scl-md-links">
-                      <img src={yt} alt="" />
-                    </a>
-                  )}
-                  {selectedStore?.instagram && (
-                    <a href={selectedStore?.instagram} className="scl-md-links">
-                      <img src={insta} alt="" />
-                    </a>
-                  )}
-                  {selectedStore?.linkedin && (
-                    <a href={selectedStore?.linkedin} className="scl-md-links">
-                      <img src={linkedin} alt="" />
-                    </a>
-                  )}
-                  {selectedStore?.twitter && (
-                    <a href={selectedStore?.twitter} className="scl-md-links">
-                      <img src={twitter} alt="" />
-                    </a>
-                  )}
+                <div className="flex gap-2">
+                  <FacebookShareButton
+                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                  >
+                    <FacebookIcon className="w-7 h-7 rounded-lg" />
+                  </FacebookShareButton>
+                  <TwitterShareButton
+                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                  >
+                    <XIcon className="w-7 h-7 rounded-lg" />
+                  </TwitterShareButton>
+                  <LinkedinShareButton
+                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                  >
+                    <LinkedinIcon className="w-7 h-7 rounded-lg" />
+                  </LinkedinShareButton>
+                  <WhatsappShareButton
+                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                  >
+                    <WhatsappIcon className="w-7 h-7 rounded-lg" />
+                  </WhatsappShareButton>
+                  <TelegramShareButton
+                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                  >
+                    <TelegramIcon className="w-7 h-7 rounded-lg" />
+                  </TelegramShareButton>
+                  <EmailShareButton
+                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                  >
+                    <EmailIcon className="w-7 h-7 rounded-lg" />
+                  </EmailShareButton>
+                  <ViberShareButton
+                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                  >
+                    <ViberIcon className="w-7 h-7 rounded-lg" />
+                  </ViberShareButton>
                 </div>
-                <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
+                {/* <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
                   <h2>Enquire Now</h2>
                   <p className="text-xs">Get free details instantly via SMS</p>
-                </button>
+                </button> */}
+                <Dialog open={openModel} onOpenChange={setOpenModel}>
+                  <DialogTrigger>
+                    <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
+                      <h2>Enquire Now</h2>
+                      <p className="text-xs">
+                        Get free details instantly via SMS
+                      </p>
+                    </button>
+                    {/* <Button
+                      asChild
+                      size="sm"
+                      className=" flex px-2 py-1 gap-1 text-white items-center justify-center bg-blue-400 hover:bg-blue-400/90"
+                    >
+                      <h4>Send Enquery</h4>
+                    </Button> */}
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Add your Enquery</DialogTitle>
+                    </DialogHeader>
+
+                    <div className="grid gap-4 py-2">
+                      <div className="space-y-3">
+                        <div>
+                          <Label htmlFor="name">Message</Label>
+                          <Input
+                            id="name"
+                            className="col-span-3"
+                            placeholder="Type your message..."
+                            value={enquery}
+                            onChange={(e) => setEnquery(e.target.value)}
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="phone">Phone Number</Label>
+                          <Input
+                            id="phone"
+                            className="col-span-3"
+                            placeholder="Phone number"
+                            value={phoneNum}
+                            onChange={(e) => setPhoneNum(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <DialogFooter className="sm:justify-start">
+                      <div className="w-full flex items-center justify-center gap-2 px-10">
+                        <Button type="button" onClick={hndelCancelClick}>
+                          Cancel
+                        </Button>
+                        <Button onClick={handleAddEnquery}>Send</Button>
+                      </div>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
             <div className=" flex flex-col gap-4 md:flex-row md:flex md:justify-between">

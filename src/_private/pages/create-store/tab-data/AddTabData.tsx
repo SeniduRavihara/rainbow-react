@@ -17,17 +17,20 @@ import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { StoreObj } from "@/types";
 import { db } from "@/firebase/config";
+import { useData } from "@/hooks/useData";
+import { CircularProgress } from "@chakra-ui/react";
 
 const AddTabData = () => {
   const [currentUserStore, setCurrentUserStore] = useState<StoreObj | null>(
     null
   );
   const params = useParams();
+  const { currentUserData } = useData();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (params.storeId) {
-      const documentRef = doc(db, "store", params.storeId);
+      const documentRef = doc(db, "latestStore", params.storeId);
       const unsubscribe = onSnapshot(documentRef, (QuerySnapshot) => {
         // console.log(sctionAddsArr);
         setCurrentUserStore(QuerySnapshot.data() as StoreObj);
@@ -38,7 +41,11 @@ const AddTabData = () => {
   }, [params.storeId]);
 
   const handlePrevClick = () => {
-    if (params.storeId) navigate(`/manage-store/${params.storeId}`);
+    if (currentUserData?.roles.includes("admin")) {
+      if (params.storeId) navigate(`/manage-store/${params.storeId}`);
+    } else {
+      if (params.storeId) navigate(`/manage-store/userStore`);
+    }
   };
 
   const handleClickRequestSend = async () => {
@@ -59,6 +66,9 @@ const AddTabData = () => {
     }
   };
 
+  if (!currentUserStore)
+    return <CircularProgress size="30px" isIndeterminate color="green.300" />;
+
   return (
     <div className="p-10">
       <Button variant="outline" className="mb-10" onClick={handlePrevClick}>
@@ -69,42 +79,51 @@ const AddTabData = () => {
         <Accordion.Item eventKey="0">
           <Accordion.Header>Setup Infomation</Accordion.Header>
           <Accordion.Body>
-            <AddInfoTab storeId={params.storeId || ""} />
+            <AddInfoTab
+              storeId={params.storeId || ""}
+              preInfo1={currentUserStore?.info1 || ""}
+              preInfo2={currentUserStore?.info2 || ""}
+            />
           </Accordion.Body>
         </Accordion.Item>
 
         <Accordion.Item eventKey="1">
           <Accordion.Header>Setup Gallery</Accordion.Header>
           <Accordion.Body>
-            <AddGalleryTab storeId={params.storeId || ""} />
+            <AddGalleryTab
+              storeId={params.storeId || ""}
+              gallery={currentUserStore.gallery || []}
+            />
           </Accordion.Body>
         </Accordion.Item>
 
         <Accordion.Item eventKey="2">
           <Accordion.Header>Setup Location</Accordion.Header>
           <Accordion.Body>
-            <AddGoogleMapLocation storeId={params.storeId || ""} />
+            <AddGoogleMapLocation
+              storeId={params.storeId || ""}
+              preLocationIframe={currentUserStore.location || ""}
+            />
           </Accordion.Body>
         </Accordion.Item>
 
         <Accordion.Item eventKey="3">
           <Accordion.Header>Setup Company Profile</Accordion.Header>
           <Accordion.Body>
-            <CreateCompanyProfile storeId={params.storeId || ""} />
+            <CreateCompanyProfile
+              storeId={params.storeId || ""}
+              pdfUrl={currentUserStore.companyProfilePdfUrl}
+            />
           </Accordion.Body>
         </Accordion.Item>
-
-        {/* <Accordion.Item eventKey="4">
-          <Accordion.Header>Setup Blogs</Accordion.Header>
-          <Accordion.Body>
-            <AddBlogTab storeId={params.storeId || ""} />
-          </Accordion.Body>
-        </Accordion.Item> */}
 
         <Accordion.Item eventKey="5">
           <Accordion.Header>Setup Videos</Accordion.Header>
           <Accordion.Body>
-            <AddVideosTab storeId={params.storeId || ""} />
+            <AddVideosTab
+              storeId={params.storeId || ""}
+              videos={currentUserStore.youtubeVideos || []}
+            />
           </Accordion.Body>
         </Accordion.Item>
 
@@ -130,12 +149,18 @@ const AddTabData = () => {
         </Accordion.Item>
       </Accordion>
 
-      <Button
-        onClick={handleClickRequestSend}
-        className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white "
-      >
-        Request For Update
-      </Button>
+      <div className="flex flex-col items-center justify-center">
+        <h1 className="text-2xl font-bold mb-4 text-center mt-5 text-red-500">
+          Need a Admin Aprove for update, Please send a admin Request
+        </h1>
+
+        <Button
+          onClick={handleClickRequestSend}
+          className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white "
+        >
+          Request For Update
+        </Button>
+      </div>
     </div>
   );
 };

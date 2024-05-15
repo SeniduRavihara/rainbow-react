@@ -185,6 +185,7 @@ export const createStore = async (uid: string, payload: any) => {
     await setDoc(doc(db, "store", storeId), {
       ...payload,
       userId: uid,
+      id: storeId,
       active: false,
       createdAt: new Date(),
       published: false,
@@ -193,19 +194,31 @@ export const createStore = async (uid: string, payload: any) => {
       visitCount: 0,
       verified: false,
       showProfile: false,
-      haveUpdate: false,
+      haveUpdate: [],
+      gallery: [],
+      location: "",
+      companyProfilePdfUrl: "",
+      youtubeVideos: [],
     });
 
     for (let index = 0; index < 4; index++) {
       console.log("payload");
       try {
-        await addDoc(collection(db, "store", storeId, "top-slider"), {
+        const { id } = await addDoc(
+          collection(db, "store", storeId, "top-slider"),
+          {
+            imageUrl: "",
+          }
+        );
+
+        await setDoc(doc(db, "latestStore", storeId, "top-slider", id), {
           imageUrl: "",
         });
       } catch (error) {
         console.log(error);
       }
     }
+
     console.log("Document successfully written to Firestore!");
 
     return storeId;
@@ -273,28 +286,43 @@ export const updateStore3 = async (storeId: string, payload: any) => {
   // console.log(payload);
 
   try {
-    await setDoc(doc(db, "latestStore", storeId), {
+    await updateDoc(doc(db, "latestStore", storeId), {
       ...payload,
     });
 
-    const collectionRef = collection(db, "store", storeId, "top-slider");
-    const querySnapshot = await getDocs(collectionRef);
-    const documentsExist = !querySnapshot.empty;
+    // const collectionRef = collection(db, "store", storeId, "top-slider");
+    // const querySnapshot = await getDocs(collectionRef);
+    // const documentsExist = !querySnapshot.empty;
 
-    if (!documentsExist) {
-      for (let index = 0; index < 4; index++) {
-        console.log("payload");
-        try {
-          await addDoc(collection(db, "store", storeId, "top-slider"), {
-            imageUrl: "",
-          });
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }
+    // if (!documentsExist) {
+    //   for (let index = 0; index < 4; index++) {
+    //     console.log("payload");
+    //     try {
+    //       await addDoc(collection(db, "latestStore", storeId, "top-slider"), {
+    //         imageUrl: "",
+    //       });
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   }
+    // }
 
     console.log("Document Update successfully");
+  } catch (error) {
+    console.error("Error writing document:", error);
+  }
+};
+
+// --------------------------------------------
+export const syncLatestStoreWithStore = async (storeId: string) => {
+  // console.log(payload);
+
+  try {
+    const documentRef = doc(db, "store", storeId);
+    const querySnapshot = await getDoc(documentRef);
+
+    const latestDocumentRef = doc(db, "latestStore", storeId);
+    await updateDoc(latestDocumentRef, {...querySnapshot.data()});
   } catch (error) {
     console.error("Error writing document:", error);
   }
@@ -551,6 +579,20 @@ export const togglePublish = async (storeId: string, published: boolean) => {
     await updateDoc(documentRef, {
       published: !published,
     });
+    // syncLatestStoreWithStore(storeId);
+     try {
+       const documentRef = doc(db, "store", storeId);
+       const querySnapshot = await getDoc(documentRef);
+
+       // const storeData = querySnapshot.data() as StoreObj
+
+       const latestDocumentRef = doc(db, "latestStore", storeId);
+       await updateDoc(latestDocumentRef, {
+         published: querySnapshot.data()?.published,
+       });
+     } catch (error) {
+       console.error("Error writing document:", error);
+     }
   } catch (error) {
     console.log(error);
   }

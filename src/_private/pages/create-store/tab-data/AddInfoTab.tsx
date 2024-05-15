@@ -7,15 +7,23 @@ import { doc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-const AddInfoTab = ({ storeId }: { storeId: string }) => {
-  const [info1, setInfo1] = useState("");
-  const [info2, setInfo2] = useState("");
+const AddInfoTab = ({
+  storeId,
+  preInfo1,
+  preInfo2,
+}: {
+  storeId: string;
+  preInfo1: string;
+  preInfo2: string;
+}) => {
+  const [info1, setInfo1] = useState(preInfo1);
+  const [info2, setInfo2] = useState(preInfo2);
   const [loading, setLoading] = useState(false);
 
   const handleClickUpdate = async () => {
     setLoading(true);
 
-    const documentRef = doc(db, "store", storeId);
+    const documentRef = doc(db, "latestStore", storeId);
     await updateDoc(documentRef, {
       info1,
       info2,

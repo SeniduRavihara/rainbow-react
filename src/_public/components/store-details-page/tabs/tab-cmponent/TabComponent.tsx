@@ -74,7 +74,7 @@ const TabComponent = ({
       <Tabs className="">
         <TabList className="overflow-x-scroll overflow-y-hidden scrollbar-hide flex gap- tab-list tab-list-container">
           <Tab className="border mb-1">Information</Tab>
-          {selectedStore && selectedStore?.gallery && (
+          {selectedStore && selectedStore?.gallery.length > 1 && (
             <Tab className="border mb-1">Gallery</Tab>
           )}
           {selectedStore && selectedStore?.location && (
@@ -86,7 +86,7 @@ const TabComponent = ({
           {/* {selectedStore && selectedStore?.gallery && (
             <Tab className="border mb-1">Blog</Tab>
           )} */}
-          {selectedStore && selectedStore?.youtubeVideos && (
+          {selectedStore && selectedStore?.youtubeVideos.length > 1 && (
             <Tab className="border mb-1">Videos</Tab>
           )}
           {selectedStore && haveProducts && (
@@ -107,7 +107,7 @@ const TabComponent = ({
             )}
           </TabPanel>
 
-          {selectedStore && selectedStore?.gallery && (
+          {selectedStore && selectedStore?.gallery.length > 1 && (
             <TabPanel>
               <GalleryTab gallery={selectedStore?.gallery} />
             </TabPanel>
@@ -133,7 +133,7 @@ const TabComponent = ({
             </TabPanel>
           )} */}
 
-          {selectedStore && selectedStore?.youtubeVideos && (
+          {selectedStore && selectedStore?.youtubeVideos.length > 1 && (
             <TabPanel>
               <Videos youtubeVideos={selectedStore.youtubeVideos} />
             </TabPanel>

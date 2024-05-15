@@ -7,7 +7,7 @@ import {
   StoreObj,
   messageObjType,
 } from "@/types";
-import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
+import { collection,  onSnapshot, orderBy, query } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
 
 export const DataContext = createContext<DataContextType>(INITIAL_DATA_CONTEXT);

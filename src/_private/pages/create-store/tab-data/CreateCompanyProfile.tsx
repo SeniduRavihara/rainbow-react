@@ -3,12 +3,19 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Document, Page } from "react-pdf";
+import "react-pdf/dist/esm/Page/TextLayer.css";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Button } from "@/components/ui/button";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { CircularProgress } from "@chakra-ui/react";
 
-const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
+const CreateCompanyProfile = ({
+  storeId,
+  pdfUrl,
+}: {
+  storeId: string;
+  pdfUrl: string;
+}) => {
   const [pdf, setPdf] = useState<File | null>(null);
   const [numPages, setNumPages] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
@@ -26,9 +33,15 @@ const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
         await setDoc(documentRef, {
           ...latestData.data(),
           companyProfilePdfUrl: pdfDownloadUrl,
+          haveUpdate: [
+            ...(latestData?.data()?.haveUpdate ?? []),
+            latestData?.data()?.haveUpdate.includes("companyProfile")
+              ? undefined
+              : "companyProfile",
+          ].filter((txt) => txt),
         });
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
 
       setLoading(false);
@@ -89,11 +102,6 @@ const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <h1 className="text-xl font-semibold mb-4">
-        Need a Admin Aprove for update the Company Profile PDF, Please send a
-        admin Request
-      </h1>
-
       <h1 className="font-semibold">
         Browes the PDF Document of your company Profile and update
       </h1>
@@ -124,40 +132,43 @@ const CreateCompanyProfile = ({ storeId }: { storeId: string }) => {
         </div>
         {/* {pdf && <p>Selected PDF: {pdf.name}</p>} */}
       </div>
+      (
+      <div className="flex items-center justify-center flex-col">
+        <Document
+          file={pdf || pdfUrl}
+          onLoadSuccess={onDocumentLoadSuccess}
+          className="w-full h-[800px] overflow-hidden"
+        >
+          <Page
+            pageNumber={pageNumber}
+            renderTextLayer={false}
+            renderAnnotationLayer={false}
+          />
+        </Document>
 
-      {pdf && (
-        <div className="flex items-center justify-center flex-col">
-          <Document
-            file={pdf}
-            onLoadSuccess={onDocumentLoadSuccess}
-            className="w-full h-[800px] overflow-hidden"
-          >
-            <Page pageNumber={pageNumber} />
-          </Document>
-
-          <div className="mt-10 flex flex-col gap-2 items-center justify-center">
-            <div className="space-x-4">
-              <Button
-                onClick={handlePrevPage}
-                disabled={pageNumber <= 1}
-                variant="outline"
-              >
-                <IoIosArrowBack />
-              </Button>
-              <Button
-                onClick={handleNextPage}
-                disabled={pageNumber >= numPages}
-                variant="outline"
-              >
-                <IoIosArrowForward />
-              </Button>
-            </div>
-            <p>
-              Page {pageNumber} of {numPages}
-            </p>
+        <div className="mt-10 flex flex-col gap-2 items-center justify-center">
+          <div className="space-x-4">
+            <Button
+              onClick={handlePrevPage}
+              disabled={pageNumber <= 1}
+              variant="outline"
+            >
+              <IoIosArrowBack />
+            </Button>
+            <Button
+              onClick={handleNextPage}
+              disabled={pageNumber >= numPages}
+              variant="outline"
+            >
+              <IoIosArrowForward />
+            </Button>
           </div>
+          <p>
+            Page {pageNumber} of {numPages}
+          </p>
         </div>
-      )}
+      </div>
+      )
     </div>
   );
 };
