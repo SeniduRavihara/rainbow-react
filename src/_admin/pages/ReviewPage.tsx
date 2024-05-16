@@ -392,7 +392,7 @@ const ReviewPage = () => {
                           variant="outline"
                           size="sm"
                           className="flex px-2 py-1 gap-1 items-center justify-center"
-                          onClick={() => navigate("/manage-store")}
+                          onClick={() => navigate("/manage-business-profile")}
                         >
                           <MdOutlineEdit />
                           <h4>Edit</h4>

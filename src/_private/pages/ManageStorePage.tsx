@@ -479,7 +479,7 @@ const ManageStorePage = () => {
   return (
     <div className="w-full min-h-screen text-center relative">
       <Link
-        to={params.storeId === "userStore"? "/": "/manage-stores"}
+        to={params.storeId === "userStore" ? "/" : "/manage-business-profiles"}
         className="absolute top-0 left-5 w-10 h-10 text-4xl font-extralight"
       >
         <IoIosArrowBack />
@@ -1006,7 +1006,10 @@ const ManageStorePage = () => {
             It seems like you haven't created a store yet. Create one now to
             start selling!
           </p>
-          <Link to="/create-store" className="text-blue-500 hover:underline">
+          <Link
+            to="/create-business-profile"
+            className="text-blue-500 hover:underline"
+          >
             Create Store
           </Link>
 

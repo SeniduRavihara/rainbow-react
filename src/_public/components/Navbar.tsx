@@ -18,7 +18,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleCreateStoreClick = () => {
-    navigate("/create-store");
+    navigate("/create-business-profile");
   };
   const handleClickAdminPanel = () => {
     navigate("/admin");
@@ -151,7 +151,7 @@ const Navbar = () => {
 
                 {currentUserData && currentUserData.roles.includes("admin") && (
                   <NavDropdown.Item
-                    onClick={() => navigate("/manage-stores")}
+                    onClick={() => navigate("/manage-business-profiles")}
                     className="flex items-center gap-2"
                   >
                     <Store className="mr-2 h-4 w-4" />

@@ -42,9 +42,9 @@ const AddTabData = () => {
 
   const handlePrevClick = () => {
     if (currentUserData?.roles.includes("admin")) {
-      if (params.storeId) navigate(`/manage-store/${params.storeId}`);
+      if (params.storeId) navigate(`/manage-business-profile/${params.storeId}`);
     } else {
-      if (params.storeId) navigate(`/manage-store/userStore`);
+      if (params.storeId) navigate(`/manage-business-profile/userStore`);
     }
   };
 

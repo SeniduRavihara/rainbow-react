@@ -30,21 +30,21 @@ import train from "./img/category-img/train-station.png";
 // import hotel from "./img/category-img/hotel.png";
 import carRental from "./img/category-img/car-rent.png";
 
-import placeholderAdd1 from "./placeholders/img/placeholder-add-1.jpg";
-import placeholderAdd2 from "./placeholders/img/placeholder-add-2.jpg";
-import placeholderAdd3 from "./placeholders/img/placeholder-add-3.jpg";
-import placeholderAdd4 from "./placeholders/img/placeholder-add-4.jpg";
+// import placeholderAdd1 from "./placeholders/img/placeholder-add-1.jpg";
+// import placeholderAdd2 from "./placeholders/img/placeholder-add-2.jpg";
+// import placeholderAdd3 from "./placeholders/img/placeholder-add-3.jpg";
+// import placeholderAdd4 from "./placeholders/img/placeholder-add-4.jpg";
 
-import placeholderSectionAdd1 from "./placeholders/img/img1.jpg";
-import placeholderSectionAdd2 from "./placeholders/img/img2.jpg";
-import placeholderSectionAdd3 from "./placeholders/img/img3.jpg";
-import placeholderSectionAdd4 from "./placeholders/img/img4.jpg";
+// import placeholderSectionAdd1 from "./placeholders/img/img1.jpg";
+// import placeholderSectionAdd2 from "./placeholders/img/img2.jpg";
+// import placeholderSectionAdd3 from "./placeholders/img/img3.jpg";
+// import placeholderSectionAdd4 from "./placeholders/img/img4.jpg";
 
-import placeholderPopularPrand1 from "./placeholders/img/placeholder-popularbrand1.png";
-import placeholderPopularPrand2 from "./placeholders/img/placeholder-popularbrand2.png";
-import placeholderPopularPrand3 from "./placeholders/img/placeholder-popularbrand3.png";
-import placeholderPopularPrand4 from "./placeholders/img/placeholder-popularbrand4.png";
-import placeholderPopularPrand5 from "./placeholders/img/placeholder-popularbrand5.png";
+// import placeholderPopularPrand1 from "./placeholders/img/placeholder-popularbrand1.png";
+// import placeholderPopularPrand2 from "./placeholders/img/placeholder-popularbrand2.png";
+// import placeholderPopularPrand3 from "./placeholders/img/placeholder-popularbrand3.png";
+// import placeholderPopularPrand4 from "./placeholders/img/placeholder-popularbrand4.png";
+// import placeholderPopularPrand5 from "./placeholders/img/placeholder-popularbrand5.png";
 
 import fb from "./img/social-platforms/fb.png";
 import insta from "./img/social-platforms/insta.png";
@@ -72,27 +72,27 @@ import visa from "./img/visa.png";
 import master from "./img/master.png";
 import americanExpress from "./img/american-express.png";
 
-const placeholderSliderAdds = [
-  placeholderAdd1,
-  placeholderAdd2,
-  placeholderAdd3,
-  placeholderAdd4,
-];
+// const placeholderSliderAdds = [
+//   placeholderAdd1,
+//   placeholderAdd2,
+//   placeholderAdd3,
+//   placeholderAdd4,
+// ];
 
-const placeholderSectionAdds = [
-  placeholderSectionAdd1,
-  placeholderSectionAdd2,
-  placeholderSectionAdd3,
-  placeholderSectionAdd4,
-];
+// const placeholderSectionAdds = [
+//   placeholderSectionAdd1,
+//   placeholderSectionAdd2,
+//   placeholderSectionAdd3,
+//   placeholderSectionAdd4,
+// ];
 
-const placeholderPopularBrands = [
-  { imageUrl: placeholderPopularPrand1, id: "1", link: "" },
-  { imageUrl: placeholderPopularPrand2, id: "2", link: "" },
-  { imageUrl: placeholderPopularPrand3, id: "3", link: "" },
-  { imageUrl: placeholderPopularPrand4, id: "4", link: "" },
-  { imageUrl: placeholderPopularPrand5, id: "5", link: "" },
-];
+// const placeholderPopularBrands = [
+//   { imageUrl: placeholderPopularPrand1, id: "1", link: "" },
+//   { imageUrl: placeholderPopularPrand2, id: "2", link: "" },
+//   { imageUrl: placeholderPopularPrand3, id: "3", link: "" },
+//   { imageUrl: placeholderPopularPrand4, id: "4", link: "" },
+//   { imageUrl: placeholderPopularPrand5, id: "5", link: "" },
+// ];
 
 export {
   resturant,
@@ -113,9 +113,9 @@ export {
   hotel,
   pgHostels,
   weddingRequisitos,
-  placeholderSliderAdds,
-  placeholderSectionAdds,
-  placeholderPopularBrands,
+  // placeholderSliderAdds,
+  // placeholderSectionAdds,
+  // placeholderPopularBrands,
   recharge,
   dth,
   electricity,

@@ -21,15 +21,15 @@ const PrivateLayout = () => {
     );
 
   if (
-    location.pathname.includes("/create-store") &&
+    location.pathname.includes("/create-business-profile") &&
     currentUserData.haveStore &&
     !currentUserData.roles.includes("admin")
   ) {
-    return <Navigate to="/manage-store/userStore" />;
+    return <Navigate to="/manage-business-profile/userStore" />;
   }
 
   if (
-    location.pathname.includes("/manage-stores") &&
+    location.pathname.includes("/manage-business-profiles") &&
     currentUserData.haveStore &&
     !currentUserData.roles.includes("admin")
   ) {
