@@ -916,7 +916,7 @@ const StorePage = () => {
       <div className="flex w-full items-center gap-2 h-10 mb-10">
         <Input
           type="text"
-          placeholder="Search Stores"
+          placeholder="Search Business"
           className="outline-none w-[70%] px-2 font-md bg-green-50"
           value={searchQuiery}
           onChange={(e) => setSearchQuiery(e.target.value)}

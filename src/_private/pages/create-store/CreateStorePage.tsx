@@ -158,11 +158,11 @@ const CreateStorePage = () => {
     toast.success("Store created successfully");
 
     if (currentUserData?.roles.includes("admin")) {
-      navigate("/manage-stores");
+      navigate("/manage-business-profiles");
       return;
     }
 
-    navigate("/manage-store/userStore");
+    navigate("/manage-business-profile/userStore");
   };
 
   const handleUpload = async (storeId: string) => {
@@ -315,11 +315,11 @@ const CreateStorePage = () => {
   return (
     <div className=" w-full min-h-screen flex flex-col gap-10 items-center justify-center">
       <h1 className=" text-center text-4xl font-bold text-[#005eff] mt-20">
-        Create Store
+        Create New Business Profile
       </h1>
 
       <Link
-        to="/manage-stores"
+        to="/manage-business-profiles"
         className="absolute top-5 left-5 w-10 h-10 text-4xl font-extralight"
       >
         <IoIosArrowBack />

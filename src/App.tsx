@@ -66,17 +66,26 @@ const router = createBrowserRouter(
         <Route path="/advertise" element={<AdvertizeYourBusiness />} />
         <Route path="/we-are-hiring" element={<WeAreHiringPage />} />
         <Route path="/investor-page" element={<InvestorPage />} />
-        <Route path="/business-profile/:storeId" element={<StoreDetailsPage />} />
+        <Route
+          path="/business-profile/:storeId"
+          element={<StoreDetailsPage />}
+        />
       </Route>
 
       {/* private routes */}
       <Route element={<PrivateLayout />}>
-        <Route path="/create-store" element={<CreateStorePage />} />
+        <Route path="/create-business-profile" element={<CreateStorePage />} />
         {/* <Route path="/setup-gallery/:storeId" element={<CreateGallery />} /> */}
         <Route path="/setup-tabs-data/:storeId" element={<AddTabData />} />
         {/* <Route path="/add-location/:storeId" element={<AddGoogleMapLocation />} /> */}
-        <Route path="/manage-store/:storeId" element={<ManageStorePage />} />
-        <Route path="/manage-stores" element={<ManageStoresPage />} />
+        <Route
+          path="/manage-business-profile/:storeId"
+          element={<ManageStorePage />}
+        />
+        <Route
+          path="/manage-business-profiles"
+          element={<ManageStoresPage />}
+        />
       </Route>
 
       {/* admin routes */}

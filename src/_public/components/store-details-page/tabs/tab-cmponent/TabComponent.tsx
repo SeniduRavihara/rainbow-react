@@ -74,21 +74,23 @@ const TabComponent = ({
       <Tabs className="">
         <TabList className="overflow-x-scroll overflow-y-hidden scrollbar-hide flex gap- tab-list tab-list-container">
           <Tab className="border mb-1">Information</Tab>
-          {selectedStore && selectedStore?.gallery.length > 1 && (
+          {selectedStore?.gallery && selectedStore?.gallery.length > 1 && (
             <Tab className="border mb-1">Gallery</Tab>
           )}
-          {selectedStore && selectedStore?.location && (
+          {selectedStore?.location && selectedStore?.location && (
             <Tab className="border mb-1">Street View</Tab>
           )}
-          {selectedStore && selectedStore?.companyProfilePdfUrl && (
-            <Tab className="border mb-1">Compay Profile</Tab>
-          )}
+          {selectedStore?.companyProfilePdfUrl &&
+            selectedStore?.companyProfilePdfUrl && (
+              <Tab className="border mb-1">Compay Profile</Tab>
+            )}
           {/* {selectedStore && selectedStore?.gallery && (
             <Tab className="border mb-1">Blog</Tab>
           )} */}
-          {selectedStore && selectedStore?.youtubeVideos.length > 1 && (
-            <Tab className="border mb-1">Videos</Tab>
-          )}
+          {selectedStore?.youtubeVideos &&
+            selectedStore?.youtubeVideos.length > 1 && (
+              <Tab className="border mb-1">Videos</Tab>
+            )}
           {selectedStore && haveProducts && (
             <Tab className="border mb-1">Our Products</Tab>
           )}
@@ -107,25 +109,26 @@ const TabComponent = ({
             )}
           </TabPanel>
 
-          {selectedStore && selectedStore?.gallery.length > 1 && (
+          {selectedStore?.gallery && selectedStore?.gallery.length > 1 && (
             <TabPanel>
               <GalleryTab gallery={selectedStore?.gallery} />
             </TabPanel>
           )}
 
-          {selectedStore && selectedStore?.location && (
+          {selectedStore?.location && selectedStore?.location && (
             <TabPanel>
               <StreetViewTab location={selectedStore?.location} />
             </TabPanel>
           )}
 
-          {selectedStore && selectedStore?.companyProfilePdfUrl && (
-            <TabPanel>
-              <CompanyProfileTab
-                companyProfilePdfUrl={selectedStore.companyProfilePdfUrl}
-              />
-            </TabPanel>
-          )}
+          {selectedStore?.companyProfilePdfUrl &&
+            selectedStore?.companyProfilePdfUrl && (
+              <TabPanel>
+                <CompanyProfileTab
+                  companyProfilePdfUrl={selectedStore.companyProfilePdfUrl}
+                />
+              </TabPanel>
+            )}
 
           {/* {selectedStore && selectedStore?.gallery && (
             <TabPanel>
@@ -133,11 +136,12 @@ const TabComponent = ({
             </TabPanel>
           )} */}
 
-          {selectedStore && selectedStore?.youtubeVideos.length > 1 && (
-            <TabPanel>
-              <Videos youtubeVideos={selectedStore.youtubeVideos} />
-            </TabPanel>
-          )}
+          {selectedStore?.youtubeVideos &&
+            selectedStore?.youtubeVideos.length > 1 && (
+              <TabPanel>
+                <Videos youtubeVideos={selectedStore.youtubeVideos} />
+              </TabPanel>
+            )}
 
           {selectedStore && haveProducts && (
             <TabPanel>

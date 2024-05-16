@@ -45,7 +45,7 @@ const ManageStoresPage = () => {
   }, [currentUserData, currentUserData?.id]);
 
   const handleStoreClick = (storeId: string) => {
-    navigate(`/manage-store/${storeId}`);
+    navigate(`/manage-business-profile/${storeId}`);
   };
 
   if (loading) return (
@@ -72,11 +72,11 @@ const ManageStoresPage = () => {
           selling!
         </p>
         <Link
-          to="/create-store"
-          className="text-blue-500 text-xl hover:underline flex items-center gap-3"
+          to="/create-business-profile"
+          className="text-blue-500 text-xl hover:underline flex font-semibold items-center gap-3"
         >
           <LucidePlusCircle />
-          Create Store
+          Create Business Profile
         </Link>
 
         <Table striped bordered hover className="mt-10">

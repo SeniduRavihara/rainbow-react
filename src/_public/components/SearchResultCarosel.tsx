@@ -1,6 +1,7 @@
 // import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { placeholderSliderAdds } from "@/assets";
+// import { placeholderSliderAdds } from "@/assets";
 import { useData } from "@/hooks/useData";
+import { CircularProgress } from "@chakra-ui/react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +27,7 @@ const SearchResultCarosel = () => {
     // If searchResultSliderAdds is null, return null or a placeholder
     return (
       <div className="w-full -mt-5 lg:mt-0">
-        <Carousel
+        {/* <Carousel
           showStatus={false}
           autoPlay
           interval={3000}
@@ -37,12 +38,15 @@ const SearchResultCarosel = () => {
           transitionTime={800}
           showThumbs={false}
         >
-          {placeholderSliderAdds.map((sliderAdd, index) => (
+          {placeholderSliderAdds?.map((sliderAdd, index) => (
             <div key={index}>
               <img alt="Adds" src={sliderAdd} className="" />
             </div>
           ))}
-        </Carousel>
+        </Carousel> */}
+        <div className="flex items-center justify-center h-[200px]">
+          <CircularProgress size="30px" isIndeterminate color="green.300" />
+        </div>
       </div>
     );
   }
@@ -64,7 +68,7 @@ const SearchResultCarosel = () => {
           <div key={index}>
             <img
               alt="Adds"
-              src={sliderAddObj.imageUrl ?? placeholderSliderAdds[index]}
+              src={sliderAddObj.imageUrl ?? ""}
               className="cursor-pointer h-[100px md:h-[200px"
             />
           </div>

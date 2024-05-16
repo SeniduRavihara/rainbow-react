@@ -1,5 +1,5 @@
 // import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { placeholderSliderAdds } from "@/assets";
+// import { placeholderSliderAdds } from "@/assets";
 import { db } from "@/firebase/config";
 import { CircularProgress } from "@chakra-ui/react";
 import { collection, onSnapshot } from "firebase/firestore";
@@ -56,7 +56,7 @@ const TopSlider = ({ storeId }: { storeId: string }) => {
               <div key={index}>
                 <img
                   alt="Adds"
-                  src={sliderAddObj.imageUrl ?? placeholderSliderAdds[index]}
+                  src={sliderAddObj.imageUrl ?? ""}
                   className="h-[180px md:h-[250px object-cover"
                 />
               </div>

@@ -100,6 +100,10 @@ const StoreDetailsPage = () => {
           await updateDoc(documentRef, {
             visitCount: selectedStore.visitCount + 1,
           });
+
+          await updateDoc(doc(db, "latestStore", storeId), {
+            visitCount: selectedStore.visitCount + 1,
+          });
         } catch (error) {
           console.log(error);
         }
@@ -194,17 +198,18 @@ const StoreDetailsPage = () => {
                     showThumbs={false}
                     className="w-full h-full"
                   >
-                    {selectedStore?.storeImages.map((image, index) => (
-                      <div
-                        key={index}
-                        className="w-full h-44 flex items-center justify-center"
-                      >
-                        <img
-                          src={image}
-                          className="w-full h-full object-cover rounded-l-md"
-                        />
-                      </div>
-                    ))}
+                    {selectedStore.storeImages &&
+                      selectedStore?.storeImages.map((image, index) => (
+                        <div
+                          key={index}
+                          className="w-full h-44 flex items-center justify-center"
+                        >
+                          <img
+                            src={image}
+                            className="w-full h-full object-cover rounded-l-md"
+                          />
+                        </div>
+                      ))}
                   </Carousel>
                 </div>
 
@@ -238,17 +243,13 @@ const StoreDetailsPage = () => {
                     <div>{selectedStore?.address}</div>
                   </div>
 
-                  {/* <div className="flex gap-1">
-                    {selectedStore?.tags.map((tag, index) => (
-                      <Tag key={index}>{tag}</Tag>
-                    ))}
-                  </div> */}
                   <div className="my-1">
-                    {selectedStore?.tags.slice(0, 4).map((tag, index) => (
-                      <Tag key={index} className="mx-[2px]">
-                        {tag}
-                      </Tag>
-                    ))}
+                    {selectedStore?.tags &&
+                      selectedStore?.tags.slice(0, 4).map((tag, index) => (
+                        <Tag key={index} className="mx-[2px]">
+                          {tag}
+                        </Tag>
+                      ))}
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -268,10 +269,13 @@ const StoreDetailsPage = () => {
                         </PopoverContent>
                       </Popover>
                       <Link
-                        to={`https://wa.me/${selectedStore?.whatsappNumber.replace(
-                          "+",
-                          ""
-                        )}`}
+                        to={
+                          selectedStore?.whatsappNumber &&
+                          `https://wa.me/${selectedStore?.whatsappNumber.replace(
+                            "+",
+                            ""
+                          )}`
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -320,17 +324,18 @@ const StoreDetailsPage = () => {
                     showThumbs={false}
                     className="w-full h-full"
                   >
-                    {selectedStore?.storeImages.map((image, index) => (
-                      <div
-                        key={index}
-                        className="w-full h-44 flex items-center justify-center"
-                      >
-                        <img
-                          src={image}
-                          className="w-full h-full object-cover rounded-l-md"
-                        />
-                      </div>
-                    ))}
+                    {selectedStore?.storeImages &&
+                      selectedStore?.storeImages.map((image, index) => (
+                        <div
+                          key={index}
+                          className="w-full h-44 flex items-center justify-center"
+                        >
+                          <img
+                            src={image}
+                            className="w-full h-full object-cover rounded-l-md"
+                          />
+                        </div>
+                      ))}
                   </Carousel>
                 </div>
                 <div className="w-full gap-2 p-3 flex flex-col justify-between">
@@ -363,11 +368,12 @@ const StoreDetailsPage = () => {
                   </div>
 
                   <div className="my-1">
-                    {selectedStore?.tags.slice(0, 4).map((tag, index) => (
-                      <Tag key={index} className="mx-[2px]">
-                        {tag}
-                      </Tag>
-                    ))}
+                    {selectedStore?.tags &&
+                      selectedStore?.tags.slice(0, 4).map((tag, index) => (
+                        <Tag key={index} className="mx-[2px]">
+                          {tag}
+                        </Tag>
+                      ))}
                   </div>
 
                   <div className="flex items-start flex-col text-sm justify-start sm:flex-row sm:justify-between">
@@ -388,10 +394,13 @@ const StoreDetailsPage = () => {
                       </Popover>
 
                       <Link
-                        to={`https://wa.me/${selectedStore?.whatsappNumber.replace(
-                          "+",
-                          ""
-                        )}`}
+                        to={
+                          selectedStore?.whatsappNumber &&
+                          `https://wa.me/${selectedStore?.whatsappNumber.replace(
+                            "+",
+                            ""
+                          )}`
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -417,7 +426,7 @@ const StoreDetailsPage = () => {
                           variant="outline"
                           size="sm"
                           className="flex px-2 py-1 gap-1 items-center justify-center"
-                          onClick={() => navigate("/manage-store")}
+                          onClick={() => navigate("/manage-business-profile")}
                         >
                           <MdOutlineEdit />
                           <h4>Edit</h4>
@@ -537,15 +546,6 @@ const StoreDetailsPage = () => {
             <div className=" flex flex-col gap-4 md:flex-row md:flex md:justify-between">
               <div className="w-full flex flex-col md:w-9/12">
                 <TabComponent selectedStore={selectedStore} />
-                {/* <div className="my-5 px-3">
-                  <div className="">Information</div>
-                  {selectedStore && (
-                    <InfoTab
-                      info1={selectedStore.info1}
-                      info2={selectedStore.info2}
-                    />
-                  )}
-                </div> */}
 
                 <div className="mb-10 flex-col gap-6 flex md:hidden items-center justify-center">
                   <h2 className="text-3xl text-center text-blue-500 font-medium">
@@ -588,25 +588,17 @@ const StoreDetailsPage = () => {
                       <ViberIcon className="w-7 h-7 rounded-lg" />
                     </ViberShareButton>
                   </div>
-                  {/* <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
-                  <h2>Enquire Now</h2>
-                  <p className="text-xs">Get free details instantly via SMS</p>
-                </button> */}
+
                   <Dialog open={openModel} onOpenChange={setOpenModel}>
                     <DialogTrigger>
-                      <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
+                      <button
+                        className="bg-blue-600 px-4 py-1 rounded-md text-white"
+                      >
                         <h2>Enquire Now</h2>
                         <p className="text-xs">
                           Get free details instantly via SMS
                         </p>
                       </button>
-                      {/* <Button
-                      asChild
-                      size="sm"
-                      className=" flex px-2 py-1 gap-1 text-white items-center justify-center bg-blue-400 hover:bg-blue-400/90"
-                    >
-                      <h4>Send Enquery</h4>
-                    </Button> */}
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                       <DialogHeader>

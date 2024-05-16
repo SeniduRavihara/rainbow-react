@@ -1,15 +1,18 @@
-import { placeholderPopularBrands } from "@/assets";
+// import { placeholderPopularBrands } from "@/assets";
 import ImageSlider from "@/components/image-slider/ImageSlider";
 import { useData } from "@/hooks/useData";
+import { CircularProgress } from "@chakra-ui/react";
 
 const PopularBrandsArea = () => {
   const { popularBrands } = useData();
 
   if (!popularBrands) {
     return (
-      <div className="">
+      <div className="px-3 md:px-10">
         <h1 className="text-2xl">Popular brands</h1>
-        <ImageSlider images={placeholderPopularBrands} />
+        <div className="flex items-center justify-center h-[200px]">
+          <CircularProgress size="30px" isIndeterminate color="green.300" />
+        </div>
       </div>
     );
   }

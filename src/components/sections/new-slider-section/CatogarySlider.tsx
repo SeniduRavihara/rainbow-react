@@ -1,49 +1,48 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import { useData } from "@/hooks/useData";
-import { useEffect, useState } from "react";
-import { placeholderSectionAdds } from "@/assets";
 import { MdArrowForwardIos } from "react-icons/md";
+import { CircularProgress } from "@chakra-ui/react";
 
-const images = [
-  {
-    src: placeholderSectionAdds[0],
-    value: "Fiddle Leaf",
-    checked: true,
-  },
-  {
-    src: placeholderSectionAdds[1],
-    value: "Pink Princess",
-    checked: false,
-  },
-  {
-    src: placeholderSectionAdds[2],
-    value: "Monstera",
-    checked: false,
-  },
-  {
-    src: placeholderSectionAdds[3],
-    value: "Pothos",
-    checked: false,
-  },
-];
+// const images = [
+//   {
+//     src: placeholderSectionAdds[0],
+//     value: "Fiddle Leaf",
+//     checked: true,
+//   },
+//   {
+//     src: placeholderSectionAdds[1],
+//     value: "Pink Princess",
+//     checked: false,
+//   },
+//   {
+//     src: placeholderSectionAdds[2],
+//     value: "Monstera",
+//     checked: false,
+//   },
+//   {
+//     src: placeholderSectionAdds[3],
+//     value: "Pothos",
+//     checked: false,
+//   },
+// ];
 
 const CatogarySlider = () => {
   const { sectionAdds, sectionStaticAdds } = useData();
-  const [adds, setAdds] = useState(images);
+  // const [adds, setAdds] = useState(images);
 
-  // const navigate = useNavigate();
+  // console.log(adds);
 
-  useEffect(() => {
-    if (sectionAdds) {
-      setAdds((pre) =>
-        pre.map((addObj, index) => ({
-          ...addObj,
-          src: sectionAdds[index]?.imageUrl || "",
-        }))
-      );
-    }
-  }, [sectionAdds]);
+  // useEffect(() => {
+  //   if (sectionAdds) {
+  //     setAdds((pre) =>
+  //       pre.map((addObj, index) => ({
+  //         ...addObj,
+  //         src: sectionAdds[index]?.imageUrl || "",
+  //       }))
+  //     );
+  //   }
+  // }, [sectionAdds]);
 
   const handleSliderImageClick = (index: number) => {
     if (sectionAdds) {
@@ -70,6 +69,12 @@ const CatogarySlider = () => {
     }
   };
 
+  if (!sectionAdds && !sectionStaticAdds) return (
+    <div className="flex items-center justify-center h-[200px]">
+      <CircularProgress size="30px" isIndeterminate color="green.300" />
+    </div>
+  );
+
   return (
     <div className="w-full flex flex-col bg-slate-100 justify-center items-center md:flex-row gap-2 my-10 px-2 md:px-10 md:h-[200px h-[400px">
       <div className="w-full lg:w-w-[65%] h-[250px flex items-center justify-center">
@@ -78,15 +83,14 @@ const CatogarySlider = () => {
           interval={3000}
           infiniteLoop
           stopOnHover={false}
-          // showIndicators={false}
           transitionTime={800}
           showThumbs={false}
           onClickItem={(index) => handleSliderImageClick(index)}
         >
-          {adds.map((image, index) => (
+          {sectionAdds?.map((image, index) => (
             <div key={index}>
               <img
-                src={image.src}
+                src={image.imageUrl}
                 className="h-[200px w-[100px] object-cover rounded-xl"
               />
             </div>
