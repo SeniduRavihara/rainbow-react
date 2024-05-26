@@ -322,7 +322,7 @@ export const syncLatestStoreWithStore = async (storeId: string) => {
     const querySnapshot = await getDoc(documentRef);
 
     const latestDocumentRef = doc(db, "latestStore", storeId);
-    await updateDoc(latestDocumentRef, {...querySnapshot.data()});
+    await updateDoc(latestDocumentRef, { ...querySnapshot.data() });
   } catch (error) {
     console.error("Error writing document:", error);
   }
@@ -557,7 +557,46 @@ export const fetchStoreById = async (id: string) => {
   }
 };
 
+export const fetchStoreByName = async (storeName: string) => {
+  const collectionRef = collection(db, "store");
+  const q = query(collectionRef, where("title", "==", storeName));
+
+  try {
+    const queryStoresSnapshot = await getDocs(q);
+    if (queryStoresSnapshot.empty) {
+      console.log("No matching store found");
+      return null;
+    }
+
+    const matchingStoreDoc = queryStoresSnapshot.docs[0];
+    const matchingStoreData = matchingStoreDoc.data();
+    const matchingStoreId = matchingStoreDoc.id;
+
+    return { matchingStoreId, matchingStoreData };
+  } catch (error) {
+    console.log("Error fetching store by name:", error);
+    return null;
+  }
+};
 // ---------------------------------------------
+export const checkIsStoreNameAvailable = async (storeName: string) => {
+  const collectionRef = collection(db, "store");
+  const q = query(collectionRef, where("title", "==", storeName));
+
+  try {
+    const queryStoresSnapshot = await getDocs(q);
+    if (queryStoresSnapshot.empty) {
+      console.log("store available");
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    console.log("Error fetching store by name:", error);
+    return false;
+  }
+};
+// --------------------------------------------
 
 // export const getCurrentUsersStore = async (uid: string) => {
 //   const documentRef = doc(db, "store", uid);
@@ -580,19 +619,19 @@ export const togglePublish = async (storeId: string, published: boolean) => {
       published: !published,
     });
     // syncLatestStoreWithStore(storeId);
-     try {
-       const documentRef = doc(db, "store", storeId);
-       const querySnapshot = await getDoc(documentRef);
+    try {
+      const documentRef = doc(db, "store", storeId);
+      const querySnapshot = await getDoc(documentRef);
 
-       // const storeData = querySnapshot.data() as StoreObj
+      // const storeData = querySnapshot.data() as StoreObj
 
-       const latestDocumentRef = doc(db, "latestStore", storeId);
-       await updateDoc(latestDocumentRef, {
-         published: querySnapshot.data()?.published,
-       });
-     } catch (error) {
-       console.error("Error writing document:", error);
-     }
+      const latestDocumentRef = doc(db, "latestStore", storeId);
+      await updateDoc(latestDocumentRef, {
+        published: querySnapshot.data()?.published,
+      });
+    } catch (error) {
+      console.error("Error writing document:", error);
+    }
   } catch (error) {
     console.log(error);
   }

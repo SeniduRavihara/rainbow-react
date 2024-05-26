@@ -36,7 +36,7 @@ const AddGoogleMapLocation = ({
   };
 
   return (
-    <div className="p-10 flex flex-col">
+    <div className="p-2 flex flex-col">
       <Link
         target="_blank"
         className="text-xl font-semibold text-blue-400 mb-5"
@@ -46,7 +46,7 @@ const AddGoogleMapLocation = ({
       </Link>
 
       <Label>Location embed url</Label>
-      <div className="flex items-center justify-center gap-2 mt-1">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-1">
         <Input
           type="text"
           value={locationIfram}

@@ -63,6 +63,9 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     null
   );
 
+  console.log(searchResultStores);
+  
+
   // useEffect(()=>{
   //   if(searchItem){
   //     localStorage.setItem("searchItem", searchItem);

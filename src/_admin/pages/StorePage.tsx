@@ -881,6 +881,7 @@ const StorePage = () => {
       setLoadingSearch(false);
     } catch (error) {
       toast.error("Network Problem");
+      setLoadingSearch(false);
       console.log("Error");
     }
   };

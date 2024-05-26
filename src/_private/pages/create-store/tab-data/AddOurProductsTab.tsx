@@ -234,7 +234,7 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
   };
 
   return (
-    <div className="lg:px-10 flex flex-col items-center justify-center">
+    <div className="lg:px-10 px-2 flex flex-col items-center justify-center">
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
           <ImageCropDialog
@@ -331,9 +331,9 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
         {productList.map((productObj, index) => (
           <li
             key={index}
-            className="flex flex-col items-center justify-items-center border rounded-lg py-4 pb-2 gap-2"
+            className="flex flex-col items-center justify-items-center border rounded-lg py-4 pb-2 gap-1"
           >
-            <img src={productObj.imageUrl} className="w-[180px]" alt="" />
+            <img src={productObj.imageUrl} className="w-[120px]" alt="" />
             <h3 className="font-semibold">{productObj.name}</h3>
             <RxCross2
               className="cursor-pointer hover:text-red-500 duration-200 text-2xl"

@@ -41,7 +41,7 @@ const AddVideosTab = ({
   };
 
   return (
-    <div className="px-10 flex flex-col">
+    <div className="px-3 flex flex-col">
       <Link
         target="_blank"
         className="text-xl font-semibold text-blue-400 mb-5"
@@ -52,7 +52,7 @@ const AddVideosTab = ({
 
       <div>
         <Label>video embed url</Label>
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
           <Input
             type="text"
             value={videoLink}

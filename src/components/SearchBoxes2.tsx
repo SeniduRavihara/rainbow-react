@@ -143,6 +143,15 @@ const SearchBoxes2 = () => {
           )
       );
       if (storeList && storeList.length > 0) {
+        console.log(storeList
+          .filter((storeObj) => storeObj.active && storeObj.published)
+          .filter((storeObj) =>
+            location
+              ? storeObj.address.toLowerCase().includes(location.toLowerCase())
+              : storeObj
+          ));
+        
+        
         navigate(`/search-results/${searchQuery || "all"}`);
       }
 

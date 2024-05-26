@@ -36,6 +36,7 @@ type StoreCardProps = {
   rating: number;
   verified: boolean;
   showProfile: boolean;
+  storeName: string;
 };
 
 const StoreCard = ({
@@ -49,6 +50,7 @@ const StoreCard = ({
   reviewCount = 0,
   verified = false,
   showProfile = false,
+  storeName,
 }: StoreCardProps) => {
   const [enquery, setEnquery] = useState("");
   const [openModel, setOpenModel] = useState(false);
@@ -61,9 +63,10 @@ const StoreCard = ({
 
   const handleStoreClick = (id: string) => {
     // console.log("SENIDU", showProfile);
-    
+    console.log(id)
+
     if (showProfile) {
-      navigate(`/business-profile/${id}`);
+      navigate(`/business-profile/${storeName}`);
     }
   };
 
@@ -121,7 +124,7 @@ const StoreCard = ({
         <div className="w-8/12 px-3 py-2 flex flex-col justify-between">
           <div
             className="w-full flex flex-col justify-between"
-            onClick={() => handleStoreClick(id)}
+            onClick={() => handleStoreClick(storeName)}
           >
             <div className="flex items-center justify-between mb-2">
               <h1 className="font-semibold text-[23px]">{title}</h1>

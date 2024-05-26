@@ -55,7 +55,7 @@ const ManageStoresPage = () => {
   );
 
   return (
-    <div className="w-full flex items-center justify-center flex-col">
+    <div className="w-full flex flex-col">
       <Link
         to="/"
         className="absolute top-5 left-5 w-10 h-10 text-4xl font-extralight"
@@ -63,61 +63,64 @@ const ManageStoresPage = () => {
         <IoIosArrowBack />
       </Link>
 
-      <div>
-        <h2 className="text-2xl font-bold text-blue-500 text-center mt-4 mb-4">
-          Manage Your Business Profiles
-        </h2>
-        <p className="mb-4">
-          It seems like you haven't created a store yet. Create one now to start
-          selling!
-        </p>
-        <Link
-          to="/create-business-profile"
-          className="text-blue-500 text-xl hover:underline flex font-semibold items-center gap-3"
-        >
-          <LucidePlusCircle />
-          Create Business Profile
-        </Link>
+      <div className="mt-20 sm:mt-5">
+        <div className="flex flex-col items-center">
+          <h2 className="text-xl sm:text-2xl font-bold px-2 text-blue-500 mb-5">
+            Manage Your Business Profiles
+          </h2>
+          {/* <p className="mb-4 px-2">
+            It seems like you haven't created a store yet. Create one now to
+            start selling!
+          </p> */}
+          <Link
+            to="/create-business-profile"
+            className="text-blue-500 text-xl hover:underline flex font-semibold items-center gap-3"
+          >
+            <LucidePlusCircle />
+            Create Business Profile
+          </Link>
+        </div>
 
-        <Table striped bordered hover className="mt-10">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Business Name</th>
-              <th>Business Category</th>
-              <th>Address</th>
-              <th>Email</th>
-              <th>Telephone</th>
-              <th>Registered/Requested Date</th>
-              {/* <th>ACTION</th> */}
-            </tr>
-          </thead>
-          <tbody>
-            {currentUserStores &&
-              currentUserStores.map((storeObj, index) => (
-                <tr
-                  key={index}
-                  className="cursor-pointer"
-                  onClick={() => handleStoreClick(storeObj.id)}
-                >
-                  <td className="font-medium">{index + 1}</td>
-                  <td>{storeObj.title}</td>
-                  <td>{storeObj.category}</td>
-                  <td>{storeObj.address}</td>
-                  <td className="font-medium">{storeObj.email}</td>
-                  {/* <td className="text-right">
+        <div className="flex items-center justify-center px-10">
+          <Table striped bordered hover className="mt-10 ">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Business Name</th>
+                <th>Business Category</th>
+                {/* <th>Address</th>
+              <th>Email</th> */}
+                {/* <th>Telephone</th> */}
+                {/* <th>Registered/Requested Date</th> */}
+                {/* <th>ACTION</th> */}
+              </tr>
+            </thead>
+            <tbody>
+              {currentUserStores &&
+                currentUserStores.map((storeObj, index) => (
+                  <tr
+                    key={index}
+                    className="cursor-pointer"
+                    onClick={() => handleStoreClick(storeObj.id)}
+                  >
+                    <td className="font-medium">{index + 1}</td>
+                    <td>{storeObj.title}</td>
+                    <td>{storeObj.category}</td>
+                    {/* <td>{storeObj.address}</td> */}
+                    {/* <td className="font-medium">{storeObj.email}</td> */}
+                    {/* <td className="text-right">
                   {storeObj.tags.slice(0, 4).map((tag, index) => (
                     <Tag key={index} className="m-2">
                       {tag}
                     </Tag>
                   ))}
                 </td> */}
-                  <td className="font-medium">{storeObj.phoneNumber}</td>
-                  <td className="font-medium">
-                    {storeObj.createdAt.toDate().toDateString()}
-                  </td>
+                    {/* <td className="font-medium">{storeObj.phoneNumber}</td> */}
+                    {/* <td className="font-medium">
+                      {storeObj.createdAt.toDate().toDateString()}
+                    </td> */}
 
-                  {/* <td className="text-right">
+                    {/* <td className="text-right">
                     <Button
                       className={cn(
                         ` flex items-center justify-center gap-2`,
@@ -152,10 +155,11 @@ const ManageStoresPage = () => {
                       {storeObj.verified ? "Remove" : "Verify"}
                     </Button>
                   </td> */}
-                </tr>
-              ))}
-          </tbody>
-        </Table>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        </div>
       </div>
     </div>
   );

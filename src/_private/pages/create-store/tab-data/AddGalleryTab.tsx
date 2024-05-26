@@ -121,14 +121,14 @@ const AddGalleryTab = ({
       </div>
 
       {selectedFiles.length === 0 && (
-        <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 xsm:grid-cols-3 md:grid-cols-4 gap-4">
           {gallery.length > 0 &&
             gallery.map((img, index) => (
               <img
                 key={index}
                 src={img}
                 alt={img}
-                className="w-[200px] h-auto"
+                className="w-[150px] h-auto"
               />
             ))}
         </div>

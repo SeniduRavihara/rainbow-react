@@ -10,6 +10,7 @@ import { db, storage } from "@/firebase/config";
 import { useAuth } from "@/hooks/useAuth";
 import {
   addLocation,
+  checkIsStoreNameAvailable,
   createStore,
   syncLatestStoreWithStore,
   updateProfileForHaveStore,
@@ -131,6 +132,13 @@ const CreateStorePage = () => {
         email: currentUser.email,
       };
 
+      const isStoreNameAvailable = await checkIsStoreNameAvailable(title);
+
+      if (!isStoreNameAvailable) {
+        toast.error("Business name already exists. Try a different name.");
+        setLoading(false);
+        return
+      }
       const storeId = await createStore(currentUser?.uid, payLoad);
 
       if (storeId) {
@@ -381,14 +389,14 @@ const CreateStorePage = () => {
             <div className="flex flex-col gap-3 md:grid grid-cols-1 md:grid-cols-2 w-full">
               <>
                 <div>
-                  <Label htmlFor="title">Title</Label>
+                  <Label htmlFor="title">Business name</Label>
                   <Input
                     type="text"
                     id="title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
-                    placeholder=" title"
+                    placeholder="Business name"
                     className="focus-visible:ring-blue-500"
                   />
                 </div>
