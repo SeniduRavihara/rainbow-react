@@ -56,6 +56,12 @@ const AddContactTab = ({ storeId }: { storeId: string }) => {
         contact,
       });
 
+      const mainCollectionRef = collection(db, "store", storeId, "contacts");
+      await addDoc(mainCollectionRef, {
+        type: contactMethod,
+        contact,
+      });
+
       const documentRef = doc(db, "latestStore", storeId);
       const latestData = await getDoc(documentRef);
 
@@ -115,11 +121,13 @@ const AddContactTab = ({ storeId }: { storeId: string }) => {
           onChange={(e) => setContactMethod(e.target.value)}
         >
           <option value="phone">Phone</option>
-          <option value="email">Email</option>
           <option value="land">Land</option>
+          <option value="whatsapp">Whatsapp</option>
+          <option value="email">Email</option>
           <option value="fax">Fax</option>
           <option value="viber">Viber</option>
           <option value="address">Adress</option>
+          <option value="website">Website</option>
         </Select>
 
         <Input
