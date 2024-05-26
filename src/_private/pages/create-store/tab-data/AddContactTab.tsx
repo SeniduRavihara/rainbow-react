@@ -116,6 +116,10 @@ const AddContactTab = ({ storeId }: { storeId: string }) => {
         >
           <option value="phone">Phone</option>
           <option value="email">Email</option>
+          <option value="land">Land</option>
+          <option value="fax">Fax</option>
+          <option value="viber">Viber</option>
+          <option value="address">Adress</option>
         </Select>
 
         <Input
