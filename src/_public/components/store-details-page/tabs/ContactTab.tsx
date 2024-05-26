@@ -8,6 +8,7 @@ import { FaRegAddressCard } from "react-icons/fa6";
 import { GiRotaryPhone } from "react-icons/gi";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { MdWeb } from "react-icons/md";
+import { RxDotFilled } from "react-icons/rx";
 
 const ContactTab = ({ storeId }: { storeId: string }) => {
   const [contactList, setContactList] = useState<
@@ -51,6 +52,7 @@ const ContactTab = ({ storeId }: { storeId: string }) => {
               .map((contactObj, index) => (
                 <li key={index} className="flex gap-1 items-center">
                   {/* {contactObj.contact} */}
+                  <RxDotFilled className="mt-1 text-gray-400" />
                   <a
                     href={`https://wa.me/${contactObj.contact}`}
                     target="_blank"
@@ -76,6 +78,7 @@ const ContactTab = ({ storeId }: { storeId: string }) => {
               .map((contactObj, index) => (
                 <li key={index} className="flex gap-1 items-center">
                   {/* {contactObj.contact} */}
+                  <RxDotFilled className="mt-1 text-gray-400" />
                   <a href={`tel:${contactObj.contact}`}>{contactObj.contact}</a>
                 </li>
               ))}
@@ -93,8 +96,9 @@ const ContactTab = ({ storeId }: { storeId: string }) => {
             {contactList
               .filter((contactObj) => contactObj.type === "land")
               .map((contactObj, index) => (
-                <li key={index}>
+                <li key={index} className="flex gap-1 items-center">
                   {/* {contactObj.contact} */}
+                  <RxDotFilled className="mt-1 text-gray-400" />
                   <a href={`tel:${contactObj.contact}`}>{contactObj.contact}</a>
                 </li>
               ))}
@@ -112,8 +116,9 @@ const ContactTab = ({ storeId }: { storeId: string }) => {
             {contactList
               .filter((contactObj) => contactObj.type === "fax")
               .map((contactObj, index) => (
-                <li key={index}>
+                <li key={index} className="flex gap-1 items-center">
                   {/* {contactObj.contact} */}
+                  <RxDotFilled className="mt-1 text-gray-400" />
                   <a href={`tel:${contactObj.contact}`}>{contactObj.contact}</a>
                 </li>
               ))}
@@ -131,8 +136,9 @@ const ContactTab = ({ storeId }: { storeId: string }) => {
             {contactList
               .filter((contactObj) => contactObj.type === "viber")
               .map((contactObj, index) => (
-                <li key={index}>
+                <li key={index} className="flex gap-1 items-center">
                   {/* {contactObj.contact} */}
+                  <RxDotFilled className="mt-1 text-gray-400" />
                   <a
                     href={`viber://chat?number=${contactObj.contact}`}
                     target="_blank"
@@ -156,8 +162,9 @@ const ContactTab = ({ storeId }: { storeId: string }) => {
             {contactList
               .filter((contactObj) => contactObj.type === "email")
               .map((contactObj, index) => (
-                <li key={index}>
+                <li key={index} className="flex gap-1 items-center">
                   {/* {contactObj.contact} */}
+                  <RxDotFilled className="mt-1 text-gray-400" />
                   <a href={`mailto:${contactObj.contact}`}>
                     {contactObj.contact}
                   </a>
@@ -177,7 +184,10 @@ const ContactTab = ({ storeId }: { storeId: string }) => {
             {contactList
               .filter((contactObj) => contactObj.type === "address")
               .map((contactObj, index) => (
-                <li key={index}>{contactObj.contact}</li>
+                <li key={index} className="flex gap-1">
+                  <RxDotFilled className="mt-1 text-gray-400" />
+                  {contactObj.contact}
+                </li>
               ))}
           </ul>
         </div>
@@ -193,12 +203,18 @@ const ContactTab = ({ storeId }: { storeId: string }) => {
             {contactList
               .filter((contactObj) => contactObj.type === "website")
               .map((contactObj, index) => (
-                <li key={index}>
+                <li key={index} className="flex gap-1 text-wrap">
                   {/* {contactObj.contact} */}
+                  <RxDotFilled className="mt-1 text-gray-400" />
                   <a
                     href={`${contactObj.contact}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="text-wrap break-words"
+                    style={{
+                      wordBreak: "break-word",
+                      overflowWrap: "break-word",
+                    }}
                   >
                     {contactObj.contact}
                   </a>
