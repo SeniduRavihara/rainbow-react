@@ -37,7 +37,7 @@ const AddContactTab = ({ storeId }: { storeId: string }) => {
           contact: string;
         }>;
 
-        console.log(contactstListArr);
+        // console.log(contactstListArr);
         setContactList(contactstListArr);
       });
 
@@ -157,7 +157,14 @@ const AddContactTab = ({ storeId }: { storeId: string }) => {
                 contactObj && (
                   <tr key={index}>
                     <td>{contactObj.type}</td>
-                    <td>{contactObj.contact}</td>
+                    <td
+                      style={{
+                        wordBreak: "break-word",
+                        overflowWrap: "break-word",
+                      }}
+                    >
+                      {contactObj.contact}
+                    </td>
                     <td className="text-right">
                       <Button
                         onClick={() => handleClickRemoveContact(contactObj.id)}

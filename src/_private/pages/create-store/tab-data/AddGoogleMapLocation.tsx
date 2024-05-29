@@ -6,6 +6,7 @@ import { db } from "@/firebase/config";
 import { extractGoogleMapsLinkFromIframe } from "@/lib/utils";
 import { doc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 const AddGoogleMapLocation = ({
@@ -25,10 +26,17 @@ const AddGoogleMapLocation = ({
     setLoading(true);
 
     try {
-      const documentRef = doc(db, "latestStore", storeId);
+      const documentRefLatest = doc(db, "latestStore", storeId);
+      await updateDoc(documentRefLatest, {
+        location: extractGoogleMapsLinkFromIframe(locationIfram),
+      });
+
+      const documentRef = doc(db, "store", storeId);
       await updateDoc(documentRef, {
         location: extractGoogleMapsLinkFromIframe(locationIfram),
       });
+
+      toast.success("location added Successfully!");
     } catch (error) {
       console.log(error);
     }

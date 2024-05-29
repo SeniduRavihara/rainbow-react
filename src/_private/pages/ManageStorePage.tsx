@@ -38,7 +38,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
-import { categories } from "@/constants";
+// import { categories } from "@/constants";
 import {
   Dialog,
   DialogContent,
@@ -101,13 +101,13 @@ const ManageStorePage = () => {
 
   // const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
   const [category, setCategory] = useState("");
+  const { currentUserData, locationArr, categories } = useData();
   const [visibleCategories, setVisibleCategories] =
-    useState<Array<{ icon: string; label: string }>>(categories);
+    useState<Array<{ icon: string; label: string }> | null>(categories);
 
   const [requestPhone, setRequestPhone] = useState("");
   const [openRequestModel, setOpenRequestModel] = useState(false);
 
-  const { currentUserData, locationArr } = useData();
   const { currentUser } = useAuth();
 
   const params = useParams();
@@ -122,7 +122,7 @@ const ManageStorePage = () => {
       })) as Array<{ icon: string; label: string }>;
 
       // console.log(categoryArr);
-      setVisibleCategories((pre) => [...pre, ...categoryArr]);
+      setVisibleCategories([...categoryArr]);
     });
 
     return unsubscribe;
@@ -722,7 +722,7 @@ const ManageStorePage = () => {
                         update
                       </button>
                     </div>
-                    <Label className="text-xs text-gray-400 text-center md:hidden">
+                    <Label className="text-xs text-gray-400 text-center">
                       Press <Kbd className="text-gray-500">Enter</Kbd> after
                       every tag
                     </Label>
@@ -864,17 +864,19 @@ const ManageStorePage = () => {
 
                         <Dropdown.Menu as={CustomMenu}>
                           <div className="h-[200px] overflow-y-scroll">
-                            {visibleCategories.map((catogaryObj, index) => (
-                              <Dropdown.Item
-                                eventKey={index + 1}
-                                onClick={() =>
-                                  handleCatogaryClick(catogaryObj.label)
-                                }
-                                key={index}
-                              >
-                                {catogaryObj.label}
-                              </Dropdown.Item>
-                            ))}
+                            {visibleCategories && visibleCategories.map(
+                              (catogaryObj, index) => (
+                                <Dropdown.Item
+                                  eventKey={index + 1}
+                                  onClick={() =>
+                                    handleCatogaryClick(catogaryObj.label)
+                                  }
+                                  key={index}
+                                >
+                                  {catogaryObj.label}
+                                </Dropdown.Item>
+                              )
+                            )}
                           </div>
                         </Dropdown.Menu>
                       </Dropdown>

@@ -93,10 +93,10 @@ const SearchBoxes = () => {
         category: hit.category || "",
         visitCount: hit.visitCount,
         verified: hit.verified || false,
-        gallery: hit.gallery,
+        // gallery: hit.gallery,
         location: hit.location,
         companyProfilePdfUrl: hit.companyProfilePdfUrl,
-        youtubeVideos: hit.youtubeVideos,
+        // youtubeVideos: hit.youtubeVideos,
         showProfile: hit.showProfile,
         haveUpdate: hit.haveUpdate,
       }));

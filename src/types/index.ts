@@ -53,6 +53,11 @@ export type DataContextType = {
   setLocationArr: React.Dispatch<
     React.SetStateAction<Array<{ location: string; id: string }> | null>
   >;
+  categories: null | Array<{
+    icon: string;
+    label: string;
+    id: string;
+  }>;
 };
 
 // --------------------------------
@@ -121,10 +126,10 @@ export type StoreObj = {
   category: string;
   visitCount: number;
   verified: boolean;
-  gallery: string[];
+  // gallery: string[];
   location: string;
   companyProfilePdfUrl: string;
-  youtubeVideos: string[];
+  // youtubeVideos: string[];
   showProfile: boolean;
   haveUpdate: string[]
 };

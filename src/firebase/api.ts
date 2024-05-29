@@ -195,10 +195,8 @@ export const createStore = async (uid: string, payload: any) => {
       verified: false,
       showProfile: false,
       haveUpdate: [],
-      gallery: [],
       location: "",
       companyProfilePdfUrl: "",
-      youtubeVideos: [],
     });
 
     for (let index = 0; index < 4; index++) {
@@ -469,7 +467,7 @@ export const fetchCatogaryData = async (
   })) as StoreListType;
 
   setLastDocument(storeListArr[storeListArr.length - 1]);
-  // console.log(storeListArr);
+  console.log(label,storeListArr);
 
   if (storeListArr.length > 0) {
     setSearchResultStores(null);

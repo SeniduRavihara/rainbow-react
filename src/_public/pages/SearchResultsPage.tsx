@@ -6,13 +6,21 @@ import DiscriptionArea from "@/components/sections/discription-area";
 import Footer from "@/components/footer";
 import BottomBanner from "@/components/bottom-banner";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useData } from "@/hooks/useData";
 import SearchResultCarosel from "../components/SearchResultCarosel";
-
+import { fetchCatogaryData } from "@/firebase/api";
 
 const SearchResultsPage = () => {
   const { searchResultStores } = useData();
+  const {
+    lastDocument,
+    setLastDocument,
+    setLoadingStoreFetching,
+    setSearchResultStores,
+    setIsAllFetched,
+  } = useData();
+  const navigate = useNavigate();
 
   const params = useParams();
   const category = params?.category ?? "";
@@ -20,6 +28,31 @@ const SearchResultsPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+   useEffect(() => {
+     const fetchData = async () => {
+       if (category) {
+         try {
+           setLoadingStoreFetching(true);
+           await fetchCatogaryData(
+             {
+               lastDocument,
+               setLastDocument,
+               setLoadingStoreFetching,
+               setSearchResultStores,
+               setIsAllFetched,
+             },
+             category?.split("-")[1] || ""
+           );
+           
+         } catch (error) {
+           console.error("Error fetching category data:", error);
+         }
+       }
+     };
+
+     fetchData();
+   }, [category, lastDocument, navigate, setIsAllFetched, setLastDocument, setLoadingStoreFetching, setSearchResultStores]);
 
   // useEffect(() => {
   //   if (category) {

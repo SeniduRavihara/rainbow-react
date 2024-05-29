@@ -1,4 +1,4 @@
-import ImageSwiper from "../../components/ImageSwiper";
+ import ImageSwiper from "../../components/ImageSwiper";
 import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import React, { forwardRef, useEffect, useState } from "react";
@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 // import { IoArrowBack } from "react-icons/io5";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { db, storage } from "@/firebase/config";
+import { storage } from "@/firebase/config";
 import { useAuth } from "@/hooks/useAuth";
 import {
   addLocation,
@@ -36,8 +36,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
-import { categories } from "@/constants";
-import { collection, onSnapshot } from "firebase/firestore";
+// import { categories } from "@/constants";
+// import { collection, onSnapshot } from "firebase/firestore";
 // import CustomTag from "@/components/CustomTag";
 // import { RxCross2 } from "react-icons/rx";
 
@@ -65,7 +65,7 @@ const CreateStorePage = () => {
   ]);
   const [dayIndex, setDayIndex] = useState(0);
   const { currentUser } = useAuth();
-  const { locationArr, currentUserData } = useData();
+  const { locationArr, currentUserData ,categories } = useData();
   const navigate = useNavigate();
 
   const [storeImages, setStoreImages] = useState<
@@ -87,22 +87,22 @@ const CreateStorePage = () => {
 
   // const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
   const [category, setCategory] = useState("");
-  const [visibleCategories, setVisibleCategories] =
-    useState<Array<{ icon: string; label: string }>>(categories);
+  // const [visibleCategories, setVisibleCategories] =
+  //   useState<Array<{ icon: string; label: string }>>(categories);
 
-  useEffect(() => {
-    const collectionRef = collection(db, "categories");
-    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-      const categoryArr = QuerySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-      })) as Array<{ icon: string; label: string }>;
+  // useEffect(() => {
+  //   const collectionRef = collection(db, "categories");
+  //   const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+  //     const categoryArr = QuerySnapshot.docs.map((doc) => ({
+  //       ...doc.data(),
+  //     })) as Array<{ icon: string; label: string }>;
 
-      // console.log(categoryArr);
-      setVisibleCategories((pre) => [...pre, ...categoryArr]);
-    });
+  //     // console.log(categoryArr);
+  //     setVisibleCategories((pre) => [...pre, ...categoryArr]);
+  //   });
 
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -548,7 +548,7 @@ const CreateStorePage = () => {
                     update
                   </button>
                 </div>
-                <Label className="text-xs text-gray-400 text-center md:hidden">
+                <Label className="text-xs text-gray-400 text-center">
                   Press <Kbd className="text-gray-500">Enter</Kbd> after every
                   tag
                 </Label>
@@ -678,7 +678,7 @@ const CreateStorePage = () => {
 
                     <Dropdown.Menu as={CustomMenu}>
                       <div className="h-[200px] overflow-y-scroll">
-                        {visibleCategories.map((catogaryObj, index) => (
+                        {categories && categories.map((catogaryObj, index) => (
                           <Dropdown.Item
                             eventKey={index + 1}
                             onClick={() =>

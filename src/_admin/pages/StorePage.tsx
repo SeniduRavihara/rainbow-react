@@ -74,7 +74,6 @@ const StorePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   const fetchData = async () => {
     setLoading(true);
 
@@ -283,16 +282,16 @@ const StorePage = () => {
         category: storeData.category || storeObj.category,
         visitCount: storeData.visitCount || storeObj.visitCount,
         verified: storeData.verified || storeObj.verified,
-        gallery: storeData.gallery || storeObj.gallery || "",
+        // gallery: storeData.gallery || storeObj.gallery || "",
         location: storeData.location || storeObj.location || "",
         companyProfilePdfUrl:
           storeData.companyProfilePdfUrl || storeObj.companyProfilePdfUrl || "",
-        youtubeVideos: storeData.youtubeVideos || storeObj.youtubeVideos || "",
+        // youtubeVideos: storeData.youtubeVideos || storeObj.youtubeVideos || "",
         showProfile: storeData.showProfile || storeObj.showProfile,
         haveUpdate: storeData.haveUpdate || storeObj.haveUpdate,
       };
 
-      console.log(dataToUpdate);
+      // console.log(dataToUpdate);
 
       await updateDoc(doc(db, "store", storeId), {
         ...dataToUpdate,
@@ -340,74 +339,80 @@ const StorePage = () => {
       }
 
       // ------------Storage Cleaning And Update with New Links---------------
-      // ---------------- gallery ------------------
 
-      if (storeData?.gallery && storeData.haveUpdate.includes("gallery")) {
-        try {
-          // Get a reference to the latest store images location
-          const oldImagesRef = ref(
-            storage,
-            `/store_data/${storeId}/latest/store-gallery`
+      // ----------------- Videos ------------------
+      if (storeData.haveUpdate.includes("videos")) {
+        const videosCollectioReflatest = collection(
+          db,
+          "latestStore",
+          storeId,
+          "videos"
+        );
+        const VideoSnapshot = await getDocs(videosCollectioReflatest);
+
+        for (const docObj of VideoSnapshot.docs) {
+          // console.log(docObj.data());
+          const videosDocumentRef = doc(
+            db,
+            "store",
+            storeId,
+            "videos",
+            docObj.id
           );
-
-          // List all the images in the latest store images location
-          const oldImagesList = await listAll(oldImagesRef);
-
-          const galleryUrlsArr: string[] = [];
-
-          // Iterate over each image and move it to the new location
-          await Promise.all(
-            oldImagesList.items.map(async (oldImageRef) => {
-              // Get the image's download URL
-              const downloadURL = await getDownloadURL(oldImageRef);
-
-              // Calculate the new image path
-              const newImagePath = `/store_data/${storeId}/store-gallery/${oldImageRef.name}`;
-
-              // Fetch the image's data
-              const imageData = await fetch(downloadURL);
-
-              // Convert the image data to a Blob
-              const imageBlob = await imageData.blob();
-
-              // Upload the image to the new location
-              const newImageRef = ref(storage, newImagePath);
-              await uploadBytes(newImageRef, imageBlob);
-
-              galleryUrlsArr.push(await getDownloadURL(newImageRef));
-
-              await deleteObject(oldImageRef);
-            })
-          );
-
-          await updateDoc(doc(db, "store", storeId), {
-            gallery: galleryUrlsArr,
-          });
-          await updateDoc(doc(db, "latestStore", storeId), {
-            gallery: galleryUrlsArr,
-          });
-
-          // clean previous images from storage
-          const newImagesRef = ref(
-            storage,
-            `/store_data/${storeId}/store-gallery`
-          );
-          const newImagesList = await listAll(newImagesRef);
-          for (const oldImageRef of newImagesList.items) {
-
-            if (storeData.gallery.length-1 < Number(oldImageRef.name)) {
-              try {
-                await deleteObject(oldImageRef);
-              } catch (error) {
-                console.error("Error processing image:", error);
-              }
-            }
-          }
-
-          console.log("GALLERY MOVED", galleryUrlsArr);
-        } catch (error) {
-          console.error("Error handling allow update:", error);
+          await setDoc(videosDocumentRef, { ...docObj.data() });
         }
+
+        console.log("Videos MOVED");
+      }
+
+      // ---------------- gallery ------------------
+      if (storeData.haveUpdate.includes("gallery")) {
+        const galleryCollectioReflatest = collection(
+          db,
+          "latestStore",
+          storeId,
+          "gallery"
+        );
+        const gallerySnapshot = await getDocs(galleryCollectioReflatest);
+
+        for (const docObj of gallerySnapshot.docs) {
+          // console.log(docObj.data());
+          const topSliderDocumentRef = doc(
+            db,
+            "store",
+            storeId,
+            "gallery",
+            docObj.id
+          );
+          await setDoc(topSliderDocumentRef, { ...docObj.data() });
+        }
+
+        console.log("GALLERY MOVED");
+      }
+
+      // -------------- products -----------------
+      if (storeData.haveUpdate.includes("products")) {
+        const productsCollectioReflatest = collection(
+          db,
+          "latestStore",
+          storeId,
+          "products"
+        );
+        const productsSnapshot = await getDocs(productsCollectioReflatest);
+
+        for (const docObj of productsSnapshot.docs) {
+          console.log(docObj.data());
+          const productDocumentRef = doc(
+            db,
+            "store",
+            storeId,
+            "products",
+            docObj.id
+          );
+          await setDoc(productDocumentRef, { ...docObj.data() });
+        }
+
+        console.log("Products MOVED");
       }
 
       // -------------- storeImages ---------------
@@ -524,7 +529,6 @@ const StorePage = () => {
           });
 
           console.log("PROFILE_PDF MOVED", newPdfUrl);
-
         } catch (error) {
           console.error("Error handling allow update:", error);
         }
@@ -687,138 +691,6 @@ const StorePage = () => {
       }
     }
 
-    // -------------- products -----------------
-    const productsCollectioReflatest = collection(
-      db,
-      "latestStore",
-      storeId,
-      "products"
-    );
-    const productsSnapshot = await getDocs(productsCollectioReflatest);
-    const productsExists = !productsSnapshot.empty;
-
-    if (productsExists && storeData.haveUpdate.includes("products")) {
-      const productsCollectioRef = collection(db, "store", storeId, "products");
-      const querySnapshot = await getDocs(productsCollectioRef);
-      for (const doc of querySnapshot.docs) {
-        await deleteDoc(doc.ref);
-      }
-
-      const productNameArr = [];
-
-      for (const docObj of productsSnapshot.docs) {
-        // console.log("SENIDU", docObj.data());
-        productNameArr.push(docObj.data().name);
-
-        const productsDocumentRef = doc(
-          db,
-          "store",
-          storeId,
-          "products",
-          docObj.data().name // Assuming doc is the DocumentSnapshot object
-        );
-        await setDoc(productsDocumentRef, { ...docObj.data() });
-      }
-
-      const newProductsRef = ref(storage, `/store_data/${storeId}/products`);
-      const newImagesList = await listAll(newProductsRef);
-
-      for (const oldImageRef of newImagesList.items) {
-
-        if (!productNameArr.includes(oldImageRef.name)) {
-          await deleteObject(oldImageRef);
-        }
-      }
-
-      try {
-        // Get a reference to the latest store images location
-        const oldTopSliderRef = ref(
-          storage,
-          `/store_data/${storeId}/latest/products`
-        );
-
-        // List all the images in the latest store images location
-        const oldImagesList = await listAll(oldTopSliderRef);
-
-        let i = 0;
-
-        // Iterate over each image and move it to the new location
-        for (const oldImageRef of oldImagesList.items) {
-          try {
-            // Get the image's download URL
-            const downloadURL = await getDownloadURL(oldImageRef);
-            console.log(i, downloadURL);
-            i++;
-
-            // Fetch the image's data
-            const imageData = await fetch(downloadURL);
-
-            // Convert the image data to a Blob
-            const imageBlob = await imageData.blob();
-
-            // Upload the image to the new location
-            const newImagePath = `/store_data/${storeId}/products/${oldImageRef.name}`;
-            const newImageRef = ref(storage, newImagePath);
-            await uploadBytes(newImageRef, imageBlob);
-
-            // Get the download URL of the uploaded image
-            const newImageDownloadUrl = await getDownloadURL(newImageRef);
-
-            // Update the document in Firestore with the new image URL
-            await updateDoc(
-              doc(db, "store", storeId, "products", oldImageRef.name),
-              {
-                imageUrl: newImageDownloadUrl,
-              }
-            );
-            await updateDoc(
-              doc(db, "latestStore", storeId, "products", oldImageRef.name),
-              {
-                imageUrl: newImageDownloadUrl,
-              }
-            );
-
-            // Log success message
-            // console.log(
-            //   `Image '${oldImageRef.name}' successfully moved to new location: ${newImagePath}`
-            // );
-
-            // Delete the old image from the old location in Firebase Storage
-            // await deleteObject(oldImageRef);
-            // console.log(
-            //   "Image successfully deleted from old location in Storage!"
-            // );
-
-            // Delete the corresponding document from Firestore
-            // const oldTopSliderDocumentRef = doc(
-            //   db,
-            //   "latestStore",
-            //   storeId,
-            //   "top-slider",
-            //   oldImageRef.name
-            // );
-            // await deleteDoc(oldTopSliderDocumentRef);
-          } catch (error) {
-            console.error("Error processing image:", error);
-          }
-        }
-
-        await Promise.all(
-          oldImagesList.items.map(async (oldImageRef) => {
-            try {
-              await deleteObject(oldImageRef);
-            } catch (error) {
-              console.error("Error deleting image from old location:", error);
-            }
-          })
-        );
-
-        console.log("PRODUCTS MOVED");
-
-      } catch (error) {
-        console.error("Error handling allow update:", error);
-      }
-    }
 
     // ---------------=========----------------
 
@@ -868,10 +740,10 @@ const StorePage = () => {
         category: hit.category || "",
         visitCount: hit.visitCount,
         verified: hit.verified || false,
-        gallery: hit.gallery,
+        // gallery: hit.gallery,
         location: hit.location,
         companyProfilePdfUrl: hit.companyProfilePdfUrl,
-        youtubeVideos: hit.youtubeVideos,
+        // youtubeVideos: hit.youtubeVideos,
         showProfile: hit.showProfile,
         haveUpdate: hit.haveUpdate,
       }));

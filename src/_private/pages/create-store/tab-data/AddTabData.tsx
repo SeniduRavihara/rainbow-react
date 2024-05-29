@@ -92,7 +92,7 @@ const AddTabData = () => {
           <Accordion.Body>
             <AddGalleryTab
               storeId={params.storeId || ""}
-              gallery={currentUserStore.gallery || []}
+              // gallery={currentUserStore.gallery || []}
             />
           </Accordion.Body>
         </Accordion.Item>
@@ -122,7 +122,7 @@ const AddTabData = () => {
           <Accordion.Body>
             <AddVideosTab
               storeId={params.storeId || ""}
-              videos={currentUserStore.youtubeVideos || []}
+              // videos={currentUserStore.youtubeVideos || []}
             />
           </Accordion.Body>
         </Accordion.Item>

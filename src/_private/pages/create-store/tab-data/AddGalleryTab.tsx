@@ -1,20 +1,54 @@
 import { Button } from "@/components/ui/button";
 import { db, storage } from "@/firebase/config";
 import { CircularProgress } from "@chakra-ui/react";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { useState } from "react";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+  setDoc,
+} from "firebase/firestore";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { v4 } from "uuid";
 
-const AddGalleryTab = ({
-  storeId,
-  gallery,
-}: {
-  storeId: string;
-  gallery: string[];
-}) => {
+const AddGalleryTab = ({ storeId }: { storeId: string }) => {
   const [selectedFiles, setSelectedFiles] = useState<Array<File>>([]);
   const [loading, setLoading] = useState(false);
+  const [showDeleteIcon, setShowDeleteIcon] = useState({
+    status: false,
+    id: "",
+    refName: "",
+  });
+  const [gallery, setGallery] = useState<Array<{
+    imageUrl: string;
+    refName: string;
+    id: string;
+  }> | null>(null);
+
+
+  useEffect(() => {
+    const collectionRef = collection(db, "latestStore", storeId, "gallery");
+    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+      const sctionStaticAddsArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as Array<{ imageUrl: string; refName: string; id: string }>;
+
+      //  console.log(sctionStaticAddsArr);
+      setGallery(sctionStaticAddsArr);
+    });
+
+    return unsubscribe;
+  }, [storeId]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files ? Array.from(event.target.files) : [];
@@ -23,15 +57,11 @@ const AddGalleryTab = ({
 
   const handleClickUpdate = async () => {
     setLoading(true);
-    try {
-      const downloadUrls = await handleUpload();
-
       const documentRef = doc(db, "latestStore", storeId);
       const latestData = await getDoc(documentRef);
 
       await setDoc(documentRef, {
         ...latestData.data(),
-        gallery: downloadUrls,
         haveUpdate: [
           ...(latestData?.data()?.haveUpdate ?? []),
           latestData?.data()?.haveUpdate.includes("gallery")
@@ -39,43 +69,72 @@ const AddGalleryTab = ({
             : "gallery",
         ].filter((txt) => txt),
       });
-    } catch (error) {
-      console.log(error);
+
+    // ----------
+    for (const selectedFile of selectedFiles) {
+      try {
+        const { photoURL, refName } = await uploadImage(selectedFile);
+        if (photoURL && refName) {
+          const collectionRef = collection(
+            db,
+            "latestStore",
+            storeId,
+            "gallery"
+          );
+
+          await addDoc(collectionRef, {
+            imageUrl: photoURL,
+            refName,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
+
+    // ----------
     setLoading(false);
   };
 
-  const handleUpload = async () => {
-    if (selectedFiles.length > 0) {
-      // Check if any files are selected
-      try {
-        const downloadUrls: string[] = [];
 
-        for (let index = 0; index < selectedFiles.length; index++) {
-          const file = selectedFiles[index];
-          const fileRef = ref(
-            storage,
-            `store_data/${storeId}/latest/store-gallery/${index}`
-          );
+  const uploadImage = async (file: File) => {
+    try {
+      const refName = v4();
 
-          if (!file) continue; // Skip if file is null
+      const fileRef = ref(
+        storage,
+        `store_data/${storeId}/store-gallery/${refName}`
+      );
 
-          await uploadBytes(fileRef, file);
-          const photoURL = await getDownloadURL(fileRef);
+      await uploadBytes(fileRef, file);
+      const photoURL = await getDownloadURL(fileRef);
 
-          downloadUrls.push(photoURL);
-        }
+      return { photoURL, refName };
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      alert("An error occurred while uploading files. Please try again later.");
+      return { photoURL: "", refName: "" };
+    }
+  };
 
-        toast.success("All files uploaded successfully!");
-        return downloadUrls;
-      } catch (error) {
-        console.error("Error uploading files:", error);
-        alert(
-          "An error occurred while uploading files. Please try again later."
-        );
-      }
-    } else {
-      alert("No images to upload!");
+  const handleDeleteGalleryImage = async (id: string, refName: string) => {
+    try {
+      // Delete the product document
+      const documentRefLatest = doc(db, "latestStore", storeId, "gallery", id);
+      await deleteDoc(documentRefLatest);
+
+      const documentRef = doc(db, "store", storeId, "gallery", id);
+      await deleteDoc(documentRef);
+
+      // Delete the image from storage
+      const imageRef = ref(
+        storage,
+        `store_data/${storeId}/store-gallery/${refName}`
+      );
+      await deleteObject(imageRef);
+      toast.success("Image successfully deleted!");    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete image");
     }
   };
 
@@ -107,8 +166,8 @@ const AddGalleryTab = ({
         multiple
       />
 
-      <h2 className="font-semibold mt-5">Selected Files</h2>
-      <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 gap-4">
+      <h2 className="font-semibold mt-5 mb-3">Available Images</h2>
+      {/* <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 gap-4">
         {selectedFiles.length > 0 &&
           Array.from(selectedFiles).map((file, index) => (
             <img
@@ -118,21 +177,47 @@ const AddGalleryTab = ({
               className="w-[200px] h-auto"
             />
           ))}
-      </div>
+      </div> */}
 
-      {selectedFiles.length === 0 && (
-        <div className="grid grid-cols-2 xsm:grid-cols-3 md:grid-cols-4 gap-4">
-          {gallery.length > 0 &&
-            gallery.map((img, index) => (
+      <div className="columns-2 xsm:columns-3 2xl:columns-4 gap-4">
+        {gallery &&
+          gallery.map((imgObj, index) => (
+            <div
+              key={index}
+              className="relative my-3"
+              onMouseEnter={() =>
+                setShowDeleteIcon({
+                  status: true,
+                  id: imgObj.id,
+                  refName: imgObj.refName,
+                })
+              }
+              onMouseLeave={() =>
+                setShowDeleteIcon({
+                  status: true,
+                  id: "",
+                  refName: "",
+                })
+              }
+            >
               <img
-                key={index}
-                src={img}
-                alt={img}
+                src={imgObj.imageUrl}
+                alt={imgObj.imageUrl}
                 className="w-[150px] h-auto"
               />
-            ))}
-        </div>
-      )}
+              {showDeleteIcon.id === imgObj.id && (
+                <div
+                  className="cursor-pointer w-full text-center hover:text-red-500 duration-200 text-2xl absolute bottom-0 backdrop-blur-xl"
+                  onClick={() =>
+                    handleDeleteGalleryImage(imgObj.id, imgObj.refName)
+                  }
+                >
+                  <Button variant="link" className="text-white">Delete</Button>
+                </div>
+              )}
+            </div>
+          ))}
+      </div>
     </div>
   );
 };

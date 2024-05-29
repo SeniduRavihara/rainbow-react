@@ -488,7 +488,7 @@ const StoreDetailsPage = () => {
                   <p className="text-xs">Get free details instantly via SMS</p>
                 </button> */}
                 <Dialog open={openModel} onOpenChange={setOpenModel}>
-                  <DialogTrigger>
+                  <DialogTrigger asChild>
                     <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
                       <h2>Enquire Now</h2>
                       <p className="text-xs">
@@ -593,15 +593,16 @@ const StoreDetailsPage = () => {
                   </div>
 
                   <Dialog open={openModel} onOpenChange={setOpenModel}>
-                    <DialogTrigger>
-                      <button
-                        className="bg-blue-600 px-4 py-1 rounded-md text-white"
-                      >
+                    <DialogTrigger
+                      asChild
+                      className="bg-blue-600 px-4 py-1 rounded-md text-white"
+                    >
+                      <>
                         <h2>Enquire Now</h2>
                         <p className="text-xs">
                           Get free details instantly via SMS
                         </p>
-                      </button>
+                      </>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                       <DialogHeader>
