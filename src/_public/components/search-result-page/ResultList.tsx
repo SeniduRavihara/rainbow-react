@@ -122,10 +122,18 @@ const ResultList = ({ category }: { category:string }) => {
       </ul>
 
       <div className="flex gap-2 mt-5 mb-2 items-end justify-center">
-        <Button variant="outline" onClick={handlePrevClick}>
+        <Button
+          variant="outline"
+          className="bg-orange-500 text-white hover:bg-orange-400"
+          onClick={handlePrevClick}
+        >
           Prev
         </Button>
-        <Button variant="outline" onClick={handleNextClick}>
+        <Button
+          variant="outline"
+          className="bg-orange-500 text-white hover:bg-orange-400"
+          onClick={handleNextClick}
+        >
           Next
         </Button>
       </div>
