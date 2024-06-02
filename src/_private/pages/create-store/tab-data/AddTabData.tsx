@@ -70,8 +70,8 @@ const AddTabData = () => {
     return <CircularProgress size="30px" isIndeterminate color="green.300" />;
 
   return (
-    <div className="p-10">
-      <Button variant="outline" className="mb-10" onClick={handlePrevClick}>
+    <div className="p-2 sm:p-10">
+      <Button variant="outline" className="mb-10 mt-3" onClick={handlePrevClick}>
         <FaArrowLeft />
       </Button>
 
@@ -92,7 +92,7 @@ const AddTabData = () => {
           <Accordion.Body>
             <AddGalleryTab
               storeId={params.storeId || ""}
-              gallery={currentUserStore.gallery || []}
+              // gallery={currentUserStore.gallery || []}
             />
           </Accordion.Body>
         </Accordion.Item>
@@ -122,7 +122,7 @@ const AddTabData = () => {
           <Accordion.Body>
             <AddVideosTab
               storeId={params.storeId || ""}
-              videos={currentUserStore.youtubeVideos || []}
+              // videos={currentUserStore.youtubeVideos || []}
             />
           </Accordion.Body>
         </Accordion.Item>
@@ -150,7 +150,7 @@ const AddTabData = () => {
       </Accordion>
 
       <div className="flex flex-col items-center justify-center">
-        <h1 className="text-2xl font-bold mb-4 text-center mt-5 text-red-500">
+        <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center mt-5 text-red-500">
           Need a Admin Aprove for update, Please send a admin Request
         </h1>
 

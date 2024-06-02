@@ -16,6 +16,7 @@ import constructorpackersMovers from "./img/category-img/constructor.png";
 import PetShop from "./img/category-img/pet-shop.png";
 import courierService from "./img/category-img/car-rent.png";
 import constructor from "./img/category-img/constructor.png";
+import bus from "./img/category-img/bus.png";
 
 import recharge from "./img/category-img/recharge.png";
 import electricity from "./img/category-img/Electricity.png";
@@ -25,7 +26,6 @@ import gas from "./img/category-img/gas-cylinder.png";
 import insurance from "./img/category-img/health-insurance.png";
 
 import flight from "./img/category-img/flight.png";
-import bus from "./img/category-img/bus.png";
 import train from "./img/category-img/train-station.png";
 // import hotel from "./img/category-img/hotel.png";
 import carRental from "./img/category-img/car-rent.png";

@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { useData } from "@/hooks/useData";
 import { useNavigate } from "react-router-dom";
 import { fetchCatogaryData } from "@/firebase/api";
-import { categories } from "@/constants";
 import { allCategories } from "@/assets";
 
 const CategoriesArea = () => {
+  const { categories } = useData();
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [visibleCategories, setVisibleCategories] = useState(categories);
 
@@ -40,17 +40,18 @@ const CategoriesArea = () => {
 
   useEffect(() => {
     // setIsShowAll(false);
-
-    if (screenWidth <= 500) {
-      setVisibleCategories(categories.slice(0, 5));
-    } else if (screenWidth <= 600) {
-      setVisibleCategories(categories.slice(0, 7));
-    } else if (screenWidth <= 768) {
-      setVisibleCategories(categories.slice(0, 9));
-    } else {
-      setVisibleCategories(categories.slice(0, 17));
+    if (categories) {
+      if (screenWidth <= 500) {
+        setVisibleCategories(categories.slice(0, 5));
+      } else if (screenWidth <= 600) {
+        setVisibleCategories(categories.slice(0, 7));
+      } else if (screenWidth <= 768) {
+        setVisibleCategories(categories.slice(0, 9));
+      } else {
+        setVisibleCategories(categories.slice(0, 17));
+      }
     }
-  }, [screenWidth]);
+  }, [categories, screenWidth]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -102,15 +103,19 @@ const CategoriesArea = () => {
     <div className="flex flex-col items-center justify-center w-full">
       <ul className="">
         <div className="w-full grid gap-x-20 grid-cols-3 xsm:grid-cols-4 sm:grid-cols-5  md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 px-14 sm:px-20 ">
-          {visibleCategories.map((categoryObj, index) => (
-            <li
-              key={index}
-              className="cursor-pointer"
-              onClick={() => handleCategaryIconClick(categoryObj.label)}
-            >
-              <CategoryCard label={categoryObj.label} icon={categoryObj.icon} />
-            </li>
-          ))}
+          {visibleCategories &&
+            visibleCategories.map((categoryObj, index) => (
+              <li
+                key={index}
+                className="cursor-pointer"
+                onClick={() => handleCategaryIconClick(categoryObj.label)}
+              >
+                <CategoryCard
+                  label={categoryObj.label}
+                  icon={categoryObj.icon}
+                />
+              </li>
+            ))}
 
           <div onClick={handleAllClick} className="cursor-pointer">
             {/* <div className="p-1 w-[100px] h-[100px] text-center flex-col bg-blue-400 text-white flex items-center justify-center rounded-lg">

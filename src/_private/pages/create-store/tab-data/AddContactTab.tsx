@@ -37,7 +37,7 @@ const AddContactTab = ({ storeId }: { storeId: string }) => {
           contact: string;
         }>;
 
-        console.log(contactstListArr);
+        // console.log(contactstListArr);
         setContactList(contactstListArr);
       });
 
@@ -52,6 +52,12 @@ const AddContactTab = ({ storeId }: { storeId: string }) => {
     try {
       const collectionRef = collection(db, "latestStore", storeId, "contacts");
       await addDoc(collectionRef, {
+        type: contactMethod,
+        contact,
+      });
+
+      const mainCollectionRef = collection(db, "store", storeId, "contacts");
+      await addDoc(mainCollectionRef, {
         type: contactMethod,
         contact,
       });
@@ -115,7 +121,13 @@ const AddContactTab = ({ storeId }: { storeId: string }) => {
           onChange={(e) => setContactMethod(e.target.value)}
         >
           <option value="phone">Phone</option>
+          <option value="land">Land</option>
+          <option value="whatsapp">Whatsapp</option>
           <option value="email">Email</option>
+          <option value="fax">Fax</option>
+          <option value="viber">Viber</option>
+          <option value="address">Adress</option>
+          <option value="website">Website</option>
         </Select>
 
         <Input
@@ -145,7 +157,14 @@ const AddContactTab = ({ storeId }: { storeId: string }) => {
                 contactObj && (
                   <tr key={index}>
                     <td>{contactObj.type}</td>
-                    <td>{contactObj.contact}</td>
+                    <td
+                      style={{
+                        wordBreak: "break-word",
+                        overflowWrap: "break-word",
+                      }}
+                    >
+                      {contactObj.contact}
+                    </td>
                     <td className="text-right">
                       <Button
                         onClick={() => handleClickRemoveContact(contactObj.id)}

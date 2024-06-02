@@ -104,8 +104,8 @@ const ImageCropDialog = ({
           onCropComplete={onCropComplete}
         />
       </div>
-      <div className="controls">
-        <div className="controls-upper-area">
+      <div className="fixed bottom-0 left-0 h-[70px] w-full flex flex-col justify-center ">
+        <div className="controls-upper-area flex items-center justify-center">
           <input
             type="range"
             min={1}
@@ -115,7 +115,7 @@ const ImageCropDialog = ({
             onChange={(e) => {
               onZoomChange(parseFloat(e.target.value));
             }}
-            className="slider"
+            className="w-[80%] sm:w-[50%] relative bottom-14 sm:bottom-0 mb-4"
           />
 
           {/* <select onChange={onAspectChange}>
@@ -130,7 +130,7 @@ const ImageCropDialog = ({
             ))}
           </select> */}
         </div>
-        <div className="button-area flex items-center justify-center gap-5">
+        <div className="button-area relative bottom-20 sm:bottom-0 flex items-center justify-center gap-5">
           <button
             className="bg-red-300 rounded-md px-2 py-1 flex items-center justify-center text-white"
             onClick={onCancel}

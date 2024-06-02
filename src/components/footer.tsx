@@ -19,25 +19,25 @@ const Footer = () => {
             Customer Care
           </h1>
           <li>
-            <a href="">About Us</a>
+            <a href="#">About Us</a>
           </li>
           <li>
-            <a href="">Investor Relations</a>
+            <a href="#">Investor Relations</a>
           </li>
           <li>
-            <a href="">We are Hiring</a>
+            <a href="#">We are Hiring</a>
           </li>
           <li>
-            <a href="">Customer Care</a>
+            <a href="#">Customer Care</a>
           </li>
           <li>
-            <a href="">Free Listing</a>
+            <a href="#">Free Listing</a>
           </li>
           <li>
-            <a href="">What&apos;s New</a>
+            <a href="#">What&apos;s New</a>
           </li>
           <li>
-            <a href="">report Bug</a>
+            <a href="#">report Bug</a>
           </li>
         </ul>
 
@@ -46,33 +46,31 @@ const Footer = () => {
             Srilanka Business
           </h1>
           <li>
-            <a href="">About</a>
+            <a href="#">About</a>
           </li>
           <li>
-            Careers
-            <ul className="ml-10">
-              <li>
-                <a href="">Stores</a>
-              </li>
-              <li>
-                <a href="">Donates</a>
-              </li>
-              <li>
-                <a href="">Blog</a>
-              </li>
-            </ul>
+            <a href="#">Careers</a>
           </li>
           <li>
-            <a href="">Terms & Conditions</a>
+            <a href="#">Stores</a>
           </li>
           <li>
-            <a href="">Privacy Policy</a>
+            <a href="#">Donates</a>
           </li>
           <li>
-            <a href="">Mobile App</a>
+            <a href="#">Blog</a>
           </li>
           <li>
-            <a href="">PayLater Edu</a>
+            <a href="#">Terms & Conditions</a>
+          </li>
+          <li>
+            <a href="#">Privacy Policy</a>
+          </li>
+          <li>
+            <a href="#">Mobile App</a>
+          </li>
+          <li>
+            <a href="#">PayLater Edu</a>
           </li>
         </ul>
 
@@ -97,18 +95,20 @@ const Footer = () => {
             <p className="text-red-500 text-lg font-semibold">0775 124 000</p>
           </a>
 
-          <a href="info@srilankanusiness.lk">info@srilankanusiness.lk</a>
-          <br />
-          <a href="https://srilankabusiness.lk/">www.srilankabusiness.lk</a>
+          <div className="mt-4">
+            <a href="info@srilankanusiness.lk">info@srilankanusiness.lk</a>
+            <br />
+            <a href="https://srilankabusiness.lk/">www.srilankabusiness.lk</a>
+          </div>
         </div>
 
         <div>
           <h1 className="text-orange-500 font-semibold  mb-2 text-lg">
             Exclusive Deals and Offers!
           </h1>
-          <img src="/QR.jpg" className="w-[150px]" alt="" />
+          <img src="/QR.jpg" className="w-[170px]" alt="" />
 
-          <h1 className="text-orange-500 font-semibold mt-3">Follow Us</h1>
+          <h1 className="text-orange-500 font-semibold mt-4">Follow Us</h1>
           <ul className="flex gap-2 mt-2">
             <li className="scl-md-links">
               <a href="">

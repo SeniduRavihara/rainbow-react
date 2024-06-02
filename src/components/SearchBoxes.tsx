@@ -18,8 +18,8 @@ import { CircularProgress } from "@chakra-ui/react";
 import { mic } from "@/assets";
 
 const searchClient = algoliasearch(
-  "6K67WTIHLT",
-  "0cb3cddf578f097566b65642564992dc"
+  import.meta.env.VITE_ALGOLIA_APP_ID,
+  import.meta.env.VITE_ALGOLIA_SEARCH_ONLY_API_KEY
 );
 
 const searchIndex = searchClient.initIndex("stores");
@@ -93,10 +93,10 @@ const SearchBoxes = () => {
         category: hit.category || "",
         visitCount: hit.visitCount,
         verified: hit.verified || false,
-        gallery: hit.gallery,
+        // gallery: hit.gallery,
         location: hit.location,
         companyProfilePdfUrl: hit.companyProfilePdfUrl,
-        youtubeVideos: hit.youtubeVideos,
+        // youtubeVideos: hit.youtubeVideos,
         showProfile: hit.showProfile,
         haveUpdate: hit.haveUpdate,
       }));
@@ -116,6 +116,7 @@ const SearchBoxes = () => {
       setLoadingSearch(false);
     } catch (error) {
       toast.error("Network Problem");
+      setLoadingSearch(false);
       console.log("Error");
     }
   };
@@ -168,6 +169,7 @@ const SearchBoxes = () => {
                   onClick={() => {
                     setSearchitem("");
                     SpeechRecognition.stopListening();
+                    setLoadingSearch(false)
                     // setLastDocument(null);
                     // setSearchResultStores(null);
                     // fetchData({

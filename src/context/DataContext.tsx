@@ -57,11 +57,17 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     location: string;
     id: string;
   }> | null>(null);
-
-  // const [messagesToAll, setMessagesToAll] = useState<messageObjType[] | null>(null);
   const [userMessages, setUserMessages] = useState<messageObjType[] | null>(
     null
   );
+  const [categories, setCategories] = useState<Array<{
+    icon: string;
+    label: string;
+    id: string
+  }> | null>(null);
+
+  console.log(searchResultStores);
+  
 
   // useEffect(()=>{
   //   if(searchItem){
@@ -179,42 +185,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
-  // -----------------------------------------------------
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     if (currentUserData && currentUserData.haveStore) {
-  //       const collectionRef = collection(db, "messagesToAll");
-  //       const q = query(collectionRef, orderBy("createdAt", "desc"));
 
-  //       const unsubscribe = onSnapshot(q, async (QuerySnapshot) => {
-  //         const messageArr = QuerySnapshot.docs.map((doc) => ({
-  //           ...doc.data(),
-  //           id: doc.id,
-  //         })) as Array<{ message: string; id: string; createdAt: Timestamp }>;
-
-  //         // setMessagesToAll(messageArr);
-  //         // console.log(messageArr);
-
-  //         for (let i = 0; i < messageArr.length; i++) {
-  //           const messageObj = messageArr[i];
-  //           const userMessagesRef = doc(
-  //             db,
-  //             "users",
-  //             currentUserData.id,
-  //             "messages",
-  //             messageObj.id
-  //           );
-
-  //           await setDoc(userMessagesRef, { ...messageObj });
-  //         }
-  //       });
-
-  //       return unsubscribe;
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [currentUserData]);
 
   // ---------------------------------------------------
 
@@ -263,6 +234,22 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
+  // -------------------------------------------------
+    useEffect(() => {
+      const collectionRef = collection(db, "categories");
+      const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+        const locationArr = QuerySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        })) as Array<{ icon: string; label: string; id: string }>;
+
+        console.log("HELOOOOO",locationArr);
+        setCategories(locationArr);
+      });
+
+      return unsubscribe;
+    }, []);
+
   const value = {
     currentUserData,
     setCurrentUserData,
@@ -287,6 +274,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     userMessages,
     locationArr,
     setLocationArr,
+    categories,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

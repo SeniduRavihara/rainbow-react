@@ -36,7 +36,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CircularProgress, Tag } from "@chakra-ui/react";
-import { fetchStoreById, postEnquery } from "@/firebase/api";
+import { fetchStoreByName, postEnquery } from "@/firebase/api";
 import ProductAndServices from "../components/store-details-page/ProductAndServices";
 import TabComponent from "../components/store-details-page/tabs/tab-cmponent/TabComponent";
 import TopSlider from "../components/TopSlider";
@@ -70,9 +70,10 @@ const StoreDetailsPage = () => {
   const { searchResultStores, currentUserData } = useData();
   const { currentUser } = useAuth();
   const [selectedStore, setSelectedStore] = useState<StoreObj | null>(null);
+  const [storeId, setStoreId] = useState("");
 
   const params = useParams();
-  const storeId = params.storeId;
+  const storeName = params.storeName?.replace(/-/g, " ");
   const [detailsPageAdds, setDetailsPageAdds] = useState<Array<{
     imageUrl: string;
     id: string;
@@ -82,11 +83,12 @@ const StoreDetailsPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // console.log("Senidu", selectedStore?.showProfile);
-    // if (!selectedStore?.showProfile) {
-    //   navigate("/");
-    // }
-  }, [navigate, selectedStore?.showProfile]);
+    console.log("Senidu", selectedStore);
+    if (selectedStore && !selectedStore?.showProfile) {
+      navigate(`/search-results/category-${selectedStore.category}`);
+    }
+  }, [navigate, selectedStore, selectedStore?.showProfile]);
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -128,21 +130,22 @@ const StoreDetailsPage = () => {
     return unsubscribe;
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!searchResultStores && storeId) {
-        const storeData = await fetchStoreById(storeId);
-        setSelectedStore({ ...storeData, id: storeId } as StoreObj);
-      } else {
-        setSelectedStore(
-          searchResultStores?.find((storeObj) => storeObj.id === storeId) ??
-            null
-        );
-      }
-    };
+    useEffect(() => {
+      const fetchData = async () => {
+        if (storeName) {
+          const result = await fetchStoreByName(storeName);
+          if (result) {
+            const { matchingStoreId, matchingStoreData: storeData } = result;
+            setStoreId(matchingStoreId);
+            setSelectedStore(storeData as StoreObj);
+          } else {
+            setSelectedStore(null);
+          }
+        }
+      };
 
-    fetchData();
-  }, [navigate, searchResultStores, storeId]);
+      fetchData();
+    }, [storeName, storeId, searchResultStores, navigate]);
 
   const hndelCancelClick = () => {
     setOpenModel(false);
@@ -485,7 +488,7 @@ const StoreDetailsPage = () => {
                   <p className="text-xs">Get free details instantly via SMS</p>
                 </button> */}
                 <Dialog open={openModel} onOpenChange={setOpenModel}>
-                  <DialogTrigger>
+                  <DialogTrigger asChild>
                     <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
                       <h2>Enquire Now</h2>
                       <p className="text-xs">
@@ -590,15 +593,16 @@ const StoreDetailsPage = () => {
                   </div>
 
                   <Dialog open={openModel} onOpenChange={setOpenModel}>
-                    <DialogTrigger>
-                      <button
-                        className="bg-blue-600 px-4 py-1 rounded-md text-white"
-                      >
+                    <DialogTrigger
+                      asChild
+                      className="bg-blue-600 px-4 py-1 rounded-md text-white"
+                    >
+                      <>
                         <h2>Enquire Now</h2>
                         <p className="text-xs">
                           Get free details instantly via SMS
                         </p>
-                      </button>
+                      </>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                       <DialogHeader>

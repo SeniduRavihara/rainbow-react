@@ -10,7 +10,7 @@ import Videos from "../Videos";
 import OurProductsTab from "../OurProductsTab";
 import ContactTab from "../ContactTab";
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase/config";
 
 const TabComponent = ({
@@ -20,6 +20,60 @@ const TabComponent = ({
 }) => {
   const [haveProducts, setHaveProducts] = useState(false);
   const [haveContacts, setHaveContacts] = useState(false);
+  const [videoList, setVideoList] = useState<
+    Array<{ videoUrl: string; id: string }>
+  >([]);
+  const [gallery, setGallery] = useState<
+    Array<{
+      imageUrl: string;
+      refName: string;
+      id: string;
+    }>
+  >([]);
+
+  useEffect(() => {
+    if (selectedStore) {
+      const collectionRef = collection(
+        db,
+        "store",
+        selectedStore?.id,
+        "gallery"
+      );
+      const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+        const sctionStaticAddsArr = QuerySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        })) as Array<{ imageUrl: string; refName: string; id: string }>;
+
+        //  console.log(sctionStaticAddsArr);
+        setGallery(sctionStaticAddsArr);
+      });
+
+      return unsubscribe;
+    }
+  }, [selectedStore, selectedStore?.id]);
+
+  useEffect(() => {
+    if (selectedStore?.id) {
+      const collectionRef = collection(
+        db,
+        "store",
+        selectedStore?.id,
+        "videos"
+      );
+      const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+        const sctionStaticAddsArr = QuerySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        })) as Array<{ videoUrl: string; id: string }>;
+
+        console.log(sctionStaticAddsArr);
+        setVideoList(sctionStaticAddsArr);
+      });
+
+      return unsubscribe;
+    }
+  }, [selectedStore?.id]);
 
   useEffect(() => {
     const checkCollection = async () => {
@@ -34,7 +88,7 @@ const TabComponent = ({
           const querySnapshot = await getDocs(collectionRef);
           const documentsExist = !querySnapshot.empty;
           // console.log("SENUUUUU", documentsExist);
-          
+
           setHaveProducts(documentsExist);
         } catch (error) {
           console.error("Error checking collection:", error);
@@ -74,9 +128,7 @@ const TabComponent = ({
       <Tabs className="">
         <TabList className="overflow-x-scroll overflow-y-hidden scrollbar-hide flex gap- tab-list tab-list-container">
           <Tab className="border mb-1">Information</Tab>
-          {selectedStore?.gallery && selectedStore?.gallery.length > 1 && (
-            <Tab className="border mb-1">Gallery</Tab>
-          )}
+          {gallery.length >= 1 && <Tab className="border mb-1">Gallery</Tab>}
           {selectedStore?.location && selectedStore?.location && (
             <Tab className="border mb-1">Street View</Tab>
           )}
@@ -87,10 +139,7 @@ const TabComponent = ({
           {/* {selectedStore && selectedStore?.gallery && (
             <Tab className="border mb-1">Blog</Tab>
           )} */}
-          {selectedStore?.youtubeVideos &&
-            selectedStore?.youtubeVideos.length > 1 && (
-              <Tab className="border mb-1">Videos</Tab>
-            )}
+          {videoList.length >= 1 && <Tab className="border mb-1">Videos</Tab>}
           {selectedStore && haveProducts && (
             <Tab className="border mb-1">Our Products</Tab>
           )}
@@ -109,9 +158,9 @@ const TabComponent = ({
             )}
           </TabPanel>
 
-          {selectedStore?.gallery && selectedStore?.gallery.length > 1 && (
+          {gallery.length >= 1 && (
             <TabPanel>
-              <GalleryTab gallery={selectedStore?.gallery} />
+              <GalleryTab gallery={gallery.map((item) => item.imageUrl)} />
             </TabPanel>
           )}
 
@@ -136,12 +185,11 @@ const TabComponent = ({
             </TabPanel>
           )} */}
 
-          {selectedStore?.youtubeVideos &&
-            selectedStore?.youtubeVideos.length > 1 && (
-              <TabPanel>
-                <Videos youtubeVideos={selectedStore.youtubeVideos} />
-              </TabPanel>
-            )}
+          {videoList.length >= 1 && (
+            <TabPanel>
+              <Videos youtubeVideos={videoList.map((item) => item.videoUrl)} />
+            </TabPanel>
+          )}
 
           {selectedStore && haveProducts && (
             <TabPanel>

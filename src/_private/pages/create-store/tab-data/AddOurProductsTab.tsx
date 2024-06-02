@@ -15,12 +15,12 @@ import { Label } from "@/components/ui/label";
 import { db, storage } from "@/firebase/config";
 import { CircularProgress } from "@chakra-ui/react";
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
   getDoc,
   onSnapshot,
-  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import {
@@ -32,6 +32,7 @@ import {
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { RxCross2 } from "react-icons/rx";
+import { v4 } from "uuid";
 
 interface ImageData {
   imageUrl: string;
@@ -56,7 +57,7 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
   const [productImage, setProductImage] = useState<{
     cropedImageBlob: Blob;
     croppedImageUrl: string;
-  }>();
+  } | null>(null);
   const [isOpenCropDialog, setIsOpenCropDialog] = useState(false);
   const [imageData, setImageData] = useState<ImageData>(initData);
   const [loading, setLoading] = useState(false);
@@ -64,7 +65,13 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
   const [productDiscription, setProductDiscription] = useState("");
 
   const [productList, setProductList] = useState<
-    Array<{ imageUrl: string; id: string; name: string; discription: string }>
+    Array<{
+      imageUrl: string;
+      id: string;
+      name: string;
+      discription: string;
+      refName: string;
+    }>
   >([]);
 
   useEffect(() => {
@@ -78,9 +85,10 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
         id: string;
         name: string;
         discription: string;
+        refName: string;
       }>;
 
-      // console.log(productListArr);
+      console.log(productListArr);
       setProductList(productListArr);
     });
 
@@ -93,14 +101,15 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
     setLoading(true);
 
     try {
-      const documentRef = doc(db, "latestStore", storeId, "products", productName);
+      const coectionRef = collection(db, "latestStore", storeId, "products");
 
-      const imageUrl = await uploadProductImage();
+      const { photoURL, refName } = await uploadProductImage();
 
-      await setDoc(documentRef, {
+      await addDoc(coectionRef, {
         name: productName,
         discription: productDiscription,
-        imageUrl: imageUrl,
+        imageUrl: photoURL,
+        refName,
       });
 
       const productsDocumentRef = doc(db, "latestStore", storeId);
@@ -114,52 +123,41 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
             : "products",
         ].filter((txt) => txt),
       });
+
+      toast.success("Product successfully created");
     } catch (error) {
       console.log(error);
     }
+
+    setProductImage(null);
+    setProductName("");
+    setProductDiscription("");
+
     setOpen(false);
     setLoading(false);
   };
 
-  const handleDeleteProduct = async (id: string) => {
+  const handleDeleteProduct = async (id: string, refName: string) => {
     if (!window.confirm("Are you sure you want to delete this product?"))
       return;
 
     try {
-      // Find the product by id
-      const product = productList.find((product) => product.id === id);
-      if (!product) {
-        console.error("Product not found");
-        return;
-      }
-
       // Delete the product document
-      const documentRef = doc(db, "latestStore", storeId, "products", id);
+      const documentRefLatest = doc(db, "latestStore", storeId, "products", id);
+      await deleteDoc(documentRefLatest);
+      const documentRef = doc(db, "store", storeId, "products", id);
       await deleteDoc(documentRef);
-      toast.success("Product successfully deleted!");
-
-      const productsDocumentRef = doc(db, "latestStore", storeId);
-      const latestData = await getDoc(productsDocumentRef);
-
-      await updateDoc(productsDocumentRef, {
-        haveUpdate: [
-          ...(latestData?.data()?.haveUpdate ?? []),
-          latestData?.data()?.haveUpdate.includes("products")
-            ? undefined
-            : "products",
-        ].filter((txt) => txt),
-      });
 
       // Delete the image from storage
       const imageRef = ref(
         storage,
-        `store_data/${storeId}/latest/products/${productName}`
+        `store_data/${storeId}/products/${refName}`
       );
       await deleteObject(imageRef);
-      toast.success("Image successfully deleted!");
+      toast.success("Product successfully deleted!");
     } catch (error) {
       console.log(error);
-      toast.error("Failed to delete product and image");
+      toast.error("Failed to delete product!");
     }
   };
 
@@ -169,16 +167,14 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
         throw new Error("No product image provided");
       }
 
-      const fileRef = ref(
-        storage,
-        `store_data/${storeId}/latest/products/${productName}`
-      );
+      const refName = v4();
+
+      const fileRef = ref(storage, `store_data/${storeId}/products/${refName}`);
 
       await uploadBytes(fileRef, productImage.cropedImageBlob);
       const photoURL = await getDownloadURL(fileRef);
-      toast.success("Product Image uploaded successfully!");
 
-      return photoURL;
+      return { photoURL, refName };
     } catch (error) {
       console.error("Error uploading product image:", error);
       throw new Error("Failed to upload product image");
@@ -234,7 +230,7 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
   };
 
   return (
-    <div className="lg:px-10 flex flex-col items-center justify-center">
+    <div className="lg:px-10 px-2 flex flex-col items-center justify-center">
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
           <ImageCropDialog
@@ -248,7 +244,7 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
         </div>
       )}
 
-      <Dialog open={open}>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant="outline" onClick={() => setOpen(true)}>
             Create Product
@@ -331,13 +327,15 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
         {productList.map((productObj, index) => (
           <li
             key={index}
-            className="flex flex-col items-center justify-items-center border rounded-lg py-4 pb-2 gap-2"
+            className="flex flex-col items-center justify-items-center border rounded-lg py-4 pb-2 gap-1"
           >
-            <img src={productObj.imageUrl} className="w-[180px]" alt="" />
+            <img src={productObj.imageUrl} className="w-[120px]" alt="" />
             <h3 className="font-semibold">{productObj.name}</h3>
             <RxCross2
               className="cursor-pointer hover:text-red-500 duration-200 text-2xl"
-              onClick={() => handleDeleteProduct(productObj.id)}
+              onClick={() =>
+                handleDeleteProduct(productObj.id, productObj.refName)
+              }
             />
           </li>
         ))}

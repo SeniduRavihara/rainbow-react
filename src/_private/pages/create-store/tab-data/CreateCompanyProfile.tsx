@@ -1,12 +1,12 @@
 import { db, storage } from "@/firebase/config";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Document, Page } from "react-pdf";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Button } from "@/components/ui/button";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { CircularProgress } from "@chakra-ui/react";
 
 const CreateCompanyProfile = ({
@@ -20,6 +20,7 @@ const CreateCompanyProfile = ({
   const [numPages, setNumPages] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [pdfUrlState, setPdfUrlState] = useState(pdfUrl);
 
   const handleClickUpdate = async () => {
     if (pdf) {
@@ -100,6 +101,38 @@ const CreateCompanyProfile = ({
     }
   };
 
+  const handleClickDelete = async () => {
+    try {
+      // Delete the product document
+      const documentRefLatest = doc(db, "latestStore", storeId);
+      await updateDoc(documentRefLatest, { companyProfilePdfUrl: "" });
+
+      const documentRef = doc(db, "store", storeId);
+      await updateDoc(documentRef, { companyProfilePdfUrl: "" });
+
+      // Delete the image from storage
+      const imageRef = ref(
+        storage,
+        `store_data/${storeId}/store-company-profile-pdfs/${storeId}.pdf`
+      );
+      await deleteObject(imageRef);
+
+      const imageRefLatest = ref(
+        storage,
+        `store_data/${storeId}/latest/store-company-profile-pdfs/${storeId}.pdf`
+      );
+      await deleteObject(imageRefLatest);
+
+      toast.success("Company Profile successfully deleted!");
+     
+    } catch (error) {
+      console.log(error);
+      // toast.error("Failed to delete product and image");
+    }
+     setPdfUrlState("");
+     setPdf(null);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="font-semibold">
@@ -129,13 +162,17 @@ const CreateCompanyProfile = ({
               <Button onClick={handleClickUpdate}>Update</Button>
             )}
           </div>
+
+          <div className="flex items-center justify-center gap-5">
+            <Button onClick={handleClickDelete}>Delete</Button>
+          </div>
         </div>
         {/* {pdf && <p>Selected PDF: {pdf.name}</p>} */}
       </div>
       (
       <div className="flex items-center justify-center flex-col">
         <Document
-          file={pdf || pdfUrl}
+          file={pdf || pdfUrlState}
           onLoadSuccess={onDocumentLoadSuccess}
           className="w-full h-[800px] overflow-hidden"
         >

@@ -1,0 +1,57 @@
+.ais-Hits-list {
+  display: grid;
+  /* grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); */
+  gap: 1rem;
+  justify-items: center;
+  
+}
+
+.ais-Hits-item {
+  width: 120px;
+  border: none;
+  box-shadow: none;
+}
+
+@media (min-width: 140px) {
+  .ais-Hits-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 2 columns for small screens and up */
+@media (min-width: 440px) {
+  .ais-Hits-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 3 columns for medium screens and up */
+@media (min-width: 648px) {
+  .ais-Hits-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* 4 columns for large screens and up */
+@media (min-width: 1024px) {
+  .ais-Hits-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+
+/* .ais-SearchBox{
+    @apply w-full  items-center justify-center flex focus:ring-0 focus:outline-none;
+}
+.ais-SearchBox-form{
+    @apply w-1/2 items-center justify-center flex border rounded-md border-blue-500;
+} */
+/* .ais-SearchBox-input {
+  @apply border-none px-5 py-2 ;
+}
+.ais-SearchBox-submitIcon{
+    @apply w-[20px] h-[20px];
+}
+.ais-SearchBox-resetIcon{
+    @apply w-[20px] h-[20px];
+} */

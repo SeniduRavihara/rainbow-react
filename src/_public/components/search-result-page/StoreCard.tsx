@@ -36,6 +36,7 @@ type StoreCardProps = {
   rating: number;
   verified: boolean;
   showProfile: boolean;
+  storeName: string;
 };
 
 const StoreCard = ({
@@ -49,6 +50,7 @@ const StoreCard = ({
   reviewCount = 0,
   verified = false,
   showProfile = false,
+  storeName,
 }: StoreCardProps) => {
   const [enquery, setEnquery] = useState("");
   const [openModel, setOpenModel] = useState(false);
@@ -61,9 +63,11 @@ const StoreCard = ({
 
   const handleStoreClick = (id: string) => {
     // console.log("SENIDU", showProfile);
-    
+    console.log(id)
+
     if (showProfile) {
-      navigate(`/business-profile/${id}`);
+      const formattedStoreName = storeName.replace(/\s+/g, "-");
+      navigate(`/business-profile/${formattedStoreName}`);
     }
   };
 
@@ -92,8 +96,8 @@ const StoreCard = ({
 
   return (
     <div>
-      <div className="hidden md:flex rounded-md max-w-[750px] h-44 border-2 cursor-pointer">
-        <div className="w-4/12 flex items-center justify-center">
+      <div className="hidden md:flex rounded-md max-w-[750px] items-center min-h-44 border-2 cursor-pointer ">
+        <div className="w-4/12 flex items-center justify-center h-full ">
           <Carousel
             showStatus={false}
             interval={3000}
@@ -107,11 +111,11 @@ const StoreCard = ({
             {storeImages.map((image, index) => (
               <div
                 key={index}
-                className="w-full h-44 flex items-center justify-center"
+                className="w-full h-44 flex items-center justify-center "
               >
                 <img
                   src={image}
-                  className="w-full h-full object-cover rounded-l-md"
+                  className="w-full h-full object-cover rounded-l-md "
                 />
               </div>
             ))}
@@ -121,7 +125,7 @@ const StoreCard = ({
         <div className="w-8/12 px-3 py-2 flex flex-col justify-between">
           <div
             className="w-full flex flex-col justify-between"
-            onClick={() => handleStoreClick(id)}
+            onClick={() => handleStoreClick(storeName)}
           >
             <div className="flex items-center justify-between mb-2">
               <h1 className="font-semibold text-[23px]">{title}</h1>
@@ -147,11 +151,23 @@ const StoreCard = ({
             </div>
 
             <div className="my-1">
-              {tags.slice(0, 4).map((tag, index) => (
+              {tags.filter((tag) => tag.length < 15).length < 4
+                ? tags.slice(0, 2).map((tag, index) => (
+                    <Tag key={index} className="mx-[2px]">
+                      {tag}
+                    </Tag>
+                  ))
+                : tags.slice(0, 4).map((tag, index) => (
+                    <Tag key={index} className="mx-[2px]">
+                      {tag}
+                    </Tag>
+                  ))}
+
+              {/* {tags.slice(0, 4).map((tag, index) => (
                 <Tag key={index} className="mx-[2px]">
                   {tag}
                 </Tag>
-              ))}
+              ))} */}
             </div>
           </div>
 
@@ -282,11 +298,20 @@ const StoreCard = ({
             </div>
 
             <div>
-              {tags.slice(0, 4).map((tag, index) => (
+              {tags
+                .filter((tag) => tag.length < 35)
+                .slice(0, 4)
+                .map((tag, index) => (
+                  <Tag key={index} className="mx-[2px]">
+                    {tag}
+                  </Tag>
+                ))}
+
+              {/* {tags.slice(0, 4).map((tag, index) => (
                 <Tag key={index} className="mx-[2px]">
                   {tag}
                 </Tag>
-              ))}
+              ))} */}
             </div>
           </div>
 
