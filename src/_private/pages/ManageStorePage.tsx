@@ -268,7 +268,7 @@ const ManageStorePage = () => {
         .filter((img): img is string => img !== undefined);
 
       await updateStore3(currentUserStore?.id, {
-        title,
+        title: title.replace(/-/g, " "),
         address,
         phoneNumber,
         whatsappNumber,

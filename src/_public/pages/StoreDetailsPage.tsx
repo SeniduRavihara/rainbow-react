@@ -73,7 +73,7 @@ const StoreDetailsPage = () => {
   const [storeId, setStoreId] = useState("");
 
   const params = useParams();
-  const storeName = params.storeName;
+  const storeName = params.storeName?.replace(/-/g, " ");
   const [detailsPageAdds, setDetailsPageAdds] = useState<Array<{
     imageUrl: string;
     id: string;
@@ -83,11 +83,11 @@ const StoreDetailsPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // console.log("Senidu", selectedStore?.showProfile);
-    // if (!selectedStore?.showProfile) {
-    //   navigate("/");
-    // }
-  }, [navigate, selectedStore?.showProfile]);
+    console.log("Senidu", selectedStore);
+    if (selectedStore && !selectedStore?.showProfile) {
+      navigate(`/search-results/category-${selectedStore.category}`);
+    }
+  }, [navigate, selectedStore, selectedStore?.showProfile]);
 
 
   useEffect(() => {

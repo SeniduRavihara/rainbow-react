@@ -113,7 +113,7 @@ const CreateStorePage = () => {
       const payLoad = {
         storeImages: storeImages.map((img) => img.imageUrl),
         storeIcon: "",
-        title,
+        title: title.replace(/-/g, " "),
         address,
         phoneNumber,
         whatsappNumber,

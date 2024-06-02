@@ -66,7 +66,8 @@ const StoreCard = ({
     console.log(id)
 
     if (showProfile) {
-      navigate(`/business-profile/${storeName}`);
+      const formattedStoreName = storeName.replace(/\s+/g, "-");
+      navigate(`/business-profile/${formattedStoreName}`);
     }
   };
 
@@ -298,7 +299,7 @@ const StoreCard = ({
 
             <div>
               {tags
-                .filter((tag, index) => tag.length < 35)
+                .filter((tag) => tag.length < 35)
                 .slice(0, 4)
                 .map((tag, index) => (
                   <Tag key={index} className="mx-[2px]">

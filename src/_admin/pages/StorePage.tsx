@@ -38,9 +38,10 @@ import {
 import { syncLatestStoreWithStore } from "@/firebase/api";
 
 const searchClient = algoliasearch(
-  "6K67WTIHLT",
-  "0cb3cddf578f097566b65642564992dc"
+  import.meta.env.VITE_ALGOLIA_APP_ID,
+  import.meta.env.VITE_ALGOLIA_SEARCH_ONLY_API_KEY
 );
+
 
 const searchIndex = searchClient.initIndex("stores");
 
