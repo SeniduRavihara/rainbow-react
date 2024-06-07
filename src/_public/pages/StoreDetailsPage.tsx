@@ -15,10 +15,10 @@ import { locationOutline } from "ionicons/icons";
 import ReviewsAndRatings from "../components/store-details-page/ReviewsAndRatings";
 import OpenTimes from "../components/store-details-page/OpenTimes";
 import DetailsPageAdds from "../components/store-details-page/DetailsPageAdds";
-import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { FaEye, FaPhoneAlt } from "react-icons/fa";
-import { whatsapp } from "@/assets";
+import { fb, insta, linkedin, twitter, whatsapp, yt } from "@/assets";
 import { PiShareFatLight } from "react-icons/pi";
 import { Button } from "@/components/ui/button";
 import { MdOutlineEdit } from "react-icons/md";
@@ -83,37 +83,39 @@ const StoreDetailsPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Senidu", selectedStore);
-    if (selectedStore && !selectedStore?.showProfile) {
+    // console.log("Senidu", selectedStore);
+    if (
+      selectedStore &&
+      (!selectedStore?.showProfile || !selectedStore.active)
+    ) {
       navigate(`/search-results/category-${selectedStore.category}`);
     }
   }, [navigate, selectedStore, selectedStore?.showProfile]);
-
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    const updateVisitCount = async () => {
-      if (selectedStore && storeId) {
-        try {
-          const documentRef = doc(db, "store", storeId);
-          await updateDoc(documentRef, {
-            visitCount: selectedStore.visitCount + 1,
-          });
+  // useEffect(() => {
+  //   const updateVisitCount = async () => {
+  //     if (selectedStore && storeId) {
+  //       try {
+  //         const documentRef = doc(db, "store", storeId);
+  //         await updateDoc(documentRef, {
+  //           visitCount: selectedStore.visitCount + 1,
+  //         });
 
-          await updateDoc(doc(db, "latestStore", storeId), {
-            visitCount: selectedStore.visitCount + 1,
-          });
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    };
+  //         await updateDoc(doc(db, "latestStore", storeId), {
+  //           visitCount: selectedStore.visitCount + 1,
+  //         });
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     }
+  //   };
 
-    updateVisitCount();
-  }, [selectedStore, storeId]);
+  //   updateVisitCount();
+  // }, [selectedStore, storeId]);
 
   useEffect(() => {
     const collectionRef = collection(db, "detailsPageAdds");
@@ -130,22 +132,22 @@ const StoreDetailsPage = () => {
     return unsubscribe;
   }, []);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        if (storeName) {
-          const result = await fetchStoreByName(storeName);
-          if (result) {
-            const { matchingStoreId, matchingStoreData: storeData } = result;
-            setStoreId(matchingStoreId);
-            setSelectedStore(storeData as StoreObj);
-          } else {
-            setSelectedStore(null);
-          }
+  useEffect(() => {
+    const fetchData = async () => {
+      if (storeName) {
+        const result = await fetchStoreByName(storeName);
+        if (result) {
+          const { matchingStoreId, matchingStoreData: storeData } = result;
+          setStoreId(matchingStoreId);
+          setSelectedStore(storeData as StoreObj);
+        } else {
+          setSelectedStore(null);
         }
-      };
+      }
+    };
 
-      fetchData();
-    }, [storeName, storeId, searchResultStores, navigate]);
+    fetchData();
+  }, [storeName, storeId, searchResultStores, navigate]);
 
   const hndelCancelClick = () => {
     setOpenModel(false);
@@ -177,7 +179,7 @@ const StoreDetailsPage = () => {
         <Navbar />
       </div>
 
-      <div className="mt-44 725:mt-20 w-full ">
+      <div className="mt-44 725:mt-24 w-full ">
         {!selectedStore ? (
           <div className="w-full h-screen flex items-center justify-center">
             <CircularProgress size="60px" isIndeterminate color="green.300" />
@@ -255,7 +257,29 @@ const StoreDetailsPage = () => {
                       ))}
                   </div>
 
-                  <div className="flex items-center justify-between">
+                  <div className="flex pr-5 my-2">
+                    <a href="#" target="_blank" className="scl-md-links">
+                      <img src={fb} alt="" />
+                    </a>
+
+                    <a href="#" target="_blank" className="scl-md-links">
+                      <img src={yt} alt="" />
+                    </a>
+
+                    <a href="#" target="_blank" className="scl-md-links">
+                      <img src={insta} alt="" />
+                    </a>
+
+                    <a href="#" target="_blank" className="scl-md-links">
+                      <img src={linkedin} alt="" />
+                    </a>
+
+                    <a href="#" target="_blank" className="scl-md-links">
+                      <img src={twitter} alt="" />
+                    </a>
+                  </div>
+
+                  <div className="flex items-start flex-col z-10 text-sm justify-start sm:flex-row sm:justify-between">
                     <div className="flex gap-2 items-center">
                       <Popover>
                         <PopoverTrigger asChild>
@@ -271,6 +295,7 @@ const StoreDetailsPage = () => {
                           {selectedStore?.whatsappNumber}
                         </PopoverContent>
                       </Popover>
+
                       <Link
                         to={
                           selectedStore?.whatsappNumber &&
@@ -304,6 +329,7 @@ const StoreDetailsPage = () => {
                           variant="outline"
                           size="sm"
                           className="flex px-2 py-1 gap-1 items-center justify-center"
+                          onClick={() => navigate("/manage-business-profile")}
                         >
                           <MdOutlineEdit />
                           <h4>Edit</h4>
@@ -379,62 +405,88 @@ const StoreDetailsPage = () => {
                       ))}
                   </div>
 
-                  <div className="flex items-start flex-col text-sm justify-start sm:flex-row sm:justify-between">
-                    <div className="flex gap-2 items-center">
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            size="sm"
-                            className="flex gap-1 items-center px-2 py-1 rounded-md justify-center bg-green-600 hover:bg-green-600/90 text-white"
-                          >
-                            <FaPhoneAlt className="text-xs" />
-                            <h4>Show Number</h4>
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-52 px-3 py-2 text-center">
-                          {selectedStore?.whatsappNumber}
-                        </PopoverContent>
-                      </Popover>
+                  <div className="flex items-center justify-center xsm:justify-start">
+                    <div className="flex pr-5 my-2">
+                      <a href="#" target="_blank" className="scl-md-links">
+                        <img src={fb} alt="" />
+                      </a>
 
-                      <Link
-                        to={
-                          selectedStore?.whatsappNumber &&
-                          `https://wa.me/${selectedStore?.whatsappNumber.replace(
-                            "+",
-                            ""
-                          )}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex gap-1 items-center justify-center"
+                      <a href="#" target="_blank" className="scl-md-links">
+                        <img src={yt} alt="" />
+                      </a>
+
+                      <a href="#" target="_blank" className="scl-md-links">
+                        <img src={insta} alt="" />
+                      </a>
+
+                      <a href="#" target="_blank" className="scl-md-links">
+                        <img src={linkedin} alt="" />
+                      </a>
+
+                      <a href="#" target="_blank" className="scl-md-links">
+                        <img src={twitter} alt="" />
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center xsm:justify-start">
+                    <div className="flex items-start flex-col text-sm justify-start sm:flex-row sm:justify-between">
+                      <div className="flex gap-2 items-center">
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              size="sm"
+                              className="flex gap-1 items-center px-2 py-1 rounded-md justify-center bg-green-600 hover:bg-green-600/90 text-white"
+                            >
+                              <FaPhoneAlt className="text-xs" />
+                              <h4>Show Number</h4>
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-52 px-3 py-2 text-center">
+                            {selectedStore?.whatsappNumber}
+                          </PopoverContent>
+                        </Popover>
+
+                        <Link
+                          to={
+                            selectedStore?.whatsappNumber &&
+                            `https://wa.me/${selectedStore?.whatsappNumber.replace(
+                              "+",
+                              ""
+                            )}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
-                          <img src={whatsapp} className="w-5" />
-                          <h4>Chat</h4>
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex px-2 py-1 gap-1 items-center justify-center"
-                      >
-                        <PiShareFatLight />
-                        <h4>Share</h4>
-                      </Button>
-                      {selectedStore?.id === currentUserData?.id && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex gap-1 items-center justify-center"
+                          >
+                            <img src={whatsapp} className="w-5" />
+                            <h4>Chat</h4>
+                          </Button>
+                        </Link>
                         <Button
                           variant="outline"
                           size="sm"
                           className="flex px-2 py-1 gap-1 items-center justify-center"
-                          onClick={() => navigate("/manage-business-profile")}
                         >
-                          <MdOutlineEdit />
-                          <h4>Edit</h4>
+                          <PiShareFatLight />
+                          <h4>Share</h4>
                         </Button>
-                      )}
+                        {selectedStore?.id === currentUserData?.id && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex px-2 py-1 gap-1 items-center justify-center"
+                            onClick={() => navigate("/manage-business-profile")}
+                          >
+                            <MdOutlineEdit />
+                            <h4>Edit</h4>
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -593,16 +645,20 @@ const StoreDetailsPage = () => {
                   </div>
 
                   <Dialog open={openModel} onOpenChange={setOpenModel}>
-                    <DialogTrigger
-                      asChild
-                      className="bg-blue-600 px-4 py-1 rounded-md text-white"
-                    >
-                      <>
+                    <DialogTrigger asChild>
+                      <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
                         <h2>Enquire Now</h2>
                         <p className="text-xs">
                           Get free details instantly via SMS
                         </p>
-                      </>
+                      </button>
+                      {/* <Button
+                      asChild
+                      size="sm"
+                      className=" flex px-2 py-1 gap-1 text-white items-center justify-center bg-blue-400 hover:bg-blue-400/90"
+                    >
+                      <h4>Send Enquery</h4>
+                    </Button> */}
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                       <DialogHeader>

@@ -1,4 +1,3 @@
-
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
@@ -6,6 +5,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 
 import { loginSchema } from "@/schemas";
 import { getUserRole, login } from "@/firebase/api";
+
 // import toast from "react-hot-toast";
 
 const LoginForm = () => {
@@ -88,11 +89,11 @@ const LoginForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  {/* <FormLabel>Email</FormLabel> */}
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="Email"
+                      placeholder="Enter email"
                       // disabled={isPending}
                       {...field}
                     />
@@ -107,12 +108,12 @@ const LoginForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  {/* <FormLabel>Password</FormLabel> */}
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
                       // disabled={isPending}
-                      placeholder="password"
+                      placeholder="Enter password"
                       {...field}
                     />
                   </FormControl>
@@ -123,17 +124,20 @@ const LoginForm = () => {
           </div>
 
           <Button
+            type="submit"
+            className="w-full bg-[#277aa0] hover:bg-[#277aa0]/90"
+          >
+            Login
+          </Button>
+
+          <Button
             variant="link"
             type="button"
             className="font-normal w-full"
             size="sm"
             asChild
           >
-            <Link to="/reset-password">Forget Password</Link>
-          </Button>
-
-          <Button type="submit" className="w-full">
-            Login
+            <Link to="/reset-password">Forgot Password?</Link>
           </Button>
         </form>
       </Form>

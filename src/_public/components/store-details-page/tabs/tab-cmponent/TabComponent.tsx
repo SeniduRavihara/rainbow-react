@@ -67,7 +67,7 @@ const TabComponent = ({
           id: doc.id,
         })) as Array<{ videoUrl: string; id: string }>;
 
-        console.log(sctionStaticAddsArr);
+        // console.log(sctionStaticAddsArr);
         setVideoList(sctionStaticAddsArr);
       });
 

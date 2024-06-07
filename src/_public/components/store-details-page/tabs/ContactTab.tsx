@@ -29,7 +29,7 @@ const ContactTab = ({ storeId }: { storeId: string }) => {
           contact: string;
         }>;
 
-        console.log(contactstListArr);
+        // console.log(contactstListArr);
         setAvailableContactMethods(contactstListArr.map(contactObj=> contactObj.type));
         setContactList(contactstListArr);
       });

@@ -24,6 +24,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { whatsapp } from "@/assets";
 // import { MdVerified } from "react-icons/md";
 import { Label } from "@/components/ui/label";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/firebase/config";
 
 type StoreCardProps = {
   title: string;
@@ -37,6 +39,7 @@ type StoreCardProps = {
   verified: boolean;
   showProfile: boolean;
   storeName: string;
+  visitCount: number;
 };
 
 const StoreCard = ({
@@ -51,6 +54,7 @@ const StoreCard = ({
   verified = false,
   showProfile = false,
   storeName,
+  visitCount,
 }: StoreCardProps) => {
   const [enquery, setEnquery] = useState("");
   const [openModel, setOpenModel] = useState(false);
@@ -61,11 +65,11 @@ const StoreCard = ({
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
-  const handleStoreClick = (id: string) => {
-    // console.log("SENIDU", showProfile);
-    console.log(id)
+  const handleStoreClick = async (storeId: string) => {
+    console.log("sdhfd", storeId);
 
     if (showProfile) {
+      await updateVisitCount(storeId);
       const formattedStoreName = storeName.replace(/\s+/g, "-");
       navigate(`/business-profile/${formattedStoreName}`);
     }
@@ -92,6 +96,23 @@ const StoreCard = ({
     }
     setOpenModel(false);
     setEnquery("");
+  };
+
+  const updateVisitCount = async (storeId: string) => {
+    if (storeId) {
+      try {
+        const documentRef = doc(db, "store", storeId);
+        await updateDoc(documentRef, {
+          visitCount: visitCount + 1,
+        });
+
+        await updateDoc(doc(db, "latestStore", storeId), {
+          visitCount: visitCount + 1,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -125,7 +146,7 @@ const StoreCard = ({
         <div className="w-8/12 px-3 py-2 flex flex-col justify-between">
           <div
             className="w-full flex flex-col justify-between"
-            onClick={() => handleStoreClick(storeName)}
+            onClick={() => handleStoreClick(id)}
           >
             <div className="flex items-center justify-between mb-2">
               <h1 className="font-semibold text-[23px]">{title}</h1>

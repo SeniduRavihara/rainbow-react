@@ -20,25 +20,21 @@ import {
   IoMdArrowDropright,
 } from "react-icons/io";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, { forwardRef, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Kbd, Tag } from "@chakra-ui/react";
 import { addLocation, togglePublish, updateStore3 } from "@/firebase/api";
 import { useAuth } from "@/hooks/useAuth";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 // import "@wojtekmaj/react-timerange-picker/dist/TimeRangePicker.css";
 import "@/styles/TimeRangePicker.css";
 import "react-clock/dist/Clock.css";
-import { cleanAddress } from "@/lib/utils";
+import { cleanAddress, cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 import PhoneInput from "react-phone-number-input";
-// import "react-phone-number-input/style.css";
 import "@/styles/phone-number-input.css";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Dropdown from "react-bootstrap/Dropdown";
-import Form from "react-bootstrap/Form";
-// import { categories } from "@/constants";
+import { MdArrowForwardIos } from "react-icons/md";
 import {
   Dialog,
   DialogContent,
@@ -47,17 +43,35 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Select } from "@chakra-ui/react";
+import { WithContext as ReactTags } from "react-tag-input";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
+import "./tagInput-styles.css";
+
+// const suggestions = [
+  // { id: "1", text: "Apple" },
+  // { id: "2", text: "Banana" },
+  // { id: "3", text: "Cherry" },
+  // Add more suggestions as needed
+// ];
+
+const KeyCodes = {
+  comma: 188,
+  enter: 13,
+};
+
+const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 const ManageStorePage = () => {
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [whatsappNumber, setWhatsappNumber] = useState<string | undefined>();
-  const [tagInput, setTagInput] = useState("");
-  const [tags, setTags] = useState<Array<string>>([]);
+  // const [tagInput, setTagInput] = useState("");
+  // const [tags, setTags] = useState<Array<string>>([]);
+  const [tags2, setTags2] = useState<Array<{ id: string; text: string }>>([]);
   const [loading, setLoading] = useState(false);
-  // const [info1, setInfo1] = useState("");
-  // const [info2, setInfo2] = useState("");
   const [timevalue, setTimevalue] = useState<TimeValue | null>(null);
   const [schedulArr, setSchedulArr] = useState<
     Array<{ day: string; time: TimeValue }>
@@ -100,11 +114,16 @@ const ManageStorePage = () => {
   const [website, setWebsite] = useState("");
 
   // const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
-  const [category, setCategory] = useState("");
-  const { currentUserData, locationArr, categories } = useData();
-  const [visibleCategories, setVisibleCategories] =
-    useState<Array<{ icon: string; label: string }> | null>(categories);
+  // const [category, setCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
+  const { currentUserData, locationArr, categories } = useData();
+  const [visibleCategories, setVisibleCategories] = useState<Array<{
+    icon: string;
+    label: string;
+  }> | null>(categories);
+  const [userCategory, setUserCategory] = useState("");
+  const [openModel, setOpenModel] = useState(false);
   const [requestPhone, setRequestPhone] = useState("");
   const [openRequestModel, setOpenRequestModel] = useState(false);
 
@@ -112,7 +131,7 @@ const ManageStorePage = () => {
 
   const params = useParams();
 
-  // console.log(storeImages);
+  console.log(selectedCategory);
 
   useEffect(() => {
     const collectionRef = collection(db, "categories");
@@ -138,44 +157,44 @@ const ManageStorePage = () => {
 
         if (params.storeId === "userStore") {
           // if (exiss) {
-            console.log("RUNNING");
-            
-            const collectionRef = collection(db, "latestStore");
-            const q = query(
-              collectionRef,
-              where("userId", "==", currentUserData.id)
-            );
+          console.log("RUNNING");
 
-            const unsubscribe = onSnapshot(q, (querySnapshot) => {
-              const storeListArr = querySnapshot.docs.map((doc) => ({
-                ...doc.data(),
-                id: doc.id,
-              })) as StoreListType;
+          const collectionRef = collection(db, "latestStore");
+          const q = query(
+            collectionRef,
+            where("userId", "==", currentUserData.id)
+          );
 
-              // console.log(storeListArr);
-              setCurrentUserStore(storeListArr[0]);
-            });
+          const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const storeListArr = querySnapshot.docs.map((doc) => ({
+              ...doc.data(),
+              id: doc.id,
+            })) as StoreListType;
 
-            return unsubscribe;
+            // console.log(storeListArr);
+            setCurrentUserStore(storeListArr[0]);
+          });
 
-            // const documentRef = doc(db, "latestStore", params.storeId);
-            // const unsubscribe = onSnapshot(documentRef, (snapshot) => {
-            //   if (snapshot.exists()) {
-            //     setCurrentUserStore({
-            //       ...snapshot.data(),
-            //       id: snapshot.id,
-            //     } as StoreObj);
-            //   } else {
-            //     setCurrentUserStore(null);
-            //   }
-            // });
+          return unsubscribe;
 
-            // // Return the unsubscribe function to stop listening for updates when the component unmounts
-            // return () => unsubscribe();
+          // const documentRef = doc(db, "latestStore", params.storeId);
+          // const unsubscribe = onSnapshot(documentRef, (snapshot) => {
+          //   if (snapshot.exists()) {
+          //     setCurrentUserStore({
+          //       ...snapshot.data(),
+          //       id: snapshot.id,
+          //     } as StoreObj);
+          //   } else {
+          //     setCurrentUserStore(null);
+          //   }
+          // });
+
+          // // Return the unsubscribe function to stop listening for updates when the component unmounts
+          // return () => unsubscribe();
           // }
         } else {
           // if (exists) {            console.log("RUNNING");
-            console.log("RUNNING2");
+          console.log("RUNNING2");
 
           const documentRef = doc(db, "latestStore", params.storeId);
           const unsubscribe = onSnapshot(documentRef, (snapshot) => {
@@ -186,7 +205,6 @@ const ManageStorePage = () => {
               } as StoreObj);
 
               // console.log(snapshot.data());
-              
             } else {
               setCurrentUserStore(null);
             }
@@ -210,7 +228,8 @@ const ManageStorePage = () => {
       setPhoneNumber(currentUserStore.phoneNumber);
       setWhatsappNumber(currentUserStore.whatsappNumber);
       setTitle(currentUserStore.title);
-      setTags(currentUserStore.tags);
+      // setTags(currentUserStore.tags);
+      setTags2(currentUserStore.tags.map((tag) => ({ id: tag, text: tag })));
       setFacebook(currentUserStore.fasebook);
       setInstagram(currentUserStore.instagram);
       setLinkedin(currentUserStore.linkedin);
@@ -218,7 +237,8 @@ const ManageStorePage = () => {
       setYoutube(currentUserStore.youtube);
       setTiktok(currentUserStore.tiktok);
       setWebsite(currentUserStore.website);
-      setCategory(currentUserStore.category || "");
+      // setCategory(currentUserStore.category || "");
+      setSelectedCategory(currentUserStore.category || "");
       setSchedulArr(currentUserStore.schedulArr);
       setStoreImages((pre) =>
         pre.map((imgObj, index) => {
@@ -233,11 +253,11 @@ const ManageStorePage = () => {
     }
   }, [currentUserStore]);
 
-  const handleAddTag = (tag: string) => {
-    if (!tag || tags.includes(tag)) return;
-    setTagInput("");
-    setTags((pre) => [...pre, tag]);
-  };
+  // const handleAddTag = (tag: string) => {
+  //   if (!tag || tags.includes(tag)) return;
+  //   setTagInput("");
+  //   setTags((pre) => [...pre, tag]);
+  // };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -272,7 +292,8 @@ const ManageStorePage = () => {
         address,
         phoneNumber,
         whatsappNumber,
-        tags,
+        // tags,
+        tags: tags2.map((tag) => tag.text),
         storeImages: storeImageUrls,
         storeIcon: storeIconUrl,
         email: currentUser.email,
@@ -286,14 +307,16 @@ const ManageStorePage = () => {
         youtube,
         tiktok,
         website,
-        category,
+        category: selectedCategory,
         haveUpdate: [
           ...(currentUserStore?.haveUpdate ?? []),
           currentUserStore?.haveUpdate.includes("normal")
             ? undefined
             : "normal",
           ...(storeIcon?.file ? ["storeIcon"] : []),
-          ...(storeImages.filter((obj)=> obj.file).length >= 1 ? ["storeImages"] : []),
+          ...(storeImages.filter((obj) => obj.file).length >= 1
+            ? ["storeImages"]
+            : []),
         ].filter((txt) => txt),
       });
       // updateProfileForHaveStore(currentUser?.uid, true);
@@ -383,11 +406,11 @@ const ManageStorePage = () => {
     setDayIndex((pre) => pre - 1);
   };
 
-  const handleCatogaryClick = (label: string) => {
-    // if (!label || categoriesArr.includes(label)) return;
-    // setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
-    setCategory(label);
-  };
+  // const handleCatogaryClick = (label: string) => {
+  //   // if (!label || categoriesArr.includes(label)) return;
+  //   // setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
+  //   setCategory(label);
+  // };
 
   const handleClickRequest = async () => {
     if (currentUserStore) {
@@ -417,63 +440,188 @@ const ManageStorePage = () => {
   // };
 
   // CustomToggle component
-  const CustomToggle = forwardRef<
-    HTMLAnchorElement,
-    {
-      children: React.ReactNode;
-      onClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
-    }
-  >(({ children, onClick }, ref) => (
-    <a
-      href=""
-      ref={ref}
-      onClick={(e) => {
-        e.preventDefault();
-        onClick(e);
-      }}
-    >
-      {children}
-      &#x25bc;
-    </a>
-  ));
+  // const CustomToggle = forwardRef<
+  //   HTMLAnchorElement,
+  //   {
+  //     children: React.ReactNode;
+  //     onClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  //   }
+  // >(({ children, onClick }, ref) => (
+  //   <a
+  //     href=""
+  //     ref={ref}
+  //     onClick={(e) => {
+  //       e.preventDefault();
+  //       onClick(e);
+  //     }}
+  //   >
+  //     {children}
+  //     &#x25bc;
+  //   </a>
+  // ));
 
   // CustomMenu component
-  const CustomMenu = forwardRef<
-    HTMLDivElement,
-    {
-      children: React.ReactNode;
-      style?: React.CSSProperties;
-      className?: string;
-      "aria-labelledby": string;
-    }
-  >(({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
-    const [value, setValue] = useState<string>("");
+  // const CustomMenu = forwardRef<
+  //   HTMLDivElement,
+  //   {
+  //     children: React.ReactNode;
+  //     style?: React.CSSProperties;
+  //     className?: string;
+  //     "aria-labelledby": string;
+  //   }
+  // >(({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
+  //   const [value, setValue] = useState<string>("");
 
-    return (
-      <div
-        ref={ref}
-        style={style}
-        className={className}
-        aria-labelledby={labeledBy}
-      >
-        <Form.Control
-          autoFocus
-          className="mx-3 my-2 w-auto"
-          placeholder="Type to filter..."
-          onChange={(e) => setValue(e.target.value)}
-          value={value}
-        />
-        <ul className="list-unstyled">
-          {React.Children.toArray(children).filter(
-            (child) =>
-              !value ||
-              (typeof child === "string" &&
-                child.toLowerCase().startsWith(value))
-          )}
-        </ul>
-      </div>
-    );
-  });
+  //   return (
+  //     <div
+  //       ref={ref}
+  //       style={style}
+  //       className={className}
+  //       aria-labelledby={labeledBy}
+  //     >
+  //       <Form.Control
+  //         autoFocus
+  //         className="mx-3 my-2 w-auto"
+  //         placeholder="Type to filter..."
+  //         onChange={(e) => setValue(e.target.value)}
+  //         value={value}
+  //       />
+  //       <ul className="list-unstyled">
+  //         {React.Children.toArray(children).filter(
+  //           (child) =>
+  //             !value ||
+  //             (typeof child === "string" &&
+  //               child.toLowerCase().startsWith(value))
+  //         )}
+  //       </ul>
+  //     </div>
+  //   );
+  // });
+
+  const handleCancelClick = () => {
+    setOpenModel(false);
+    setUserCategory("");
+  };
+
+  const handleAddUserCategory = async () => {
+    if (userCategory && currentUser) {
+      toast.success("Request Send to Admin");
+      const adminMessagesCollectionRef = collection(db, "adminMessages");
+      await addDoc(adminMessagesCollectionRef, {
+        message: `I would like to add ${userCategory} as a new category`,
+        createdAt: new Date(),
+        imageUrl: "",
+        fromName: "",
+        fromId: currentUser.uid,
+        toName: "admin",
+        toId: "",
+        seen: false,
+      });
+    }
+    setOpenModel(false);
+    setUserCategory("");
+  };
+
+  // ----------------TAG-----------------------
+
+  const handleDelete = (index: number) => {
+    setTags2(tags2.filter((_, i) => i !== index));
+  };
+
+  const handleAddition = (tag: { id: string; text: string }) => {
+    setTags2([...tags2, tag]);
+  };
+
+  const handleDrag = (
+    tag: {
+      id: string;
+      text: string;
+    },
+    currPos: number,
+    newPos: number
+  ) => {
+    const newTags = tags2.slice();
+    newTags.splice(currPos, 1);
+    newTags.splice(newPos, 0, tag);
+    setTags2(newTags);
+  };
+
+  // ------------------------------------------
+
+    const handleChange = (
+      event: React.ChangeEvent<HTMLInputElement>,
+      index: number
+    ): void => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      // Create a copy of the previous images array
+      const updatedImages = [...storeImages];
+
+      // Check if an image with the same index already exists
+      const existingImageIndex = updatedImages.findIndex(
+        (item) => item.index === index
+      );
+
+      // If an image with the same index exists, replace it with the new image
+      if (existingImageIndex !== -1) {
+        updatedImages[existingImageIndex] = { index, file, imageUrl: null };
+      } else {
+        // Otherwise, add the new image to the array
+        updatedImages.push({ index, file, imageUrl: null });
+      }
+
+      // Update the storeImages state with the updated array
+      setStoreImages(updatedImages);
+    };
+
+    const renderSlides = () => {
+      const slides = [];
+      for (let i = 0; i < 4; i++) {
+        const file = storeImages[i]?.file;
+        const imgUrl = storeImages[i].imageUrl;
+
+        const imageUrl = file
+          ? URL.createObjectURL(file)
+          : imgUrl ?? "imageGalery";
+
+        slides.push(
+          <div
+            key={i}
+            className="w-full h-full flex flex-col items-center justify-center"
+          >
+            <div>
+              <img
+                src={imageUrl}
+                className={cn(
+                  "object-covr rounded-l-md",
+                  imageUrl === "imageGalery" && "w-32 h-32"
+                )}
+                alt=""
+              />
+            </div>
+
+            <div>
+              <input
+                id={`fileInput${i}`}
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleChange(e, i)}
+                required
+                className="hidden"
+              />
+              <p>
+                Select your store image{" "}
+                <label htmlFor={`fileInput${i}`} className="text-blue-500">
+                  Browse
+                </label>
+              </p>
+            </div>
+          </div>
+        );
+      }
+      return slides;
+    };
 
   // if (!currentUserStore) return <div>Loading...</div>;
   return (
@@ -491,13 +639,13 @@ const ManageStorePage = () => {
           {/* <h2 className="text-xl font-semibold mb-4">Your Store</h2> */}
           <div className="flex flex-col gap-10 items-center justify-between">
             <div className="flex flex-col md:flex-row gap-4">
-              <div className="md:w-6/12 w-full flex items-center justify-center">
+              {/* <div className="md:w-6/12 w-full flex items-center justify-center">
                 <ImageSwiper
                   setStoreImages={setStoreImages}
                   storeImages={storeImages}
                 />
-              </div>
-              <div
+              </div> */}
+              {/* <div
                 className="gap-3 flex items-center justify-center md:w-6/12 w-full"
                 id="logo-conten"
               >
@@ -552,8 +700,33 @@ const ManageStorePage = () => {
                     Brower
                   </label>
                 </p>
-              </div>
+              </div> */}
             </div>
+            {/* <ul className="flex gap-3">
+              {storeImages.map((imgObj, index) => (
+                <li key={index}>
+                  <img
+                    src={imgObj.imageUrl || ""}
+                    className="w-44 h-36 object-cover"
+                  />
+                  <input
+                    id={`fileInput${i}`}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleChange(e, i)}
+                    required
+                    className="hidden"
+                  />
+                  <p>
+                    Select your store image{" "}
+                    <label htmlFor={`fileInput${i}`} className="text-blue-500">
+                      Browse
+                    </label>
+                  </p>
+                </li>
+              ))}
+            </ul> */}
+            {renderSlides()}
             {/* ----------------------------------------------------------- */}
             <div className="w-full px-3 gap-5">
               <form onSubmit={handleSubmit}>
@@ -688,7 +861,38 @@ const ManageStorePage = () => {
                   </>
 
                   {/* -----------------Tag input---------------------------- */}
+
                   <div className="col-span-2 flex flex-col">
+                    <DndProvider backend={HTML5Backend}>
+                      <div className="tag-input-component">
+                        <ReactTags
+                          tags={tags2}
+                          // suggestions={suggestions}
+                          delimiters={delimiters}
+                          handleDelete={handleDelete}
+                          handleAddition={handleAddition}
+                          handleDrag={handleDrag}
+                          inputFieldPosition="bottom"
+                          classNames={{
+                            // tagInput: "custom-tag-input",
+                            tagInputField:
+                              "flex px-2 items-center justify-between col-span-2 text-lg w-full focus:outline-none",
+                            suggestions: "custom-suggestions",
+                            activeSuggestion: "custom-active-suggestion",
+                          }}
+                          autocomplete
+                          // editable
+                          // clearAll
+                        />
+                      </div>
+                      {/* <Label className="text-xs mt-3 text-gray-400 text-center">
+                        Press <Kbd className="text-gray-500">Enter</Kbd> after
+                        every tag
+                      </Label> */}
+                    </DndProvider>
+                  </div>
+
+                  {/* <div className="col-span-2 flex flex-col">
                     <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border rounded-md focus:outline-blue-400">
                       <div className="flex items-center">
                         <div className="">
@@ -726,7 +930,7 @@ const ManageStorePage = () => {
                       Press <Kbd className="text-gray-500">Enter</Kbd> after
                       every tag
                     </Label>
-                  </div>
+                  </div> */}
 
                   {/* --------------------Social Links------------------------- */}
                   <>
@@ -831,30 +1035,37 @@ const ManageStorePage = () => {
                     </div>
                   </>
 
-                  {/* --------------------------------------------------------- */}
-                  <>
+                  {/* ------------------------ Cotegories --------------------------------- */}
+                  <div className="col-span-2">
                     <hr className="col-span-2" />
                     <h1 className="col-span-2 text-2xl mt-5 mb-3 text-blue-500 text-left">
-                      List Your Cotogary
+                      Business Cotegories
                     </h1>
 
-                    <div className="col-span-2 flex flex-row-reverse gap-5 items-center justify-center">
-                      {category && (
-                        <div className="bg-blue-500 text-white px-3 py-2 rounded-md">
-                          {/* {categoriesArr.map((catogary, index) => (
-                          <CustomTag key={index} styles="m-1">
-                            <div>{catogary}</div>
-                            <RxCross2
-                              className="mt-1"
-                              onClick={() => handleRemoveCatogary(catogary)}
-                            />
-                          </CustomTag>
-                        ))} */}
-                          {category}
-                        </div>
-                      )}
+                    <div className="flex items-center justify-between w-full gap-4">
+                      <div className="col-span-2 flex flex-row-reverse gap-5 items-center justify-center">
+                        <Select
+                          value={selectedCategory}
+                          onChange={(
+                            event:
+                              | React.ChangeEvent<HTMLSelectElement>
+                              | undefined
+                          ) => {
+                            if (event && event.target) {
+                              setSelectedCategory(event.target.value);
+                            }
+                          }}
+                        >
+                          {visibleCategories &&
+                            visibleCategories.map((catogaryObj, index) => (
+                              <option value={catogaryObj.label} key={index}>
+                                {catogaryObj.label}
+                              </option>
+                            ))}
+                        </Select>
+                      </div>
 
-                      <Dropdown>
+                      {/* <Dropdown>
                         <Dropdown.Toggle
                           as={CustomToggle}
                           id="dropdown-custom-components"
@@ -864,8 +1075,8 @@ const ManageStorePage = () => {
 
                         <Dropdown.Menu as={CustomMenu}>
                           <div className="h-[200px] overflow-y-scroll">
-                            {visibleCategories && visibleCategories.map(
-                              (catogaryObj, index) => (
+                            {visibleCategories &&
+                              visibleCategories.map((catogaryObj, index) => (
                                 <Dropdown.Item
                                   eventKey={index + 1}
                                   onClick={() =>
@@ -875,13 +1086,76 @@ const ManageStorePage = () => {
                                 >
                                   {catogaryObj.label}
                                 </Dropdown.Item>
-                              )
-                            )}
+                              ))}
                           </div>
                         </Dropdown.Menu>
-                      </Dropdown>
+                      </Dropdown> */}
+
+                      <div className="w-full flex items-center justify-center">
+                        <Dialog open={openModel} onOpenChange={setOpenModel}>
+                          <DialogTrigger asChild>
+                            <Button className="bg-[#277aa0] hover:bg-[#277aa0]/90">
+                              Request For Add New Category
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                              <DialogTitle>Suggest your Category</DialogTitle>
+                            </DialogHeader>
+
+                            <div className="grid gap-4 py-2">
+                              <div className="space-y-3">
+                                <div>
+                                  <Label htmlFor="name">Category</Label>
+                                  <Input
+                                    id="name"
+                                    className="col-span-3"
+                                    placeholder="Type your Category..."
+                                    value={userCategory}
+                                    onChange={(e) =>
+                                      setUserCategory(e.target.value)
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            <DialogFooter className="sm:justify-start">
+                              <div className="w-full flex items-center justify-center gap-2 px-10">
+                                <Button
+                                  type="button"
+                                  onClick={handleCancelClick}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button onClick={handleAddUserCategory}>
+                                  Send
+                                </Button>
+                              </div>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     </div>
-                  </>
+                  </div>
+
+                  {currentUserStore && (
+                    <Button
+                      variant="destructive"
+                      type="button"
+                      onClick={() =>
+                        togglePublish(
+                          currentUserStore.id,
+                          currentUserStore.published
+                        )
+                      }
+                      className="m-full col-span-2 flex items-center justify-center p-3 text-white bg-[#41a1ce] hover:bg-[#41a1ce]/90"
+                    >
+                      {currentUserStore.published ? "Unpublish" : "Publish"}
+                    </Button>
+                  )}
+
+                  <hr className="col-span-2" style={{ borderWidth: "5px" }} />
 
                   <div className="w-full col-span-2 flex items-center justify-center mb-10">
                     <Button
@@ -891,7 +1165,7 @@ const ManageStorePage = () => {
                         !address ||
                         !phoneNumber ||
                         !whatsappNumber ||
-                        !tags ||
+                        !tags2 ||
                         loading
                       }
                       className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white "
@@ -905,27 +1179,12 @@ const ManageStorePage = () => {
                       )}
                     </Button>
 
-                    {currentUserStore && (
-                      <Button
-                        variant="destructive"
-                        type="button"
-                        onClick={() =>
-                          togglePublish(
-                            currentUserStore.id,
-                            currentUserStore.published
-                          )
-                        }
-                        className="md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white"
-                      >
-                        {currentUserStore.published ? "Unpublish" : "Publish"}
-                      </Button>
-                    )}
-
                     {currentUserStore.showProfile ? (
                       <div>
                         <Link to={`/setup-tabs-data/${currentUserStore?.id}`}>
                           <Button className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white ">
-                            Next
+                            Next{" "}
+                            <MdArrowForwardIos className="ml-2 text-xl mt-[1px]" />
                           </Button>
                         </Link>
                       </div>
@@ -940,7 +1199,12 @@ const ManageStorePage = () => {
                             size="sm"
                             className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white"
                           >
-                            <h4>Request For Create Profile</h4>
+                            <h4>
+                              Request For
+                              <span className="text-yellow-300 ml-1">
+                                Pro Profile
+                              </span>
+                            </h4>
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px] flex items-center justify-center flex-col">
@@ -979,7 +1243,7 @@ const ManageStorePage = () => {
                                 onClick={handleClickRequest}
                                 className=" md:w-[200px] m-[10px] flex items-center justify-center p-3 text-white "
                               >
-                                Request For Create Profile
+                                Request For Pro Profile
                               </Button>
                             </div>
                           </DialogFooter>

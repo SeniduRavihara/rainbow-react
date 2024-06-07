@@ -6,14 +6,13 @@ import { useEffect } from "react";
 import { RxCross1 } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 import { Hits, InstantSearch, SearchBox } from "react-instantsearch";
-import "./AllCategoryPage.css"
+import "./AllCategoryPage.css";
 
 import algoliasearch from "algoliasearch/lite";
 const searchClient = algoliasearch(
   import.meta.env.VITE_ALGOLIA_APP_ID,
   import.meta.env.VITE_ALGOLIA_SEARCH_ONLY_API_KEY
 );
-
 
 // const searchIndex = searchClient.initIndex("categories");
 
@@ -74,7 +73,7 @@ const AllCategoryPage = () => {
     navigate("/");
   };
 
-  function Hit({ hit }: {hit: any}) {
+  function Hit({ hit }: { hit: any }) {
     return (
       <div
         className="cursor-pointer flex items-center gap-3 flex-col justify-center text-center"

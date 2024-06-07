@@ -116,6 +116,7 @@ const ResultList = ({ category }: { category:string }) => {
                 verified={data.verified}
                 showProfile={data.showProfile}
                 storeName={data.title}
+                visitCount={data.visitCount}
               />
             </li>
           ))}

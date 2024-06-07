@@ -66,7 +66,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     id: string
   }> | null>(null);
 
-  console.log(searchResultStores);
+  // console.log(searchResultStores);
   
 
   // useEffect(()=>{
@@ -243,7 +243,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
           id: doc.id,
         })) as Array<{ icon: string; label: string; id: string }>;
 
-        console.log("HELOOOOO",locationArr);
+        // console.log("HELOOOOO",locationArr);
         setCategories(locationArr);
       });
 

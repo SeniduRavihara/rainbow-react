@@ -4,6 +4,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
@@ -105,10 +106,10 @@ const RegisterForm = () => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  {/* <FormLabel>Name</FormLabel> */}
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Name"
+                      placeholder="Enter name"
                       // disabled={isPending}
                       {...field}
                     />
@@ -123,11 +124,11 @@ const RegisterForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  {/* <FormLabel>Email</FormLabel> */}
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="Email"
+                      placeholder="Enter email"
                       // disabled={isPending}
                       {...field}
                     />
@@ -142,12 +143,12 @@ const RegisterForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  {/* <FormLabel>Password</FormLabel> */}
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
                       // disabled={isPending}
-                      placeholder="password"
+                      placeholder="Enter password"
                       {...field}
                     />
                   </FormControl>
@@ -176,7 +177,10 @@ const RegisterForm = () => {
             /> */}
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button
+            type="submit"
+            className="w-full bg-[#277aa0] hover:bg-[#277aa0]/90"
+          >
             Signup
           </Button>
         </form>

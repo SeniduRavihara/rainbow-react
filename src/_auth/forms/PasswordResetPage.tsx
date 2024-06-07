@@ -1,44 +1,46 @@
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { auth } from "@/firebase/config";
-import { sendPasswordResetEmail } from "firebase/auth";
+import { confirmPasswordReset } from "firebase/auth";
 import { useState } from "react";
 import toast from "react-hot-toast";
-
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
-
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { Label } from "@/components/ui/label";
 
-const ForgetPasswordPage = () => {
-  const [email, setEmail] = useState("");
+const PasswordResetPage = () => {
+  const [password, setPassword] = useState("");
+  const [searchParams] = useSearchParams();
+  const resetCode = searchParams.get("oobCode");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!email){
-      toast.error("Please Eter Your Email")
-      return
+    if (!password) {
+      //   toast.error("Please Eter Your Email");
+      return;
     }
+
+    if (resetCode) {
       try {
-        await sendPasswordResetEmail(auth, email);
-        toast.success("Check In your Email");
-        setEmail("")
+        await confirmPasswordReset(auth, resetCode, password);
+        toast.success(
+          "Your password has been reset. Please log in with your new password."
+        );
+        setPassword("");
         navigate("/login");
       } catch (error) {
         console.log(error);
       }
+    }
   };
 
   return (
     <div>
-      <Card className="sm:w-[400px] w-[350px] shadow-md backdrop-blur-xl bg-white/60">
+      <Card className="xsm:w-[400px] w-[350px] shadow-md backdrop-blur-xl bg-white/60">
         <CardHeader className="text-center">
           <Header label="Reset Your Password" />
         </CardHeader>
@@ -49,17 +51,17 @@ const ForgetPasswordPage = () => {
             className="flex flex-col gap-5 items-center justify-center"
           >
             <div className="w-full">
-              <Label>Enter Your email</Label>
+              <Label>Enter Your New Password</Label>
               <Input
-                type="text"
+                type="password"
                 className="w-full"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
             <Button className="mx-auto bg-[#277aa0] hover:bg-[#277aa0]/90">
-              send password reset email
+              Reset
             </Button>
           </form>
         </CardContent>
@@ -76,4 +78,4 @@ const ForgetPasswordPage = () => {
     </div>
   );
 };
-export default ForgetPasswordPage;
+export default PasswordResetPage;
