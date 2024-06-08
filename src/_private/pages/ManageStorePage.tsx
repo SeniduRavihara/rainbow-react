@@ -84,10 +84,10 @@ const ManageStorePage = () => {
     { index: 4, imageUrl: "" },
     { index: 5, imageUrl: "" },
   ]);
-  const [storeIcon, setStoreIcon] = useState<{
-    file: File | null;
-    imageUrl: string;
-  } | null>(null);
+  // const [storeIcon, setStoreIcon] = useState<{
+  //   file: File | null;
+  //   imageUrl: string;
+  // } | null>(null);
   const [currentUserStore, setCurrentUserStore] = useState<StoreObj | null>(
     null
   );
@@ -114,7 +114,7 @@ const ManageStorePage = () => {
 
   const params = useParams();
 
-  // console.log(storeImages);
+  console.log(storeImages);
 
   useEffect(() => {
     const collectionRef = collection(db, "categories");
@@ -223,14 +223,15 @@ const ManageStorePage = () => {
       setSchedulArr(currentUserStore.schedulArr);
       setStoreImages((pre) =>
         pre.map((imgObj, index) => {
+          const { file, ...rest } = imgObj;
           return { ...imgObj, imageUrl: currentUserStore.storeImages[index] };
         })
       );
-      setStoreIcon((pre) =>
-        pre
-          ? { ...pre, imageUrl: currentUserStore.storeIcon }
-          : { file: null, imageUrl: currentUserStore.storeIcon }
-      );
+      // setStoreIcon((pre) =>
+      //   pre
+      //     ? { ...pre, imageUrl: currentUserStore.storeIcon }
+      //     : { file: null, imageUrl: currentUserStore.storeIcon }
+      // );
     }
   }, [currentUserStore]);
 
@@ -251,16 +252,12 @@ const ManageStorePage = () => {
         seen: false,
       });
 
-      await handleUpload(currentUserStore?.id);
-      const storeIconUrl =
-        (await uploadStoreIcon(currentUserStore.id)) ||
-        (storeIcon?.imageUrl ?? "");
-      // console.log("STORE", storeIconUrl);
+      const storeImageUrlList = await handleUpload(currentUserStore?.id);
+      console.log("URL LIST", storeImageUrlList);
 
-      // const validStoreImages = storeImages.filter((img) => img !== undefined);
-      const storeImageUrls = storeImages
-        .map((img) => img.imageUrl)
-        .filter((img): img is string => img !== undefined);
+      // const storeImageUrls = storeImages
+      //   .map((img) => img.imageUrl)
+      //   .filter((img): img is string => img !== undefined);
 
       await updateStore3(currentUserStore?.id, {
         title,
@@ -268,8 +265,8 @@ const ManageStorePage = () => {
         phoneNumber,
         whatsappNumber,
         tags,
-        storeImages: storeImageUrls,
-        storeIcon: storeIconUrl,
+        storeImages: storeImageUrlList?.filter((url) => url),
+        // storeIcon: storeIconUrl,
         email: currentUser.email,
         // info1,
         // info2,
@@ -287,7 +284,6 @@ const ManageStorePage = () => {
           currentUserStore?.haveUpdate.includes("normal")
             ? undefined
             : "normal",
-          ...(storeIcon?.file ? ["storeIcon"] : []),
           ...(storeImages.filter((obj) => obj.file).length >= 1
             ? ["storeImages"]
             : []),
@@ -303,55 +299,45 @@ const ManageStorePage = () => {
     toast.success("Store Updated Successfully");
   };
 
-  const uploadStoreIcon = async (storeId: string) => {
-    if (storeIcon?.file) {
-      try {
-        const fileRef = ref(
-          storage,
-          `store_data/${storeId}/latest/store_icons/${storeId}`
-        );
-        await uploadBytes(fileRef, storeIcon.file);
-        const photoURL = await getDownloadURL(fileRef);
-
-        return photoURL;
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
   const handleUpload = async (storeId: string) => {
     if (storeImages.length > 0) {
+      const storeImageUrlList = [];
       try {
         for (let i = 0; i < storeImages.length; i++) {
+          // console.log("Senu", storeImages[i]);
+
           const file = storeImages[i].file;
           const fileRef = ref(
             storage,
             `store_data/${storeId}/latest/store-images/${storeImages[i].index}`
           );
-          console.log("Working");
 
-          if (!file) continue;
+          if (!file) {
+            storeImageUrlList.push(storeImages[i].imageUrl);
+            continue;
+          }
 
-          console.log("Working");
+          // console.log("Working", i);
 
           await uploadBytes(fileRef, file);
           const photoURL = await getDownloadURL(fileRef);
-          console.log("URL", photoURL);
+
+          storeImageUrlList.push(photoURL);
+
+          // console.log("URL", storeImageUrlList);
 
           // Update storeImages state with the uploaded image's URL
-          setStoreImages((prevImages) => {
-            const updatedImages = [...prevImages];
+          // setStoreImages((prevImages) => {
+          //   const updatedImages = [...prevImages];
 
-            // Image exists, update its URL
-            updatedImages[i].imageUrl = photoURL;
+          //   // Image exists, update its URL
+          //   updatedImages[i].imageUrl = photoURL;
 
-            return updatedImages;
-          });
-
-          // console.log("Download URL:", photoURL);
+          //   return updatedImages;
+          // });
         }
         console.log("All files uploaded successfully!");
+        return storeImageUrlList;
       } catch (error) {
         console.error("Error uploading files:", error);
         alert(
@@ -378,12 +364,6 @@ const ManageStorePage = () => {
   };
   const handlePrevDay = () => {
     setDayIndex((pre) => pre - 1);
-  };
-
-  const handleCatogaryClick = (label: string) => {
-    // if (!label || categoriesArr.includes(label)) return;
-    // setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
-    setCategory(label);
   };
 
   const handleClickRequest = async () => {
@@ -455,7 +435,7 @@ const ManageStorePage = () => {
     <div className="w-full min-h-screen text-center relative">
       <div className="md:absolute md:-top-2 md:left-5 flex text-4xl font-extralight items-center justify-center">
         <Link
-        className="relative -left-3"
+          className="relative -left-3"
           to={
             params.storeId === "userStore" ? "/" : "/manage-business-profiles"
           }
@@ -485,62 +465,6 @@ const ManageStorePage = () => {
                   setStoreImages={setStoreImages}
                   storeImages={storeImages}
                 />
-              </div>
-              <div
-                className="gap-3 flex items-center justify-center md:w-6/12 w-full"
-                id="logo-conten"
-              >
-                <input
-                  id={`iconInput`}
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files) {
-                      setStoreIcon((pre) =>
-                        pre
-                          ? {
-                              ...pre,
-                              file: e.target.files![0],
-                              imageUrl: URL.createObjectURL(e.target.files![0]),
-                            }
-                          : {
-                              file: e.target.files![0],
-                              imageUrl: URL.createObjectURL(e.target.files![0]),
-                            }
-                      );
-                    }
-                  }}
-                  required
-                  className="hidden"
-                />
-                <button
-                  className="photo-add-butto w-20 h-20 border rounded-md"
-                  id="logo-button"
-                  type="button"
-                >
-                  {storeIcon ? (
-                    <img
-                      src={
-                        (storeIcon.file &&
-                          URL.createObjectURL(storeIcon.file)) ??
-                        storeIcon.imageUrl
-                      }
-                      alt="profile"
-                      className="w-full h-full rounded-md object-cover"
-                    />
-                  ) : (
-                    <IonIcon icon={addOutline}></IonIcon>
-                  )}
-                </button>
-                <p className="text-center">
-                  Select your logo{" "}
-                  <label
-                    htmlFor="iconInput"
-                    className="text-blue-500 cursor-pointer"
-                  >
-                    Brower
-                  </label>
-                </p>
               </div>
             </div>
             {/* ----------------------------------------------------------- */}
@@ -904,118 +828,121 @@ const ManageStorePage = () => {
                     </div>
                   </div>
 
-                  {currentUserStore && (
-                    <Button
-                      variant="destructive"
-                      type="button"
-                      onClick={() =>
-                        togglePublish(
-                          currentUserStore.id,
-                          currentUserStore.published
-                        )
-                      }
-                      className="m-full col-span-2 flex items-center justify-center p-3 text-white bg-[#41a1ce] hover:bg-[#41a1ce]/90"
-                    >
-                      {currentUserStore.published ? "Unpublish" : "Publish"}
-                    </Button>
-                  )}
-
-                  <hr className="col-span-2" style={{ borderWidth: "5px" }} />
-
-                  <div className="w-full col-span-2 flex items-center justify-center mb-10">
-                    <Button
-                      type="submit"
-                      disabled={
-                        !title ||
-                        !address ||
-                        !phoneNumber ||
-                        !whatsappNumber ||
-                        !tags ||
-                        loading
-                      }
-                      className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white "
-                    >
-                      {loading ? (
-                        <>
-                          <Loader /> <span className="ml-3">Loading...</span>
-                        </>
-                      ) : (
-                        "Request For Update"
-                      )}
-                    </Button>
-
-                    {currentUserStore.showProfile ? (
-                      <div>
-                        <Link to={`/setup-tabs-data/${currentUserStore?.id}`}>
-                          <Button className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white ">
-                            Next{" "}
-                            <MdArrowForwardIos className="ml-2 text-xl mt-[1px]" />
-                          </Button>
-                        </Link>
-                      </div>
-                    ) : (
-                      <Dialog
-                        open={openRequestModel}
-                        onOpenChange={setOpenRequestModel}
+                  {/* ---------------------------Buttons---------------------------------- */}
+                  <>
+                    {currentUserStore && (
+                      <Button
+                        variant="destructive"
+                        type="button"
+                        onClick={() =>
+                          togglePublish(
+                            currentUserStore.id,
+                            currentUserStore.published
+                          )
+                        }
+                        className="m-full col-span-2 flex items-center justify-center p-3 text-white bg-[#41a1ce] hover:bg-[#41a1ce]/90"
                       >
-                        <DialogTrigger>
-                          <Button
-                            asChild
-                            size="sm"
-                            className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white"
-                          >
-                            <h4>
-                              Request For
-                              <span className="text-yellow-300 ml-1">
-                                Pro Profile
-                              </span>
-                            </h4>
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px] flex items-center justify-center flex-col">
-                          <DialogHeader>
-                            <DialogTitle>Send Your Request</DialogTitle>
-                          </DialogHeader>
-
-                          <div className="grid gap-4 py-2 w-full">
-                            <div className="">
-                              <Label>Phone No</Label>
-                              <Input
-                                id="name"
-                                className=""
-                                placeholder="Your Phone Number"
-                                value={requestPhone}
-                                onChange={(e) =>
-                                  setRequestPhone(e.target.value)
-                                }
-                              />
-                            </div>
-                          </div>
-
-                          <DialogFooter className="sm:justify-start">
-                            <div className="w-full flex items-center justify-center gap-2 px-10">
-                              <Button
-                                type="button"
-                                onClick={() => {
-                                  setOpenRequestModel(false);
-                                  setRequestPhone("");
-                                }}
-                              >
-                                Cancel
-                              </Button>
-                              <Button
-                                type="button"
-                                onClick={handleClickRequest}
-                                className=" md:w-[200px] m-[10px] flex items-center justify-center p-3 text-white "
-                              >
-                                Request For Pro Profile
-                              </Button>
-                            </div>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
+                        {currentUserStore.published ? "Unpublish" : "Publish"}
+                      </Button>
                     )}
-                  </div>
+
+                    <hr className="col-span-2" style={{ borderWidth: "5px" }} />
+
+                    <div className="w-full col-span-2 flex items-center justify-center mb-10">
+                      <Button
+                        type="submit"
+                        disabled={
+                          !title ||
+                          !address ||
+                          !phoneNumber ||
+                          !whatsappNumber ||
+                          !tags ||
+                          loading
+                        }
+                        className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white "
+                      >
+                        {loading ? (
+                          <>
+                            <Loader /> <span className="ml-3">Loading...</span>
+                          </>
+                        ) : (
+                          "Request For Update"
+                        )}
+                      </Button>
+
+                      {currentUserStore.showProfile ? (
+                        <div>
+                          <Link to={`/setup-tabs-data/${currentUserStore?.id}`}>
+                            <Button className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white ">
+                              Next{" "}
+                              <MdArrowForwardIos className="ml-2 text-xl mt-[1px]" />
+                            </Button>
+                          </Link>
+                        </div>
+                      ) : (
+                        <Dialog
+                          open={openRequestModel}
+                          onOpenChange={setOpenRequestModel}
+                        >
+                          <DialogTrigger>
+                            <Button
+                              asChild
+                              size="sm"
+                              className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white"
+                            >
+                              <h4>
+                                Request For
+                                <span className="text-yellow-300 ml-1">
+                                  Pro Profile
+                                </span>
+                              </h4>
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[425px] flex items-center justify-center flex-col">
+                            <DialogHeader>
+                              <DialogTitle>Send Your Request</DialogTitle>
+                            </DialogHeader>
+
+                            <div className="grid gap-4 py-2 w-full">
+                              <div className="">
+                                <Label>Phone No</Label>
+                                <Input
+                                  id="name"
+                                  className=""
+                                  placeholder="Your Phone Number"
+                                  value={requestPhone}
+                                  onChange={(e) =>
+                                    setRequestPhone(e.target.value)
+                                  }
+                                />
+                              </div>
+                            </div>
+
+                            <DialogFooter className="sm:justify-start">
+                              <div className="w-full flex items-center justify-center gap-2 px-10">
+                                <Button
+                                  type="button"
+                                  onClick={() => {
+                                    setOpenRequestModel(false);
+                                    setRequestPhone("");
+                                  }}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  type="button"
+                                  onClick={handleClickRequest}
+                                  className=" md:w-[200px] m-[10px] flex items-center justify-center p-3 text-white "
+                                >
+                                  Request For Pro Profile
+                                </Button>
+                              </div>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                    </div>
+                  </>
                 </div>
               </form>
             </div>

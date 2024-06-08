@@ -13,7 +13,7 @@ const Header = ({ label }: HeaderProps) => {
   return (
     <div className="w-full flex flex-col gap-y-4 items-center justify-center">
       <Link to="/">
-        <img src={logo} alt="logo" className="h-14 w-52" />
+        <img src={logo} alt="logo" className="h-14 w-48" />
       </Link>
       {/* <p className="text-muted-foreground text-3xl font-bold -mt-2">{label}</p> */}
     </div>

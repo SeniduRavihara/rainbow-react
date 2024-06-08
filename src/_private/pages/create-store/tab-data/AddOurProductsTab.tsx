@@ -260,7 +260,11 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
 
           <div className="flex flex-col gap-4 items-center space-x-2">
             <div className="grid flex-1 gap-2">
-              <img src={productImage?.croppedImageUrl} alt="" />
+              <img
+                src={productImage?.croppedImageUrl}
+                alt=""
+                className="w-44 h-38 object-cover"
+              />
               <label
                 htmlFor="image-input1"
                 className="btn btn-primary text-white shadow-none"
