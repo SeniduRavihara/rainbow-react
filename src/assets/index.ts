@@ -55,6 +55,7 @@ import web from "./img/social-platforms/web.png";
 import appStore from "./img/Download_on_the_App_Store_Badge.svg.png";
 import playStore from "./img/Google_Play_Store_badge_EN.svg.png";
 import whatsapp from "./img/icons8-whatsapp.svg";
+import tiktok from "./img/social-platforms/tiktok.png";
 
 import placeholderReviewPic from "./img/icons8-male-user-94.png";
 import imageGalery from "./img/image-gallery.png";
@@ -131,6 +132,7 @@ export {
   linkedin,
   twitter,
   yt,
+  tiktok,
   web,
   appStore,
   playStore,

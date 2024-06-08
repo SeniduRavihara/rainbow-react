@@ -10,38 +10,33 @@ import {
   doc,
   onSnapshot,
   query,
-  setDoc,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import {
   IoIosArrowBack,
+  IoIosClose,
   IoMdArrowDropleft,
   IoMdArrowDropright,
 } from "react-icons/io";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { Kbd, Select, Tag } from "@chakra-ui/react";
 import { addLocation, togglePublish, updateStore3 } from "@/firebase/api";
 import { useAuth } from "@/hooks/useAuth";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 // import "@wojtekmaj/react-timerange-picker/dist/TimeRangePicker.css";
 import "@/styles/TimeRangePicker.css";
 import "react-clock/dist/Clock.css";
-import { cleanAddress, cn } from "@/lib/utils";
+import { cleanAddress } from "@/lib/utils";
 import toast from "react-hot-toast";
 import PhoneInput from "react-phone-number-input";
+// import "react-phone-number-input/style.css";
 import "@/styles/phone-number-input.css";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MdArrowForwardIos } from "react-icons/md";
 import {
   Dialog,
   DialogContent,
@@ -50,28 +45,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Select } from "@chakra-ui/react";
-import { WithContext as ReactTags } from "react-tag-input";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { DndProvider } from "react-dnd";
-import "./tagInput-styles.css";
-
-const KeyCodes = {
-  comma: 188,
-  enter: 13,
-};
-
-const delimiters = [KeyCodes.comma, KeyCodes.enter];
+import { MdArrowForwardIos } from "react-icons/md";
+import { logo } from "@/assets";
 
 const ManageStorePage = () => {
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [whatsappNumber, setWhatsappNumber] = useState<string | undefined>();
-  // const [tagInput, setTagInput] = useState("");
-  // const [tags, setTags] = useState<Array<string>>([]);
-  const [tags2, setTags2] = useState<Array<{ id: string; text: string }>>([]);
+  const [tagInput, setTagInput] = useState("");
+  const [tags, setTags] = useState<Array<string>>([]);
   const [loading, setLoading] = useState(false);
+  // const [info1, setInfo1] = useState("");
+  // const [info2, setInfo2] = useState("");
   const [timevalue, setTimevalue] = useState<TimeValue | null>(null);
   const [schedulArr, setSchedulArr] = useState<
     Array<{ day: string; time: TimeValue }>
@@ -87,13 +73,17 @@ const ManageStorePage = () => {
   const [dayIndex, setDayIndex] = useState(0);
   const [storeImages, setStoreImages] = useState<
     Array<{
-      file?: File | null;
+      index: number;
+      file?: File;
       imageUrl: null | string;
-      id: string;
-      refName: string | null;
-      localUrl: string | null;
     }>
-  >([]);
+  >([
+    { index: 1, imageUrl: "" },
+    { index: 2, imageUrl: "" },
+    { index: 3, imageUrl: "" },
+    { index: 4, imageUrl: "" },
+    { index: 5, imageUrl: "" },
+  ]);
   const [storeIcon, setStoreIcon] = useState<{
     file: File | null;
     imageUrl: string;
@@ -108,27 +98,23 @@ const ManageStorePage = () => {
   const [youtube, setYoutube] = useState("");
   const [tiktok, setTiktok] = useState("");
   const [website, setWebsite] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
 
+  // const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
+  const [category, setCategory] = useState("");
   const { currentUserData, locationArr, categories } = useData();
   const [visibleCategories, setVisibleCategories] = useState<Array<{
     icon: string;
     label: string;
   }> | null>(categories);
-  const [userCategory, setUserCategory] = useState("");
-  const [openModel, setOpenModel] = useState(false);
+  const [userCategory, setUserCategory] = useState(""); //Requsested category
   const [requestPhone, setRequestPhone] = useState("");
   const [openRequestModel, setOpenRequestModel] = useState(false);
-  const [showDeleteIcon, setShowDeleteIcon] = useState({
-    status: false,
-    index: null,
-  });
-
+  const [openModel, setOpenModel] = useState(false);
   const { currentUser } = useAuth();
 
   const params = useParams();
 
-  console.log(storeImages);
+  // console.log(storeImages);
 
   useEffect(() => {
     const collectionRef = collection(db, "categories");
@@ -145,36 +131,13 @@ const ManageStorePage = () => {
   }, []);
 
   useEffect(() => {
-    if (params.storeId) {
-      const storeImagesCollectionRef = collection(
-        db,
-        "latestStore",
-        params.storeId,
-        "storeImages"
-      );
-      const unsubscribe = onSnapshot(
-        storeImagesCollectionRef,
-        (QuerySnapshot) => {
-          const storeImagesArr = QuerySnapshot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          })) as Array<{
-            imageUrl: null | string;
-            id: string;
-          }>;
-
-          // console.log(storeImagesArr);
-          setStoreImages(storeImagesArr);
-        }
-      );
-
-      return unsubscribe;
-    }
-  }, [params.storeId]);
-
-  useEffect(() => {
     async function fetchData() {
       if (currentUserData && params.storeId) {
+        // const documentReflatest = doc(db, "latestStore", params.storeId);
+        // const snapshot = await getDoc(documentReflatest);
+        // const latestStoreData = snapshot.data() as StoreObj;
+        // const exists = snapshot.exists();
+
         if (params.storeId === "userStore") {
           // if (exiss) {
           console.log("RUNNING");
@@ -196,6 +159,22 @@ const ManageStorePage = () => {
           });
 
           return unsubscribe;
+
+          // const documentRef = doc(db, "latestStore", params.storeId);
+          // const unsubscribe = onSnapshot(documentRef, (snapshot) => {
+          //   if (snapshot.exists()) {
+          //     setCurrentUserStore({
+          //       ...snapshot.data(),
+          //       id: snapshot.id,
+          //     } as StoreObj);
+          //   } else {
+          //     setCurrentUserStore(null);
+          //   }
+          // });
+
+          // // Return the unsubscribe function to stop listening for updates when the component unmounts
+          // return () => unsubscribe();
+          // }
         } else {
           // if (exists) {            console.log("RUNNING");
           console.log("RUNNING2");
@@ -226,11 +205,13 @@ const ManageStorePage = () => {
 
   useEffect(() => {
     if (currentUserStore) {
+      // setInfo1(currentUserStore.info1);
+      // setInfo2(currentUserStore.info2);
       setAddress(currentUserStore.address);
       setPhoneNumber(currentUserStore.phoneNumber);
       setWhatsappNumber(currentUserStore.whatsappNumber);
       setTitle(currentUserStore.title);
-      setTags2(currentUserStore.tags.map((tag) => ({ id: tag, text: tag })));
+      setTags(currentUserStore.tags);
       setFacebook(currentUserStore.fasebook);
       setInstagram(currentUserStore.instagram);
       setLinkedin(currentUserStore.linkedin);
@@ -238,13 +219,13 @@ const ManageStorePage = () => {
       setYoutube(currentUserStore.youtube);
       setTiktok(currentUserStore.tiktok);
       setWebsite(currentUserStore.website);
-      setSelectedCategory(currentUserStore.category || "");
+      setCategory(currentUserStore.category || "");
       setSchedulArr(currentUserStore.schedulArr);
-      // setStoreImages((pre) =>
-      //   pre.map((imgObj, index) => {
-      //     return { ...imgObj, imageUrl: currentUserStore.storeImages[index] };
-      //   })
-      // );
+      setStoreImages((pre) =>
+        pre.map((imgObj, index) => {
+          return { ...imgObj, imageUrl: currentUserStore.storeImages[index] };
+        })
+      );
       setStoreIcon((pre) =>
         pre
           ? { ...pre, imageUrl: currentUserStore.storeIcon }
@@ -252,8 +233,6 @@ const ManageStorePage = () => {
       );
     }
   }, [currentUserStore]);
-
-  // console.log("HELLO", storeImages);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -273,24 +252,23 @@ const ManageStorePage = () => {
       });
 
       await handleUpload(currentUserStore?.id);
-
       const storeIconUrl =
         (await uploadStoreIcon(currentUserStore.id)) ||
         (storeIcon?.imageUrl ?? "");
       // console.log("STORE", storeIconUrl);
 
       // const validStoreImages = storeImages.filter((img) => img !== undefined);
-      // const storeImageUrls = storeImages
-      //   .map((img) => img.imageUrl)
+      const storeImageUrls = storeImages
+        .map((img) => img.imageUrl)
+        .filter((img): img is string => img !== undefined);
 
       await updateStore3(currentUserStore?.id, {
-        title: title.replace(/-/g, " "),
+        title,
         address,
         phoneNumber,
         whatsappNumber,
-        // tags,
-        tags: tags2.map((tag) => tag.text),
-        // storeImages: urlList,
+        tags,
+        storeImages: storeImageUrls,
         storeIcon: storeIconUrl,
         email: currentUser.email,
         // info1,
@@ -303,7 +281,7 @@ const ManageStorePage = () => {
         youtube,
         tiktok,
         website,
-        category: selectedCategory,
+        category,
         haveUpdate: [
           ...(currentUserStore?.haveUpdate ?? []),
           currentUserStore?.haveUpdate.includes("normal")
@@ -349,33 +327,31 @@ const ManageStorePage = () => {
           const file = storeImages[i].file;
           const fileRef = ref(
             storage,
-            `store_data/${storeId}/latest/store-images/${storeImages[i].id}`
+            `store_data/${storeId}/latest/store-images/${storeImages[i].index}`
           );
+          console.log("Working");
 
-          if (!file) {
-            continue;
-          }
+          if (!file) continue;
 
           console.log("Working");
 
           await uploadBytes(fileRef, file);
           const photoURL = await getDownloadURL(fileRef);
+          console.log("URL", photoURL);
 
-          // urlList.push(photoURL);
-          const documentRef = doc(
-            db,
-            "latestStore",
-            storeId,
-            "storeImages",
-            storeImages[i].id
-          );
-          await setDoc(documentRef, {
-            imageUrl: photoURL,
+          // Update storeImages state with the uploaded image's URL
+          setStoreImages((prevImages) => {
+            const updatedImages = [...prevImages];
+
+            // Image exists, update its URL
+            updatedImages[i].imageUrl = photoURL;
+
+            return updatedImages;
           });
+
+          // console.log("Download URL:", photoURL);
         }
         console.log("All files uploaded successfully!");
-
-        // return urlList;
       } catch (error) {
         console.error("Error uploading files:", error);
         alert(
@@ -404,6 +380,12 @@ const ManageStorePage = () => {
     setDayIndex((pre) => pre - 1);
   };
 
+  const handleCatogaryClick = (label: string) => {
+    // if (!label || categoriesArr.includes(label)) return;
+    // setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
+    setCategory(label);
+  };
+
   const handleClickRequest = async () => {
     if (currentUserStore) {
       const adminMessagesCollectionRef = collection(db, "adminMessages");
@@ -427,6 +409,11 @@ const ManageStorePage = () => {
     // }
   };
 
+  // const handleRemoveCatogary = (label: string) => {
+  //   setCategoriesArr((pre) => [...pre.filter((preObj) => preObj !== label)]);
+  // };
+
+  // ------------------Categories----------------------------
   const handleCancelClick = () => {
     setOpenModel(false);
     setUserCategory("");
@@ -451,100 +438,55 @@ const ManageStorePage = () => {
     setUserCategory("");
   };
 
-  // ----------------TAG-----------------------
+  // ------------------Tag--------------------------
 
-  const handleDelete = (index: number) => {
-    setTags2(tags2.filter((_, i) => i !== index));
+  const handleAddTag = (tag: string) => {
+    if (!tag || tags.includes(tag)) return;
+    setTagInput("");
+    setTags((pre) => [...pre, tag]);
   };
 
-  const handleAddition = (tag: { id: string; text: string }) => {
-    setTags2([...tags2, tag]);
+  const handleDelete = (tag: string) => {
+    setTags(tags.filter((t) => t !== tag));
   };
 
-  const handleDrag = (
-    tag: {
-      id: string;
-      text: string;
-    },
-    currPos: number,
-    newPos: number
-  ) => {
-    const newTags = tags2.slice();
-    newTags.splice(currPos, 1);
-    newTags.splice(newPos, 0, tag);
-    setTags2(newTags);
-  };
-
-  // ------------------------------------------
-
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    id: string
-  ): void => {
-    if (!event.target.files) return;
-
-    const file = event.target.files?.[0];
-    const localUrl = URL.createObjectURL(file);
-
-    setStoreImages((prevState) => {
-      return prevState
-        ? prevState.map((imgObj) =>
-            imgObj.id === id ? { ...imgObj, file, localUrl } : imgObj
-          )
-        : prevState;
-    });
-  };
-
-  const handleDeleteGalleryImage = async (index: number) => {
-    if (currentUserStore?.id) {
-      try {
-        const letestStoreImages = storeImages.map((_, i) =>
-          i !== index ? _ : { index, file: null, imageUrl: null }
-        );
-
-        console.log(letestStoreImages);
-
-        const documentRefLatest = doc(db, "latestStore", currentUserStore?.id);
-
-        await updateDoc(documentRefLatest, {
-          storeImages: letestStoreImages.map((_) => _.imageUrl),
-        });
-
-        const imageRef = ref(
-          storage,
-          `store_data/${currentUserStore?.id}/store-gallery/${index}`
-        );
-        // await deleteObject(imageRef);
-        toast.success("Image successfully deleted!");
-      } catch (error) {
-        console.log(error);
-        toast.error("Failed to delete image");
-      }
-    }
-  };
   // if (!currentUserStore) return <div>Loading...</div>;
   return (
     <div className="w-full min-h-screen text-center relative">
-      <Link
-        to={params.storeId === "userStore" ? "/" : "/manage-business-profiles"}
-        className="absolute top-0 left-5 w-10 h-10 text-4xl font-extralight"
-      >
-        <IoIosArrowBack />
-      </Link>
+      <div className="md:absolute md:-top-2 md:left-5 flex text-4xl font-extralight items-center justify-center">
+        <Link
+        className="relative -left-3"
+          to={
+            params.storeId === "userStore" ? "/" : "/manage-business-profiles"
+          }
+          // className="absolute top-0 left-5 w-10 h-10 text-4xl font-extralight"
+        >
+          <Button variant="outline">
+            <IoIosArrowBack />
+          </Button>
+        </Link>
 
-      <h1 className="text-3xl font-bold mb-6 mt-4">Business Profile</h1>
+        <Link to="/" className="flex items-center justify-center">
+          <img src={logo} alt="logo" className="h-12 w-36" />
+        </Link>
+      </div>
+
+      <h1 className="text-xl font-bold mb-6 mt-4">
+        Update Your Business Profile
+      </h1>
+
       {currentUserData && currentUserStore ? (
         <div className="flex flex-col gap-2 md:p-5">
           {/* <h2 className="text-xl font-semibold mb-4">Your Store</h2> */}
           <div className="flex flex-col gap-10 items-center justify-between">
             <div className="flex flex-col md:flex-row gap-4">
-              {/* <div className="md:w-6/12 w-full flex items-center justify-center">
+              <div className="md:w-6/12 w-full flex items-center justify-center">
                 <ImageSwiper
                   setStoreImages={setStoreImages}
                   storeImages={storeImages}
                 />
-              </div> */}
-              {/* <div
+              </div>
+              <div
                 className="gap-3 flex items-center justify-center md:w-6/12 w-full"
                 id="logo-conten"
               >
@@ -599,64 +541,8 @@ const ManageStorePage = () => {
                     Brower
                   </label>
                 </p>
-              </div> */}
+              </div>
             </div>
-            <ul className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {storeImages.map((imgObj, index) => (
-                <li key={index} className="relative my-3">
-                  <div
-                  // onMouseEnter={() =>
-                  //   setShowDeleteIcon({
-                  //     status: true,
-                  //     index: storeImages,
-                  //   })
-                  // }
-                  // onMouseLeave={() =>
-                  //   setShowDeleteIcon({
-                  //     status: false,
-                  //     index: null,
-                  //   })
-                  // }
-                  >
-                    <img
-                      src={imgObj.localUrl || imgObj.imageUrl || ""}
-                      className="w-44 h-36 object-cover"
-                    />
-
-                    {/* {showDeleteIcon.id === imgObj.id && (
-                      <div
-                        className="cursor-pointer w-full text-center hover:text-red-500 duration-200 text-2xl absolute bottom-0 backdrop-blur-xl"
-                        onClick={() =>
-                          handleDeleteGalleryImage(imgObj.id, imgObj.refName)
-                        }
-                      >
-                        <Button variant="link" className="text-white">
-                          Delete
-                        </Button>
-                      </div>
-                    )} */}
-                  </div>
-
-                  <input
-                    id={`fileInput${index}`}
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleChange(e, imgObj.id)}
-                    required
-                    className="hidden"
-                  />
-                  <p>
-                    <label
-                      htmlFor={`fileInput${index}`}
-                      className="text-blue-500"
-                    >
-                      Browse
-                    </label>
-                  </p>
-                </li>
-              ))}
-            </ul>
-
             {/* ----------------------------------------------------------- */}
             <div className="w-full px-3 gap-5">
               <form onSubmit={handleSubmit}>
@@ -738,13 +624,13 @@ const ManageStorePage = () => {
 
                   {/* ------------Shedul input---------------- */}
                   <>
-                    <div className="hidden md:flex col-span-2 items-center justify-between w-full px-20">
+                    <div className="hidden md:flex col-span-2 items-center justify-between w-full px-20 bg-gray-200 rounded-md">
                       <button
                         type="button"
                         disabled={dayIndex <= 0}
                         onClick={handlePrevDay}
                       >
-                        <IoMdArrowDropleft className="text-5xl text-blue-500" />
+                        <IoMdArrowDropleft className="text-5xl text-orange-500" />
                       </button>
                       <div>{schedulArr[dayIndex].day}</div>
                       <TimeRangePicker
@@ -757,11 +643,11 @@ const ManageStorePage = () => {
                         disabled={dayIndex >= 6}
                         onClick={handleNextDay}
                       >
-                        <IoMdArrowDropright className="text-5xl text-blue-500" />
+                        <IoMdArrowDropright className="text-5xl text-orange-500" />
                       </button>
                     </div>
                     {/* -------------------- */}
-                    <div className="flex md:hidden flex-col items-center justify-between w-full">
+                    <div className="flex md:hidden flex-col items-center justify-between w-full bg-gray-200 rounded-md">
                       <TimeRangePicker
                         onChange={setTimevalue}
                         value={schedulArr[dayIndex].time}
@@ -773,7 +659,7 @@ const ManageStorePage = () => {
                           disabled={dayIndex <= 0}
                           onClick={handlePrevDay}
                         >
-                          <IoMdArrowDropleft className="text-5xl text-blue-500" />
+                          <IoMdArrowDropleft className="text-5xl text-orange-500" />
                         </button>
 
                         <div>{schedulArr[dayIndex].day}</div>
@@ -783,43 +669,60 @@ const ManageStorePage = () => {
                           disabled={dayIndex >= 6}
                           onClick={handleNextDay}
                         >
-                          <IoMdArrowDropright className="text-5xl text-blue-500" />
+                          <IoMdArrowDropright className="text-5xl text-orange-500" />
                         </button>
                       </div>
                     </div>
                     {/* ------------------------------- */}
                   </>
 
-                  {/* -----------------Tag input---------------------------- */}
+                  <hr className="col-span-2" />
+                  <h1 className="col-span-2 text-xl mb-3 text-blue-500 text-left">
+                    Tags
+                  </h1>
 
+                  {/* -----------------Tag input---------------------------- */}
                   <div className="col-span-2 flex flex-col">
-                    <DndProvider backend={HTML5Backend}>
-                      <div className="tag-input-component">
-                        <ReactTags
-                          tags={tags2}
-                          // suggestions={suggestions}
-                          delimiters={delimiters}
-                          handleDelete={handleDelete}
-                          handleAddition={handleAddition}
-                          handleDrag={handleDrag}
-                          inputFieldPosition="bottom"
-                          classNames={{
-                            // tagInput: "custom-tag-input",
-                            tagInputField:
-                              "flex px-2 items-center justify-between col-span-2 text-lg w-full focus:outline-none",
-                            suggestions: "custom-suggestions",
-                            activeSuggestion: "custom-active-suggestion",
-                          }}
-                          autocomplete
-                          // editable
-                          // clearAll
-                        />
-                      </div>
-                      {/* <Label className="text-xs mt-3 text-gray-400 text-center">
-                        Press <Kbd className="text-gray-500">Enter</Kbd> after
-                        every tag
-                      </Label> */}
-                    </DndProvider>
+                    <div className="tag-input-component">
+                      <ul className="flex flex-wrap gap-2">
+                        {tags.map((tag) => (
+                          <li>
+                            <Tag className="flex items-center gap-2 justify-between px-2 py-2">
+                              {tag}
+                              <IoIosClose
+                                onClick={() => handleDelete(tag)}
+                                className="text-2xl"
+                              />
+                            </Tag>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <Input
+                        value={tagInput}
+                        onChange={(e) => setTagInput(e.target.value)}
+                        placeholder="Add a tag"
+                        className="focus-visible:ring-blue-500 mt-3"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault(); // Prevent form submission
+                            handleAddTag(tagInput);
+                          }
+                        }}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                      onClick={() => handleAddTag(tagInput)}
+                    >
+                      Update
+                    </button>
+
+                    <Label className="text-xs text-gray-400 text-center mt-3">
+                      Press <Kbd className="text-gray-500">Enter</Kbd> after
+                      every tag
+                    </Label>
                   </div>
 
                   {/* --------------------Social Links------------------------- */}
@@ -932,28 +835,26 @@ const ManageStorePage = () => {
                       Business Cotegories
                     </h1>
 
-                    <div className="flex items-center justify-between w-full gap-4">
-                      <div className="col-span-2 flex flex-row-reverse gap-5 items-center justify-center">
-                        <Select
-                          value={selectedCategory}
-                          onChange={(
-                            event:
-                              | React.ChangeEvent<HTMLSelectElement>
-                              | undefined
-                          ) => {
-                            if (event && event.target) {
-                              setSelectedCategory(event.target.value);
-                            }
-                          }}
-                        >
-                          {visibleCategories &&
-                            visibleCategories.map((catogaryObj, index) => (
-                              <option value={catogaryObj.label} key={index}>
-                                {catogaryObj.label}
-                              </option>
-                            ))}
-                        </Select>
-                      </div>
+                    <div className="flex items-center justify-between flex-col md:flex-row w-full gap-4">
+                      <Select
+                        value={category}
+                        onChange={(
+                          event:
+                            | React.ChangeEvent<HTMLSelectElement>
+                            | undefined
+                        ) => {
+                          if (event && event.target) {
+                            setCategory(event.target.value);
+                          }
+                        }}
+                      >
+                        {visibleCategories &&
+                          visibleCategories.map((catogaryObj, index) => (
+                            <option value={catogaryObj.label} key={index}>
+                              {catogaryObj.label}
+                            </option>
+                          ))}
+                      </Select>
 
                       <div className="w-full flex items-center justify-center">
                         <Dialog open={openModel} onOpenChange={setOpenModel}>
@@ -1029,7 +930,7 @@ const ManageStorePage = () => {
                         !address ||
                         !phoneNumber ||
                         !whatsappNumber ||
-                        !tags2 ||
+                        !tags ||
                         loading
                       }
                       className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white "

@@ -10,6 +10,7 @@
 import { imageGalery } from "@/assets";
 import { Carousel } from "react-responsive-carousel";
 import { cn } from "@/lib/utils";
+import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 // import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 
 type ImageSwiperProps = {
@@ -74,7 +75,7 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
             <img
               src={imageUrl}
               className={cn(
-                "object-covr rounded-l-md",
+                "object-covr rounded-l-md w-44 h-32",
                 imageUrl === imageGalery && "w-32 h-32"
               )}
               alt=""
@@ -103,33 +104,33 @@ const ImageSwiper = ({ setStoreImages, storeImages }: ImageSwiperProps) => {
     return slides;
   };
 
-  // const renderPrevArrow = (clickHandler: () => void, hasPrev: boolean) => (
-  //   <div
-  //     className={`${
-  //       hasPrev ? "absolute" : "hidden"
-  //     } top-0 bottom-0 left-0 flex justify-center items-center p-3 opacity-30 hover:opacity-100 cursor-pointer z-20`}
-  //     onClick={clickHandler}
-  //   >
-  //     <BiLeftArrow className="w-9 h-9 text-blue-700" />
-  //   </div>
-  // );
+  const renderPrevArrow = (clickHandler: () => void, hasPrev: boolean) => (
+    <div
+      className={`${
+        hasPrev ? "absolute" : "hidden"
+      } top-0 bottom-0 left-0 flex justify-center items-center p-3 opacity-80 hover:opacity-100 cursor-pointer z-20`}
+      onClick={clickHandler}
+    >
+      <BiLeftArrow className="w-9 h-9 text-blue-700" />
+    </div>
+  );
 
-  // const renderNextArrow = (clickHandler: () => void, hasNext: boolean) => (
-  //   <div
-  //     className={`${
-  //       hasNext ? "absolute" : "hidden"
-  //     } top-0 bottom-0 right-0 flex justify-center items-center p-3 opacity-30 hover:opacity-100 cursor-pointer z-20`}
-  //     onClick={clickHandler}
-  //   >
-  //     <BiRightArrow className="w-9 h-9 text-blue-700" />
-  //   </div>
-  // );
+  const renderNextArrow = (clickHandler: () => void, hasNext: boolean) => (
+    <div
+      className={`${
+        hasNext ? "absolute" : "hidden"
+      } top-0 bottom-0 right-0 flex justify-center items-center p-3 opacity-80 hover:opacity-100 cursor-pointer z-20`}
+      onClick={clickHandler}
+    >
+      <BiRightArrow className="w-9 h-9 text-blue-700" />
+    </div>
+  );
 
   return (
     <>
       <Carousel
-        // renderArrowPrev={renderPrevArrow}
-        // renderArrowNext={renderNextArrow}
+        renderArrowPrev={renderPrevArrow}
+        renderArrowNext={renderNextArrow}
         showStatus={false}
         interval={3000}
         stopOnHover={false}

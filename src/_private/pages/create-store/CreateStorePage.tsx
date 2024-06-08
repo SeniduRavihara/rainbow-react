@@ -1,4 +1,4 @@
- import ImageSwiper from "../../components/ImageSwiper";
+import ImageSwiper from "../../components/ImageSwiper";
 import { IonIcon } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import React, { forwardRef, useEffect, useState } from "react";
@@ -65,7 +65,7 @@ const CreateStorePage = () => {
   ]);
   const [dayIndex, setDayIndex] = useState(0);
   const { currentUser } = useAuth();
-  const { locationArr, currentUserData ,categories } = useData();
+  const { locationArr, currentUserData, categories } = useData();
   const navigate = useNavigate();
 
   const [storeImages, setStoreImages] = useState<
@@ -104,6 +104,9 @@ const CreateStorePage = () => {
   //   return unsubscribe;
   // }, []);
 
+  console.log(storeImages);
+  
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -113,7 +116,7 @@ const CreateStorePage = () => {
       const payLoad = {
         storeImages: storeImages.map((img) => img.imageUrl),
         storeIcon: "",
-        title: title.replace(/-/g, " "),
+        title,
         address,
         phoneNumber,
         whatsappNumber,
@@ -137,7 +140,7 @@ const CreateStorePage = () => {
       if (!isStoreNameAvailable) {
         toast.error("Business name already exists. Try a different name.");
         setLoading(false);
-        return
+        return;
       }
       const storeId = await createStore(currentUser?.uid, payLoad);
 
@@ -678,17 +681,18 @@ const CreateStorePage = () => {
 
                     <Dropdown.Menu as={CustomMenu}>
                       <div className="h-[200px] overflow-y-scroll">
-                        {categories && categories.map((catogaryObj, index) => (
-                          <Dropdown.Item
-                            eventKey={index + 1}
-                            onClick={() =>
-                              handleCatogaryClick(catogaryObj.label)
-                            }
-                            key={index}
-                          >
-                            {catogaryObj.label}
-                          </Dropdown.Item>
-                        ))}
+                        {categories &&
+                          categories.map((catogaryObj, index) => (
+                            <Dropdown.Item
+                              eventKey={index + 1}
+                              onClick={() =>
+                                handleCatogaryClick(catogaryObj.label)
+                              }
+                              key={index}
+                            >
+                              {catogaryObj.label}
+                            </Dropdown.Item>
+                          ))}
                       </div>
                     </Dropdown.Menu>
                   </Dropdown>

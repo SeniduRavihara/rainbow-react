@@ -18,7 +18,16 @@ import DetailsPageAdds from "../components/store-details-page/DetailsPageAdds";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { FaEye, FaPhoneAlt } from "react-icons/fa";
-import { fb, insta, linkedin, twitter, whatsapp, yt } from "@/assets";
+import {
+  fb,
+  insta,
+  linkedin,
+  tiktok,
+  twitter,
+  web,
+  whatsapp,
+  yt,
+} from "@/assets";
 import { PiShareFatLight } from "react-icons/pi";
 import { Button } from "@/components/ui/button";
 import { MdOutlineEdit } from "react-icons/md";
@@ -65,6 +74,7 @@ import {
 const StoreDetailsPage = () => {
   const [enquery, setEnquery] = useState("");
   const [openModel, setOpenModel] = useState(false);
+  const [openShareModel, setOpenShareModel] = useState(false);
   const [phoneNum, setPhoneNum] = useState("");
 
   const { searchResultStores, currentUserData } = useData();
@@ -257,26 +267,50 @@ const StoreDetailsPage = () => {
                       ))}
                   </div>
 
-                  <div className="flex pr-5 my-2">
-                    <a href="#" target="_blank" className="scl-md-links">
-                      <img src={fb} alt="" />
-                    </a>
+                  {/* ---------------------User's Social links------------------ */}
 
-                    <a href="#" target="_blank" className="scl-md-links">
-                      <img src={yt} alt="" />
-                    </a>
+                  <div className="flex pr-5 my-2 gap-2">
+                    {selectedStore.fasebook && (
+                      <a href={selectedStore.fasebook} target="_blank">
+                        <img src={fb} alt="" className="w-8" />
+                      </a>
+                    )}
 
-                    <a href="#" target="_blank" className="scl-md-links">
-                      <img src={insta} alt="" />
-                    </a>
+                    {selectedStore.youtube && (
+                      <a href={selectedStore.youtube} target="_blank">
+                        <img src={yt} alt="" className="w-8" />
+                      </a>
+                    )}
 
-                    <a href="#" target="_blank" className="scl-md-links">
-                      <img src={linkedin} alt="" />
-                    </a>
+                    {selectedStore.instagram && (
+                      <a href={selectedStore.instagram} target="_blank">
+                        <img src={insta} alt="" className="w-8" />
+                      </a>
+                    )}
 
-                    <a href="#" target="_blank" className="scl-md-links">
-                      <img src={twitter} alt="" />
-                    </a>
+                    {selectedStore.linkedin && (
+                      <a href={selectedStore.linkedin} target="_blank">
+                        <img src={linkedin} alt="" className="w-8" />
+                      </a>
+                    )}
+
+                    {selectedStore.twitter && (
+                      <a href={selectedStore.twitter} target="_blank">
+                        <img src={twitter} alt="" className="w-8" />
+                      </a>
+                    )}
+
+                    {selectedStore.tiktok && (
+                      <a href={selectedStore.tiktok} target="_blank">
+                        <img src={tiktok} alt="" className="w-8" />
+                      </a>
+                    )}
+
+                    {selectedStore.website && (
+                      <a href={selectedStore.website} target="_blank">
+                        <img src={web} alt="" className="w-8" />
+                      </a>
+                    )}
                   </div>
 
                   <div className="flex items-start flex-col z-10 text-sm justify-start sm:flex-row sm:justify-between">
@@ -316,14 +350,79 @@ const StoreDetailsPage = () => {
                           <h4>Chat</h4>
                         </Button>
                       </Link>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex px-2 py-1 gap-1 items-center justify-center"
+
+                      {/* ---------------Share Dialog----------------- */}
+                      <Dialog
+                        open={openShareModel}
+                        onOpenChange={setOpenShareModel}
                       >
-                        <PiShareFatLight />
-                        <h4>Share</h4>
-                      </Button>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex px-2 py-1 gap-1 items-center justify-center"
+                          >
+                            <PiShareFatLight />
+                            <h4>Share</h4>
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                          <DialogHeader>
+                            <DialogTitle>Share</DialogTitle>
+                          </DialogHeader>
+
+                          <div className="flex gap-2 items-center justify-center">
+                            <FacebookShareButton
+                              url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                            >
+                              <FacebookIcon className="w-7 h-7 rounded-lg" />
+                            </FacebookShareButton>
+                            <TwitterShareButton
+                              url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                            >
+                              <XIcon className="w-7 h-7 rounded-lg" />
+                            </TwitterShareButton>
+                            <LinkedinShareButton
+                              url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                            >
+                              <LinkedinIcon className="w-7 h-7 rounded-lg" />
+                            </LinkedinShareButton>
+                            <WhatsappShareButton
+                              url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                            >
+                              <WhatsappIcon className="w-7 h-7 rounded-lg" />
+                            </WhatsappShareButton>
+                            <TelegramShareButton
+                              url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                            >
+                              <TelegramIcon className="w-7 h-7 rounded-lg" />
+                            </TelegramShareButton>
+                            <EmailShareButton
+                              url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                            >
+                              <EmailIcon className="w-7 h-7 rounded-lg" />
+                            </EmailShareButton>
+                            <ViberShareButton
+                              url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                            >
+                              <ViberIcon className="w-7 h-7 rounded-lg" />
+                            </ViberShareButton>
+                          </div>
+
+                          {/* <DialogFooter className="sm:justify-start">
+                              <div className="w-full flex items-center justify-center gap-2 px-10">
+                                <Button
+                                  type="button"
+                                  onClick={hndelCancelClick}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button onClick={handleAddEnquery}>Send</Button>
+                              </div>
+                            </DialogFooter> */}
+                        </DialogContent>
+                      </Dialog>
+
                       {selectedStore?.id === currentUserData?.id && (
                         <Button
                           variant="outline"
@@ -405,27 +504,51 @@ const StoreDetailsPage = () => {
                       ))}
                   </div>
 
+                  {/* ---------------------User's Social links------------------ */}
+
                   <div className="flex items-center justify-center xsm:justify-start">
-                    <div className="flex pr-5 my-2">
-                      <a href="#" target="_blank" className="scl-md-links">
-                        <img src={fb} alt="" />
-                      </a>
+                    <div className="flex pr-5 my-2 gap-2">
+                      {selectedStore.fasebook && (
+                        <a href={selectedStore.fasebook} target="_blank">
+                          <img src={fb} alt="" className="w-8" />
+                        </a>
+                      )}
 
-                      <a href="#" target="_blank" className="scl-md-links">
-                        <img src={yt} alt="" />
-                      </a>
+                      {selectedStore.youtube && (
+                        <a href={selectedStore.youtube} target="_blank">
+                          <img src={yt} alt="" className="w-8" />
+                        </a>
+                      )}
 
-                      <a href="#" target="_blank" className="scl-md-links">
-                        <img src={insta} alt="" />
-                      </a>
+                      {selectedStore.instagram && (
+                        <a href={selectedStore.instagram} target="_blank">
+                          <img src={insta} alt="" className="w-8" />
+                        </a>
+                      )}
 
-                      <a href="#" target="_blank" className="scl-md-links">
-                        <img src={linkedin} alt="" />
-                      </a>
+                      {selectedStore.linkedin && (
+                        <a href={selectedStore.linkedin} target="_blank">
+                          <img src={linkedin} alt="" className="w-8" />
+                        </a>
+                      )}
 
-                      <a href="#" target="_blank" className="scl-md-links">
-                        <img src={twitter} alt="" />
-                      </a>
+                      {selectedStore.twitter && (
+                        <a href={selectedStore.twitter} target="_blank">
+                          <img src={twitter} alt="" className="w-8" />
+                        </a>
+                      )}
+
+                      {selectedStore.tiktok && (
+                        <a href={selectedStore.tiktok} target="_blank">
+                          <img src={tiktok} alt="" className="w-8" />
+                        </a>
+                      )}
+
+                      {selectedStore.website && (
+                        <a href={selectedStore.website} target="_blank">
+                          <img src={web} alt="" className="w-8" />
+                        </a>
+                      )}
                     </div>
                   </div>
 
@@ -467,14 +590,79 @@ const StoreDetailsPage = () => {
                             <h4>Chat</h4>
                           </Button>
                         </Link>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex px-2 py-1 gap-1 items-center justify-center"
+
+                        {/* ---------------Share Dialog----------------- */}
+                        <Dialog
+                          open={openShareModel}
+                          onOpenChange={setOpenShareModel}
                         >
-                          <PiShareFatLight />
-                          <h4>Share</h4>
-                        </Button>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="flex px-2 py-1 gap-1 items-center justify-center"
+                            >
+                              <PiShareFatLight />
+                              <h4>Share</h4>
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                              <DialogTitle>Share</DialogTitle>
+                            </DialogHeader>
+
+                            <div className="flex gap-3 items-center justify-center flex-wrap">
+                              <FacebookShareButton
+                                url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                              >
+                                <FacebookIcon className="w-12 h-12 rounded-lg" />
+                              </FacebookShareButton>
+                              <TwitterShareButton
+                                url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                              >
+                                <XIcon className="w-12 h-12  rounded-lg" />
+                              </TwitterShareButton>
+                              <LinkedinShareButton
+                                url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                              >
+                                <LinkedinIcon className="w-12 h-12  rounded-lg" />
+                              </LinkedinShareButton>
+                              <WhatsappShareButton
+                                url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                              >
+                                <WhatsappIcon className="w-12 h-12  rounded-lg" />
+                              </WhatsappShareButton>
+                              <TelegramShareButton
+                                url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                              >
+                                <TelegramIcon className="w-12 h-12  rounded-lg" />
+                              </TelegramShareButton>
+                              <EmailShareButton
+                                url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                              >
+                                <EmailIcon className="w-12 h-12  rounded-lg" />
+                              </EmailShareButton>
+                              <ViberShareButton
+                                url={`https://srilankabusiness.lk/business-profile/${storeName}`}
+                              >
+                                <ViberIcon className="w-12 h-12  rounded-lg" />
+                              </ViberShareButton>
+                            </div>
+
+                            {/* <DialogFooter className="sm:justify-start">
+                              <div className="w-full flex items-center justify-center gap-2 px-10">
+                                <Button
+                                  type="button"
+                                  onClick={hndelCancelClick}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button onClick={handleAddEnquery}>Send</Button>
+                              </div>
+                            </DialogFooter> */}
+                          </DialogContent>
+                        </Dialog>
+
                         {selectedStore?.id === currentUserData?.id && (
                           <Button
                             variant="outline"
@@ -500,39 +688,39 @@ const StoreDetailsPage = () => {
                 </h2>
                 <div className="flex gap-2">
                   <FacebookShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                   >
-                    <FacebookIcon className="w-7 h-7 rounded-lg" />
+                    <FacebookIcon className="w-7 h-7  rounded-lg" />
                   </FacebookShareButton>
                   <TwitterShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                   >
-                    <XIcon className="w-7 h-7 rounded-lg" />
+                    <XIcon className="w-7 h-7  rounded-lg" />
                   </TwitterShareButton>
                   <LinkedinShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                   >
-                    <LinkedinIcon className="w-7 h-7 rounded-lg" />
+                    <LinkedinIcon className="w-7 h-7  rounded-lg" />
                   </LinkedinShareButton>
                   <WhatsappShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                   >
-                    <WhatsappIcon className="w-7 h-7 rounded-lg" />
+                    <WhatsappIcon className="w-7 h-7  rounded-lg" />
                   </WhatsappShareButton>
                   <TelegramShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                   >
-                    <TelegramIcon className="w-7 h-7 rounded-lg" />
+                    <TelegramIcon className="w-7 h-7  rounded-lg" />
                   </TelegramShareButton>
                   <EmailShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                   >
-                    <EmailIcon className="w-7 h-7 rounded-lg" />
+                    <EmailIcon className="w-7 h-7  rounded-lg" />
                   </EmailShareButton>
                   <ViberShareButton
-                    url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                    url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                   >
-                    <ViberIcon className="w-7 h-7 rounded-lg" />
+                    <ViberIcon className="w-7 h-7  rounded-lg" />
                   </ViberShareButton>
                 </div>
                 {/* <button className="bg-blue-600 px-4 py-1 rounded-md text-white">
@@ -608,37 +796,37 @@ const StoreDetailsPage = () => {
                   </h2>
                   <div className="flex gap-2">
                     <FacebookShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                      url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                     >
                       <FacebookIcon className="w-7 h-7 rounded-lg" />
                     </FacebookShareButton>
                     <TwitterShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                      url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                     >
                       <XIcon className="w-7 h-7 rounded-lg" />
                     </TwitterShareButton>
                     <LinkedinShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                      url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                     >
                       <LinkedinIcon className="w-7 h-7 rounded-lg" />
                     </LinkedinShareButton>
                     <WhatsappShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                      url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                     >
                       <WhatsappIcon className="w-7 h-7 rounded-lg" />
                     </WhatsappShareButton>
                     <TelegramShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                      url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                     >
                       <TelegramIcon className="w-7 h-7 rounded-lg" />
                     </TelegramShareButton>
                     <EmailShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                      url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                     >
                       <EmailIcon className="w-7 h-7 rounded-lg" />
                     </EmailShareButton>
                     <ViberShareButton
-                      url={`https://srilankabusiness.lk/business-profile/${params.storeId}`}
+                      url={`https://srilankabusiness.lk/business-profile/${storeName}`}
                     >
                       <ViberIcon className="w-7 h-7 rounded-lg" />
                     </ViberShareButton>
