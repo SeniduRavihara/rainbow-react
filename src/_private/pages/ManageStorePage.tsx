@@ -10,6 +10,8 @@ import {
   doc,
   onSnapshot,
   query,
+  setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { IonIcon } from "@ionic/react";
@@ -19,8 +21,13 @@ import {
   IoMdArrowDropleft,
   IoMdArrowDropright,
 } from "react-icons/io";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, {  useEffect, useState } from "react";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { addLocation, togglePublish, updateStore3 } from "@/firebase/api";
 import { useAuth } from "@/hooks/useAuth";
@@ -48,13 +55,6 @@ import { WithContext as ReactTags } from "react-tag-input";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 import "./tagInput-styles.css";
-
-// const suggestions = [
-  // { id: "1", text: "Apple" },
-  // { id: "2", text: "Banana" },
-  // { id: "3", text: "Cherry" },
-  // Add more suggestions as needed
-// ];
 
 const KeyCodes = {
   comma: 188,
@@ -87,17 +87,13 @@ const ManageStorePage = () => {
   const [dayIndex, setDayIndex] = useState(0);
   const [storeImages, setStoreImages] = useState<
     Array<{
-      index: number;
-      file?: File;
+      file?: File | null;
       imageUrl: null | string;
+      id: string;
+      refName: string | null;
+      localUrl: string | null;
     }>
-  >([
-    { index: 1, imageUrl: "" },
-    { index: 2, imageUrl: "" },
-    { index: 3, imageUrl: "" },
-    { index: 4, imageUrl: "" },
-    { index: 5, imageUrl: "" },
-  ]);
+  >([]);
   const [storeIcon, setStoreIcon] = useState<{
     file: File | null;
     imageUrl: string;
@@ -112,9 +108,6 @@ const ManageStorePage = () => {
   const [youtube, setYoutube] = useState("");
   const [tiktok, setTiktok] = useState("");
   const [website, setWebsite] = useState("");
-
-  // const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
-  // const [category, setCategory] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const { currentUserData, locationArr, categories } = useData();
@@ -126,12 +119,16 @@ const ManageStorePage = () => {
   const [openModel, setOpenModel] = useState(false);
   const [requestPhone, setRequestPhone] = useState("");
   const [openRequestModel, setOpenRequestModel] = useState(false);
+  const [showDeleteIcon, setShowDeleteIcon] = useState({
+    status: false,
+    index: null,
+  });
 
   const { currentUser } = useAuth();
 
   const params = useParams();
 
-  console.log(selectedCategory);
+  console.log(storeImages);
 
   useEffect(() => {
     const collectionRef = collection(db, "categories");
@@ -148,13 +145,36 @@ const ManageStorePage = () => {
   }, []);
 
   useEffect(() => {
+    if (params.storeId) {
+      const storeImagesCollectionRef = collection(
+        db,
+        "latestStore",
+        params.storeId,
+        "storeImages"
+      );
+      const unsubscribe = onSnapshot(
+        storeImagesCollectionRef,
+        (QuerySnapshot) => {
+          const storeImagesArr = QuerySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          })) as Array<{
+            imageUrl: null | string;
+            id: string;
+          }>;
+
+          // console.log(storeImagesArr);
+          setStoreImages(storeImagesArr);
+        }
+      );
+
+      return unsubscribe;
+    }
+  }, [params.storeId]);
+
+  useEffect(() => {
     async function fetchData() {
       if (currentUserData && params.storeId) {
-        // const documentReflatest = doc(db, "latestStore", params.storeId);
-        // const snapshot = await getDoc(documentReflatest);
-        // const latestStoreData = snapshot.data() as StoreObj;
-        // const exists = snapshot.exists();
-
         if (params.storeId === "userStore") {
           // if (exiss) {
           console.log("RUNNING");
@@ -176,22 +196,6 @@ const ManageStorePage = () => {
           });
 
           return unsubscribe;
-
-          // const documentRef = doc(db, "latestStore", params.storeId);
-          // const unsubscribe = onSnapshot(documentRef, (snapshot) => {
-          //   if (snapshot.exists()) {
-          //     setCurrentUserStore({
-          //       ...snapshot.data(),
-          //       id: snapshot.id,
-          //     } as StoreObj);
-          //   } else {
-          //     setCurrentUserStore(null);
-          //   }
-          // });
-
-          // // Return the unsubscribe function to stop listening for updates when the component unmounts
-          // return () => unsubscribe();
-          // }
         } else {
           // if (exists) {            console.log("RUNNING");
           console.log("RUNNING2");
@@ -222,13 +226,10 @@ const ManageStorePage = () => {
 
   useEffect(() => {
     if (currentUserStore) {
-      // setInfo1(currentUserStore.info1);
-      // setInfo2(currentUserStore.info2);
       setAddress(currentUserStore.address);
       setPhoneNumber(currentUserStore.phoneNumber);
       setWhatsappNumber(currentUserStore.whatsappNumber);
       setTitle(currentUserStore.title);
-      // setTags(currentUserStore.tags);
       setTags2(currentUserStore.tags.map((tag) => ({ id: tag, text: tag })));
       setFacebook(currentUserStore.fasebook);
       setInstagram(currentUserStore.instagram);
@@ -237,14 +238,13 @@ const ManageStorePage = () => {
       setYoutube(currentUserStore.youtube);
       setTiktok(currentUserStore.tiktok);
       setWebsite(currentUserStore.website);
-      // setCategory(currentUserStore.category || "");
       setSelectedCategory(currentUserStore.category || "");
       setSchedulArr(currentUserStore.schedulArr);
-      setStoreImages((pre) =>
-        pre.map((imgObj, index) => {
-          return { ...imgObj, imageUrl: currentUserStore.storeImages[index] };
-        })
-      );
+      // setStoreImages((pre) =>
+      //   pre.map((imgObj, index) => {
+      //     return { ...imgObj, imageUrl: currentUserStore.storeImages[index] };
+      //   })
+      // );
       setStoreIcon((pre) =>
         pre
           ? { ...pre, imageUrl: currentUserStore.storeIcon }
@@ -253,11 +253,7 @@ const ManageStorePage = () => {
     }
   }, [currentUserStore]);
 
-  // const handleAddTag = (tag: string) => {
-  //   if (!tag || tags.includes(tag)) return;
-  //   setTagInput("");
-  //   setTags((pre) => [...pre, tag]);
-  // };
+  // console.log("HELLO", storeImages);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -277,15 +273,15 @@ const ManageStorePage = () => {
       });
 
       await handleUpload(currentUserStore?.id);
+
       const storeIconUrl =
         (await uploadStoreIcon(currentUserStore.id)) ||
         (storeIcon?.imageUrl ?? "");
       // console.log("STORE", storeIconUrl);
 
       // const validStoreImages = storeImages.filter((img) => img !== undefined);
-      const storeImageUrls = storeImages
-        .map((img) => img.imageUrl)
-        .filter((img): img is string => img !== undefined);
+      // const storeImageUrls = storeImages
+      //   .map((img) => img.imageUrl)
 
       await updateStore3(currentUserStore?.id, {
         title: title.replace(/-/g, " "),
@@ -294,7 +290,7 @@ const ManageStorePage = () => {
         whatsappNumber,
         // tags,
         tags: tags2.map((tag) => tag.text),
-        storeImages: storeImageUrls,
+        // storeImages: urlList,
         storeIcon: storeIconUrl,
         email: currentUser.email,
         // info1,
@@ -353,31 +349,33 @@ const ManageStorePage = () => {
           const file = storeImages[i].file;
           const fileRef = ref(
             storage,
-            `store_data/${storeId}/latest/store-images/${storeImages[i].index}`
+            `store_data/${storeId}/latest/store-images/${storeImages[i].id}`
           );
-          console.log("Working");
 
-          if (!file) continue;
+          if (!file) {
+            continue;
+          }
 
           console.log("Working");
 
           await uploadBytes(fileRef, file);
           const photoURL = await getDownloadURL(fileRef);
-          console.log("URL", photoURL);
 
-          // Update storeImages state with the uploaded image's URL
-          setStoreImages((prevImages) => {
-            const updatedImages = [...prevImages];
-
-            // Image exists, update its URL
-            updatedImages[i].imageUrl = photoURL;
-
-            return updatedImages;
+          // urlList.push(photoURL);
+          const documentRef = doc(
+            db,
+            "latestStore",
+            storeId,
+            "storeImages",
+            storeImages[i].id
+          );
+          await setDoc(documentRef, {
+            imageUrl: photoURL,
           });
-
-          // console.log("Download URL:", photoURL);
         }
         console.log("All files uploaded successfully!");
+
+        // return urlList;
       } catch (error) {
         console.error("Error uploading files:", error);
         alert(
@@ -406,12 +404,6 @@ const ManageStorePage = () => {
     setDayIndex((pre) => pre - 1);
   };
 
-  // const handleCatogaryClick = (label: string) => {
-  //   // if (!label || categoriesArr.includes(label)) return;
-  //   // setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
-  //   setCategory(label);
-  // };
-
   const handleClickRequest = async () => {
     if (currentUserStore) {
       const adminMessagesCollectionRef = collection(db, "adminMessages");
@@ -434,69 +426,6 @@ const ManageStorePage = () => {
     //   );
     // }
   };
-
-  // const handleRemoveCatogary = (label: string) => {
-  //   setCategoriesArr((pre) => [...pre.filter((preObj) => preObj !== label)]);
-  // };
-
-  // CustomToggle component
-  // const CustomToggle = forwardRef<
-  //   HTMLAnchorElement,
-  //   {
-  //     children: React.ReactNode;
-  //     onClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
-  //   }
-  // >(({ children, onClick }, ref) => (
-  //   <a
-  //     href=""
-  //     ref={ref}
-  //     onClick={(e) => {
-  //       e.preventDefault();
-  //       onClick(e);
-  //     }}
-  //   >
-  //     {children}
-  //     &#x25bc;
-  //   </a>
-  // ));
-
-  // CustomMenu component
-  // const CustomMenu = forwardRef<
-  //   HTMLDivElement,
-  //   {
-  //     children: React.ReactNode;
-  //     style?: React.CSSProperties;
-  //     className?: string;
-  //     "aria-labelledby": string;
-  //   }
-  // >(({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
-  //   const [value, setValue] = useState<string>("");
-
-  //   return (
-  //     <div
-  //       ref={ref}
-  //       style={style}
-  //       className={className}
-  //       aria-labelledby={labeledBy}
-  //     >
-  //       <Form.Control
-  //         autoFocus
-  //         className="mx-3 my-2 w-auto"
-  //         placeholder="Type to filter..."
-  //         onChange={(e) => setValue(e.target.value)}
-  //         value={value}
-  //       />
-  //       <ul className="list-unstyled">
-  //         {React.Children.toArray(children).filter(
-  //           (child) =>
-  //             !value ||
-  //             (typeof child === "string" &&
-  //               child.toLowerCase().startsWith(value))
-  //         )}
-  //       </ul>
-  //     </div>
-  //   );
-  // });
 
   const handleCancelClick = () => {
     setOpenModel(false);
@@ -548,81 +477,51 @@ const ManageStorePage = () => {
 
   // ------------------------------------------
 
-    const handleChange = (
-      event: React.ChangeEvent<HTMLInputElement>,
-      index: number
-    ): void => {
-      const file = event.target.files?.[0];
-      if (!file) return;
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    id: string
+  ): void => {
+    if (!event.target.files) return;
 
-      // Create a copy of the previous images array
-      const updatedImages = [...storeImages];
+    const file = event.target.files?.[0];
+    const localUrl = URL.createObjectURL(file);
 
-      // Check if an image with the same index already exists
-      const existingImageIndex = updatedImages.findIndex(
-        (item) => item.index === index
-      );
+    setStoreImages((prevState) => {
+      return prevState
+        ? prevState.map((imgObj) =>
+            imgObj.id === id ? { ...imgObj, file, localUrl } : imgObj
+          )
+        : prevState;
+    });
+  };
 
-      // If an image with the same index exists, replace it with the new image
-      if (existingImageIndex !== -1) {
-        updatedImages[existingImageIndex] = { index, file, imageUrl: null };
-      } else {
-        // Otherwise, add the new image to the array
-        updatedImages.push({ index, file, imageUrl: null });
-      }
-
-      // Update the storeImages state with the updated array
-      setStoreImages(updatedImages);
-    };
-
-    const renderSlides = () => {
-      const slides = [];
-      for (let i = 0; i < 4; i++) {
-        const file = storeImages[i]?.file;
-        const imgUrl = storeImages[i].imageUrl;
-
-        const imageUrl = file
-          ? URL.createObjectURL(file)
-          : imgUrl ?? "imageGalery";
-
-        slides.push(
-          <div
-            key={i}
-            className="w-full h-full flex flex-col items-center justify-center"
-          >
-            <div>
-              <img
-                src={imageUrl}
-                className={cn(
-                  "object-covr rounded-l-md",
-                  imageUrl === "imageGalery" && "w-32 h-32"
-                )}
-                alt=""
-              />
-            </div>
-
-            <div>
-              <input
-                id={`fileInput${i}`}
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleChange(e, i)}
-                required
-                className="hidden"
-              />
-              <p>
-                Select your store image{" "}
-                <label htmlFor={`fileInput${i}`} className="text-blue-500">
-                  Browse
-                </label>
-              </p>
-            </div>
-          </div>
+  const handleDeleteGalleryImage = async (index: number) => {
+    if (currentUserStore?.id) {
+      try {
+        const letestStoreImages = storeImages.map((_, i) =>
+          i !== index ? _ : { index, file: null, imageUrl: null }
         );
-      }
-      return slides;
-    };
 
+        console.log(letestStoreImages);
+
+        const documentRefLatest = doc(db, "latestStore", currentUserStore?.id);
+
+        await updateDoc(documentRefLatest, {
+          storeImages: letestStoreImages.map((_) => _.imageUrl),
+        });
+
+        const imageRef = ref(
+          storage,
+          `store_data/${currentUserStore?.id}/store-gallery/${index}`
+        );
+        // await deleteObject(imageRef);
+        toast.success("Image successfully deleted!");
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to delete image");
+      }
+    }
+  };
   // if (!currentUserStore) return <div>Loading...</div>;
   return (
     <div className="w-full min-h-screen text-center relative">
@@ -702,31 +601,62 @@ const ManageStorePage = () => {
                 </p>
               </div> */}
             </div>
-            {/* <ul className="flex gap-3">
+            <ul className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {storeImages.map((imgObj, index) => (
-                <li key={index}>
-                  <img
-                    src={imgObj.imageUrl || ""}
-                    className="w-44 h-36 object-cover"
-                  />
+                <li key={index} className="relative my-3">
+                  <div
+                  // onMouseEnter={() =>
+                  //   setShowDeleteIcon({
+                  //     status: true,
+                  //     index: storeImages,
+                  //   })
+                  // }
+                  // onMouseLeave={() =>
+                  //   setShowDeleteIcon({
+                  //     status: false,
+                  //     index: null,
+                  //   })
+                  // }
+                  >
+                    <img
+                      src={imgObj.localUrl || imgObj.imageUrl || ""}
+                      className="w-44 h-36 object-cover"
+                    />
+
+                    {/* {showDeleteIcon.id === imgObj.id && (
+                      <div
+                        className="cursor-pointer w-full text-center hover:text-red-500 duration-200 text-2xl absolute bottom-0 backdrop-blur-xl"
+                        onClick={() =>
+                          handleDeleteGalleryImage(imgObj.id, imgObj.refName)
+                        }
+                      >
+                        <Button variant="link" className="text-white">
+                          Delete
+                        </Button>
+                      </div>
+                    )} */}
+                  </div>
+
                   <input
-                    id={`fileInput${i}`}
+                    id={`fileInput${index}`}
                     type="file"
                     accept="image/*"
-                    onChange={(e) => handleChange(e, i)}
+                    onChange={(e) => handleChange(e, imgObj.id)}
                     required
                     className="hidden"
                   />
                   <p>
-                    Select your store image{" "}
-                    <label htmlFor={`fileInput${i}`} className="text-blue-500">
+                    <label
+                      htmlFor={`fileInput${index}`}
+                      className="text-blue-500"
+                    >
                       Browse
                     </label>
                   </p>
                 </li>
               ))}
-            </ul> */}
-            {renderSlides()}
+            </ul>
+
             {/* ----------------------------------------------------------- */}
             <div className="w-full px-3 gap-5">
               <form onSubmit={handleSubmit}>
@@ -892,46 +822,6 @@ const ManageStorePage = () => {
                     </DndProvider>
                   </div>
 
-                  {/* <div className="col-span-2 flex flex-col">
-                    <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border rounded-md focus:outline-blue-400">
-                      <div className="flex items-center">
-                        <div className="">
-                          {tags.map((tag, index) => (
-                            <Tag key={index} className="m-1">
-                              {tag}
-                            </Tag>
-                          ))}
-                        </div>
-
-                        <input
-                          type="text"
-                          value={tagInput}
-                          onChange={(e) => setTagInput(e.target.value)}
-                          placeholder="Tag"
-                          className="p- text-lg m-[10px] outline-none"
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault(); // Prevent form submission
-                              handleAddTag(tagInput);
-                            }
-                          }}
-                        />
-                      </div>
-
-                      <button
-                        className="bg-green-500 rounded-md text-white px-2 py-1 hidden md:block"
-                        onClick={() => handleAddTag(tagInput)}
-                        type="button"
-                      >
-                        update
-                      </button>
-                    </div>
-                    <Label className="text-xs text-gray-400 text-center">
-                      Press <Kbd className="text-gray-500">Enter</Kbd> after
-                      every tag
-                    </Label>
-                  </div> */}
-
                   {/* --------------------Social Links------------------------- */}
                   <>
                     <hr className="col-span-2" />
@@ -1064,32 +954,6 @@ const ManageStorePage = () => {
                             ))}
                         </Select>
                       </div>
-
-                      {/* <Dropdown>
-                        <Dropdown.Toggle
-                          as={CustomToggle}
-                          id="dropdown-custom-components"
-                        >
-                          Categories
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu as={CustomMenu}>
-                          <div className="h-[200px] overflow-y-scroll">
-                            {visibleCategories &&
-                              visibleCategories.map((catogaryObj, index) => (
-                                <Dropdown.Item
-                                  eventKey={index + 1}
-                                  onClick={() =>
-                                    handleCatogaryClick(catogaryObj.label)
-                                  }
-                                  key={index}
-                                >
-                                  {catogaryObj.label}
-                                </Dropdown.Item>
-                              ))}
-                          </div>
-                        </Dropdown.Menu>
-                      </Dropdown> */}
 
                       <div className="w-full flex items-center justify-center">
                         <Dialog open={openModel} onOpenChange={setOpenModel}>
