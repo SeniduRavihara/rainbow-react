@@ -4,23 +4,26 @@ import {
   insta,
   linkedin,
   playStore,
-  twitter,
-  yt,
+  tiktok,
+  // twitter,
+  // yt,
 } from "@/assets";
 // import { Link } from "react-router-dom";
 
 const SocialMediaArea = ({
-  facebookUrl = "test",
-  linkedinUrl = "test",
+  facebookUrl = "https://www.facebook.com/srilankabusiness.lk",
+  linkedinUrl = "https://www.linkedin.com/in/srilankabusiness/",
   youtubeUrl = "test",
   twitterUrl = "test",
-  instagramUrl = "test",
+  instagramUrl = "https://www.instagram.com/srilankabusiness.lk/",
+  tiktokUrl = "https://Www.tiktok.com/@srilankabusiness.lk",
 }: {
   facebookUrl?: string;
   linkedinUrl?: string;
   youtubeUrl?: string;
   twitterUrl?: string;
   instagramUrl?: string;
+  tiktokUrl?: string;
 }) => {
   return (
     <div className="third-section py-5 flex flex-col gap-5 md:flex-row items-center justify-between px-1">
@@ -39,11 +42,11 @@ const SocialMediaArea = ({
             </a>
           )}
 
-          {youtubeUrl && (
+          {/* {youtubeUrl && (
             <a href={youtubeUrl} target="_blank" className="scl-md-links">
               <img src={yt} alt="" />
             </a>
-          )}
+          )} */}
 
           {instagramUrl && (
             <a href={instagramUrl} target="_blank" className="scl-md-links">
@@ -57,11 +60,17 @@ const SocialMediaArea = ({
             </a>
           )}
 
-          {twitterUrl && (
+          {tiktokUrl && (
+            <a href={tiktokUrl} target="_blank" className="scl-md-links">
+              <img src={tiktok} alt="" />
+            </a>
+          )}
+
+          {/* {twitterUrl && (
             <a href={twitterUrl} target="_blank" className="scl-md-links">
               <img src={twitter} alt="" />
             </a>
-          )}
+          )} */}
         </div>
       </div>
       <div className="right-side flex">

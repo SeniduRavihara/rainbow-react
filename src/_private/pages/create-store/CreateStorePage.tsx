@@ -1,12 +1,10 @@
- import ImageSwiper from "../../components/ImageSwiper";
-import { IonIcon } from "@ionic/react";
-import { addOutline } from "ionicons/icons";
-import React, { forwardRef, useEffect, useState } from "react";
+import ImageSwiper from "../../components/ImageSwiper";
+import React, {  useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 // import { IoArrowBack } from "react-icons/io5";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "@/firebase/config";
+import { db, storage } from "@/firebase/config";
 import { useAuth } from "@/hooks/useAuth";
 import {
   addLocation,
@@ -18,12 +16,21 @@ import {
 } from "@/firebase/api";
 import toast from "react-hot-toast";
 import Loader from "@/components/Loader";
-import { Kbd, Tag } from "@chakra-ui/react";
+import { Kbd, Select, Tag } from "@chakra-ui/react";
 import {
   IoIosArrowBack,
+  IoIosClose,
   IoMdArrowDropleft,
   IoMdArrowDropright,
 } from "react-icons/io";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 import { TimeValue } from "@/types";
 import { cleanAddress } from "@/lib/utils";
@@ -34,8 +41,8 @@ import { useData } from "@/hooks/useData";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import Dropdown from "react-bootstrap/Dropdown";
-import Form from "react-bootstrap/Form";
+import { addDoc, collection } from "firebase/firestore";
+import { logo } from "@/assets";
 // import { categories } from "@/constants";
 // import { collection, onSnapshot } from "firebase/firestore";
 // import CustomTag from "@/components/CustomTag";
@@ -65,17 +72,23 @@ const CreateStorePage = () => {
   ]);
   const [dayIndex, setDayIndex] = useState(0);
   const { currentUser } = useAuth();
-  const { locationArr, currentUserData ,categories } = useData();
+  const { locationArr, currentUserData, categories } = useData();
   const navigate = useNavigate();
 
   const [storeImages, setStoreImages] = useState<
     Array<{
       index: number;
-      file: File;
+      file?: File;
       imageUrl: null | string;
     }>
-  >([]);
-  const [storeIcon, setStoreIcon] = useState<File | null>(null);
+  >([
+    { index: 1, imageUrl: "" },
+    { index: 2, imageUrl: "" },
+    { index: 3, imageUrl: "" },
+    { index: 4, imageUrl: "" },
+    { index: 5, imageUrl: "" },
+  ]);
+  // const [storeIcon, setStoreIcon] = useState<File | null>(null);
 
   const [fasebook, setFacebook] = useState("");
   const [instagram, setInstagram] = useState("");
@@ -85,7 +98,8 @@ const CreateStorePage = () => {
   const [tiktok, setTiktok] = useState("");
   const [website, setWebsite] = useState("");
 
-  // const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
+  const [openModel, setOpenModel] = useState(false);
+  const [userCategory, setUserCategory] = useState(""); //Requsested category
   const [category, setCategory] = useState("");
   // const [visibleCategories, setVisibleCategories] =
   //   useState<Array<{ icon: string; label: string }>>(categories);
@@ -111,9 +125,9 @@ const CreateStorePage = () => {
       // await handleUpload();
 
       const payLoad = {
-        storeImages: storeImages.map((img) => img.imageUrl),
+        storeImages: [],
         storeIcon: "",
-        title: title.replace(/-/g, " "),
+        title,
         address,
         phoneNumber,
         whatsappNumber,
@@ -137,20 +151,20 @@ const CreateStorePage = () => {
       if (!isStoreNameAvailable) {
         toast.error("Business name already exists. Try a different name.");
         setLoading(false);
-        return
+        return;
       }
       const storeId = await createStore(currentUser?.uid, payLoad);
 
       if (storeId) {
         // console.log("HAVE STOREID", storeId);
 
-        await handleUpload(storeId);
+        const storeImageUrlList = await handleUpload(storeId);
         // console.log("STORE IMAGES", storeImages);
-        const storeIconUrl = await uploadStoreIcon(storeId);
+        // const storeIconUrl = await uploadStoreIcon(storeId);
 
         await updateStore2(storeId, {
-          storeIcon: storeIconUrl,
-          storeImages: storeImages.map((img) => img.imageUrl),
+          // storeIcon: storeIconUrl,
+          storeImages: storeImageUrlList?.filter((url) => url),
         });
 
         await syncLatestStoreWithStore(storeId);
@@ -161,20 +175,21 @@ const CreateStorePage = () => {
         cleanAddress(address),
         locationArr?.map((locationObj) => locationObj.location) || []
       );
-    }
-    setLoading(false);
-    toast.success("Store created successfully");
+      setLoading(false);
+      toast.success("Store created successfully");
 
-    if (currentUserData?.roles.includes("admin")) {
-      navigate("/manage-business-profiles");
-      return;
-    }
+      if (currentUserData?.roles.includes("admin")) {
+        navigate(`/manage-business-profile/${storeId}`);
+        return;
+      }
 
-    navigate("/manage-business-profile/userStore");
+      navigate("/manage-business-profile/userStore");
+    }
   };
 
   const handleUpload = async (storeId: string) => {
     if (storeImages.length > 0) {
+      const storeImageUrlList = [];
       try {
         for (let i = 0; i < storeImages.length; i++) {
           const file = storeImages[i].file;
@@ -182,22 +197,29 @@ const CreateStorePage = () => {
             storage,
             `store_data/${storeId}/store-images/${storeImages[i].index}`
           );
+
+          if (!file) {
+            storeImageUrlList.push(storeImages[i].imageUrl);
+            continue;
+          }
+
           await uploadBytes(fileRef, file);
           const photoURL = await getDownloadURL(fileRef);
 
+          storeImageUrlList.push(photoURL);
+
           // Update storeImages state with the uploaded image's URL
-          setStoreImages((prevImages) => {
-            const updatedImages = [...prevImages];
+          // setStoreImages((prevImages) => {
+          //   const updatedImages = [...prevImages];
 
-            // Image exists, update its URL
-            updatedImages[i].imageUrl = photoURL;
+          //   // Image exists, update its URL
+          //   updatedImages[i].imageUrl = photoURL;
 
-            return updatedImages;
-          });
-
-          // console.log("Download URL:", photoURL);
+          //   return updatedImages;
+          // });
         }
         console.log("All files uploaded successfully!");
+        return storeImageUrlList;
       } catch (error) {
         console.error("Error uploading files:", error);
         alert(
@@ -209,28 +231,22 @@ const CreateStorePage = () => {
     }
   };
 
-  const uploadStoreIcon = async (storeId: string) => {
-    if (storeIcon) {
-      try {
-        const fileRef = ref(
-          storage,
-          `store_data/${storeId}/store_icons/${storeId}`
-        );
-        await uploadBytes(fileRef, storeIcon);
-        const photoURL = await getDownloadURL(fileRef);
+  // const uploadStoreIcon = async (storeId: string) => {
+  //   if (storeIcon) {
+  //     try {
+  //       const fileRef = ref(
+  //         storage,
+  //         `store_data/${storeId}/store_icons/${storeId}`
+  //       );
+  //       await uploadBytes(fileRef, storeIcon);
+  //       const photoURL = await getDownloadURL(fileRef);
 
-        return photoURL;
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  const handleAddTag = (tag: string) => {
-    if (!tag || tags.includes(tag)) return;
-    setTagInput("");
-    setTags((pre) => [...pre, tag]);
-  };
+  //       return photoURL;
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     if (timevalue) {
@@ -251,138 +267,81 @@ const CreateStorePage = () => {
   };
 
   // --------------------------
-  const handleCatogaryClick = (label: string) => {
-    // if (!label || categoriesArr.includes(label)) return;
-    // setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
-    setCategory(label);
-  };
 
   // const handleRemoveCatogary = (label: string) => {
   //   setCategoriesArr((pre) => [...pre.filter((preObj) => preObj !== label)]);
   // };
 
-  // CustomToggle component
-  const CustomToggle = forwardRef<
-    HTMLAnchorElement,
-    {
-      children: React.ReactNode;
-      onClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
-    }
-  >(({ children, onClick }, ref) => (
-    <a
-      href=""
-      ref={ref}
-      onClick={(e) => {
-        e.preventDefault();
-        onClick(e);
-      }}
-    >
-      {children}
-      &#x25bc;
-    </a>
-  ));
+  // ------------------Categories----------------------------
+  const handleCancelClick = () => {
+    setOpenModel(false);
+    setUserCategory("");
+  };
 
-  // CustomMenu component
-  const CustomMenu = forwardRef<
-    HTMLDivElement,
-    {
-      children: React.ReactNode;
-      style?: React.CSSProperties;
-      className?: string;
-      "aria-labelledby": string;
+  const handleAddUserCategory = async () => {
+    if (userCategory && currentUser) {
+      toast.success("Request Send to Admin");
+      const adminMessagesCollectionRef = collection(db, "adminMessages");
+      await addDoc(adminMessagesCollectionRef, {
+        message: `I would like to add ${userCategory} as a new category`,
+        createdAt: new Date(),
+        imageUrl: "",
+        fromName: "",
+        fromId: currentUser.uid,
+        toName: "admin",
+        toId: "",
+        seen: false,
+      });
     }
-  >(({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
-    const [value, setValue] = useState<string>("");
+    setOpenModel(false);
+    setUserCategory("");
+  };
 
-    return (
-      <div
-        ref={ref}
-        style={style}
-        className={className}
-        aria-labelledby={labeledBy}
-      >
-        <Form.Control
-          autoFocus
-          className="mx-3 my-2 w-auto"
-          placeholder="Type to filter..."
-          onChange={(e) => setValue(e.target.value)}
-          value={value}
-        />
-        <ul className="list-unstyled">
-          {React.Children.toArray(children).filter(
-            (child) =>
-              !value ||
-              (typeof child === "string" &&
-                child.toLowerCase().startsWith(value))
-          )}
-        </ul>
-      </div>
-    );
-  });
+  // ------------------Tag--------------------------
+
+  const handleAddTag = (tag: string) => {
+    if (!tag || tags.includes(tag)) return;
+    setTagInput("");
+    setTags((pre) => [...pre, tag]);
+  };
+
+  const handleDelete = (tag: string) => {
+    setTags(tags.filter((t) => t !== tag));
+  };
 
   return (
-    <div className=" w-full min-h-screen flex flex-col gap-10 items-center justify-center">
-      <h1 className=" text-center text-4xl font-bold text-[#005eff] mt-20">
-        Create New Business Profile
-      </h1>
+    <div className="w-full min-h-screen flex flex-col gap-10 items-center justify-center relative">
+      <>
+        <div className="md:absolute md:-top-2 md:left-5 flex text-4xl font-extralight items-center mt-4 justify-center">
+          <Link
+            className="relative -left-3"
+            to="/manage-business-profiles"
 
-      <Link
-        to="/manage-business-profiles"
-        className="absolute top-5 left-5 w-10 h-10 text-4xl font-extralight"
-      >
-        <IoIosArrowBack />
-      </Link>
+            // className="absolute top-0 left-5 w-10 h-10 text-4xl font-extralight"
+          >
+            <Button variant="outline">
+              <IoIosArrowBack />
+            </Button>
+          </Link>
+
+          <Link to="/" className="flex items-center justify-center">
+            <img src={logo} alt="logo" className="h-12 w-36" />
+          </Link>
+        </div>
+
+        <h1 className="text-xl font-bold md:mt-6">
+          Register Your Business Profile
+        </h1>
+      </>
 
       <div className="flex flex-col gap-10 items-center justify-between">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="md:w-6/12 w-full flex items-center justify-center">
-            <ImageSwiper
-              setStoreImages={setStoreImages}
-              storeImages={storeImages}
-            />
-          </div>
-          <div
-            className="gap-3 flex items-center justify-center md:w-6/12 w-full"
-            id="logo-conten"
-          >
-            <input
-              id={`iconInput`}
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                if (e.target.files) {
-                  setStoreIcon(e.target.files[0]);
-                }
-              }}
-              required
-              className="hidden"
-            />
-            <button
-              className="photo-add-butto w-20 h-20 border rounded-md"
-              id="logo-button"
-              type="button"
-            >
-              {storeIcon ? (
-                <img
-                  src={URL.createObjectURL(storeIcon)}
-                  alt="profile"
-                  className="w-full h-full rounded-md object-cover"
-                />
-              ) : (
-                <IonIcon icon={addOutline}></IonIcon>
-              )}
-            </button>
-            <p className="text-center">
-              Select your logo{" "}
-              <label
-                htmlFor="iconInput"
-                className="text-blue-500 cursor-pointer"
-              >
-                Brower
-              </label>
-            </p>
-          </div>
+        <div className="md:w-6/12 w-full flex items-center justify-center">
+          <ImageSwiper
+            setStoreImages={setStoreImages}
+            storeImages={storeImages}
+          />
         </div>
+
         {/* ----------------------- */}
         <div className="w-full px-3 gap-5">
           <form onSubmit={handleSubmit}>
@@ -463,92 +422,97 @@ const CreateStorePage = () => {
               </>
 
               {/* ------------Shedul input---------------- */}
-              <div className="hidden md:flex col-span-2 items-center justify-between w-full px-20">
-                <button
-                  type="button"
-                  disabled={dayIndex <= 0}
-                  onClick={handlePrevDay}
-                >
-                  <IoMdArrowDropleft className="text-5xl text-blue-500" />
-                </button>
-                <div>{schedulArr[dayIndex].day}</div>
-                <TimeRangePicker
-                  onChange={setTimevalue}
-                  value={schedulArr[dayIndex].time}
-                  className="border rounded-md outline-none px-4 py-2"
-                />
-                <button
-                  type="button"
-                  disabled={dayIndex >= 6}
-                  onClick={handleNextDay}
-                >
-                  <IoMdArrowDropright className="text-5xl text-blue-500" />
-                </button>
-              </div>
-              {/* -------------------- */}
-              <div className="flex md:hidden flex-col items-center justify-between w-full">
-                <TimeRangePicker
-                  onChange={setTimevalue}
-                  value={schedulArr[dayIndex].time}
-                  className="border rounded-md outline-none px-4 py-2"
-                />
-                <div className="flex items-center justify-between w-[50%]">
+              <>
+                <div className="hidden md:flex col-span-2 items-center justify-between w-full px-20 bg-gray-200 rounded-md">
                   <button
                     type="button"
                     disabled={dayIndex <= 0}
                     onClick={handlePrevDay}
                   >
-                    <IoMdArrowDropleft className="text-5xl text-blue-500" />
+                    <IoMdArrowDropleft className="text-5xl text-orange-500" />
                   </button>
-
                   <div>{schedulArr[dayIndex].day}</div>
-
+                  <TimeRangePicker
+                    onChange={setTimevalue}
+                    value={schedulArr[dayIndex].time}
+                    className="border rounded-md outline-none px-4 py-2"
+                  />
                   <button
                     type="button"
                     disabled={dayIndex >= 6}
                     onClick={handleNextDay}
                   >
-                    <IoMdArrowDropright className="text-5xl text-blue-500" />
+                    <IoMdArrowDropright className="text-5xl text-orange-500" />
                   </button>
                 </div>
-              </div>
-              {/* ------------------------------- */}
+                {/* -------------------- */}
+                <div className="flex md:hidden flex-col items-center justify-between w-full bg-gray-200 rounded-md">
+                  <TimeRangePicker
+                    onChange={setTimevalue}
+                    value={schedulArr[dayIndex].time}
+                    className="border rounded-md outline-none px-4 py-2"
+                  />
+                  <div className="flex items-center justify-between w-[50%]">
+                    <button
+                      type="button"
+                      disabled={dayIndex <= 0}
+                      onClick={handlePrevDay}
+                    >
+                      <IoMdArrowDropleft className="text-5xl text-orange-500" />
+                    </button>
 
-              <div className="col-span-2 flex flex-col">
-                <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border rounded-md focus:outline-blue-400">
-                  <div className="flex items-center">
-                    <div className="">
-                      {tags.map((tag, index) => (
-                        <Tag key={index} className="m-1">
-                          {tag}
-                        </Tag>
-                      ))}
-                    </div>
+                    <div>{schedulArr[dayIndex].day}</div>
 
-                    <input
-                      type="text"
-                      value={tagInput}
-                      onChange={(e) => setTagInput(e.target.value)}
-                      placeholder="Tag"
-                      className="p- text-lg m-[10px] outline-none"
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault(); // Prevent form submission
-                          handleAddTag(tagInput);
-                        }
-                      }}
-                    />
+                    <button
+                      type="button"
+                      disabled={dayIndex >= 6}
+                      onClick={handleNextDay}
+                    >
+                      <IoMdArrowDropright className="text-5xl text-orange-500" />
+                    </button>
                   </div>
-
-                  <button
-                    className="bg-green-500 rounded-md text-white px-2 py-1 hidden md:block"
-                    onClick={() => handleAddTag(tagInput)}
-                    type="button"
-                  >
-                    update
-                  </button>
                 </div>
-                <Label className="text-xs text-gray-400 text-center">
+              </>
+
+              {/* -----------------Tag input---------------------------- */}
+              <div className="col-span-2 flex flex-col">
+                <div className="tag-input-component">
+                  <ul className="flex flex-wrap gap-2">
+                    {tags.map((tag) => (
+                      <li>
+                        <Tag className="flex items-center gap-2 justify-between px-2 py-2">
+                          {tag}
+                          <IoIosClose
+                            onClick={() => handleDelete(tag)}
+                            className="text-2xl"
+                          />
+                        </Tag>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Input
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    placeholder="Add a tag"
+                    className="focus-visible:ring-blue-500 mt-3"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault(); // Prevent form submission
+                        handleAddTag(tagInput);
+                      }
+                    }}
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                  onClick={() => handleAddTag(tagInput)}
+                >
+                  Update
+                </button>
+
+                <Label className="text-xs text-gray-400 text-center mt-3">
                   Press <Kbd className="text-gray-500">Enter</Kbd> after every
                   tag
                 </Label>
@@ -557,7 +521,7 @@ const CreateStorePage = () => {
               {/* --------------------Social Links------------------------- */}
               <>
                 <hr className="col-span-2" />
-                <h1 className="col-span-2 text-2xl text-blue-500">
+                <h1 className="col-span-2 text-xl text-blue-500">
                   Social Links
                 </h1>
                 <div>
@@ -645,8 +609,80 @@ const CreateStorePage = () => {
                 </div>
               </>
 
+              {/* ------------------------ Cotegories --------------------------------- */}
+              <div className="col-span-2">
+                <hr className="col-span-2" />
+                <h1 className="col-span-2 text-xl mt-5 mb-3 text-blue-500 text-left">
+                  Business Cotegories
+                </h1>
+
+                <div className="flex items-center justify-between flex-col md:flex-row w-full gap-4">
+                  <Select
+                    value={category}
+                    onChange={(
+                      event: React.ChangeEvent<HTMLSelectElement> | undefined
+                    ) => {
+                      if (event && event.target) {
+                        setCategory(event.target.value);
+                      }
+                    }}
+                  >
+                    <option value="">select a category</option>
+                    {categories &&
+                      categories.map((catogaryObj, index) => (
+                        <option value={catogaryObj.label} key={index}>
+                          {catogaryObj.label}
+                        </option>
+                      ))}
+                  </Select>
+
+                  <div className="w-full flex items-center justify-center">
+                    <Dialog open={openModel} onOpenChange={setOpenModel}>
+                      <DialogTrigger asChild>
+                        <Button className="bg-[#277aa0] hover:bg-[#277aa0]/90">
+                          Request For Add New Category
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Suggest your Category</DialogTitle>
+                        </DialogHeader>
+
+                        <div className="grid gap-4 py-2">
+                          <div className="space-y-3">
+                            <div>
+                              <Label htmlFor="name">Category</Label>
+                              <Input
+                                id="name"
+                                className="col-span-3"
+                                placeholder="Type your Category..."
+                                value={userCategory}
+                                onChange={(e) =>
+                                  setUserCategory(e.target.value)
+                                }
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <DialogFooter className="sm:justify-start">
+                          <div className="w-full flex items-center justify-center gap-2 px-10">
+                            <Button type="button" onClick={handleCancelClick}>
+                              Cancel
+                            </Button>
+                            <Button onClick={handleAddUserCategory}>
+                              Send
+                            </Button>
+                          </div>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </div>
+              </div>
+
               {/* --------------------------------------------------------- */}
-              <>
+              {/* <>
                 <hr className="col-span-2" />
                 <h1 className="col-span-2 text-2xl mt-5 mb-3 text-blue-500 text-left">
                   List Your Cotogary
@@ -655,15 +691,7 @@ const CreateStorePage = () => {
                 <div className="col-span-2 flex flex-row-reverse gap-5 items-center justify-center">
                   {category && (
                     <div className="bg-blue-500 text-white px-3 py-2 rounded-md">
-                      {/* {categoriesArr.map((catogary, index) => (
-                      <CustomTag key={index} styles="m-1">
-                        <div>{catogary}</div>
-                        <RxCross2
-                          className="mt-1"
-                          onClick={() => handleRemoveCatogary(catogary)}
-                        />
-                      </CustomTag>
-                    ))} */}
+
                       {category}
                     </div>
                   )}
@@ -678,22 +706,23 @@ const CreateStorePage = () => {
 
                     <Dropdown.Menu as={CustomMenu}>
                       <div className="h-[200px] overflow-y-scroll">
-                        {categories && categories.map((catogaryObj, index) => (
-                          <Dropdown.Item
-                            eventKey={index + 1}
-                            onClick={() =>
-                              handleCatogaryClick(catogaryObj.label)
-                            }
-                            key={index}
-                          >
-                            {catogaryObj.label}
-                          </Dropdown.Item>
-                        ))}
+                        {categories &&
+                          categories.map((catogaryObj, index) => (
+                            <Dropdown.Item
+                              eventKey={index + 1}
+                              onClick={() =>
+                                handleCatogaryClick(catogaryObj.label)
+                              }
+                              key={index}
+                            >
+                              {catogaryObj.label}
+                            </Dropdown.Item>
+                          ))}
                       </div>
                     </Dropdown.Menu>
                   </Dropdown>
                 </div>
-              </>
+              </> */}
 
               {/* <div>
                 <Checkbox
@@ -704,28 +733,34 @@ const CreateStorePage = () => {
                 </Checkbox>
               </div> */}
 
-              <div className="w-full col-span-2 flex items-center justify-center mb-10">
-                <Button
-                  type="submit"
-                  disabled={
-                    !title ||
-                    !address ||
-                    !phoneNumber ||
-                    !whatsappNumber ||
-                    !tags ||
-                    loading
-                  }
-                  className=" text-xl m-[10px] w-[200px] md:w-[450px] col-span-2 rounded-xl flex items-center justify-center p-3 text-white "
-                >
-                  {loading ? (
-                    <>
-                      <Loader /> Loading...
-                    </>
-                  ) : (
-                    "Create"
-                  )}
-                </Button>
-              </div>
+              {/* ---------------------------Buttons---------------------------------- */}
+
+              <>
+                <hr className="col-span-2" style={{ borderWidth: "5px" }} />
+
+                <div className="w-full col-span-2 flex items-center justify-center mb-10">
+                  <Button
+                    type="submit"
+                    disabled={
+                      !title ||
+                      !address ||
+                      !phoneNumber ||
+                      !whatsappNumber ||
+                      !tags ||
+                      loading
+                    }
+                    className=" text-xl m-[10px] w-[200px] md:w-[450px] col-span-2 rounded-sm flex items-center justify-center p-3 text-white "
+                  >
+                    {loading ? (
+                      <>
+                        <Loader /> Creating...
+                      </>
+                    ) : (
+                      "Create"
+                    )}
+                  </Button>
+                </div>
+              </>
             </div>
           </form>
         </div>

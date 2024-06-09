@@ -56,7 +56,9 @@ const ProductAndServices = ({
     <div className="mb-10 px-10 flex flex-col gap-5">
       {tags && (
         <div>
-          <h1 className="text-2xl font-bold mb-3">PRODUCTS AND SERVICES</h1>
+          <h1 className="text-xl md:text-xl font-bold mb-3">
+            PRODUCTS AND SERVICES
+          </h1>
 
           <div className="my-1 gap-2 flex flex-wrap">
             {tags.map((tag, index) => (
@@ -72,7 +74,7 @@ const ProductAndServices = ({
 
       {category && (
         <div>
-          <h1 className="text-2xl font-bold mb-3">LISTED UNDER</h1>
+          <h1 className="text-xl md:text-xl font-bold mb-3">LISTED UNDER</h1>
 
           <div
             className="my-1 gap-2  flex flex-wrap"

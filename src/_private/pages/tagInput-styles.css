@@ -1,0 +1,29 @@
+.ReactTags__tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ReactTags__tagInput {
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+.ReactTags__selected {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+}
+
+.ReactTags__selected .ReactTags__tag {
+  margin: 5px;
+  padding: 5px;
+  background: #e2e2e2;
+  border-radius: 3px;
+}
+
+.ReactTags__selected .ReactTags__remove {
+  margin-left: 10px;
+  cursor: pointer;
+}

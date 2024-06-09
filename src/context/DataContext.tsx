@@ -66,7 +66,7 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     id: string
   }> | null>(null);
 
-  console.log(searchResultStores);
+  // console.log(searchResultStores);
   
 
   // useEffect(()=>{
@@ -238,13 +238,13 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
       const collectionRef = collection(db, "categories");
       const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-        const locationArr = QuerySnapshot.docs.map((doc) => ({
+        const categoriesArr = QuerySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         })) as Array<{ icon: string; label: string; id: string }>;
 
-        console.log("HELOOOOO",locationArr);
-        setCategories(locationArr);
+        // console.log("HELOOOOO",categoriesArr);
+        setCategories(categoriesArr);
       });
 
       return unsubscribe;

@@ -2,11 +2,13 @@ import {
   americanExpress,
   fb,
   insta,
+  linkedin,
   master,
-  twitter,
+  tiktok,
+  // twitter,
   visa,
   web,
-  yt,
+  // yt,
 } from "@/assets";
 
 const Footer = () => {
@@ -96,7 +98,9 @@ const Footer = () => {
           </a>
 
           <div className="mt-4">
-            <a href="info@srilankanusiness.lk">info@srilankanusiness.lk</a>
+            <a href="mailto:info@srilankanusiness.lk">
+              info@srilankanusiness.lk
+            </a>
             <br />
             <a href="https://srilankabusiness.lk/">www.srilankabusiness.lk</a>
           </div>
@@ -111,27 +115,49 @@ const Footer = () => {
           <h1 className="text-orange-500 font-semibold mt-4">Follow Us</h1>
           <ul className="flex gap-2 mt-2">
             <li className="scl-md-links">
-              <a href="">
+              <a
+                href="https://www.facebook.com/srilankabusiness.lk"
+                target="_blank"
+              >
                 <img src={fb} alt="" />
               </a>
             </li>
-            <li className="scl-md-links">
+            {/* <li className="scl-md-links">
               <a href="">
                 <img src={twitter} alt="" />
               </a>
-            </li>
+            </li> */}
             <li className="scl-md-links">
-              <a href="">
+              <a
+                href="https://www.instagram.com/srilankabusiness.lk/"
+                target="_blank"
+              >
                 <img src={insta} alt="" />
               </a>
             </li>
             <li className="scl-md-links">
+              <a
+                href="https://www.linkedin.com/in/srilankabusiness/"
+                target="_blank"
+              >
+                <img src={linkedin} alt="" />
+              </a>
+            </li>
+            <li className="scl-md-links">
+              <a
+                href="https://Www.tiktok.com/@srilankabusiness.lk"
+                target="_blank"
+              >
+                <img src={tiktok} alt="" />
+              </a>
+            </li>
+            {/* <li className="scl-md-links">
               <a href="">
                 <img src={yt} alt="" />
               </a>
-            </li>
+            </li> */}
             <li className="w-[30px] -mt-[2px]">
-              <a href="">
+              <a href="https://srilankabusiness.lk/">
                 <img src={web} alt="" />
               </a>
             </li>

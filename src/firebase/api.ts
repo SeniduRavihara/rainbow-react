@@ -467,7 +467,7 @@ export const fetchCatogaryData = async (
   })) as StoreListType;
 
   setLastDocument(storeListArr[storeListArr.length - 1]);
-  console.log(label,storeListArr);
+  // console.log(label,storeListArr);
 
   if (storeListArr.length > 0) {
     setSearchResultStores(null);
@@ -905,6 +905,8 @@ export const postEnquery = async (
     throw error;
   }
 };
+
+
 
 // ------------------------------------
 

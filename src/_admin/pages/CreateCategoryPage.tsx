@@ -112,7 +112,7 @@ const CreateCategoryPage = () => {
 
 
   return (
-    <div>
+    <div className="pb-5 pt-3 px-20">
       <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
         <div>
           <Label>Category name</Label>

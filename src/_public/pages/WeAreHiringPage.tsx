@@ -9,7 +9,7 @@ import BottomBanner from "@/components/bottom-banner";
 const WeAreHiringPage = () => {
   return (
     <div className="">
-      <main className="flex min-h-screen w-screen flex-col items-center relative overflow-hidden">
+      <main className="flex min-h-screen w- flex-col items-center relative overflow-hidden">
         <img
           src="/img/logo.png"
           className="w-60 md:w-72 absolute -rotate-45 -right-10 top-0 -z-10 "

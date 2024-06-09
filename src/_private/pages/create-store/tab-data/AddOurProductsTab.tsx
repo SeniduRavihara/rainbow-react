@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -253,14 +252,22 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Create Your Product</DialogTitle>
-            <DialogDescription>
+            {/* <DialogDescription>
               Anyone who has this link will be able to view this.
-            </DialogDescription>
+            </DialogDescription> */}
           </DialogHeader>
 
-          <div className="flex flex-col gap-4 items-center space-x-2">
-            <div className="grid flex-1 gap-2">
-              <img src={productImage?.croppedImageUrl} alt="" />
+          <div className="flex flex-col gap-4 items-center space-x-2 justify-center ">
+            <div className="flex flex-col gap-2 items-center justify-center">
+              <h2 className="text-primary font-bold mb-1 text-center">
+                Product Slider (4:3 ~ 416px:312px )
+              </h2>
+
+              <img
+                src={productImage?.croppedImageUrl}
+                alt=""
+                className="w-44 h-38 object-cover"
+              />
               <label
                 htmlFor="image-input1"
                 className="btn btn-primary text-white shadow-none"
@@ -301,7 +308,12 @@ const AddOurProductsTab = ({ storeId }: { storeId: string }) => {
                 <Button
                   type="button"
                   variant="destructive"
-                  onClick={() => setOpen(false)}
+                  onClick={() => {
+                    setProductImage(null);
+                    setProductName("");
+                    setProductDiscription("");
+                    setOpen(false);
+                  }}
                 >
                   Cancel
                 </Button>

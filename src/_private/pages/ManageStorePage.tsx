@@ -12,17 +12,17 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { IonIcon } from "@ionic/react";
-import { addOutline } from "ionicons/icons";
+
 import {
   IoIosArrowBack,
+  IoIosClose,
   IoMdArrowDropleft,
   IoMdArrowDropright,
 } from "react-icons/io";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Kbd, Tag } from "@chakra-ui/react";
+import { Kbd, Select, Tag } from "@chakra-ui/react";
 import { addLocation, togglePublish, updateStore3 } from "@/firebase/api";
 import { useAuth } from "@/hooks/useAuth";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
@@ -36,9 +36,6 @@ import PhoneInput from "react-phone-number-input";
 import "@/styles/phone-number-input.css";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Dropdown from "react-bootstrap/Dropdown";
-import Form from "react-bootstrap/Form";
-// import { categories } from "@/constants";
 import {
   Dialog,
   DialogContent,
@@ -47,6 +44,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { MdArrowForwardIos } from "react-icons/md";
+import { logo } from "@/assets";
 
 const ManageStorePage = () => {
   const [title, setTitle] = useState("");
@@ -84,10 +83,10 @@ const ManageStorePage = () => {
     { index: 4, imageUrl: "" },
     { index: 5, imageUrl: "" },
   ]);
-  const [storeIcon, setStoreIcon] = useState<{
-    file: File | null;
-    imageUrl: string;
-  } | null>(null);
+  // const [storeIcon, setStoreIcon] = useState<{
+  //   file: File | null;
+  //   imageUrl: string;
+  // } | null>(null);
   const [currentUserStore, setCurrentUserStore] = useState<StoreObj | null>(
     null
   );
@@ -102,17 +101,19 @@ const ManageStorePage = () => {
   // const [categoriesArr, setCategoriesArr] = useState<Array<string>>([]);
   const [category, setCategory] = useState("");
   const { currentUserData, locationArr, categories } = useData();
-  const [visibleCategories, setVisibleCategories] =
-    useState<Array<{ icon: string; label: string }> | null>(categories);
-
+  const [visibleCategories, setVisibleCategories] = useState<Array<{
+    icon: string;
+    label: string;
+  }> | null>(categories);
+  const [userCategory, setUserCategory] = useState(""); //Requsested category
   const [requestPhone, setRequestPhone] = useState("");
   const [openRequestModel, setOpenRequestModel] = useState(false);
-
+  const [openModel, setOpenModel] = useState(false);
   const { currentUser } = useAuth();
 
   const params = useParams();
 
-  // console.log(storeImages);
+  console.log(storeImages);
 
   useEffect(() => {
     const collectionRef = collection(db, "categories");
@@ -138,44 +139,44 @@ const ManageStorePage = () => {
 
         if (params.storeId === "userStore") {
           // if (exiss) {
-            console.log("RUNNING");
-            
-            const collectionRef = collection(db, "latestStore");
-            const q = query(
-              collectionRef,
-              where("userId", "==", currentUserData.id)
-            );
+          console.log("RUNNING");
 
-            const unsubscribe = onSnapshot(q, (querySnapshot) => {
-              const storeListArr = querySnapshot.docs.map((doc) => ({
-                ...doc.data(),
-                id: doc.id,
-              })) as StoreListType;
+          const collectionRef = collection(db, "latestStore");
+          const q = query(
+            collectionRef,
+            where("userId", "==", currentUserData.id)
+          );
 
-              // console.log(storeListArr);
-              setCurrentUserStore(storeListArr[0]);
-            });
+          const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const storeListArr = querySnapshot.docs.map((doc) => ({
+              ...doc.data(),
+              id: doc.id,
+            })) as StoreListType;
 
-            return unsubscribe;
+            // console.log(storeListArr);
+            setCurrentUserStore(storeListArr[0]);
+          });
 
-            // const documentRef = doc(db, "latestStore", params.storeId);
-            // const unsubscribe = onSnapshot(documentRef, (snapshot) => {
-            //   if (snapshot.exists()) {
-            //     setCurrentUserStore({
-            //       ...snapshot.data(),
-            //       id: snapshot.id,
-            //     } as StoreObj);
-            //   } else {
-            //     setCurrentUserStore(null);
-            //   }
-            // });
+          return unsubscribe;
 
-            // // Return the unsubscribe function to stop listening for updates when the component unmounts
-            // return () => unsubscribe();
+          // const documentRef = doc(db, "latestStore", params.storeId);
+          // const unsubscribe = onSnapshot(documentRef, (snapshot) => {
+          //   if (snapshot.exists()) {
+          //     setCurrentUserStore({
+          //       ...snapshot.data(),
+          //       id: snapshot.id,
+          //     } as StoreObj);
+          //   } else {
+          //     setCurrentUserStore(null);
+          //   }
+          // });
+
+          // // Return the unsubscribe function to stop listening for updates when the component unmounts
+          // return () => unsubscribe();
           // }
         } else {
           // if (exists) {            console.log("RUNNING");
-            console.log("RUNNING2");
+          console.log("RUNNING2");
 
           const documentRef = doc(db, "latestStore", params.storeId);
           const unsubscribe = onSnapshot(documentRef, (snapshot) => {
@@ -186,7 +187,6 @@ const ManageStorePage = () => {
               } as StoreObj);
 
               // console.log(snapshot.data());
-              
             } else {
               setCurrentUserStore(null);
             }
@@ -222,22 +222,17 @@ const ManageStorePage = () => {
       setSchedulArr(currentUserStore.schedulArr);
       setStoreImages((pre) =>
         pre.map((imgObj, index) => {
+          // const { file, ...rest } = imgObj;
           return { ...imgObj, imageUrl: currentUserStore.storeImages[index] };
         })
       );
-      setStoreIcon((pre) =>
-        pre
-          ? { ...pre, imageUrl: currentUserStore.storeIcon }
-          : { file: null, imageUrl: currentUserStore.storeIcon }
-      );
+      // setStoreIcon((pre) =>
+      //   pre
+      //     ? { ...pre, imageUrl: currentUserStore.storeIcon }
+      //     : { file: null, imageUrl: currentUserStore.storeIcon }
+      // );
     }
   }, [currentUserStore]);
-
-  const handleAddTag = (tag: string) => {
-    if (!tag || tags.includes(tag)) return;
-    setTagInput("");
-    setTags((pre) => [...pre, tag]);
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -256,25 +251,21 @@ const ManageStorePage = () => {
         seen: false,
       });
 
-      await handleUpload(currentUserStore?.id);
-      const storeIconUrl =
-        (await uploadStoreIcon(currentUserStore.id)) ||
-        (storeIcon?.imageUrl ?? "");
-      // console.log("STORE", storeIconUrl);
+      const storeImageUrlList = await handleUpload(currentUserStore?.id);
+      console.log("URL LIST", storeImageUrlList);
 
-      // const validStoreImages = storeImages.filter((img) => img !== undefined);
-      const storeImageUrls = storeImages
-        .map((img) => img.imageUrl)
-        .filter((img): img is string => img !== undefined);
+      // const storeImageUrls = storeImages
+      //   .map((img) => img.imageUrl)
+      //   .filter((img): img is string => img !== undefined);
 
       await updateStore3(currentUserStore?.id, {
-        title: title.replace(/-/g, " "),
+        title,
         address,
         phoneNumber,
         whatsappNumber,
         tags,
-        storeImages: storeImageUrls,
-        storeIcon: storeIconUrl,
+        storeImages: storeImageUrlList?.filter((url) => url),
+        // storeIcon: storeIconUrl,
         email: currentUser.email,
         // info1,
         // info2,
@@ -292,8 +283,9 @@ const ManageStorePage = () => {
           currentUserStore?.haveUpdate.includes("normal")
             ? undefined
             : "normal",
-          ...(storeIcon?.file ? ["storeIcon"] : []),
-          ...(storeImages.filter((obj)=> obj.file).length >= 1 ? ["storeImages"] : []),
+          ...(storeImages.filter((obj) => obj.file).length >= 1
+            ? ["storeImages"]
+            : []),
         ].filter((txt) => txt),
       });
       // updateProfileForHaveStore(currentUser?.uid, true);
@@ -306,55 +298,45 @@ const ManageStorePage = () => {
     toast.success("Store Updated Successfully");
   };
 
-  const uploadStoreIcon = async (storeId: string) => {
-    if (storeIcon?.file) {
-      try {
-        const fileRef = ref(
-          storage,
-          `store_data/${storeId}/latest/store_icons/${storeId}`
-        );
-        await uploadBytes(fileRef, storeIcon.file);
-        const photoURL = await getDownloadURL(fileRef);
-
-        return photoURL;
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
   const handleUpload = async (storeId: string) => {
     if (storeImages.length > 0) {
+      const storeImageUrlList = [];
       try {
         for (let i = 0; i < storeImages.length; i++) {
+          // console.log("Senu", storeImages[i]);
+
           const file = storeImages[i].file;
           const fileRef = ref(
             storage,
             `store_data/${storeId}/latest/store-images/${storeImages[i].index}`
           );
-          console.log("Working");
 
-          if (!file) continue;
+          if (!file) {
+            storeImageUrlList.push(storeImages[i].imageUrl);
+            continue;
+          }
 
-          console.log("Working");
+          // console.log("Working", i);
 
           await uploadBytes(fileRef, file);
           const photoURL = await getDownloadURL(fileRef);
-          console.log("URL", photoURL);
+
+          storeImageUrlList.push(photoURL);
+
+          // console.log("URL", storeImageUrlList);
 
           // Update storeImages state with the uploaded image's URL
-          setStoreImages((prevImages) => {
-            const updatedImages = [...prevImages];
+          // setStoreImages((prevImages) => {
+          //   const updatedImages = [...prevImages];
 
-            // Image exists, update its URL
-            updatedImages[i].imageUrl = photoURL;
+          //   // Image exists, update its URL
+          //   updatedImages[i].imageUrl = photoURL;
 
-            return updatedImages;
-          });
-
-          // console.log("Download URL:", photoURL);
+          //   return updatedImages;
+          // });
         }
         console.log("All files uploaded successfully!");
+        return storeImageUrlList;
       } catch (error) {
         console.error("Error uploading files:", error);
         alert(
@@ -383,12 +365,6 @@ const ManageStorePage = () => {
     setDayIndex((pre) => pre - 1);
   };
 
-  const handleCatogaryClick = (label: string) => {
-    // if (!label || categoriesArr.includes(label)) return;
-    // setCategoriesArr((pre) => (pre ? [...pre, label] : [label]));
-    setCategory(label);
-  };
-
   const handleClickRequest = async () => {
     if (currentUserStore) {
       const adminMessagesCollectionRef = collection(db, "adminMessages");
@@ -404,6 +380,8 @@ const ManageStorePage = () => {
       });
 
       toast.success("Request Send to Admin");
+      setOpenRequestModel(false);
+      setRequestPhone("");
     }
     // if (requestPhone) {
     //   window.open(
@@ -416,144 +394,79 @@ const ManageStorePage = () => {
   //   setCategoriesArr((pre) => [...pre.filter((preObj) => preObj !== label)]);
   // };
 
-  // CustomToggle component
-  const CustomToggle = forwardRef<
-    HTMLAnchorElement,
-    {
-      children: React.ReactNode;
-      onClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
-    }
-  >(({ children, onClick }, ref) => (
-    <a
-      href=""
-      ref={ref}
-      onClick={(e) => {
-        e.preventDefault();
-        onClick(e);
-      }}
-    >
-      {children}
-      &#x25bc;
-    </a>
-  ));
+  // ------------------Categories----------------------------
+  const handleCancelClick = () => {
+    setOpenModel(false);
+    setUserCategory("");
+  };
 
-  // CustomMenu component
-  const CustomMenu = forwardRef<
-    HTMLDivElement,
-    {
-      children: React.ReactNode;
-      style?: React.CSSProperties;
-      className?: string;
-      "aria-labelledby": string;
+  const handleAddUserCategory = async () => {
+    if (userCategory && currentUser) {
+      toast.success("Request Send to Admin");
+      const adminMessagesCollectionRef = collection(db, "adminMessages");
+      await addDoc(adminMessagesCollectionRef, {
+        message: `I would like to add ${userCategory} as a new category`,
+        createdAt: new Date(),
+        imageUrl: "",
+        fromName: "",
+        fromId: currentUser.uid,
+        toName: "admin",
+        toId: "",
+        seen: false,
+      });
     }
-  >(({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
-    const [value, setValue] = useState<string>("");
+    setOpenModel(false);
+    setUserCategory("");
+  };
 
-    return (
-      <div
-        ref={ref}
-        style={style}
-        className={className}
-        aria-labelledby={labeledBy}
-      >
-        <Form.Control
-          autoFocus
-          className="mx-3 my-2 w-auto"
-          placeholder="Type to filter..."
-          onChange={(e) => setValue(e.target.value)}
-          value={value}
-        />
-        <ul className="list-unstyled">
-          {React.Children.toArray(children).filter(
-            (child) =>
-              !value ||
-              (typeof child === "string" &&
-                child.toLowerCase().startsWith(value))
-          )}
-        </ul>
-      </div>
-    );
-  });
+  // ------------------Tag--------------------------
+
+  const handleAddTag = (tag: string) => {
+    if (!tag || tags.includes(tag)) return;
+    setTagInput("");
+    setTags((pre) => [...pre, tag]);
+  };
+
+  const handleDelete = (tag: string) => {
+    setTags(tags.filter((t) => t !== tag));
+  };
 
   // if (!currentUserStore) return <div>Loading...</div>;
   return (
     <div className="w-full min-h-screen text-center relative">
-      <Link
-        to={params.storeId === "userStore" ? "/" : "/manage-business-profiles"}
-        className="absolute top-0 left-5 w-10 h-10 text-4xl font-extralight"
-      >
-        <IoIosArrowBack />
-      </Link>
+      <div className="md:absolute md:-top-2 md:left-5 flex text-4xl font-extralight items-center justify-center">
+        <Link
+          className="relative -left-3"
+          to={
+            params.storeId === "userStore" ? "/" : "/manage-business-profiles"
+          }
+          // className="absolute top-0 left-5 w-10 h-10 text-4xl font-extralight"
+        >
+          <Button variant="outline">
+            <IoIosArrowBack />
+          </Button>
+        </Link>
 
-      <h1 className="text-3xl font-bold mb-6 mt-4">Business Profile</h1>
+        <Link to="/" className="flex items-center justify-center">
+          <img src={logo} alt="logo" className="h-12 w-36" />
+        </Link>
+      </div>
+
+      <h1 className="text-xl font-bold mb-6 mt-4">
+        Update Your Business Profile
+      </h1>
+
       {currentUserData && currentUserStore ? (
         <div className="flex flex-col gap-2 md:p-5">
           {/* <h2 className="text-xl font-semibold mb-4">Your Store</h2> */}
           <div className="flex flex-col gap-10 items-center justify-between">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="md:w-6/12 w-full flex items-center justify-center">
-                <ImageSwiper
-                  setStoreImages={setStoreImages}
-                  storeImages={storeImages}
-                />
-              </div>
-              <div
-                className="gap-3 flex items-center justify-center md:w-6/12 w-full"
-                id="logo-conten"
-              >
-                <input
-                  id={`iconInput`}
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files) {
-                      setStoreIcon((pre) =>
-                        pre
-                          ? {
-                              ...pre,
-                              file: e.target.files![0],
-                              imageUrl: URL.createObjectURL(e.target.files![0]),
-                            }
-                          : {
-                              file: e.target.files![0],
-                              imageUrl: URL.createObjectURL(e.target.files![0]),
-                            }
-                      );
-                    }
-                  }}
-                  required
-                  className="hidden"
-                />
-                <button
-                  className="photo-add-butto w-20 h-20 border rounded-md"
-                  id="logo-button"
-                  type="button"
-                >
-                  {storeIcon ? (
-                    <img
-                      src={
-                        (storeIcon.file &&
-                          URL.createObjectURL(storeIcon.file)) ??
-                        storeIcon.imageUrl
-                      }
-                      alt="profile"
-                      className="w-full h-full rounded-md object-cover"
-                    />
-                  ) : (
-                    <IonIcon icon={addOutline}></IonIcon>
-                  )}
-                </button>
-                <p className="text-center">
-                  Select your logo{" "}
-                  <label
-                    htmlFor="iconInput"
-                    className="text-blue-500 cursor-pointer"
-                  >
-                    Brower
-                  </label>
-                </p>
-              </div>
+            <div className="md:w-6/12 w-full flex items-center justify-center">
+              <ImageSwiper
+                setStoreImages={setStoreImages}
+                storeImages={storeImages}
+              />
             </div>
+
             {/* ----------------------------------------------------------- */}
             <div className="w-full px-3 gap-5">
               <form onSubmit={handleSubmit}>
@@ -635,13 +548,13 @@ const ManageStorePage = () => {
 
                   {/* ------------Shedul input---------------- */}
                   <>
-                    <div className="hidden md:flex col-span-2 items-center justify-between w-full px-20">
+                    <div className="hidden md:flex col-span-2 items-center justify-between w-full px-20 bg-gray-200 rounded-md">
                       <button
                         type="button"
                         disabled={dayIndex <= 0}
                         onClick={handlePrevDay}
                       >
-                        <IoMdArrowDropleft className="text-5xl text-blue-500" />
+                        <IoMdArrowDropleft className="text-5xl text-orange-500" />
                       </button>
                       <div>{schedulArr[dayIndex].day}</div>
                       <TimeRangePicker
@@ -654,11 +567,11 @@ const ManageStorePage = () => {
                         disabled={dayIndex >= 6}
                         onClick={handleNextDay}
                       >
-                        <IoMdArrowDropright className="text-5xl text-blue-500" />
+                        <IoMdArrowDropright className="text-5xl text-orange-500" />
                       </button>
                     </div>
                     {/* -------------------- */}
-                    <div className="flex md:hidden flex-col items-center justify-between w-full">
+                    <div className="flex md:hidden flex-col items-center justify-between w-full bg-gray-200 rounded-md">
                       <TimeRangePicker
                         onChange={setTimevalue}
                         value={schedulArr[dayIndex].time}
@@ -670,7 +583,7 @@ const ManageStorePage = () => {
                           disabled={dayIndex <= 0}
                           onClick={handlePrevDay}
                         >
-                          <IoMdArrowDropleft className="text-5xl text-blue-500" />
+                          <IoMdArrowDropleft className="text-5xl text-orange-500" />
                         </button>
 
                         <div>{schedulArr[dayIndex].day}</div>
@@ -680,49 +593,57 @@ const ManageStorePage = () => {
                           disabled={dayIndex >= 6}
                           onClick={handleNextDay}
                         >
-                          <IoMdArrowDropright className="text-5xl text-blue-500" />
+                          <IoMdArrowDropright className="text-5xl text-orange-500" />
                         </button>
                       </div>
                     </div>
                     {/* ------------------------------- */}
                   </>
 
+                  <hr className="col-span-2" />
+                  <h1 className="col-span-2 text-xl mb-3 text-blue-500 text-left">
+                    Tags
+                  </h1>
+
                   {/* -----------------Tag input---------------------------- */}
                   <div className="col-span-2 flex flex-col">
-                    <div className="flex px-2 items-center justify-between col-span-2 text-lg m-[10px] border rounded-md focus:outline-blue-400">
-                      <div className="flex items-center">
-                        <div className="">
-                          {tags.map((tag, index) => (
-                            <Tag key={index} className="m-1">
+                    <div className="tag-input-component">
+                      <ul className="flex flex-wrap gap-2">
+                        {tags.map((tag) => (
+                          <li>
+                            <Tag className="flex items-center gap-2 justify-between px-2 py-2">
                               {tag}
+                              <IoIosClose
+                                onClick={() => handleDelete(tag)}
+                                className="text-2xl"
+                              />
                             </Tag>
-                          ))}
-                        </div>
+                          </li>
+                        ))}
+                      </ul>
 
-                        <input
-                          type="text"
-                          value={tagInput}
-                          onChange={(e) => setTagInput(e.target.value)}
-                          placeholder="Tag"
-                          className="p- text-lg m-[10px] outline-none"
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault(); // Prevent form submission
-                              handleAddTag(tagInput);
-                            }
-                          }}
-                        />
-                      </div>
-
-                      <button
-                        className="bg-green-500 rounded-md text-white px-2 py-1 hidden md:block"
-                        onClick={() => handleAddTag(tagInput)}
-                        type="button"
-                      >
-                        update
-                      </button>
+                      <Input
+                        value={tagInput}
+                        onChange={(e) => setTagInput(e.target.value)}
+                        placeholder="Add a tag"
+                        className="focus-visible:ring-blue-500 mt-3"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault(); // Prevent form submission
+                            handleAddTag(tagInput);
+                          }
+                        }}
+                      />
                     </div>
-                    <Label className="text-xs text-gray-400 text-center">
+                    <button
+                      type="button"
+                      className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                      onClick={() => handleAddTag(tagInput)}
+                    >
+                      Update
+                    </button>
+
+                    <Label className="text-xs text-gray-400 text-center mt-3">
                       Press <Kbd className="text-gray-500">Enter</Kbd> after
                       every tag
                     </Label>
@@ -831,80 +752,84 @@ const ManageStorePage = () => {
                     </div>
                   </>
 
-                  {/* --------------------------------------------------------- */}
-                  <>
+                  {/* ------------------------ Cotegories --------------------------------- */}
+                  <div className="col-span-2">
                     <hr className="col-span-2" />
                     <h1 className="col-span-2 text-2xl mt-5 mb-3 text-blue-500 text-left">
-                      List Your Cotogary
+                      Business Cotegories
                     </h1>
 
-                    <div className="col-span-2 flex flex-row-reverse gap-5 items-center justify-center">
-                      {category && (
-                        <div className="bg-blue-500 text-white px-3 py-2 rounded-md">
-                          {/* {categoriesArr.map((catogary, index) => (
-                          <CustomTag key={index} styles="m-1">
-                            <div>{catogary}</div>
-                            <RxCross2
-                              className="mt-1"
-                              onClick={() => handleRemoveCatogary(catogary)}
-                            />
-                          </CustomTag>
-                        ))} */}
-                          {category}
-                        </div>
-                      )}
+                    <div className="flex items-center justify-between flex-col md:flex-row w-full gap-4">
+                      <Select
+                        value={category}
+                        onChange={(
+                          event:
+                            | React.ChangeEvent<HTMLSelectElement>
+                            | undefined
+                        ) => {
+                          if (event && event.target) {
+                            setCategory(event.target.value);
+                          }
+                        }}
+                      >
+                        {visibleCategories &&
+                          visibleCategories.map((catogaryObj, index) => (
+                            <option value={catogaryObj.label} key={index}>
+                              {catogaryObj.label}
+                            </option>
+                          ))}
+                      </Select>
 
-                      <Dropdown>
-                        <Dropdown.Toggle
-                          as={CustomToggle}
-                          id="dropdown-custom-components"
-                        >
-                          Categories
-                        </Dropdown.Toggle>
+                      <div className="w-full flex items-center justify-center">
+                        <Dialog open={openModel} onOpenChange={setOpenModel}>
+                          <DialogTrigger asChild>
+                            <Button className="bg-[#277aa0] hover:bg-[#277aa0]/90">
+                              Request For Add New Category
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                              <DialogTitle>Suggest your Category</DialogTitle>
+                            </DialogHeader>
 
-                        <Dropdown.Menu as={CustomMenu}>
-                          <div className="h-[200px] overflow-y-scroll">
-                            {visibleCategories && visibleCategories.map(
-                              (catogaryObj, index) => (
-                                <Dropdown.Item
-                                  eventKey={index + 1}
-                                  onClick={() =>
-                                    handleCatogaryClick(catogaryObj.label)
-                                  }
-                                  key={index}
+                            <div className="grid gap-4 py-2">
+                              <div className="space-y-3">
+                                <div>
+                                  <Label htmlFor="name">Category</Label>
+                                  <Input
+                                    id="name"
+                                    className="col-span-3"
+                                    placeholder="Type your Category..."
+                                    value={userCategory}
+                                    onChange={(e) =>
+                                      setUserCategory(e.target.value)
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            <DialogFooter className="sm:justify-start">
+                              <div className="w-full flex items-center justify-center gap-2 px-10">
+                                <Button
+                                  type="button"
+                                  onClick={handleCancelClick}
                                 >
-                                  {catogaryObj.label}
-                                </Dropdown.Item>
-                              )
-                            )}
-                          </div>
-                        </Dropdown.Menu>
-                      </Dropdown>
+                                  Cancel
+                                </Button>
+                                <Button onClick={handleAddUserCategory}>
+                                  Send
+                                </Button>
+                              </div>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     </div>
-                  </>
+                  </div>
 
-                  <div className="w-full col-span-2 flex items-center justify-center mb-10">
-                    <Button
-                      type="submit"
-                      disabled={
-                        !title ||
-                        !address ||
-                        !phoneNumber ||
-                        !whatsappNumber ||
-                        !tags ||
-                        loading
-                      }
-                      className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white "
-                    >
-                      {loading ? (
-                        <>
-                          <Loader /> <span className="ml-3">Loading...</span>
-                        </>
-                      ) : (
-                        "Request For Update"
-                      )}
-                    </Button>
-
+                  {/* ---------------------------Buttons---------------------------------- */}
+                  <>
                     {currentUserStore && (
                       <Button
                         variant="destructive"
@@ -915,78 +840,109 @@ const ManageStorePage = () => {
                             currentUserStore.published
                           )
                         }
-                        className="md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white"
+                        className="m-full col-span-2 flex items-center justify-center p-3 text-white bg-[#41a1ce] hover:bg-[#41a1ce]/90"
                       >
                         {currentUserStore.published ? "Unpublish" : "Publish"}
                       </Button>
                     )}
 
-                    {currentUserStore.showProfile ? (
-                      <div>
-                        <Link to={`/setup-tabs-data/${currentUserStore?.id}`}>
-                          <Button className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white ">
-                            Next
-                          </Button>
-                        </Link>
-                      </div>
-                    ) : (
-                      <Dialog
-                        open={openRequestModel}
-                        onOpenChange={setOpenRequestModel}
+                    <hr className="col-span-2" style={{ borderWidth: "5px" }} />
+
+                    <div className="w-full col-span-2 flex items-center justify-center mb-10">
+                      <Button
+                        type="submit"
+                        disabled={
+                          !title ||
+                          !address ||
+                          !phoneNumber ||
+                          !whatsappNumber ||
+                          !tags ||
+                          loading
+                        }
+                        className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white "
                       >
-                        <DialogTrigger>
-                          <Button
-                            asChild
-                            size="sm"
-                            className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white"
-                          >
-                            <h4>Request For Create Profile</h4>
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px] flex items-center justify-center flex-col">
-                          <DialogHeader>
-                            <DialogTitle>Send Your Request</DialogTitle>
-                          </DialogHeader>
+                        {loading ? (
+                          <>
+                            <Loader /> <span className="ml-3">Updating...</span>
+                          </>
+                        ) : (
+                          "Request For Update"
+                        )}
+                      </Button>
 
-                          <div className="grid gap-4 py-2 w-full">
-                            <div className="">
-                              <Label>Phone No</Label>
-                              <Input
-                                id="name"
-                                className=""
-                                placeholder="Your Phone Number"
-                                value={requestPhone}
-                                onChange={(e) =>
-                                  setRequestPhone(e.target.value)
-                                }
-                              />
-                            </div>
-                          </div>
+                      {currentUserStore.showProfile ? (
+                        <div>
+                          <Link to={`/setup-tabs-data/${currentUserStore?.id}`}>
+                            <Button className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white ">
+                              Next{" "}
+                              <MdArrowForwardIos className="ml-2 text-xl mt-[1px]" />
+                            </Button>
+                          </Link>
+                        </div>
+                      ) : (
+                        <Dialog
+                          open={openRequestModel}
+                          onOpenChange={setOpenRequestModel}
+                        >
+                          <DialogTrigger>
+                            <Button
+                              asChild
+                              size="sm"
+                              className=" md:w-[200px] m-[10px] rounded-xl flex items-center justify-center p-3 text-white"
+                            >
+                              <h4>
+                                Request For
+                                <span className="text-yellow-300 ml-1">
+                                  Pro Profile
+                                </span>
+                              </h4>
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[425px] flex items-center justify-center flex-col">
+                            <DialogHeader>
+                              <DialogTitle>Send Your Request</DialogTitle>
+                            </DialogHeader>
 
-                          <DialogFooter className="sm:justify-start">
-                            <div className="w-full flex items-center justify-center gap-2 px-10">
-                              <Button
-                                type="button"
-                                onClick={() => {
-                                  setOpenRequestModel(false);
-                                  setRequestPhone("");
-                                }}
-                              >
-                                Cancel
-                              </Button>
-                              <Button
-                                type="button"
-                                onClick={handleClickRequest}
-                                className=" md:w-[200px] m-[10px] flex items-center justify-center p-3 text-white "
-                              >
-                                Request For Create Profile
-                              </Button>
+                            <div className="grid gap-4 py-2 w-full">
+                              <div className="">
+                                <Label>Phone No</Label>
+                                <Input
+                                  id="name"
+                                  className=""
+                                  placeholder="Your Phone Number"
+                                  value={requestPhone}
+                                  onChange={(e) =>
+                                    setRequestPhone(e.target.value)
+                                  }
+                                />
+                              </div>
                             </div>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                    )}
-                  </div>
+
+                            <DialogFooter className="sm:justify-start">
+                              <div className="w-full flex items-center justify-center gap-2 px-10">
+                                <Button
+                                  type="button"
+                                  onClick={() => {
+                                    setOpenRequestModel(false);
+                                    setRequestPhone("");
+                                  }}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  type="button"
+                                  onClick={handleClickRequest}
+                                  className=" md:w-[200px] m-[10px] flex items-center justify-center p-3 text-white "
+                                >
+                                  Request For Pro Profile
+                                </Button>
+                              </div>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                    </div>
+                  </>
                 </div>
               </form>
             </div>

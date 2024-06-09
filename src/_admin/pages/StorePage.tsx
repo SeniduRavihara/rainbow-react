@@ -13,9 +13,15 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-
+import { ImMenu2 } from "react-icons/im";
 import Table from "react-bootstrap/Table";
-// import { Tag } from "@chakra-ui/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "../../components/ui/button";
 import { StoreListType, StoreObj } from "@/types";
 import Loader from "../../components/Loader";
@@ -26,7 +32,6 @@ import { IoIosSearch } from "react-icons/io";
 import algoliasearch from "algoliasearch/lite";
 import { RxCross2 } from "react-icons/rx";
 import { Input } from "@/components/ui/input";
-import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import {
   deleteObject,
@@ -36,12 +41,12 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { syncLatestStoreWithStore } from "@/firebase/api";
+import { Label } from "@/components/ui/label";
 
 const searchClient = algoliasearch(
   import.meta.env.VITE_ALGOLIA_APP_ID,
   import.meta.env.VITE_ALGOLIA_SEARCH_ONLY_API_KEY
 );
-
 
 const searchIndex = searchClient.initIndex("stores");
 
@@ -61,14 +66,18 @@ const StorePage = () => {
   const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchQuiery, setSearchQuiery] = useState("");
-  // const [haveLatestUpdate, setHaveLatestUpdate] = useState(false);
 
-  const [openRviewWindow, setOpenRviewWindow] = useState({
-    open: false,
-    storeId: "",
-  });
+  const [openActionWindow, setOpenActionWindow] = useState(false);
+  const [selectedStore, setSelectedStore] = useState<StoreObj | null>(null);
+  // const [openRviewWindow, setOpenRviewWindow] = useState({
+  //   open: false,
+  //   storeId: "",
+  // });
 
   const navigate = useNavigate();
+
+  console.log(selectedStore);
+  
 
   useEffect(() => {
     fetchData();
@@ -108,6 +117,8 @@ const StorePage = () => {
     setLoading(false);
   };
 
+  // ------------------Actions----------------------
+
   const toggleActive = async (id: string, active: boolean) => {
     setLoadingActive((pre) => ({ ...pre, state: true, id }));
     const documentRef = doc(db, "store", id);
@@ -131,6 +142,9 @@ const StorePage = () => {
 
         return updatedList;
       });
+      setSelectedStore((prev) =>
+        prev ? { ...prev, active: !prev.active } : null
+      );
 
       try {
         const documentRef = doc(db, "store", id);
@@ -176,6 +190,10 @@ const StorePage = () => {
         return updatedList;
       });
 
+       setSelectedStore((prev) =>
+         prev ? { ...prev, verified: !prev.verified } : null
+       );
+
       try {
         const documentRef = doc(db, "store", id);
         const querySnapshot = await getDoc(documentRef);
@@ -219,6 +237,10 @@ const StorePage = () => {
 
         return updatedList;
       });
+
+      setSelectedStore((prev) =>
+        prev ? { ...prev, showProfile: !prev.showProfile } : null
+      );
 
       try {
         const documentRef = doc(db, "store", id);
@@ -692,7 +714,6 @@ const StorePage = () => {
       }
     }
 
-
     // ---------------=========----------------
 
     // await deleteDoc(documentReflatest);
@@ -705,6 +726,7 @@ const StorePage = () => {
 
     setLoadingShowUpdate((pre) => ({ ...pre, state: false, storeId }));
   };
+  // -------------------------------------------------
 
   const handlesearch = async (searchQuery: string) => {
     try {
@@ -764,11 +786,16 @@ const StorePage = () => {
     // setOpenRviewWindow((pre) => ({ ...pre, storeId, open: true }));
   };
 
+  const handleCancelClick = () => {
+    //Action Model
+    setOpenActionWindow(false);
+  };
+
   // console.log(storeList && new Date(storeList[0].createdAt._seconds * 1000).toDateString());
 
   return (
-    <div className="pb-10 flex flex-col items-center justify-center ml-[200px] w-[1000px]">
-      {openRviewWindow.open && (
+    <div className="pb-10 flex flex-col items-center justify-center p-5 ">
+      {/* {openRviewWindow.open && (
         <div className="w-screen h-screen absolute top-0 left-0 flex flex-col items-center justify-center">
           <div
             className="bg-green-500 hover:bg-green-600 duration-300 w-full flex items-center justify-center"
@@ -776,7 +803,7 @@ const StorePage = () => {
               setOpenRviewWindow((pre) => ({ ...pre, open: false }))
             }
           >
-            <IoArrowBack className="text-5xl text-white" />
+            <IoArrowBack className="text-5xl text-black" />
           </div>
 
           <iframe
@@ -785,9 +812,9 @@ const StorePage = () => {
             frameBorder="1"
           ></iframe>
         </div>
-      )}
+      )} */}
 
-      <div className="flex w-full items-center gap-2 h-10 mb-10">
+      <div className="flex w-[70%] items-center justify-center gap-2 h-10 mb-10 fixed top-3 py-4 rounded-lg bg-green-500/20 backdrop-blur-xl">
         <Input
           type="text"
           placeholder="Search Business"
@@ -818,23 +845,24 @@ const StorePage = () => {
         )}
       </div>
 
-      <Table striped bordered hover className="">
+      <Table striped bordered hover className="mt-5">
         <thead>
-          <tr>
-            <th>#</th>
-            <th>Business Name</th>
-            <th>Business Category</th>
+          <tr className="text-sm">
+            <th className="w-[10px]">#</th>
+            <th className="w-[10px]">Business Name</th>
+            <th className="w-[10px]">Business Category</th>
             <th className="w-[10px]">Address</th>
-            <th>Email</th>
-            <th>Telephone</th>
-            <th>Registered/Requested Date</th>
-            <th>ACTION</th>
+            <th className="w-[10px]">Email</th>
+            <th className="w-[10px]">Telephone</th>
+            <th className="text-sm w-[10px]">Registered/Requested Date</th>
+            <th className="w-[10px]">ACTION</th>
+            {/* <th>ACTION</th>
             <th>VERIFY</th>
             <th>ShowProfile</th>
-            <th>Allow Update</th>
+            <th>Allow Update</th> */}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-sm">
           {storeList &&
             storeList.map((storeObj, index) => (
               <tr key={index}>
@@ -867,7 +895,17 @@ const StorePage = () => {
                 </td>
                 {/* above block have some problem ToDo to fix it */}
 
-                <td className="text-right">
+                <td className="text-center">
+                  <ImMenu2
+                    className="text-4xl cursor-pointer"
+                    onClick={() => {
+                      setOpenActionWindow(true);
+                      setSelectedStore(storeObj);
+                    }}
+                  />
+                </td>
+
+                {/* <td className="text-right">
                   <Button
                     className={cn(
                       ` flex items-center justify-center gap-2`,
@@ -932,11 +970,113 @@ const StorePage = () => {
                       "Allow"
                     )}
                   </Button>
-                </td>
+                </td> */}
               </tr>
             ))}
         </tbody>
       </Table>
+
+      <Dialog open={openActionWindow} onOpenChange={setOpenActionWindow}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Actions -&gt; {selectedStore?.title}</DialogTitle>
+          </DialogHeader>
+
+          {selectedStore && (
+            <div className=" gap-4 py-2 flex items-center justify-center">
+              <ul className="flex flex-col gap-2 w-[200px]">
+                <li className="flex items-center justify-between">
+                  <Label>Active</Label>
+                  <div>
+                    <Button
+                      className={cn(
+                        ` flex items-center justify-center gap-2`,
+                        selectedStore.active ? "bg-blue-500" : "bg-red-500"
+                      )}
+                      disabled={
+                        loadingActive.id === selectedStore.id &&
+                        loadingActive.state
+                      }
+                      onClick={() =>
+                        toggleActive(selectedStore.id, selectedStore.active)
+                      }
+                    >
+                      {loadingActive.id === selectedStore.id &&
+                        loadingActive.state && <Loader />}
+                      {selectedStore.active ? "Dective" : "Active"}
+                    </Button>
+                  </div>
+                </li>
+                <li className="flex items-center justify-between">
+                  <Label>Verify</Label>
+                  <Button
+                    className={cn(
+                      ` flex items-center justify-center gap-2`,
+                      selectedStore.verified ? "bg-blue-500" : "bg-red-500"
+                    )}
+                    disabled={
+                      loadingVerify.id === selectedStore.id &&
+                      loadingVerify.state
+                    }
+                    onClick={() =>
+                      toggleVerify(selectedStore.id, selectedStore.verified)
+                    }
+                  >
+                    {loadingVerify.id === selectedStore.id &&
+                      loadingVerify.state && <Loader />}
+                    {selectedStore.verified ? "Remove" : "Verify"}
+                  </Button>
+                </li>
+                <li className="flex items-center justify-between">
+                  <Label>ShowProfile</Label>
+                  <Button
+                    className={cn(
+                      ` flex items-center justify-center gap-2`,
+                      !selectedStore.showProfile ? "bg-blue-500" : "bg-red-500"
+                    )}
+                    disabled={
+                      loadingShowProfile.id === selectedStore.id &&
+                      loadingShowProfile.state
+                    }
+                    onClick={() =>
+                      toggleShowProfile(
+                        selectedStore.id,
+                        selectedStore.showProfile
+                      )
+                    }
+                  >
+                    {loadingShowProfile.id === selectedStore.id &&
+                      loadingShowProfile.state && <Loader />}
+                    {selectedStore.showProfile ? "Hide" : "Show"}
+                  </Button>
+                </li>
+                <li className="flex items-center justify-between">
+                  <Label>Allow Update</Label>
+                  <Button
+                    className={cn(` flex items-center justify-center gap-2`)}
+                    onClick={() => handleAllowUpdate(selectedStore.id)}
+                  >
+                    {loadingUpdate.id === selectedStore.id &&
+                    loadingUpdate.state ? (
+                      <Loader />
+                    ) : (
+                      "Allow"
+                    )}
+                  </Button>
+                </li>
+              </ul>
+            </div>
+          )}
+
+          <DialogFooter className="sm:justify-start">
+            <div className="w-full flex items-center justify-center gap-2 px-10">
+              <Button type="button" onClick={handleCancelClick}>
+                Cancel
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <div className="w-full flex items-center justify-center">
         <Button
