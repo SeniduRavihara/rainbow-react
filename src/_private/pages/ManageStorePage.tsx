@@ -380,6 +380,8 @@ const ManageStorePage = () => {
       });
 
       toast.success("Request Send to Admin");
+      setOpenRequestModel(false);
+      setRequestPhone("");
     }
     // if (requestPhone) {
     //   window.open(

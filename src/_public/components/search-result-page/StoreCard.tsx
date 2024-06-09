@@ -69,7 +69,7 @@ const StoreCard = ({
     console.log("sdhfd", storeId);
 
     if (showProfile) {
-      await updateVisitCount(storeId);
+      updateVisitCount(storeId);
       const formattedStoreName = storeName.replace(/\s+/g, "-");
       navigate(`/business-profile/${formattedStoreName}`);
     }
