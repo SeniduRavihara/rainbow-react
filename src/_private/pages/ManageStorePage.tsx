@@ -12,8 +12,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { IonIcon } from "@ionic/react";
-import { addOutline } from "ionicons/icons";
+
 import {
   IoIosArrowBack,
   IoIosClose,
@@ -223,7 +222,7 @@ const ManageStorePage = () => {
       setSchedulArr(currentUserStore.schedulArr);
       setStoreImages((pre) =>
         pre.map((imgObj, index) => {
-          const { file, ...rest } = imgObj;
+          // const { file, ...rest } = imgObj;
           return { ...imgObj, imageUrl: currentUserStore.storeImages[index] };
         })
       );
@@ -459,14 +458,13 @@ const ManageStorePage = () => {
         <div className="flex flex-col gap-2 md:p-5">
           {/* <h2 className="text-xl font-semibold mb-4">Your Store</h2> */}
           <div className="flex flex-col gap-10 items-center justify-between">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="md:w-6/12 w-full flex items-center justify-center">
-                <ImageSwiper
-                  setStoreImages={setStoreImages}
-                  storeImages={storeImages}
-                />
-              </div>
+            <div className="md:w-6/12 w-full flex items-center justify-center">
+              <ImageSwiper
+                setStoreImages={setStoreImages}
+                storeImages={storeImages}
+              />
             </div>
+
             {/* ----------------------------------------------------------- */}
             <div className="w-full px-3 gap-5">
               <form onSubmit={handleSubmit}>
@@ -863,7 +861,7 @@ const ManageStorePage = () => {
                       >
                         {loading ? (
                           <>
-                            <Loader /> <span className="ml-3">Loading...</span>
+                            <Loader /> <span className="ml-3">Updating...</span>
                           </>
                         ) : (
                           "Request For Update"

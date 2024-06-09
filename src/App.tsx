@@ -45,10 +45,11 @@ import AddTabData from "./_private/pages/create-store/tab-data/AddTabData";
 import ForgetPasswordPage from "./_auth/forms/ForgetPasswordPage";
 import ReviewPage from "./_admin/pages/ReviewPage";
 import PasswordResetPage from "./_auth/forms/PasswordResetPage";
+import RootLayout from "./layout/RootLayout";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route>
+    <Route element={<RootLayout />}>
       {/* auth routes */}
       <Route element={<AuthLayout />}>
         <Route path="/signup" element={<SignupPage />} />

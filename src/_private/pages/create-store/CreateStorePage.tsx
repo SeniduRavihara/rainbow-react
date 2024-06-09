@@ -1,7 +1,5 @@
 import ImageSwiper from "../../components/ImageSwiper";
-import { IonIcon } from "@ionic/react";
-import { addOutline } from "ionicons/icons";
-import React, { forwardRef, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 // import { IoArrowBack } from "react-icons/io5";
@@ -43,8 +41,6 @@ import { useData } from "@/hooks/useData";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import Dropdown from "react-bootstrap/Dropdown";
-import Form from "react-bootstrap/Form";
 import { addDoc, collection } from "firebase/firestore";
 import { logo } from "@/assets";
 // import { categories } from "@/constants";
@@ -314,7 +310,7 @@ const CreateStorePage = () => {
   };
 
   return (
-    <div className=" w-full min-h-screen flex flex-col gap-10 items-center justify-center">
+    <div className="w-full min-h-screen flex flex-col gap-10 items-center justify-center relative">
       <>
         <div className="md:absolute md:-top-2 md:left-5 flex text-4xl font-extralight items-center mt-4 justify-center">
           <Link

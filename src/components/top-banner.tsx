@@ -1,9 +1,10 @@
 
 import { FaFacebook } from "react-icons/fa6";
-import { FaYoutube } from "react-icons/fa";
+// import { FaYoutube } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
 import { FaLinkedin } from "react-icons/fa";
-import { FaSquareXTwitter } from "react-icons/fa6";
+// import { FaSquareXTwitter } from "react-icons/fa6";
+import { AiFillTikTok } from "react-icons/ai";
 
 
 const TopBanner = () => {
@@ -22,12 +23,20 @@ const TopBanner = () => {
           <FaFacebook />
         </a>
 
-        <a
+        {/* <a
           href="#"
           target="_blank"
           className="scl-md-links text-white xsm:text-xl text-base"
         >
           <FaYoutube />
+        </a> */}
+
+        <a
+          href="https://Www.tiktok.com/@srilankabusiness.lk"
+          target="_blank"
+          className="scl-md-links text-white xsm:text-xl text-base"
+        >
+          <AiFillTikTok />
         </a>
 
         <a
@@ -39,20 +48,20 @@ const TopBanner = () => {
         </a>
 
         <a
-          href="#"
+          href="https://www.linkedin.com/in/srilankabusiness/"
           target="_blank"
           className="scl-md-links text-white xsm:text-xl text-base"
         >
           <FaLinkedin />
         </a>
 
-        <a
+        {/* <a
           href="#"
           target="_blank"
           className="scl-md-links text-white xsm:text-xl text-base"
         >
           <FaSquareXTwitter />
-        </a>
+        </a> */}
       </div>
     </div>
   );

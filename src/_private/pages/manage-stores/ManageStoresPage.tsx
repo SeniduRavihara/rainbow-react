@@ -8,6 +8,7 @@ import Table from "react-bootstrap/Table";
 import { CircularProgress } from "@chakra-ui/react";
 import { IoIosArrowBack } from "react-icons/io";
 import { LucidePlusCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const ManageStoresPage = () => {
   const [loading, setLoading] = useState(false);
@@ -56,12 +57,44 @@ const ManageStoresPage = () => {
 
   return (
     <div className="w-full flex flex-col">
-      <Link
+      {/* <Link
         to="/"
         className="absolute top-5 left-5 w-10 h-10 text-4xl font-extralight"
       >
         <IoIosArrowBack />
+      </Link> */}
+      <Link
+        to="/"
+
+        className="absolute top-0 left-5 w-10 h-10 text-4xl font-extralight"
+      >
+        <Button variant="outline">
+          <IoIosArrowBack className="" />
+        </Button>
       </Link>
+
+      {/* <>
+        <div className="md:absolute md:-top-2 md:left-5 flex text-4xl font-extralight items-center mt-4 justify-center">
+          <Link
+            className="relative -left-3"
+            to="/manage-business-profiles"
+
+            // className="absolute top-0 left-5 w-10 h-10 text-4xl font-extralight"
+          >
+            <Button variant="outline">
+              <IoIosArrowBack />
+            </Button>
+          </Link>
+
+          <Link to="/" className="flex items-center justify-center">
+            <img src={logo} alt="logo" className="h-12 w-36" />
+          </Link>
+        </div>
+
+        <h1 className="text-xl font-bold md:mt-6">
+          Register Your Business Profile
+        </h1>
+      </> */}
 
       <div className="mt-20 sm:mt-5">
         <div className="flex flex-col items-center">
@@ -91,7 +124,7 @@ const ManageStoresPage = () => {
                 {/* <th>Address</th>
               <th>Email</th> */}
                 {/* <th>Telephone</th> */}
-                {/* <th>Registered/Requested Date</th> */}
+                <th>Registered Date</th>
                 {/* <th>ACTION</th> */}
               </tr>
             </thead>
@@ -116,9 +149,9 @@ const ManageStoresPage = () => {
                   ))}
                 </td> */}
                     {/* <td className="font-medium">{storeObj.phoneNumber}</td> */}
-                    {/* <td className="font-medium">
+                    <td className="font-medium">
                       {storeObj.createdAt.toDate().toDateString()}
-                    </td> */}
+                    </td>
 
                     {/* <td className="text-right">
                     <Button

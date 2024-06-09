@@ -179,12 +179,12 @@ const AddGalleryTab = ({ storeId }: { storeId: string }) => {
           ))}
       </div> */}
 
-      <div className="columns-2 xsm:columns-3 2xl:columns-4 gap-4">
+      <div className="grid grid-cols-2 xsm:grid-cols-3 2xl:grid-cols-4 gap-2 max-h-[500px] overflow-y-scroll ">
         {gallery &&
           gallery.map((imgObj, index) => (
             <div
               key={index}
-              className="relative my-3"
+              className="relative"
               onMouseEnter={() =>
                 setShowDeleteIcon({
                   status: true,
@@ -203,7 +203,7 @@ const AddGalleryTab = ({ storeId }: { storeId: string }) => {
               <img
                 src={imgObj.imageUrl}
                 alt={imgObj.imageUrl}
-                className="w-[150px] h-auto"
+                className="w-[150px] h-[120px] object-cover"
               />
               {showDeleteIcon.id === imgObj.id && (
                 <div
@@ -212,7 +212,9 @@ const AddGalleryTab = ({ storeId }: { storeId: string }) => {
                     handleDeleteGalleryImage(imgObj.id, imgObj.refName)
                   }
                 >
-                  <Button variant="link" className="text-white">Delete</Button>
+                  <Button variant="link" className="text-white">
+                    Delete
+                  </Button>
                 </div>
               )}
             </div>

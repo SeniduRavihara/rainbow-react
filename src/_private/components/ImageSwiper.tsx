@@ -8,14 +8,14 @@ import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 type ImageSwiperProps = {
   storeImages: Array<{
     index: number;
-    file: File;
+    file?: File;
     imageUrl: null | string;
   }>;
   setStoreImages: React.Dispatch<
     React.SetStateAction<
       Array<{
         index: number;
-        file: File;
+        file?: File;
         imageUrl: null | string;
       }>
     >

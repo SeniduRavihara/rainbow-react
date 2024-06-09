@@ -13,9 +13,16 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-
+import { ImMenu2 } from "react-icons/im";
 import Table from "react-bootstrap/Table";
-// import { Tag } from "@chakra-ui/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "../../components/ui/button";
 import { StoreListType, StoreObj } from "@/types";
 import Loader from "../../components/Loader";
@@ -36,12 +43,12 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { syncLatestStoreWithStore } from "@/firebase/api";
+import { Label } from "@/components/ui/label";
 
 const searchClient = algoliasearch(
   import.meta.env.VITE_ALGOLIA_APP_ID,
   import.meta.env.VITE_ALGOLIA_SEARCH_ONLY_API_KEY
 );
-
 
 const searchIndex = searchClient.initIndex("stores");
 
@@ -61,7 +68,10 @@ const StorePage = () => {
   const [lastDocument, setLastDocument] = useState<StoreObj | null>(null);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchQuiery, setSearchQuiery] = useState("");
-  // const [haveLatestUpdate, setHaveLatestUpdate] = useState(false);
+  const [openActionWindow, setOpenActionWindow] = useState({
+    index: 0,
+    state: false,
+  });
 
   const [openRviewWindow, setOpenRviewWindow] = useState({
     open: false,
@@ -692,7 +702,6 @@ const StorePage = () => {
       }
     }
 
-
     // ---------------=========----------------
 
     // await deleteDoc(documentReflatest);
@@ -764,6 +773,11 @@ const StorePage = () => {
     // setOpenRviewWindow((pre) => ({ ...pre, storeId, open: true }));
   };
 
+  const handleCancelClick = () => {
+    //Action Model
+    setOpenActionWindow(false);
+  };
+
   // console.log(storeList && new Date(storeList[0].createdAt._seconds * 1000).toDateString());
 
   return (
@@ -829,6 +843,7 @@ const StorePage = () => {
             <th>Telephone</th>
             <th>Registered/Requested Date</th>
             <th>ACTION</th>
+            <th>ACTION</th>
             <th>VERIFY</th>
             <th>ShowProfile</th>
             <th>Allow Update</th>
@@ -866,6 +881,59 @@ const StorePage = () => {
                       ).toDateString()}
                 </td>
                 {/* above block have some problem ToDo to fix it */}
+
+                <td className="text-center">
+                  <Dialog
+                    open={openActionWindow.state}
+                    onOpenChange={(e) =>
+                      setOpenActionWindow({ ...openActionWindow, state: e })
+                    }
+                  >
+                    <DialogTrigger asChild>
+                      <ImMenu2 className="text-4xl cursor-pointer" />
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>Suggest your Category</DialogTitle>
+                      </DialogHeader>
+
+                      <div className="grid gap-4 py-2">
+                        <ul>
+                          <li>
+                            <Label>Active</Label>
+                            {/* <div>
+                              <Button
+                                className={cn(
+                                  ` flex items-center justify-center gap-2`,
+                                  storeObj.active ? "bg-blue-500" : "bg-red-500"
+                                )}
+                                disabled={
+                                  loadingActive.id === storeObj.id &&
+                                  loadingActive.state
+                                }
+                                onClick={() =>
+                                  toggleActive(storeObj.id, storeObj.active)
+                                }
+                              >
+                                {loadingActive.id === storeObj.id &&
+                                  loadingActive.state && <Loader />}
+                                {storeObj.active ? "Dective" : "Active"}
+                              </Button>
+                            </div> */}
+                          </li>
+                        </ul>
+                      </div>
+
+                      <DialogFooter className="sm:justify-start">
+                        <div className="w-full flex items-center justify-center gap-2 px-10">
+                          <Button type="button" onClick={handleCancelClick}>
+                            Cancel
+                          </Button>
+                        </div>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </td>
 
                 <td className="text-right">
                   <Button
