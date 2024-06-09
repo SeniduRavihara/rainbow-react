@@ -165,7 +165,7 @@ const SearchResultAddsManage = () => {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full pb-5 pt-3 px-10">
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
           <ImageCropDialog
@@ -207,12 +207,12 @@ const SearchResultAddsManage = () => {
                     <Input
                       type="text"
                       value={
-                        searchResultAdds.find((addObj) => addObj.id === add.id)?.link
+                        searchResultAdds.find((addObj) => addObj.id === add.id)
+                          ?.link
                       }
                       onChange={(e) => handleChangeInput(e, add.id)}
                     />
                   </div>
-
 
                   <div className="card-body">
                     <div className="flex items-center justify-center gap-10">

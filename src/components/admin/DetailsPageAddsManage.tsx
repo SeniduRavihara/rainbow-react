@@ -165,7 +165,7 @@ const DetailsPageAddsManage = () => {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full pb-5 pt-3 px-10">
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
           <ImageCropDialog
@@ -207,7 +207,8 @@ const DetailsPageAddsManage = () => {
                     <Input
                       type="text"
                       value={
-                        detailsPageAdds.find((addObj) => addObj.id === add.id)?.link
+                        detailsPageAdds.find((addObj) => addObj.id === add.id)
+                          ?.link
                       }
                       onChange={(e) => handleChangeInput(e, add.id)}
                     />

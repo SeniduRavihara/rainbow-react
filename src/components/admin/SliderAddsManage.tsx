@@ -168,7 +168,7 @@ const SliderAddsManage = () => {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full pb-5 pt-3 px-10">
       {isOpenCropDialog && (
         <div className="w-screen h-screen absolute z-10">
           <ImageCropDialog

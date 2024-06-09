@@ -282,7 +282,7 @@ const SectionAddsManage: React.FC = () => {
     };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full pb-5 pt-3 px-10">
       <div className="w-full h-full flex items-center justify-center">
         {isOpenCropDialog && (
           <div className="w-screen h-screen absolute z-10">

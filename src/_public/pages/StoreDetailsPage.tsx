@@ -196,7 +196,6 @@ const StoreDetailsPage = () => {
           </div>
         ) : (
           <>
-            {/* <Gallery /> */}
             <TopSlider storeId={selectedStore.id} />
 
             <div className="w-full flex items-center justify-between pt-2 px-2">

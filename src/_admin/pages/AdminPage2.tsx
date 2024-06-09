@@ -3,15 +3,15 @@ import { Outlet } from "react-router-dom";
 
 const AdminPage2 = () => {
   return (
-    <div className="flex w-screen h-screen">
+    <div className="flex">
       <Sidebar />
       <div className="flex flex-col w-full h-full ">
-        <h1 className="bg-green-600 py-3 text-white text-center">
+        {/* <h1 className="bg-green-600 py-3 text-white text-center">
           ADMIN PANEL
-        </h1>
+        </h1> */}
 
-        <div className="flex w-full h-full px-20 bg-green-50 py-5">
-          <div className="w-full h-full">
+        <div className="flex w-full bg-green-50">
+          <div className="w-full h-screen  overflow-y-scroll">
             <Outlet />
           </div>
         </div>

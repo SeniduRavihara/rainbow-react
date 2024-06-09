@@ -126,7 +126,7 @@ const TabComponent = ({
   return (
     <div className="my-5">
       <Tabs className="">
-        <TabList className="overflow-x-scroll overflow-y-hidden scrollbar-hide flex gap- tab-list tab-list-container">
+        <TabList className="overflow-x-scroll overflow-y-hidden scrollbar-hide flex gap- tab-list tab-list-container w-screen md:w-full">
           <Tab className="border mb-1">Information</Tab>
           {gallery.length >= 1 && <Tab className="border mb-1">Gallery</Tab>}
           {selectedStore?.location && selectedStore?.location && (

@@ -80,7 +80,7 @@ const ManagmentPage = () => {
   };
 
   return (
-    <div>
+    <div className="pb-5 pt-3 px-10">
       <h1 className="text-2xl font-bold text-center mb-10">
         Assign Roles To Users
       </h1>
