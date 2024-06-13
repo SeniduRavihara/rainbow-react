@@ -4,7 +4,7 @@ import { Divider } from "@chakra-ui/react";
 const OpenTimes = ({
   schedulArr,
 }: {
-  schedulArr: Array<{ day: string; time: TimeValue }>;
+  schedulArr: Array<{ day: string; time: TimeValue; closed: boolean }>;
 }) => {
   // console.log(schedulArr);
 
@@ -19,8 +19,14 @@ const OpenTimes = ({
               <h3>{day.day}</h3>
               {day.time && Array.isArray(day.time) && (
                 <h3>
-                  {day.time[0]?.toLocaleString()} -{" "}
-                  {day.time[1]?.toLocaleString()}
+                  {day.closed ? (
+                    "Closed"
+                  ) : (
+                    <>
+                      {day.time[0]?.toLocaleString()} -{" "}
+                      {day.time[1]?.toLocaleString()}
+                    </>
+                  )}
                 </h3>
               )}
             </div>

@@ -22,7 +22,7 @@ import {
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Kbd, Select, Tag } from "@chakra-ui/react";
+import { Checkbox, Kbd, Select, Tag } from "@chakra-ui/react";
 import { addLocation, togglePublish, updateStore3 } from "@/firebase/api";
 import { useAuth } from "@/hooks/useAuth";
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
@@ -59,15 +59,15 @@ const ManageStorePage = () => {
   // const [info2, setInfo2] = useState("");
   const [timevalue, setTimevalue] = useState<TimeValue | null>(null);
   const [schedulArr, setSchedulArr] = useState<
-    Array<{ day: string; time: TimeValue }>
+    Array<{ day: string; time: TimeValue; closed: boolean }>
   >([
-    { day: "Monday", time: ["08:00", "05:00"] },
-    { day: "Tuesday", time: ["08:00", "05:00"] },
-    { day: "Wednesday", time: ["08:00", "05:00"] },
-    { day: "Thursday", time: ["08:00", "05:00"] },
-    { day: "Friday", time: ["08:00", "05:00"] },
-    { day: "Saturday", time: ["08:00", "05:00"] },
-    { day: "Sunday", time: ["08:00", "05:00"] },
+    { day: "Monday", time: ["08:00", "05:00"], closed: false },
+    { day: "Tuesday", time: ["08:00", "05:00"], closed: false },
+    { day: "Wednesday", time: ["08:00", "05:00"], closed: false },
+    { day: "Thursday", time: ["08:00", "05:00"], closed: false },
+    { day: "Friday", time: ["08:00", "05:00"], closed: false },
+    { day: "Saturday", time: ["08:00", "05:00"], closed: false },
+    { day: "Sunday", time: ["08:00", "05:00"], closed: false },
   ]);
   const [dayIndex, setDayIndex] = useState(0);
   const [storeImages, setStoreImages] = useState<
@@ -113,7 +113,7 @@ const ManageStorePage = () => {
 
   const params = useParams();
 
-  console.log(storeImages);
+  console.log(schedulArr);
 
   useEffect(() => {
     const collectionRef = collection(db, "categories");
@@ -219,7 +219,12 @@ const ManageStorePage = () => {
       setTiktok(currentUserStore.tiktok);
       setWebsite(currentUserStore.website);
       setCategory(currentUserStore.category || "");
-      setSchedulArr(currentUserStore.schedulArr);
+      setSchedulArr(
+        currentUserStore.schedulArr.map((obj) => ({
+          ...obj,
+          closed: obj.closed !== undefined ? obj.closed : false,
+        }))
+      );
       setStoreImages((pre) =>
         pre.map((imgObj, index) => {
           // const { file, ...rest } = imgObj;
@@ -348,6 +353,7 @@ const ManageStorePage = () => {
     }
   };
 
+  // -------------------------------------
   useEffect(() => {
     if (timevalue) {
       setSchedulArr((pre) => {
@@ -364,6 +370,7 @@ const ManageStorePage = () => {
   const handlePrevDay = () => {
     setDayIndex((pre) => pre - 1);
   };
+  // -------------------------------------
 
   const handleClickRequest = async () => {
     if (currentUserStore) {
@@ -562,6 +569,32 @@ const ManageStorePage = () => {
                         value={schedulArr[dayIndex].time}
                         className="border rounded-md outline-none px-4 py-2"
                       />
+                      <div className="flex items-center justify-center gap-2">
+                        <Checkbox
+                          colorScheme="blue"
+                          iconColor="gray.100"
+                          className=""
+                          isChecked={schedulArr[dayIndex]?.closed}
+                          onChange={() => {
+                            setSchedulArr((prevState) => {
+                              const newState = [...prevState];
+                              newState[dayIndex].closed =
+                                !newState[dayIndex].closed;
+                              return newState;
+                            });
+                          }}
+                          sx={{
+                            "& .chakra-checkbox__control": {
+                              borderColor: "red", // control color
+                            },
+                            "& .chakra-checkbox__control[data-checked]": {
+                              borderColor: "red", // control color when checked
+                            },
+                          }}
+                        >
+                          closed
+                        </Checkbox>
+                      </div>
                       <button
                         type="button"
                         disabled={dayIndex >= 6}
@@ -571,7 +604,7 @@ const ManageStorePage = () => {
                       </button>
                     </div>
                     {/* -------------------- */}
-                    <div className="flex md:hidden flex-col items-center justify-between w-full bg-gray-200 rounded-md">
+                    <div className="flex md:hidden flex-col items-center justify-between w-full pb-2 bg-gray-200 rounded-md">
                       <TimeRangePicker
                         onChange={setTimevalue}
                         value={schedulArr[dayIndex].time}
@@ -595,6 +628,32 @@ const ManageStorePage = () => {
                         >
                           <IoMdArrowDropright className="text-5xl text-orange-500" />
                         </button>
+                      </div>
+                      <div className="flex items-center justify-center gap-2">
+                        <Checkbox
+                          colorScheme="blue"
+                          iconColor="gray.100"
+                          className=""
+                          isChecked={schedulArr[dayIndex]?.closed}
+                          onChange={() => {
+                            setSchedulArr((prevState) => {
+                              const newState = [...prevState];
+                              newState[dayIndex].closed =
+                                !newState[dayIndex].closed;
+                              return newState;
+                            });
+                          }}
+                          sx={{
+                            "& .chakra-checkbox__control": {
+                              borderColor: "red", // control color
+                            },
+                            "& .chakra-checkbox__control[data-checked]": {
+                              borderColor: "red", // control color when checked
+                            },
+                          }}
+                        >
+                          closed
+                        </Checkbox>
                       </div>
                     </div>
                     {/* ------------------------------- */}

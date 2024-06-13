@@ -59,6 +59,7 @@ const SearchBoxes = () => {
   }
 
   const handlesearch = async (searchQuery: string) => {
+    if(!searchItem) return
     try {
       setLoadingSearch(true);
       const result = await searchIndex.search(searchQuery);
