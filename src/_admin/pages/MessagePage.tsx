@@ -128,7 +128,7 @@ const Message = () => {
               <RxCross1
                 className="cursor-pointer"
                 onClick={() => {
-                  console.log(messageObj);
+                  // console.log(messageObj);
 
                   handleMessageDelete(messageObj.toId, messageObj.id);
                 }}

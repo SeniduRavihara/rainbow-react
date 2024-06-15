@@ -113,7 +113,7 @@ const ManageStorePage = () => {
 
   const params = useParams();
 
-  console.log(schedulArr);
+  // console.log(schedulArr);
 
   useEffect(() => {
     const collectionRef = collection(db, "categories");
@@ -139,7 +139,7 @@ const ManageStorePage = () => {
 
         if (params.storeId === "userStore") {
           // if (exiss) {
-          console.log("RUNNING");
+          // console.log("RUNNING");
 
           const collectionRef = collection(db, "latestStore");
           const q = query(
@@ -176,7 +176,7 @@ const ManageStorePage = () => {
           // }
         } else {
           // if (exists) {            console.log("RUNNING");
-          console.log("RUNNING2");
+          // console.log("RUNNING2");
 
           const documentRef = doc(db, "latestStore", params.storeId);
           const unsubscribe = onSnapshot(documentRef, (snapshot) => {
@@ -257,7 +257,7 @@ const ManageStorePage = () => {
       });
 
       const storeImageUrlList = await handleUpload(currentUserStore?.id);
-      console.log("URL LIST", storeImageUrlList);
+      // console.log("URL LIST", storeImageUrlList);
 
       // const storeImageUrls = storeImages
       //   .map((img) => img.imageUrl)
