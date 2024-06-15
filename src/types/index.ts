@@ -113,7 +113,7 @@ export type StoreObj = {
   info1: string;
   info2: string;
   published: boolean;
-  schedulArr: Array<{ day: string; time: TimeValue }>;
+  schedulArr: Array<{ day: string; time: TimeValue; closed: boolean }>;
   fasebook: string;
   instagram: string;
   linkedin: string;
@@ -131,7 +131,7 @@ export type StoreObj = {
   companyProfilePdfUrl: string;
   // youtubeVideos: string[];
   showProfile: boolean;
-  haveUpdate: string[]
+  haveUpdate: string[];
 };
 
 export type StoreListType = Array<StoreObj>;

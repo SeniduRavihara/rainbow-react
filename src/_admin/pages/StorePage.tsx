@@ -76,7 +76,7 @@ const StorePage = () => {
 
   const navigate = useNavigate();
 
-  console.log(selectedStore);
+  // console.log(selectedStore);
   
 
   useEffect(() => {

@@ -93,6 +93,7 @@ const SearchBoxes2 = () => {
   }
 
   const handlesearch = async (searchQuery: string) => {
+    if (!searchItem) return;
     try {
       setLoadingSearch(true);
       const result = await searchIndex.search(searchQuery);
@@ -144,13 +145,13 @@ const SearchBoxes2 = () => {
           )
       );
       if (storeList && storeList.length > 0) {
-        console.log(storeList
-          .filter((storeObj) => storeObj.active && storeObj.published)
-          .filter((storeObj) =>
-            location
-              ? storeObj.address.toLowerCase().includes(location.toLowerCase())
-              : storeObj
-          ));
+        // console.log(storeList
+        //   .filter((storeObj) => storeObj.active && storeObj.published)
+        //   .filter((storeObj) =>
+        //     location
+        //       ? storeObj.address.toLowerCase().includes(location.toLowerCase())
+        //       : storeObj
+        //   ));
         
         
         navigate(`/search-results/${searchQuery || "all"}`);

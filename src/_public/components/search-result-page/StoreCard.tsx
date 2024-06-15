@@ -66,7 +66,7 @@ const StoreCard = ({
   const navigate = useNavigate();
 
   const handleStoreClick = async (storeId: string) => {
-    console.log("sdhfd", storeId);
+    // console.log("sdhfd", storeId);
 
     if (showProfile) {
       updateVisitCount(storeId);

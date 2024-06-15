@@ -16,7 +16,7 @@ import {
 } from "@/firebase/api";
 import toast from "react-hot-toast";
 import Loader from "@/components/Loader";
-import { Kbd, Select, Tag } from "@chakra-ui/react";
+import { Checkbox, Kbd, Select, Tag } from "@chakra-ui/react";
 import {
   IoIosArrowBack,
   IoIosClose,
@@ -60,15 +60,15 @@ const CreateStorePage = () => {
   const [info2, setInfo2] = useState("");
   const [timevalue, setTimevalue] = useState<TimeValue | null>(null);
   const [schedulArr, setSchedulArr] = useState<
-    Array<{ day: string; time: TimeValue }>
+    Array<{ day: string; time: TimeValue; closed: boolean }>
   >([
-    { day: "Monday", time: ["08:00", "05:00"] },
-    { day: "Tuesday", time: ["08:00", "05:00"] },
-    { day: "Wednesday", time: ["08:00", "05:00"] },
-    { day: "Thursday", time: ["08:00", "05:00"] },
-    { day: "Friday", time: ["08:00", "05:00"] },
-    { day: "Saturday", time: ["08:00", "05:00"] },
-    { day: "Sunday", time: ["08:00", "05:00"] },
+    { day: "Monday", time: ["08:00", "05:00"], closed: false },
+    { day: "Tuesday", time: ["08:00", "05:00"], closed: false },
+    { day: "Wednesday", time: ["08:00", "05:00"], closed: false },
+    { day: "Thursday", time: ["08:00", "05:00"], closed: false },
+    { day: "Friday", time: ["08:00", "05:00"], closed: false },
+    { day: "Saturday", time: ["08:00", "05:00"], closed: false },
+    { day: "Sunday", time: ["08:00", "05:00"], closed: false },
   ]);
   const [dayIndex, setDayIndex] = useState(0);
   const { currentUser } = useAuth();
@@ -437,6 +437,32 @@ const CreateStorePage = () => {
                     value={schedulArr[dayIndex].time}
                     className="border rounded-md outline-none px-4 py-2"
                   />
+                  <div className="flex items-center justify-center gap-2">
+                    <Checkbox
+                      colorScheme="blue"
+                      iconColor="gray.100"
+                      className=""
+                      isChecked={schedulArr[dayIndex]?.closed}
+                      onChange={() => {
+                        setSchedulArr((prevState) => {
+                          const newState = [...prevState];
+                          newState[dayIndex].closed =
+                            !newState[dayIndex].closed;
+                          return newState;
+                        });
+                      }}
+                      sx={{
+                        "& .chakra-checkbox__control": {
+                          borderColor: "red", // control color
+                        },
+                        "& .chakra-checkbox__control[data-checked]": {
+                          borderColor: "red", // control color when checked
+                        },
+                      }}
+                    >
+                      closed
+                    </Checkbox>
+                  </div>
                   <button
                     type="button"
                     disabled={dayIndex >= 6}
@@ -446,7 +472,7 @@ const CreateStorePage = () => {
                   </button>
                 </div>
                 {/* -------------------- */}
-                <div className="flex md:hidden flex-col items-center justify-between w-full bg-gray-200 rounded-md">
+                <div className="flex md:hidden flex-col items-center justify-between pb-2 w-full bg-gray-200 rounded-md">
                   <TimeRangePicker
                     onChange={setTimevalue}
                     value={schedulArr[dayIndex].time}
@@ -470,6 +496,32 @@ const CreateStorePage = () => {
                     >
                       <IoMdArrowDropright className="text-5xl text-orange-500" />
                     </button>
+                  </div>
+                  <div className="flex items-center justify-center gap-2">
+                    <Checkbox
+                      colorScheme="blue"
+                      iconColor="gray.100"
+                      className=""
+                      isChecked={schedulArr[dayIndex]?.closed}
+                      onChange={() => {
+                        setSchedulArr((prevState) => {
+                          const newState = [...prevState];
+                          newState[dayIndex].closed =
+                            !newState[dayIndex].closed;
+                          return newState;
+                        });
+                      }}
+                      sx={{
+                        "& .chakra-checkbox__control": {
+                          borderColor: "red", // control color
+                        },
+                        "& .chakra-checkbox__control[data-checked]": {
+                          borderColor: "red", // control color when checked
+                        },
+                      }}
+                    >
+                      closed
+                    </Checkbox>
                   </div>
                 </div>
               </>

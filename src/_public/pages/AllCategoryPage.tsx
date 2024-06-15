@@ -76,11 +76,11 @@ const AllCategoryPage = () => {
   function Hit({ hit }: { hit: any }) {
     return (
       <div
-        className="cursor-pointer flex items-center gap-3 flex-col justify-center text-center"
+        className="cursor-pointer flex items-center gap-3"
         onClick={() => handleCategaryIconClick(hit.label)}
       >
         <img src={hit.icon} alt="" className="w-10 h-10" />
-        <div>{hit.label}</div>
+        <div className="lg:text-nowrap">{hit.label}</div>
       </div>
     );
   }
@@ -92,7 +92,7 @@ const AllCategoryPage = () => {
           className="text-xl hover:border duration-200 p-2 w-10 h-10 rounded-md"
           onClick={handleClickCancel}
         />
-        <h1 className="text-2xl font-bold ">Popular Categories</h1>
+        <h1 className="text-xl md:text-2xl font-bold ">Popular Categories</h1>
       </div>
 
       <InstantSearch searchClient={searchClient} indexName="categories">
