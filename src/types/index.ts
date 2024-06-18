@@ -58,6 +58,8 @@ export type DataContextType = {
     label: string;
     id: string;
   }>;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 };
 
 // --------------------------------

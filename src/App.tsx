@@ -46,6 +46,7 @@ import ForgetPasswordPage from "./_auth/forms/ForgetPasswordPage";
 import ReviewPage from "./_admin/pages/ReviewPage";
 import PasswordResetPage from "./_auth/forms/PasswordResetPage";
 import RootLayout from "./layout/RootLayout";
+import SearchResultsPageError from "./_public/pages/SearchResultsPageError";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -65,6 +66,7 @@ const router = createBrowserRouter(
           path="/search-results/:category"
           element={<SearchResultsPage />}
         />
+        <Route path="/search-results/" element={<SearchResultsPageError />} />
         <Route path="/all-catogaries" element={<AllCategoryPage />} />
         <Route path="/advertise" element={<AdvertizeYourBusiness />} />
         <Route path="/we-are-hiring" element={<WeAreHiringPage />} />

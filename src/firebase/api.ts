@@ -53,8 +53,31 @@ export const login = async ({
     // console.log(userCredential);
 
     return userCredential.user;
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    // Log the error for debugging purposes
+    console.error("Login error:", error.code);
+
+    // Handle specific error codes
+    switch (error.code) {
+      case "auth/invalid-credential":
+        toast.error("Incorrect email or password. Please try again.");
+        break;
+      case "auth/user-disabled":
+        toast.error("This account has been disabled. Please contact support.");
+        break;
+      case "auth/user-not-found":
+        toast.error("No account found with this email. Please sign up.");
+        break;
+      case "auth/wrong-password":
+        toast.error("Incorrect password. Please try again.");
+        break;
+      default:
+        // Handle unexpected errors
+        toast.error("An unexpected error occurred. Please try again later.");
+        break;
+    }
+
+    // Re-throw the error to allow further handling if needed
     throw error;
   }
 };
@@ -100,8 +123,28 @@ export const signup = async ({
     // }
 
     return userCredential.user;
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    // Enhanced error handling
+    console.error("Error during signup:", error);
+
+    // Custom error messages based on error code
+    switch (error.code) {
+      case "auth/email-already-in-use":
+        toast.error("This email is already in use. Please try another one.");
+        break;
+      case "auth/invalid-email":
+        toast.error("Invalid email address. Please check and try again.");
+        break;
+      case "auth/weak-password":
+        toast.error(
+          "The password is too weak. Please use a stronger password."
+        );
+        break;
+      default:
+        toast.error("An error occurred during signup. Please try again.");
+    }
+
+    // Throw the error to allow further handling if necessary
     throw error;
   }
 };
@@ -452,7 +495,7 @@ export const fetchCatogaryData = async (
     collectionRef,
     orderBy("createdAt", "desc"),
     startAfter(lastDocument?.createdAt ?? ""),
-    limit(8),
+    // limit(8),
     where("active", "==", true),
     where("published", "==", true),
     // where("categoriesArr", "array-contains", label),
@@ -467,7 +510,7 @@ export const fetchCatogaryData = async (
   })) as StoreListType;
 
   setLastDocument(storeListArr[storeListArr.length - 1]);
-  // console.log(label,storeListArr);
+  // console.log(storeListArr[storeListArr.length - 1]);
 
   if (storeListArr.length > 0) {
     setSearchResultStores(null);
@@ -905,8 +948,6 @@ export const postEnquery = async (
     throw error;
   }
 };
-
-
 
 // ------------------------------------
 

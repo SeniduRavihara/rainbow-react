@@ -2,31 +2,65 @@ import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { auth } from "@/firebase/config";
-import { confirmPasswordReset } from "firebase/auth";
-import { useState } from "react";
+import {
+  applyActionCode,
+  confirmPasswordReset,
+  verifyBeforeUpdateEmail,
+} from "firebase/auth";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { Label } from "@/components/ui/label";
+import { CircularProgress } from "@chakra-ui/react";
 
 const PasswordResetPage = () => {
   const [password, setPassword] = useState("");
   const [searchParams] = useSearchParams();
   const resetCode = searchParams.get("oobCode");
+  const mode = searchParams.get("mode");
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (mode === "verifyEmail") {
+      if (resetCode) {
+        // Apply the email verification action code
+        applyActionCode(auth, resetCode)
+          .then(() => {
+            // Email verified successfully
+            toast.success("Email verified successfully");
+            // Redirect to a success page or dashboard
+            navigate("/login");
+          })
+          .catch((error) => {
+            if (error.code === "auth/invalid-action-code") {
+              toast.error(
+                "The verification link has already been used or is expired."
+              );
+            } else {
+              toast.error(
+                "An error occurred while verifying your email. Please try again later."
+              );
+            }
+            navigate("/login");
+          });
+      }
+    }
+  }, [mode, navigate, resetCode]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!password) {
-      //   toast.error("Please Eter Your Email");
+      toast.error("Please Enter Your new Password");
       return;
     }
 
     if (resetCode) {
       try {
         await confirmPasswordReset(auth, resetCode, password);
+        verifyBeforeUpdateEmail;
         toast.success(
           "Your password has been reset. Please log in with your new password."
         );
@@ -37,6 +71,10 @@ const PasswordResetPage = () => {
       }
     }
   };
+
+  if (mode === "verifyEmail") {
+    return <CircularProgress size="60px" isIndeterminate color="green.300" />;
+  }
 
   return (
     <div>

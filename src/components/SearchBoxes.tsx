@@ -37,6 +37,8 @@ const SearchBoxes = () => {
     lastDocument,
     setLastDocument,
     setIsAllFetched,
+    // currentPage,
+    setCurrentPage,
   } = useData();
 
   const navigate = useNavigate();
@@ -54,18 +56,41 @@ const SearchBoxes = () => {
     }
   }, [listening, searchItem, setSearchitem, transcript]);
 
+  //  useEffect(() => {
+  //    handlesearch(searchItem);
+  //  // eslint-disable-next-line react-hooks/exhaustive-deps
+  //  }, [currentPage]);
+
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
 
-  const handlesearch = async (searchQuery: string) => {
-    if(!searchItem) return
+  const handlesearch = async (searchQuery: string, location?: string) => {
+    if (!searchItem) return;
     try {
       setLoadingSearch(true);
-      const result = await searchIndex.search(searchQuery);
-      // console.log(result);
 
-      const storeList: StoreListType = result.hits.map((hit: any) => ({
+      const allResults: StoreListType[] = [];
+      const currentPage = 0;
+      const hitsPerPage = 20; // Algolia default hits per page
+
+      const fetchPage = async (page: number): Promise<void> => {
+        const result = await searchIndex.search(searchQuery, {
+          page: page,
+          hitsPerPage: hitsPerPage,
+        });
+
+        allResults.push(...(result.hits as any[]));
+
+        // If there are more pages, fetch the next one
+        if (result.page + 1 < result.nbPages) {
+          await fetchPage(result.page + 1);
+        }
+      };
+
+      await fetchPage(currentPage);
+
+      const storeList: StoreListType = allResults.map((hit: any) => ({
         id: hit.objectID,
         title: hit.title,
         active: hit.active,
@@ -94,13 +119,12 @@ const SearchBoxes = () => {
         category: hit.category || "",
         visitCount: hit.visitCount,
         verified: hit.verified || false,
-        // gallery: hit.gallery,
         location: hit.location,
         companyProfilePdfUrl: hit.companyProfilePdfUrl,
-        // youtubeVideos: hit.youtubeVideos,
         showProfile: hit.showProfile,
         haveUpdate: hit.haveUpdate,
       }));
+
       setLastDocument(null);
       setSearchResultStores(
         storeList
@@ -111,16 +135,85 @@ const SearchBoxes = () => {
               : storeObj
           )
       );
-      if (storeList && storeList.length > 0)
+      setCurrentPage(1);
+      if (storeList && storeList.length > 0) {
         navigate(`/search-results/${searchQuery || "all"}`);
+      }
 
       setLoadingSearch(false);
     } catch (error) {
       toast.error("Network Problem");
       setLoadingSearch(false);
-      console.log("Error");
+      console.error("Error", error);
     }
   };
+
+  // const handlesearch = async (searchQuery: string) => {
+  //   if (!searchItem) return;
+  //   try {
+  //     setLoadingSearch(true);
+  //     const result = await searchIndex.search(searchQuery, {
+  //       page: 2,
+  //       hitsPerPage: 8,
+  //     });
+  //     // console.log(result);
+
+  //     const storeList: StoreListType = result.hits.map((hit: any) => ({
+  //       id: hit.objectID,
+  //       title: hit.title,
+  //       active: hit.active,
+  //       address: hit.address,
+  //       email: hit.email,
+  //       tags: hit.tags,
+  //       createdAt: hit.createdAt,
+  //       phoneNumber: hit.phoneNumber,
+  //       whatsappNumber: hit.whatsappNumber,
+  //       storeIcon: hit.storeIcon,
+  //       storeImages: hit.storeImages,
+  //       userId: hit.userId,
+  //       info1: hit.info1,
+  //       info2: hit.info2,
+  //       published: hit.published,
+  //       schedulArr: hit.schedulArr,
+  //       fasebook: hit.fasebook,
+  //       instagram: hit.instagram,
+  //       linkedin: hit.linkedin,
+  //       twitter: hit.twitter,
+  //       youtube: hit.youtube,
+  //       tiktok: hit.tiktok,
+  //       website: hit.website,
+  //       rating: hit.rating,
+  //       reviewCount: hit.reviewCount,
+  //       category: hit.category || "",
+  //       visitCount: hit.visitCount,
+  //       verified: hit.verified || false,
+  //       // gallery: hit.gallery,
+  //       location: hit.location,
+  //       companyProfilePdfUrl: hit.companyProfilePdfUrl,
+  //       // youtubeVideos: hit.youtubeVideos,
+  //       showProfile: hit.showProfile,
+  //       haveUpdate: hit.haveUpdate,
+  //     }));
+  //     setLastDocument(null);
+  //     setSearchResultStores(
+  //       storeList
+  //         .filter((storeObj) => storeObj.active && storeObj.published)
+  //         .filter((storeObj) =>
+  //           location
+  //             ? storeObj.address.toLowerCase().includes(location.toLowerCase())
+  //             : storeObj
+  //         )
+  //     );
+  //     if (storeList && storeList.length > 0)
+  //       navigate(`/search-results/${searchQuery || "all"}`);
+
+  //     setLoadingSearch(false);
+  //   } catch (error) {
+  //     toast.error("Network Problem");
+  //     setLoadingSearch(false);
+  //     console.log("Error");
+  //   }
+  // };
 
   return (
     <div className="flex w-full flex-col items-center gap-5 justify-center">
@@ -170,7 +263,7 @@ const SearchBoxes = () => {
                   onClick={() => {
                     setSearchitem("");
                     SpeechRecognition.stopListening();
-                    setLoadingSearch(false)
+                    setLoadingSearch(false);
                     // setLastDocument(null);
                     // setSearchResultStores(null);
                     // fetchData({

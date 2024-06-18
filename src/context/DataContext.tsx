@@ -7,7 +7,7 @@ import {
   StoreObj,
   messageObjType,
 } from "@/types";
-import { collection,  onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
 
 export const DataContext = createContext<DataContextType>(INITIAL_DATA_CONTEXT);
@@ -63,11 +63,12 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
   const [categories, setCategories] = useState<Array<{
     icon: string;
     label: string;
-    id: string
+    id: string;
   }> | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // console.log(searchResultStores);
-  
+  console.log(searchResultStores);
+  console.log(currentPage);
 
   // useEffect(()=>{
   //   if(searchItem){
@@ -185,8 +186,6 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
-
-
   // ---------------------------------------------------
 
   useEffect(() => {
@@ -235,20 +234,20 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // -------------------------------------------------
-    useEffect(() => {
-      const collectionRef = collection(db, "categories");
-      const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
-        const categoriesArr = QuerySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        })) as Array<{ icon: string; label: string; id: string }>;
+  useEffect(() => {
+    const collectionRef = collection(db, "categories");
+    const unsubscribe = onSnapshot(collectionRef, (QuerySnapshot) => {
+      const categoriesArr = QuerySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as Array<{ icon: string; label: string; id: string }>;
 
-        // console.log("HELOOOOO",categoriesArr);
-        setCategories(categoriesArr);
-      });
+      // console.log("HELOOOOO",categoriesArr);
+      setCategories(categoriesArr);
+    });
 
-      return unsubscribe;
-    }, []);
+    return unsubscribe;
+  }, []);
 
   const value = {
     currentUserData,
@@ -275,6 +274,8 @@ function DataContextProvider({ children }: { children: React.ReactNode }) {
     locationArr,
     setLocationArr,
     categories,
+    currentPage,
+    setCurrentPage,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

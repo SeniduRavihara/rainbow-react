@@ -14,17 +14,17 @@ import { useNavigate } from "react-router-dom";
 import AutocompleteLocationInput from "@/_public/components/auto-compleate-location-input/AutoCompleateInput";
 import { CircularProgress } from "@chakra-ui/react";
 import { mic } from "@/assets";
+import toast from "react-hot-toast";
 
 const searchClient = algoliasearch(
   import.meta.env.VITE_ALGOLIA_APP_ID,
   import.meta.env.VITE_ALGOLIA_SEARCH_ONLY_API_KEY
 );
 
-
 const searchIndex = searchClient.initIndex("stores");
 
 const SearchBoxes2 = () => {
-  const { locationArr } = useData();
+  const { locationArr, setCurrentPage } = useData();
   const [scrollPosition, setScrollPosition] = useState(0);
   const [scrollDirection, setScrollDirection] = useState("");
   const [loadingSearch, setLoadingSearch] = useState(false);
@@ -92,13 +92,32 @@ const SearchBoxes2 = () => {
     return <span>Browser doesn't support speech recognition.</span>;
   }
 
-  const handlesearch = async (searchQuery: string) => {
+  const handlesearch = async (searchQuery: string, location?: string) => {
     if (!searchItem) return;
     try {
       setLoadingSearch(true);
-      const result = await searchIndex.search(searchQuery);
 
-      const storeList: StoreListType = result.hits.map((hit: any) => ({
+      const allResults: StoreListType[] = [];
+      const currentPage = 0;
+      const hitsPerPage = 20; // Algolia default hits per page
+
+      const fetchPage = async (page: number): Promise<void> => {
+        const result = await searchIndex.search(searchQuery, {
+          page: page,
+          hitsPerPage: hitsPerPage,
+        });
+
+        allResults.push(...(result.hits as any[]));
+
+        // If there are more pages, fetch the next one
+        if (result.page + 1 < result.nbPages) {
+          await fetchPage(result.page + 1);
+        }
+      };
+
+      await fetchPage(currentPage);
+
+      const storeList: StoreListType = allResults.map((hit: any) => ({
         id: hit.objectID,
         title: hit.title,
         active: hit.active,
@@ -127,13 +146,12 @@ const SearchBoxes2 = () => {
         category: hit.category || "",
         visitCount: hit.visitCount,
         verified: hit.verified || false,
-        // gallery: hit.gallery,
         location: hit.location,
         companyProfilePdfUrl: hit.companyProfilePdfUrl,
-        // youtubeVideos: hit.youtubeVideos,
         showProfile: hit.showProfile,
         haveUpdate: hit.haveUpdate,
       }));
+
       setLastDocument(null);
       setSearchResultStores(
         storeList
@@ -144,22 +162,16 @@ const SearchBoxes2 = () => {
               : storeObj
           )
       );
+      setCurrentPage(1);
       if (storeList && storeList.length > 0) {
-        // console.log(storeList
-        //   .filter((storeObj) => storeObj.active && storeObj.published)
-        //   .filter((storeObj) =>
-        //     location
-        //       ? storeObj.address.toLowerCase().includes(location.toLowerCase())
-        //       : storeObj
-        //   ));
-        
-        
         navigate(`/search-results/${searchQuery || "all"}`);
       }
 
       setLoadingSearch(false);
     } catch (error) {
-      console.log("Error");
+      toast.error("Network Problem");
+      setLoadingSearch(false);
+      console.error("Error", error);
     }
   };
 

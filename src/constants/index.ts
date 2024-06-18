@@ -56,6 +56,8 @@ export const INITIAL_DATA_CONTEXT = {
   locationArr: null,
   setLocationArr: () => {},
   categories: null,
+  currentPage: 1,
+  setCurrentPage: () => {},
 };
 
 export const INITIAL_SCHEDULAR_ARR = [
@@ -67,7 +69,6 @@ export const INITIAL_SCHEDULAR_ARR = [
   { day: "Saturday", time: ["08:00", "05:00"] },
   { day: "Sunday", time: ["08:00", "05:00"] },
 ];
-
 
 // export const placeholderCategories = [
 //   { icon: resturant, label: "Restaurant" },

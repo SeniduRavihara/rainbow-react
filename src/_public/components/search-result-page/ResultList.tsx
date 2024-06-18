@@ -6,7 +6,7 @@ import { fetchCatogaryData } from "@/firebase/api";
 import { StoreListType } from "@/types";
 import { SkeletonCard } from "@/components/SkeletonCard";
 
-const ResultList = ({ category }: { category:string }) => {
+const ResultList = ({ category }: { category: string }) => {
   const {
     searchResultStores,
     setSearchResultStores,
@@ -16,15 +16,26 @@ const ResultList = ({ category }: { category:string }) => {
     isAllFetched,
     setIsAllFetched,
     loadingStoreFetching,
+    currentPage,
+    setCurrentPage,
   } = useData();
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [visibleStores, setVisibleStores] = useState<StoreListType | null>();
   const [allPageCount, setAllPageCount] = useState(0);
+  const [disabled, setDisabled] = useState(false);
 
   // const params = useParams();
   // const category = params.category;
 
   // console.log(visibleStores);
+
+  useEffect(() => {
+    if (checkDisable) {
+      setDisabled(checkDisable);
+      scrollToTop();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, isAllFetched]);
 
   useEffect(() => {
     if (isAllFetched) setAllPageCount(currentPage);
@@ -62,6 +73,8 @@ const ResultList = ({ category }: { category:string }) => {
 
   const handleNextClick = () => {
     scrollToTop();
+    if (disabled) return;
+
     if (allPageCount <= currentPage) setCurrentPage((pre) => pre + 1);
 
     if (searchResultStores && searchResultStores?.length / 8 === currentPage) {
@@ -86,6 +99,12 @@ const ResultList = ({ category }: { category:string }) => {
   // const handleStoreClick = (id: string)=>{
   //   navigate(`/business-profile/${id}`);
   // }
+
+  const checkDisable = (): boolean => {
+    if (!searchResultStores) return true;
+    const totalPages = Math.ceil(searchResultStores.length / 8);
+    return currentPage >= totalPages;
+  };
 
   if (loadingStoreFetching) {
     return (
@@ -122,7 +141,7 @@ const ResultList = ({ category }: { category:string }) => {
           ))}
       </ul>
 
-      <div className="flex gap-2 mt-5 mb-2 items-end justify-center">
+      <div className="flex gap-3 mt-5 mb-2 items-center justify-center">
         <Button
           variant="outline"
           className="bg-orange-500 text-white hover:bg-orange-400"
@@ -130,10 +149,14 @@ const ResultList = ({ category }: { category:string }) => {
         >
           Prev
         </Button>
+        <div className="text-xl border w-10 h-10 rounded-full flex items-center justify-center">
+          {currentPage}
+        </div>
         <Button
           variant="outline"
           className="bg-orange-500 text-white hover:bg-orange-400"
           onClick={handleNextClick}
+          // disabled={disabled}
         >
           Next
         </Button>

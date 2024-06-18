@@ -16,12 +16,24 @@ import { useData } from "@/hooks/useData";
 // import TestSearch from "@/testing/TestSearch";
 
 const HomePage = () => {
-  const { setLastDocument, setSearchResultStores } = useData();
+  const { setLastDocument, setSearchResultStores, setCurrentPage } = useData();
 
   useEffect(() => {
     setSearchResultStores(null);
     setLastDocument(null);
   }, [setLastDocument, setSearchResultStores]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+    scrollToTop();
+  }, [setCurrentPage]);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optionally, you can use smooth scrolling
+    });
+  };
 
   return (
     <div>

@@ -12,7 +12,6 @@ import Social from "./Social";
 
 type CardWrapperProps = {
   children: React.ReactNode;
-  headerLabel: string;
   backButtonLabel: string;
   backButtonHref: string;
   showSocial?: boolean;
@@ -20,17 +19,14 @@ type CardWrapperProps = {
 
 const CardWrapper = ({
   children,
-  headerLabel,
   backButtonLabel,
   backButtonHref,
   showSocial,
 }: CardWrapperProps) => {
-
-
   return (
     <Card className="xsm:w-[400px] w-[350px] shadow-md backdrop-blur-xl bg-white/60">
       <CardHeader className="text-center">
-        <Header label={headerLabel} />
+        <Header />
       </CardHeader>
 
       <CardContent>{children}</CardContent>

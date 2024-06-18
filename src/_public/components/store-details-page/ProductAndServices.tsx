@@ -16,6 +16,7 @@ const ProductAndServices = ({
     setLoadingStoreFetching,
     setSearchResultStores,
     setIsAllFetched,
+    setCurrentPage,
   } = useData();
   const navigate = useNavigate();
 
@@ -38,6 +39,7 @@ const ProductAndServices = ({
   const handleCategaryClick = async (label: string) => {
     // setSearchResultStores(null);
     // setLastDocument(null);
+    setCurrentPage(1);
     await fetchCatogaryData(
       {
         lastDocument,

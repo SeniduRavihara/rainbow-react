@@ -12,14 +12,15 @@ import SearchResultCarosel from "../components/SearchResultCarosel";
 import { fetchCatogaryData } from "@/firebase/api";
 
 const SearchResultsPage = () => {
-  const { searchResultStores } = useData();
   const {
+    searchResultStores,
     lastDocument,
     setLastDocument,
     setLoadingStoreFetching,
     setSearchResultStores,
     setIsAllFetched,
   } = useData();
+
   const navigate = useNavigate();
 
   const params = useParams();
@@ -29,30 +30,37 @@ const SearchResultsPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
-   useEffect(() => {
-     const fetchData = async () => {
-       if (category) {
-         try {
-           setLoadingStoreFetching(true);
-           await fetchCatogaryData(
-             {
-               lastDocument,
-               setLastDocument,
-               setLoadingStoreFetching,
-               setSearchResultStores,
-               setIsAllFetched,
-             },
-             category?.split("-")[1] || ""
-           );
-           
-         } catch (error) {
-           console.error("Error fetching category data:", error);
-         }
-       }
-     };
+  useEffect(() => {
+    const fetchData = async () => {
+      if (category) {
+        try {
+          setLoadingStoreFetching(true);
+          await fetchCatogaryData(
+            {
+              lastDocument,
+              setLastDocument,
+              setLoadingStoreFetching,
+              setSearchResultStores,
+              setIsAllFetched,
+            },
+            category?.split("-")[1] || ""
+          );
+        } catch (error) {
+          console.error("Error fetching category data:", error);
+        }
+      }
+    };
 
-     fetchData();
-   }, [category, lastDocument, navigate, setIsAllFetched, setLastDocument, setLoadingStoreFetching, setSearchResultStores]);
+    fetchData();
+  }, [
+    category,
+    lastDocument,
+    navigate,
+    setIsAllFetched,
+    setLastDocument,
+    setLoadingStoreFetching,
+    setSearchResultStores,
+  ]);
 
   // useEffect(() => {
   //   if (category) {

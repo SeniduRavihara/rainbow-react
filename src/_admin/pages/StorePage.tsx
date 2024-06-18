@@ -77,7 +77,6 @@ const StorePage = () => {
   const navigate = useNavigate();
 
   // console.log(selectedStore);
-  
 
   useEffect(() => {
     fetchData();
@@ -92,7 +91,7 @@ const StorePage = () => {
       collectionRef,
       orderBy("createdAt", "desc"),
       startAfter(lastDocument?.createdAt ?? ""),
-      limit(6)
+      limit(8)
     );
 
     const queryStoresSnapshot = await getDocs(q);
@@ -190,9 +189,9 @@ const StorePage = () => {
         return updatedList;
       });
 
-       setSelectedStore((prev) =>
-         prev ? { ...prev, verified: !prev.verified } : null
-       );
+      setSelectedStore((prev) =>
+        prev ? { ...prev, verified: !prev.verified } : null
+      );
 
       try {
         const documentRef = doc(db, "store", id);
@@ -831,6 +830,11 @@ const StorePage = () => {
             onClick={() => {
               setSearchQuiery("");
               setLoading(false);
+              setLastDocument(null);
+              setStoreList(null);
+              console.log("OK");
+
+              fetchData();
             }}
             className="hover:bg-gray-100 duration-200 text-2xl rounded-md w-8 h-8 p-1"
           />
@@ -1082,7 +1086,7 @@ const StorePage = () => {
         <Button
           className="flex items-center justify-center"
           onClick={fetchData}
-          disabled={loading && !storeList}
+          disabled={(loading && !storeList) || !!searchQuiery}
         >
           {loading ? <Loader /> : "Load More"}
         </Button>
